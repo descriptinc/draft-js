@@ -1,19 +1,19 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
 
 import type SelectionState from 'SelectionState';
 
+const DraftEffects = require('DraftEffects');
 const DraftJsDebugLogging = require('DraftJsDebugLogging');
 
 const containsNode = require('containsNode');
@@ -323,6 +323,7 @@ function addPointToSelection(
       extraParams: JSON.stringify({offset: offset}),
       selectionState: JSON.stringify(selectionState.toJS()),
     });
+    DraftEffects.handleExtensionCausedError();
   }
   range.setStart(node, offset);
   selection.addRange(range);

@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -19,8 +18,8 @@ import type SelectionState from 'SelectionState';
 
 const BlockMapBuilder = require('BlockMapBuilder');
 const ContentBlockNode = require('ContentBlockNode');
-const Immutable = require('immutable');
 
+const Immutable = require('immutable');
 const insertIntoList = require('insertIntoList');
 const invariant = require('invariant');
 const randomizeBlockMapKeys = require('randomizeBlockMapKeys');
@@ -124,7 +123,7 @@ const getRootBlocks = (
 ): Array<string> => {
   const headKey = block.getKey();
   let rootBlock = block;
-  let rootBlocks = [];
+  const rootBlocks = [];
 
   // sometimes the fragment head block will not be part of the blockMap itself this can happen when
   // the fragment head is used to update the target block, however when this does not happen we need

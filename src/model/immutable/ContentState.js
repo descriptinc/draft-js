@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -23,16 +22,14 @@ const CharacterMetadata = require('CharacterMetadata');
 const ContentBlock = require('ContentBlock');
 const ContentBlockNode = require('ContentBlockNode');
 const DraftEntity = require('DraftEntity');
-const Immutable = require('immutable');
 const SelectionState = require('SelectionState');
 
 const generateRandomKey = require('generateRandomKey');
 const gkx = require('gkx');
+const Immutable = require('immutable');
 const sanitizeDraftText = require('sanitizeDraftText');
 
 const {List, Record, Repeat} = Immutable;
-
-const experimentalTreeDataSupport = gkx('draft_tree_data_support');
 
 const defaultRecord: {
   entityMap: ?any,
@@ -46,11 +43,7 @@ const defaultRecord: {
   selectionAfter: null,
 };
 
-const ContentBlockNodeRecord = experimentalTreeDataSupport
-  ? ContentBlockNode
-  : ContentBlock;
-
-const ContentStateRecord = Record(defaultRecord);
+const ContentStateRecord = (Record(defaultRecord): any);
 
 class ContentState extends ContentStateRecord {
   getEntityMap(): any {
@@ -127,7 +120,7 @@ class ContentState extends ContentStateRecord {
       .join(delimiter || '\n');
   }
 
-  getLastCreatedEntityKey() {
+  getLastCreatedEntityKey(): string {
     // TODO: update this when we fully remove DraftEntity
     return DraftEntity.__getLastCreatedEntityKey();
   }
@@ -196,6 +189,9 @@ class ContentState extends ContentStateRecord {
     const strings = text.split(delimiter);
     const blocks = strings.map(block => {
       block = sanitizeDraftText(block);
+      const ContentBlockNodeRecord = gkx('draft_tree_data_support')
+        ? ContentBlockNode
+        : ContentBlock;
       return new ContentBlockNodeRecord({
         key: generateRandomKey(),
         text: block,

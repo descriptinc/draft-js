@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -20,6 +20,8 @@ const siteConfig = {
       label: "GitHub"
     }
   ],
+  headerIcon: 'img/draftjs-logo.svg',
+  favicon: 'img/draftjs-logo.ico',
   /* colors for website */
   colors: {
     primaryColor: '#3B3738',
@@ -40,6 +42,18 @@ const siteConfig = {
 
   // Google analytics tracking id
   gaTrackingId: 'UA-44373548-19',
+
+  // Show page's Table of Contents
+  onPageNav: 'separate',
+
+  // No .html in the path.
+  cleanUrl: true,
+
+  // Algolia search.
+  algolia: {
+    apiKey: 'ae94c9e3ee00ea8edddd484adafc37cd',
+    indexName: 'draft-js',
+  },
 };
 
 module.exports = siteConfig;

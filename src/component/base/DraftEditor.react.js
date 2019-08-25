@@ -1,14 +1,13 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
  * @preventMunge
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -25,7 +24,7 @@ const DraftEditorContents = require('DraftEditorContents.react');
 const DraftEditorDragHandler = require('DraftEditorDragHandler');
 const DraftEditorEditHandler = require('DraftEditorEditHandler');
 const DraftEditorPlaceholder = require('DraftEditorPlaceholder.react');
-const DraftODS = require('DraftODS');
+const DraftEffects = require('DraftEffects');
 const EditorState = require('EditorState');
 const React = require('React');
 const ReactDOM = require('ReactDOM');
@@ -68,13 +67,13 @@ class UpdateDraftEditorFlags extends React.Component<{
   editor: DraftEditor,
   editorState: EditorState,
 }> {
-  render() {
+  render(): React.Node {
     return null;
   }
-  componentDidMount() {
+  componentDidMount(): mixed {
     this._update();
   }
-  componentDidUpdate() {
+  componentDidUpdate(): mixed {
     this._update();
   }
   _update() {
@@ -265,9 +264,13 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * editor mode, if any has been specified.
    */
   _buildHandler(eventName: string): Function {
-    const flushControlled = ReactDOM.unstable_flushControlled;
+    const flushControlled: (fn: Function) => void =
+      /* $FlowFixMe(>=0.79.1 site=www) This comment suppresses an error found
+       * when Flow v0.79 was deployed. To see the error delete this comment and
+       * run Flow. */
+      ReactDOM.unstable_flushControlled;
     // Wrap event handlers in `flushControlled`. In sync mode, this is
-    // effetively a no-op. In async mode, this ensures all updates scheduled
+    // effectively a no-op. In async mode, this ensures all updates scheduled
     // inside the handler are flushed before React yields to the browser.
     return e => {
       if (!this.props.readOnly) {
@@ -377,6 +380,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
             aria-label={this.props.ariaLabel}
             aria-labelledby={this.props.ariaLabelledBy}
             aria-multiline={this.props.ariaMultiline}
+            aria-owns={readOnly ? null : this.props.ariaOwneeID}
             autoCapitalize={this.props.autoCapitalize}
             autoComplete={this.props.autoComplete}
             autoCorrect={this.props.autoCorrect}
@@ -429,9 +433,10 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
   }
 
   componentDidMount(): void {
+    this._blockSelectEvents = false;
     if (!didInitODS && gkx('draft_ods_enabled')) {
       didInitODS = true;
-      DraftODS.init();
+      DraftEffects.initODS();
     }
     this.setMode('edit');
 
@@ -449,7 +454,6 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
 
   componentDidUpdate(): void {
     this._blockSelectEvents = false;
-    // moving this here, when it was previously set in componentWillUpdate
     this._latestEditorState = this.props.editorState;
     this._latestCommittedEditorState = this.props.editorState;
   }
@@ -463,10 +467,12 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * a specified scroll position (for cases like `cut` behavior where it should
    * be restored to a known position).
    */
-  focus = (scrollPosition?: DraftScrollPosition): void => {
+  focus: (scrollPosition?: DraftScrollPosition) => void = (
+    scrollPosition?: DraftScrollPosition,
+  ): void => {
     const {editorState} = this.props;
     const alreadyHasFocus = editorState.getSelection().getHasFocus();
-    const editorNode = ReactDOM.findDOMNode(this.editor);
+    const editorNode = this.editor;
 
     if (!editorNode) {
       // once in a while people call 'focus' in a setTimeout, and the node has
@@ -502,8 +508,8 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
     }
   };
 
-  blur = (): void => {
-    const editorNode = ReactDOM.findDOMNode(this.editor);
+  blur: () => void = (): void => {
+    const editorNode = this.editor;
     invariant(
       editorNode instanceof HTMLElement,
       'editorNode is not an HTMLElement',
@@ -518,11 +524,30 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * handler module to ensure that DOM events are managed appropriately for
    * the active mode.
    */
-  setMode = (mode: DraftEditorModes): void => {
-    this._handler = handlerMap[mode];
+  setMode: DraftEditorModes => void = (mode: DraftEditorModes): void => {
+    const {onPaste, onCut, onCopy} = this.props;
+    const editHandler = {...handlerMap.edit};
+
+    if (onPaste) {
+      editHandler.onPaste = onPaste;
+    }
+
+    if (onCut) {
+      editHandler.onCut = onCut;
+    }
+
+    if (onCopy) {
+      editHandler.onCopy = onCopy;
+    }
+
+    const handler = {
+      ...handlerMap,
+      edit: editHandler,
+    };
+    this._handler = handler[mode];
   };
 
-  exitCurrentMode = (): void => {
+  exitCurrentMode: () => void = (): void => {
     this.setMode('edit');
   };
 
@@ -535,7 +560,9 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * reconciliation occurs on a version of the DOM that is synchronized with
    * our EditorState.
    */
-  restoreEditorDOM = (scrollPosition?: DraftScrollPosition): void => {
+  restoreEditorDOM: (scrollPosition?: DraftScrollPosition) => void = (
+    scrollPosition?: DraftScrollPosition,
+  ): void => {
     this.setState({contentsKey: this.state.contentsKey + 1}, () => {
       this.focus(scrollPosition);
     });
@@ -546,7 +573,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    *
    * Set the clipboard state for a cut/copy event.
    */
-  setClipboard = (clipboard: ?BlockMap): void => {
+  setClipboard: (?BlockMap) => void = (clipboard: ?BlockMap): void => {
     this._clipboard = clipboard;
   };
 
@@ -555,7 +582,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    *
    * Retrieve the clipboard state for a cut/copy event.
    */
-  getClipboard = (): ?BlockMap => {
+  getClipboard: () => ?BlockMap = (): ?BlockMap => {
     return this._clipboard;
   };
 
@@ -568,7 +595,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * an `onChange` prop to receive state updates passed along from this
    * function.
    */
-  update = (editorState: EditorState): void => {
+  update: EditorState => void = (editorState: EditorState): void => {
     this._latestEditorState = editorState;
     this.props.onChange(editorState);
   };
@@ -578,14 +605,14 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
    * a dragged element enters and leaves the editor (or any of its children),
    * to determine when the dragged element absolutely leaves the editor.
    */
-  onDragEnter = (): void => {
+  onDragEnter: () => void = (): void => {
     this._dragCount++;
   };
 
   /**
    * See `onDragEnter()`.
    */
-  onDragLeave = (): void => {
+  onDragLeave: () => void = (): void => {
     this._dragCount--;
     if (this._dragCount === 0) {
       this.exitCurrentMode();

@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -24,7 +23,6 @@ import type {List} from 'immutable';
 const DraftEditorLeaf = require('DraftEditorLeaf.react');
 const DraftOffsetKey = require('DraftOffsetKey');
 const React = require('React');
-const ReactDOM = require('ReactDOM');
 const Scroll = require('Scroll');
 const Style = require('Style');
 const UnicodeBidi = require('UnicodeBidi');
@@ -72,6 +70,8 @@ const isBlockOnSelectionEdge = (
  * appropriate decorator and inline style components.
  */
 class DraftEditorBlock extends React.Component<Props> {
+  _node: ?HTMLDivElement;
+
   shouldComponentUpdate(nextProps: Props): boolean {
     return (
       this.props.block !== nextProps.block ||
@@ -86,7 +86,7 @@ class DraftEditorBlock extends React.Component<Props> {
    * When a block is mounted and overlaps the selection state, we need to make
    * sure that the cursor is visible to match native behavior. This may not
    * be the case if the user has pressed `RETURN` or pasted some content, since
-   * programatically creating these new blocks and setting the DOM selection
+   * programmatically creating these new blocks and setting the DOM selection
    * will miss out on the browser natively scrolling to that position.
    *
    * To replicate native behavior, if the block overlaps the selection state
@@ -104,7 +104,10 @@ class DraftEditorBlock extends React.Component<Props> {
       return;
     }
 
-    const blockNode = ReactDOM.findDOMNode(this);
+    const blockNode = this._node;
+    if (blockNode == null) {
+      return;
+    }
     const scrollParent = Style.getScrollParent(blockNode);
     const scrollPosition = getScrollPosition(scrollParent);
     let scrollDelta;
@@ -219,7 +222,10 @@ class DraftEditorBlock extends React.Component<Props> {
     });
 
     return (
-      <div data-offset-key={offsetKey} className={className}>
+      <div
+        data-offset-key={offsetKey}
+        className={className}
+        ref={ref => (this._node = ref)}>
         {this._renderChildren()}
       </div>
     );

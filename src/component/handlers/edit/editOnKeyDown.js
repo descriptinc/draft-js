@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -103,77 +102,81 @@ function editOnKeyDown(editor: DraftEditor, e: SyntheticKeyboardEvent<>): void {
       return false;
     }
   }
+
   if (
-    !editor.props.handleKeyboardEvent ||
-    !isEventHandled(editor.props.handleKeyboardEvent(e))
+    editor.props.handleKeyboardEvent &&
+    isEventHandled(editor.props.handleKeyboardEvent(e))
   ) {
-    switch (keyCode) {
-      case Keys.RETURN:
+    return
+  }
+
+  switch (keyCode) {
+    case Keys.RETURN:
+      e.preventDefault();
+      // The top-level component may manually handle newline insertion. If
+      // no special handling is performed, fall through to command handling.
+      if (
+        editor.props.handleReturn &&
+        isEventHandled(editor.props.handleReturn(e, editorState))
+      ) {
+        return;
+      }
+      break;
+    case Keys.ESC:
+      e.preventDefault();
+      if (callDeprecatedHandler('onEscape')) {
+        return;
+      }
+      break;
+    case Keys.TAB:
+      if (callDeprecatedHandler('onTab')) {
+        return;
+      }
+      break;
+    case Keys.UP:
+      if (callDeprecatedHandler('onUpArrow')) {
+        return;
+      }
+      break;
+    case Keys.RIGHT:
+      if (callDeprecatedHandler('onRightArrow')) {
+        return;
+      }
+      break;
+    case Keys.DOWN:
+      if (callDeprecatedHandler('onDownArrow')) {
+        return;
+      }
+      break;
+    case Keys.LEFT:
+      if (callDeprecatedHandler('onLeftArrow')) {
+        return;
+      }
+      break;
+    case Keys.SPACE:
+      // Prevent Chrome on OSX behavior where option + space scrolls.
+      if (isChrome && isOptionKeyCommand(e)) {
         e.preventDefault();
-        // The top-level component may manually handle newline insertion. If
-        // no special handling is performed, fall through to command handling.
-        if (
-          editor.props.handleReturn &&
-          isEventHandled(editor.props.handleReturn(e, editorState))
-        ) {
-          return;
-        }
-        break;
-      case Keys.ESC:
-        e.preventDefault();
-        if (callDeprecatedHandler('onEscape')) {
-          return;
-        }
-        break;
-      case Keys.TAB:
-        if (callDeprecatedHandler('onTab')) {
-          return;
-        }
-        break;
-      case Keys.UP:
-        if (callDeprecatedHandler('onUpArrow')) {
-          return;
-        }
-        break;
-      case Keys.RIGHT:
-        if (callDeprecatedHandler('onRightArrow')) {
-          return;
-        }
-        break;
-      case Keys.DOWN:
-        if (callDeprecatedHandler('onDownArrow')) {
-          return;
-        }
-        break;
-      case Keys.LEFT:
-        if (callDeprecatedHandler('onLeftArrow')) {
-          return;
-        }
-        break;
-      case Keys.SPACE:
-        // Handling for OSX where option + space scrolls.
-        if (isChrome && isOptionKeyCommand(e)) {
-          e.preventDefault();
-          // Insert a nbsp into the editor.
-          const contentState = DraftModifier.replaceText(
-            editorState.getCurrentContent(),
-            editorState.getSelection(),
-            '\u00a0',
-          );
-          editor.update(
-            EditorState.push(editorState, contentState, 'insert-characters'),
-          );
-          return;
-        }
-    }
-  } else {
-    return;
+      }
   }
 
   const command = editor.props.keyBindingFn(e);
 
   // If no command is specified, allow keydown event to continue.
   if (!command) {
+    if (keyCode === Keys.SPACE && isChrome && isOptionKeyCommand(e)) {
+      // The default keydown event has already been prevented in order to stop
+      // Chrome from scrolling. Insert a nbsp into the editor as OSX would for
+      // other browsers.
+      const contentState = DraftModifier.replaceText(
+        editorState.getCurrentContent(),
+        editorState.getSelection(),
+        '\u00a0',
+      );
+      editor.update(
+        EditorState.push(editorState, contentState, 'insert-characters'),
+      );
+    }
     return;
   }
 

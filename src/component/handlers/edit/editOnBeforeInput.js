@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow strict-local
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -52,6 +51,7 @@ function replaceText(
   text: string,
   inlineStyle: DraftInlineStyle,
   entityKey: ?string,
+  forceSelection: boolean,
 ): EditorState {
   const contentState = DraftModifier.replaceText(
     editorState.getCurrentContent(),
@@ -60,7 +60,12 @@ function replaceText(
     inlineStyle,
     entityKey,
   );
-  return EditorState.push(editorState, contentState, 'insert-characters');
+  return EditorState.push(
+    editorState,
+    contentState,
+    'insert-characters',
+    forceSelection,
+  );
 }
 
 /**
@@ -111,42 +116,22 @@ function editOnBeforeInput(
   // is not collapsed, we will re-render.
   const selection = editorState.getSelection();
   const selectionStart = selection.getStartOffset();
-  const selectionEnd = selection.getEndOffset();
   const anchorKey = selection.getAnchorKey();
 
   if (!selection.isCollapsed()) {
     e.preventDefault();
-
-    // If the currently selected text matches what the user is trying to
-    // replace it with, let's just update the `SelectionState`. If not, update
-    // the `ContentState` with the new text.
-    const currentlySelectedChars = editorState
-      .getCurrentContent()
-      .getPlainText()
-      .slice(selectionStart, selectionEnd);
-    if (chars === currentlySelectedChars) {
-      editor.update(
-        EditorState.forceSelection(
-          editorState,
-          selection.merge({
-            anchorOffset: selectionEnd,
-            focusOffset: selectionEnd,
-          }),
+    editor.update(
+      replaceText(
+        editorState,
+        chars,
+        editorState.getCurrentInlineStyle(),
+        getEntityKeyForSelection(
+          editorState.getCurrentContent(),
+          editorState.getSelection(),
         ),
-      );
-    } else {
-      editor.update(
-        replaceText(
-          editorState,
-          chars,
-          editorState.getCurrentInlineStyle(),
-          getEntityKeyForSelection(
-            editorState.getCurrentContent(),
-            editorState.getSelection(),
-          ),
-        ),
-      );
-    }
+        true,
+      ),
+    );
     return;
   }
 
@@ -158,6 +143,7 @@ function editOnBeforeInput(
       editorState.getCurrentContent(),
       editorState.getSelection(),
     ),
+    false,
   );
 
   // Bunch of different cases follow where we need to prevent native insertion.
@@ -254,6 +240,9 @@ function editOnBeforeInput(
 
   if (mustPreventNative) {
     e.preventDefault();
+    newEditorState = EditorState.set(newEditorState, {
+      forceSelection: true,
+    });
     editor.update(newEditorState);
     return;
   }
