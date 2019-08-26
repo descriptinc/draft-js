@@ -124,6 +124,21 @@ class DraftEditorBlock extends React.Component<Props> {
         );
       }
     }
+    // } else {
+    //   invariant(
+    //     blockNode instanceof HTMLElement,
+    //     'blockNode is not an HTMLElement',
+    //   );
+    //   const blockBottom = blockNode.getBoundingClientRect().bottom;
+    //   const scrollBottom = scrollParent.getBoundingClientRect().bottom;
+    //   scrollDelta = blockBottom - scrollBottom;
+    //   if (scrollDelta > 0) {
+    //     Scroll.setTop(
+    //       scrollParent,
+    //       Scroll.getTop(scrollParent) + scrollDelta + SCROLL_BUFFER,
+    //     );
+    //   }
+    // }
   }
 
   _renderChildren(): Array<React.Node> {

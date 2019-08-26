@@ -107,7 +107,7 @@ function editOnKeyDown(editor: DraftEditor, e: SyntheticKeyboardEvent<>): void {
     editor.props.handleKeyboardEvent &&
     isEventHandled(editor.props.handleKeyboardEvent(e))
   ) {
-    return
+    return;
   }
 
   switch (keyCode) {
