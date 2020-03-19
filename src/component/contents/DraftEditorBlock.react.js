@@ -130,7 +130,12 @@ class DraftEditorBlock extends React.Component<Props> {
       }
     } else {
       invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
-      const blockBottom = blockNode.offsetHeight + blockNode.offsetTop;
+      let blockBottom = blockNode.offsetHeight + blockNode.offsetTop;
+      let offsetParent = blockNode.offsetParent || scrollParent;
+      while (offsetParent !== scrollParent && isHTMLElement(offsetParent)) {
+        blockBottom += offsetParent.offsetTop;
+        offsetParent = offsetParent.offsetParent;
+      }
       const pOffset = scrollParent.offsetTop + scrollParent.offsetHeight;
       const scrollBottom = pOffset + scrollPosition.y;
 
@@ -227,10 +232,7 @@ class DraftEditorBlock extends React.Component<Props> {
         };
 
         return (
-          <DecoratorComponent
-            {...decoratorProps}
-            {...commonProps}
-          >
+          <DecoratorComponent {...decoratorProps} {...commonProps}>
             {leaves}
           </DecoratorComponent>
         );
