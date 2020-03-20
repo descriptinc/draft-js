@@ -36,8 +36,6 @@ const invariant = require('invariant');
 const isHTMLElement = require('isHTMLElement');
 const nullthrows = require('nullthrows');
 
-const SCROLL_BUFFER = 10;
-
 type Props = {
   block: BlockNodeRecord,
   blockProps?: Object,
@@ -53,6 +51,10 @@ type Props = {
   selection: SelectionState,
   startIndent?: boolean,
   tree: List<any>,
+  scrollUpThreshold?: number,
+  scrollUpHeight?: number,
+  scrollDownThreshold?: number,
+  scrollDownHeight?: number,
 };
 
 /**
@@ -63,6 +65,19 @@ const isBlockOnSelectionEdge = (
   key: string,
 ): boolean => {
   return selection.getAnchorKey() === key || selection.getFocusKey() === key;
+};
+
+const getNodeScrollTopAndBottom = (
+  blockNode: HTMLElement,
+  scrollParent: HTMLElement,
+): {bottom: number, top: number} => {
+  let blockTop = blockNode.offsetTop;
+  let offsetParent = blockNode.offsetParent || scrollParent;
+  while (offsetParent !== scrollParent && isHTMLElement(offsetParent)) {
+    blockTop += offsetParent.offsetTop;
+    offsetParent = offsetParent.offsetParent;
+  }
+  return {blockTop, blockBottom: blockTop + blockNode.offsetHeight};
 };
 
 /**
@@ -125,27 +140,94 @@ class DraftEditorBlock extends React.Component<Props> {
       if (scrollDelta > 0) {
         window.scrollTo(
           scrollPosition.x,
-          scrollPosition.y + scrollDelta + SCROLL_BUFFER,
+          scrollPosition.y + scrollDelta + this.props.scrollDownHeight || 0,
         );
       }
     } else {
       invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
-      let blockBottom = blockNode.offsetHeight + blockNode.offsetTop;
-      let offsetParent = blockNode.offsetParent || scrollParent;
-      while (offsetParent !== scrollParent && isHTMLElement(offsetParent)) {
-        blockBottom += offsetParent.offsetTop;
-        offsetParent = offsetParent.offsetParent;
-      }
+      const {blockBottom} = getNodeScrollTopAndBottom(blockNode, scrollParent);
       const pOffset = scrollParent.offsetTop + scrollParent.offsetHeight;
       const scrollBottom = pOffset + scrollPosition.y;
 
       scrollDelta = blockBottom - scrollBottom;
-      if (scrollDelta > 0) {
+      if (scrollDelta > -(this.props.scrollDownThreshold || 0)) {
         Scroll.setTop(
           scrollParent,
-          Scroll.getTop(scrollParent) + scrollDelta + SCROLL_BUFFER,
+          Scroll.getTop(scrollParent) +
+            scrollDelta +
+            this.props.scrollDownHeight || 0,
         );
       }
+    }
+  }
+
+  ensureVisibility(): void {
+    if (this.props.preventScroll) {
+      return;
+    }
+    const selection = this.props.selection;
+    const endKey = selection.getEndKey();
+    if (!selection.getHasFocus() || endKey !== this.props.block.getKey()) {
+      return;
+    }
+
+    const blockNode = this._node;
+    if (blockNode == null) {
+      return;
+    }
+    const scrollParent = Style.getScrollParent(blockNode);
+    const scrollPosition = getScrollPosition(scrollParent);
+    let scrollDelta;
+
+    if (scrollParent === window) {
+      const nodePosition = getElementPosition(blockNode);
+      const nodeBottom = nodePosition.y + nodePosition.height;
+      const viewportHeight = getViewportDimensions().height;
+      scrollDelta = nodeBottom - viewportHeight;
+      if (scrollDelta > 0) {
+        window.scrollTo(
+          scrollPosition.x,
+          scrollPosition.y + scrollDelta + this.props.scrollDownHeight || 0,
+        );
+      }
+    } else {
+      invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
+
+      const {blockTop} = getNodeScrollTopAndBottom(blockNode, scrollParent);
+      const pOffset = scrollParent.offsetTop;
+      const scrollTop = pOffset + scrollPosition.y;
+      const scrollBottom = scrollTop + scrollParent.offsetHeight;
+      const blockBottom = blockTop + blockNode.offsetHeight;
+
+      if (blockBottom - (this.props.scrollUpThreshold || 0) < scrollTop) {
+        // scroll up
+        scrollDelta = blockBottom - scrollTop;
+        const scrollPos =
+          Scroll.getTop(scrollParent) +
+            scrollDelta -
+            this.props.scrollUpHeight || 0;
+        Scroll.setTop(scrollParent, scrollPos);
+      } else if (
+        blockTop - (this.props.scrollDownThreshold || 0) >
+        scrollBottom
+      ) {
+        // scroll down
+        scrollDelta = blockTop - scrollBottom;
+        const scrollPos =
+          Scroll.getTop(scrollParent) +
+          scrollDelta +
+          (this.props.scrollDownHeight || 0);
+        Scroll.setTop(scrollParent, scrollPos);
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps): void {
+    const blockKey = this.props.block.getKey();
+    const hadSelection = isBlockOnSelectionEdge(prevProps.selection, blockKey);
+    const hasSelection = isBlockOnSelectionEdge(this.props.selection, blockKey);
+    if (hasSelection && !hadSelection) {
+      this.ensureVisibility();
     }
   }
 
