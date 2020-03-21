@@ -40,7 +40,6 @@ module.exports = {
       '..',
       '..',
       'node_modules',
-      '@descript',
       'fbjs',
       'package.json'
     ),
