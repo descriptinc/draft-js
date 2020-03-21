@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -24,7 +23,6 @@ import type {List} from 'immutable';
 const DraftEditorLeaf = require('DraftEditorLeaf.react');
 const DraftOffsetKey = require('DraftOffsetKey');
 const React = require('React');
-const ReactDOM = require('ReactDOM');
 const Scroll = require('Scroll');
 const Style = require('Style');
 const UnicodeBidi = require('UnicodeBidi');
@@ -35,6 +33,7 @@ const getElementPosition = require('getElementPosition');
 const getScrollPosition = require('getScrollPosition');
 const getViewportDimensions = require('getViewportDimensions');
 const invariant = require('invariant');
+const isHTMLElement = require('isHTMLElement');
 const nullthrows = require('nullthrows');
 
 const SCROLL_BUFFER = 10;
@@ -50,6 +49,7 @@ type Props = {
   direction: BidiDirection,
   forceSelection: boolean,
   offsetKey: string,
+  preventScroll?: boolean,
   selection: SelectionState,
   startIndent?: boolean,
   tree: List<any>,
@@ -72,6 +72,8 @@ const isBlockOnSelectionEdge = (
  * appropriate decorator and inline style components.
  */
 class DraftEditorBlock extends React.Component<Props> {
+  _node: ?HTMLDivElement;
+
   shouldComponentUpdate(nextProps: Props): boolean {
     return (
       this.props.block !== nextProps.block ||
@@ -86,7 +88,7 @@ class DraftEditorBlock extends React.Component<Props> {
    * When a block is mounted and overlaps the selection state, we need to make
    * sure that the cursor is visible to match native behavior. This may not
    * be the case if the user has pressed `RETURN` or pasted some content, since
-   * programatically creating these new blocks and setting the DOM selection
+   * programmatically creating these new blocks and setting the DOM selection
    * will miss out on the browser natively scrolling to that position.
    *
    * To replicate native behavior, if the block overlaps the selection state
@@ -98,13 +100,19 @@ class DraftEditorBlock extends React.Component<Props> {
    * hence disabling this functionality for blocks that are mounted in a scrollable div
    */
   componentDidMount(): void {
+    if (this.props.preventScroll) {
+      return;
+    }
     const selection = this.props.selection;
     const endKey = selection.getEndKey();
     if (!selection.getHasFocus() || endKey !== this.props.block.getKey()) {
       return;
     }
 
-    const blockNode = ReactDOM.findDOMNode(this);
+    const blockNode = this._node;
+    if (blockNode == null) {
+      return;
+    }
     const scrollParent = Style.getScrollParent(blockNode);
     const scrollPosition = getScrollPosition(scrollParent);
     let scrollDelta;
@@ -120,6 +128,19 @@ class DraftEditorBlock extends React.Component<Props> {
           scrollPosition.y + scrollDelta + SCROLL_BUFFER,
         );
       }
+    } else {
+      invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
+      const blockBottom = blockNode.offsetHeight + blockNode.offsetTop;
+      const pOffset = scrollParent.offsetTop + scrollParent.offsetHeight;
+      const scrollBottom = pOffset + scrollPosition.y;
+
+      scrollDelta = blockBottom - scrollBottom;
+      if (scrollDelta > 0) {
+        Scroll.setTop(
+          scrollParent,
+          Scroll.getTop(scrollParent) + scrollDelta + SCROLL_BUFFER,
+        );
+      }
     }
   }
 
@@ -133,6 +154,10 @@ class DraftEditorBlock extends React.Component<Props> {
     return this.props.tree
       .map((leafSet, ii) => {
         const leavesForLeafSet = leafSet.get('leaves');
+        // T44088704
+        if (leavesForLeafSet.size === 0) {
+          return null;
+        }
         const lastLeaf = leavesForLeafSet.size - 1;
         const leaves = leavesForLeafSet
           .map((leaf, jj) => {
@@ -202,7 +227,10 @@ class DraftEditorBlock extends React.Component<Props> {
         };
 
         return (
-          <DecoratorComponent {...decoratorProps} {...commonProps}>
+          <DecoratorComponent
+            {...decoratorProps}
+            {...commonProps}
+          >
             {leaves}
           </DecoratorComponent>
         );
@@ -219,7 +247,10 @@ class DraftEditorBlock extends React.Component<Props> {
     });
 
     return (
-      <div data-offset-key={offsetKey} className={className}>
+      <div
+        data-offset-key={offsetKey}
+        className={className}
+        ref={ref => (this._node = ref)}>
         {this._renderChildren()}
       </div>
     );

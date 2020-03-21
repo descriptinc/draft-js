@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -15,6 +14,7 @@
 import type {BlockNodeRecord} from 'BlockNodeRecord';
 import type {DraftBlockRenderMap} from 'DraftBlockRenderMap';
 import type {DraftDragType} from 'DraftDragType';
+import type DraftEditor from 'DraftEditor.react';
 import type {DraftEditorCommand} from 'DraftEditorCommand';
 import type {DraftHandleValue} from 'DraftHandleValue';
 import type {DraftInlineStyle} from 'DraftInlineStyle';
@@ -64,10 +64,21 @@ export type DraftEditorProps = {
   // Function that returns a cx map corresponding to block-level styles.
   blockStyleFn: (block: BlockNodeRecord) => string,
 
+  // If supplied, a ref which will be passed to the contenteditable.
+  // Currently, only object refs are supported.
+  editorRef?: ?(
+    | {|current: null | HTMLElement|}
+    | ((HTMLElement | null) => void)
+  ),
+
   // A function that accepts a synthetic key event and returns
   // the matching DraftEditorCommand constant, or a custom string,
   // or null if no command should be invoked.
   keyBindingFn: (e: SyntheticKeyboardEvent<>) => ?string,
+
+  // Set whether the editor should prevent scrolling into view on mount
+  // if it happens offscreen. By default, `false` to match the native behavior.
+  preventScroll?: boolean,
 
   // Set whether the `DraftEditor` component should be editable. Useful for
   // temporarily disabling edit behavior or allowing `DraftEditor` rendering
@@ -98,6 +109,7 @@ export type DraftEditorProps = {
   ariaLabel?: string,
   ariaLabelledBy?: string,
   ariaMultiline?: boolean,
+  ariaOwneeID?: string,
 
   webDriverTestID?: string,
 
@@ -181,6 +193,17 @@ export type DraftEditorProps = {
   // an element tag and an optional react element wrapper. This configuration
   // is used for both rendering and paste processing.
   blockRenderMap: DraftBlockRenderMap,
+
+  // When the Editor loses focus (blurs) text selections are cleared
+  // by default to mimic <textarea> behaviour, however in some situations
+  // users may wish to preserve native behaviour.
+  preserveSelectionOnBlur?: boolean,
+
+  // Overrides for cut, copy & paste, which can be used to implement custom
+  // behavior like entity cut/copy/paste (see PR #1784)."
+  onPaste?: (DraftEditor, SyntheticClipboardEvent<>) => void | Promise<void>,
+  onCut?: (DraftEditor, SyntheticClipboardEvent<>) => void,
+  onCopy?: (DraftEditor, SyntheticClipboardEvent<>) => void,
 };
 
 export type DraftEditorDefaultProps = {

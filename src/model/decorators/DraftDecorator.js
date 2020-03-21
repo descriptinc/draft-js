@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -44,6 +43,7 @@ export type DraftDecorator = {
   strategy: DraftDecoratorStrategy,
   component: Function,
   props?: Object,
+  ...
 };
 
 /**
@@ -58,7 +58,6 @@ export type DraftDecoratorComponentProps = {
   decoratedText: string,
   dir: ?HTMLDir,
   end: number,
-
   // Many folks mistakenly assume that there will always be an 'entityKey'
   // passed to a DecoratorComponent.
   // To find the `entityKey`, Draft calls
@@ -67,8 +66,7 @@ export type DraftDecoratorComponentProps = {
   // undefined. That's why `getEntityKeyAt()` is typed to return `?string`.
   // See https://github.com/facebook/draft-js/blob/2da3dcb1c4c106d1b2a0f07b3d0275b8d724e777/src/model/immutable/BlockNode.js#L51
   entityKey: ?string,
-
-  key: React.Key,
   offsetKey: string,
   start: number,
+  ...
 };

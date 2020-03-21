@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
@@ -23,22 +22,21 @@ const CharacterMetadata = require('CharacterMetadata');
 const ContentBlock = require('ContentBlock');
 const ContentBlockNode = require('ContentBlockNode');
 const DraftEntity = require('DraftEntity');
-const Immutable = require('immutable');
 const SelectionState = require('SelectionState');
 
 const generateRandomKey = require('generateRandomKey');
 const gkx = require('gkx');
+const Immutable = require('immutable');
 const sanitizeDraftText = require('sanitizeDraftText');
 
 const {List, Record, Repeat} = Immutable;
-
-const experimentalTreeDataSupport = gkx('draft_tree_data_support');
 
 const defaultRecord: {
   entityMap: ?any,
   blockMap: ?BlockMap,
   selectionBefore: ?SelectionState,
   selectionAfter: ?SelectionState,
+  ...
 } = {
   entityMap: null,
   blockMap: null,
@@ -46,11 +44,7 @@ const defaultRecord: {
   selectionAfter: null,
 };
 
-const ContentBlockNodeRecord = experimentalTreeDataSupport
-  ? ContentBlockNode
-  : ContentBlock;
-
-const ContentStateRecord = Record(defaultRecord);
+const ContentStateRecord = (Record(defaultRecord): any);
 
 class ContentState extends ContentStateRecord {
   getEntityMap(): any {
@@ -127,14 +121,18 @@ class ContentState extends ContentStateRecord {
       .join(delimiter || '\n');
   }
 
-  getLastCreatedEntityKey() {
+  getLastCreatedEntityKey(): string {
     // TODO: update this when we fully remove DraftEntity
     return DraftEntity.__getLastCreatedEntityKey();
   }
 
   hasText(): boolean {
     const blockMap = this.getBlockMap();
-    return blockMap.size > 1 || blockMap.first().getLength() > 0;
+    return (
+      blockMap.size > 1 ||
+      // make sure that there are no zero width space chars
+      escape(blockMap.first().getText()).replace(/%u200B/g, '').length > 0
+    );
   }
 
   createEntity(
@@ -147,13 +145,19 @@ class ContentState extends ContentStateRecord {
     return this;
   }
 
-  mergeEntityData(key: string, toMerge: {[key: string]: any}): ContentState {
+  mergeEntityData(
+    key: string,
+    toMerge: {[key: string]: any, ...},
+  ): ContentState {
     // TODO: update this when we fully remove DraftEntity
     DraftEntity.__mergeData(key, toMerge);
     return this;
   }
 
-  replaceEntityData(key: string, newData: {[key: string]: any}): ContentState {
+  replaceEntityData(
+    key: string,
+    newData: {[key: string]: any, ...},
+  ): ContentState {
     // TODO: update this when we fully remove DraftEntity
     DraftEntity.__replaceData(key, newData);
     return this;
@@ -172,7 +176,9 @@ class ContentState extends ContentStateRecord {
 
   static createFromBlockArray(
     // TODO: update flow type when we completely deprecate the old entity API
-    blocks: Array<BlockNodeRecord> | {contentBlocks: Array<BlockNodeRecord>},
+    blocks:
+      | Array<BlockNodeRecord>
+      | {contentBlocks: Array<BlockNodeRecord>, ...},
     entityMap: ?any,
   ): ContentState {
     // TODO: remove this when we completely deprecate the old entity API
@@ -196,6 +202,9 @@ class ContentState extends ContentStateRecord {
     const strings = text.split(delimiter);
     const blocks = strings.map(block => {
       block = sanitizeDraftText(block);
+      const ContentBlockNodeRecord = gkx('draft_tree_data_support')
+        ? ContentBlockNode
+        : ContentBlock;
       return new ContentBlockNodeRecord({
         key: generateRandomKey(),
         text: block,
