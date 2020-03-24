@@ -72,7 +72,7 @@ const isBlockOnSelectionEdge = (
 const getNodeScrollTopAndBottom = (
   blockNode: HTMLElement,
   scrollParent: HTMLElement,
-): {bottom: number, top: number} => {
+) => {
   let blockTop = blockNode.offsetTop;
   let offsetParent = blockNode.offsetParent || scrollParent;
   while (offsetParent !== scrollParent && isHTMLElement(offsetParent)) {
@@ -139,26 +139,29 @@ class DraftEditorBlock extends React.Component<Props> {
       const viewportHeight = getViewportDimensions().height;
       const scrollDelta = nodeBottom - viewportHeight;
       if (scrollDelta > 0) {
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
         window.scrollTo(
           scrollPosition.x,
-          scrollPosition.y + scrollDelta + this.props.scrollDownHeight ||
-            DEFAULT_SCROLL_BUFFER,
+          scrollPosition.y + scrollDelta + downBufferHeight,
         );
       }
     } else {
       invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
-      const {blockBottom} = getNodeScrollTopAndBottom(blockNode, scrollParent);
+      const {blockBottom, blockTop} = getNodeScrollTopAndBottom(
+        blockNode,
+        scrollParent,
+      );
       const pOffset = scrollParent.offsetTop + scrollParent.offsetHeight;
       const scrollBottom = pOffset + scrollPosition.y;
-
       const scrollDelta = blockBottom - scrollBottom;
+
       if (scrollDelta > -(this.props.scrollDownThreshold || 0)) {
-        Scroll.setTop(
-          scrollParent,
-          Scroll.getTop(scrollParent) +
-            scrollDelta +
-            this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER,
-        );
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
+        const newTop =
+          Scroll.getTop(scrollParent) + scrollDelta + downBufferHeight;
+        Scroll.setTop(scrollParent, newTop);
       }
     }
   }
@@ -191,10 +194,11 @@ class DraftEditorBlock extends React.Component<Props> {
       if (blockBottom - (this.props.scrollUpThreshold || 0) < 0) {
         // scroll up
         const scrollDelta = blockBottom - scrollTop;
+        const upBufferHeight =
+          this.props.scrollUpHeight || DEFAULT_SCROLL_BUFFER;
         window.scrollTo(
           scrollPosition.x,
-          scrollPosition.y + scrollDelta - this.props.scrollUpHeight ||
-            DEFAULT_SCROLL_BUFFER,
+          scrollPosition.y + scrollDelta - upBufferHeight,
         );
       } else if (
         blockTop - (this.props.scrollDownThreshold || 0) >
@@ -202,29 +206,31 @@ class DraftEditorBlock extends React.Component<Props> {
       ) {
         // scroll down
         const scrollDelta = blockTop - scrollBottom;
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
         window.scrollTo(
           scrollPosition.x,
-          scrollPosition.y +
-            scrollDelta +
-            (this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER),
+          scrollPosition.y + scrollDelta + downBufferHeight,
         );
       }
     } else {
       invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
 
-      const {blockTop} = getNodeScrollTopAndBottom(blockNode, scrollParent);
+      const {blockTop, blockBottom} = getNodeScrollTopAndBottom(
+        blockNode,
+        scrollParent,
+      );
       const pOffset = scrollParent.offsetTop;
       const scrollTop = pOffset + scrollPosition.y;
       const scrollBottom = scrollTop + scrollParent.offsetHeight;
-      const blockBottom = blockTop + blockNode.offsetHeight;
 
       if (blockBottom - (this.props.scrollUpThreshold || 0) < scrollTop) {
         // scroll up
         const scrollDelta = blockBottom - scrollTop;
+        const upBufferHeight =
+          this.props.scrollUpHeight || DEFAULT_SCROLL_BUFFER;
         const scrollPos =
-          Scroll.getTop(scrollParent) +
-            scrollDelta -
-            this.props.scrollUpHeight || DEFAULT_SCROLL_BUFFER;
+          Scroll.getTop(scrollParent) + scrollDelta - upBufferHeight;
         Scroll.setTop(scrollParent, scrollPos);
       } else if (
         blockTop - (this.props.scrollDownThreshold || 0) >
@@ -232,10 +238,10 @@ class DraftEditorBlock extends React.Component<Props> {
       ) {
         // scroll down
         const scrollDelta = blockTop - scrollBottom;
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
         const scrollPos =
-          Scroll.getTop(scrollParent) +
-          scrollDelta +
-          (this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER);
+          Scroll.getTop(scrollParent) + scrollDelta + downBufferHeight;
         Scroll.setTop(scrollParent, scrollPos);
       }
     }

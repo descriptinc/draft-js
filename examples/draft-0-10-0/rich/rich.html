@@ -35,7 +35,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <script type="text/babel">
       'use strict';
 
-      const {Editor, EditorState, ContentState, RichUtils, getDefaultKeyBinding} = Draft;
+      const {
+        Editor,
+        EditorState,
+        ContentState,
+        RichUtils,
+        getDefaultKeyBinding,
+      } = Draft;
 
       const lipsum =
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rhoncus  mauris sapien, et pellentesque nibh suscipit ac. Etiam porttitor maximus  sem, nec efficitur sem tincidunt eu. Nulla a fringilla purus, sed  faucibus dui. Quisque id viverra augue. Fusce sit amet nisl neque.  Pellentesque venenatis arcu sed nunc pharetra, eu bibendum erat  convallis. Morbi lobortis nibh velit, porttitor facilisis lorem suscipit  ac. Curabitur non erat et libero rhoncus dapibus vitae in eros. Duis  venenatis molestie eros. Suspendisse vestibulum egestas arcu sit amet  consectetur. Sed ac hendrerit quam, vel aliquam dui. Aliquam eget nibh  ac massa fringilla porta. Morbi convallis massa vitae quam egestas  aliquam.\n' +
@@ -257,7 +263,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         );
       };
 
-      ReactDOM.render(<RichEditorExample />, document.getElementById('target'));
+      ReactDOM.render(
+        <div>
+          <div
+            style={{
+              height: '300px',
+              overflowY: 'scroll',
+              marginBottom: '100px',
+            }}>
+            <RichEditorExample />
+          </div>
+          <RichEditorExample />
+        </div>,
+        document.getElementById('target'),
+      );
     </script>
   </body>
 </html>
