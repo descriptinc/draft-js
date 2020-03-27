@@ -189,9 +189,9 @@ class DraftEditorBlock extends React.Component<Props> {
         scrollParent,
       );
       const scrollTop = scrollPosition.y;
-      const scrollBottom = getViewportDimensions().height;
+      const scrollBottom = getViewportDimensions().height + scrollTop;
 
-      if (blockBottom - (this.props.scrollUpThreshold || 0) < 0) {
+      if (blockBottom - (this.props.scrollUpThreshold || 0) < scrollTop) {
         // scroll up
         const scrollDelta = blockBottom - scrollTop;
         const upBufferHeight =
