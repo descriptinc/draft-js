@@ -96,6 +96,20 @@ export type DraftEditorProps = {
 
   tabIndex?: number,
 
+  // scroll behavior
+
+  // scroll up when block bottom newly containing a selection
+  // is within `scrollUpThreshold` pixels of the scroll parent top
+  scrollUpThreshold?: number,
+  // amount to scroll from block bottom when scrolling up
+  scrollUpHeight?: number,
+
+  // scroll down when block top newly containing a selection
+  // is within `scrollDownThreshold` pixels of the scroll parent bottom
+  scrollDownThreshold?: number,
+  // amount to scroll from block top when scrolling down
+  scrollDownHeight?: number,
+
   // exposed especially to help improve mobile web behaviors
   autoCapitalize?: string,
   autoComplete?: string,

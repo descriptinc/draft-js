@@ -113,6 +113,13 @@ var buildDist = function(opts) {
         chunkModules: true,
       }),
     ],
+    ...(opts.debug
+      ? {
+          optimization: {
+            minimize: false,
+          },
+        }
+      : undefined),
   };
   if (!opts.debug) {
     webpackOpts.plugins.push(new UglifyJsPlugin());

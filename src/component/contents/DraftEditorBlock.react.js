@@ -36,7 +36,7 @@ const invariant = require('invariant');
 const isHTMLElement = require('isHTMLElement');
 const nullthrows = require('nullthrows');
 
-const SCROLL_BUFFER = 10;
+const DEFAULT_SCROLL_BUFFER = 10;
 
 type Props = {
   block: BlockNodeRecord,
@@ -53,6 +53,10 @@ type Props = {
   selection: SelectionState,
   startIndent?: boolean,
   tree: List<any>,
+  scrollUpThreshold?: number,
+  scrollUpHeight?: number,
+  scrollDownThreshold?: number,
+  scrollDownHeight?: number,
 };
 
 /**
@@ -63,6 +67,19 @@ const isBlockOnSelectionEdge = (
   key: string,
 ): boolean => {
   return selection.getAnchorKey() === key || selection.getFocusKey() === key;
+};
+
+const getNodeScrollTopAndBottom = (
+  blockNode: HTMLElement,
+  scrollParent: HTMLElement,
+) => {
+  let blockTop = blockNode.offsetTop;
+  let offsetParent = blockNode.offsetParent || scrollParent;
+  while (offsetParent !== scrollParent && isHTMLElement(offsetParent)) {
+    blockTop += offsetParent.offsetTop;
+    offsetParent = offsetParent.offsetParent;
+  }
+  return {blockTop, blockBottom: blockTop + blockNode.offsetHeight};
 };
 
 /**
@@ -115,32 +132,127 @@ class DraftEditorBlock extends React.Component<Props> {
     }
     const scrollParent = Style.getScrollParent(blockNode);
     const scrollPosition = getScrollPosition(scrollParent);
-    let scrollDelta;
 
     if (scrollParent === window) {
       const nodePosition = getElementPosition(blockNode);
       const nodeBottom = nodePosition.y + nodePosition.height;
       const viewportHeight = getViewportDimensions().height;
-      scrollDelta = nodeBottom - viewportHeight;
+      const scrollDelta = nodeBottom - viewportHeight;
       if (scrollDelta > 0) {
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
         window.scrollTo(
           scrollPosition.x,
-          scrollPosition.y + scrollDelta + SCROLL_BUFFER,
+          scrollPosition.y + scrollDelta + downBufferHeight,
         );
       }
     } else {
       invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
-      const blockBottom = blockNode.offsetHeight + blockNode.offsetTop;
+      const {blockBottom, blockTop} = getNodeScrollTopAndBottom(
+        blockNode,
+        scrollParent,
+      );
       const pOffset = scrollParent.offsetTop + scrollParent.offsetHeight;
       const scrollBottom = pOffset + scrollPosition.y;
+      const scrollDelta = blockBottom - scrollBottom;
 
-      scrollDelta = blockBottom - scrollBottom;
-      if (scrollDelta > 0) {
-        Scroll.setTop(
-          scrollParent,
-          Scroll.getTop(scrollParent) + scrollDelta + SCROLL_BUFFER,
+      if (scrollDelta > -(this.props.scrollDownThreshold || 0)) {
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
+        const newTop =
+          Scroll.getTop(scrollParent) + scrollDelta + downBufferHeight;
+        Scroll.setTop(scrollParent, newTop);
+      }
+    }
+  }
+
+  ensureVisibility(): void {
+    if (this.props.preventScroll) {
+      return;
+    }
+    const selection = this.props.selection;
+    const endKey = selection.getEndKey();
+    if (!selection.getHasFocus() || endKey !== this.props.block.getKey()) {
+      return;
+    }
+
+    const blockNode = this._node;
+    if (blockNode == null) {
+      return;
+    }
+    const scrollParent = Style.getScrollParent(blockNode);
+    const scrollPosition = getScrollPosition(scrollParent);
+
+    if (scrollParent === window) {
+      const {blockTop, blockBottom} = getNodeScrollTopAndBottom(
+        blockNode,
+        scrollParent,
+      );
+      const scrollTop = scrollPosition.y;
+      const scrollBottom = getViewportDimensions().height + scrollTop;
+
+      if (blockBottom - (this.props.scrollUpThreshold || 0) < scrollTop) {
+        // scroll up
+        const scrollDelta = blockBottom - scrollTop;
+        const upBufferHeight =
+          this.props.scrollUpHeight || DEFAULT_SCROLL_BUFFER;
+        window.scrollTo(
+          scrollPosition.x,
+          scrollPosition.y + scrollDelta - upBufferHeight,
+        );
+      } else if (
+        blockTop - (this.props.scrollDownThreshold || 0) >
+        scrollBottom
+      ) {
+        // scroll down
+        const scrollDelta = blockTop - scrollBottom;
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
+        window.scrollTo(
+          scrollPosition.x,
+          scrollPosition.y + scrollDelta + downBufferHeight,
         );
       }
+    } else {
+      invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
+
+      const {blockTop, blockBottom} = getNodeScrollTopAndBottom(
+        blockNode,
+        scrollParent,
+      );
+      const pOffset = scrollParent.offsetTop;
+      const scrollTop = pOffset + scrollPosition.y;
+      const scrollBottom = scrollTop + scrollParent.offsetHeight;
+
+      if (blockBottom - (this.props.scrollUpThreshold || 0) < scrollTop) {
+        // scroll up
+        const scrollDelta = blockBottom - scrollTop;
+        const upBufferHeight =
+          this.props.scrollUpHeight || DEFAULT_SCROLL_BUFFER;
+        const scrollPos =
+          Scroll.getTop(scrollParent) + scrollDelta - upBufferHeight;
+        Scroll.setTop(scrollParent, scrollPos);
+      } else if (
+        blockTop - (this.props.scrollDownThreshold || 0) >
+        scrollBottom
+      ) {
+        // scroll down
+        const scrollDelta = blockTop - scrollBottom;
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
+        const scrollPos =
+          Scroll.getTop(scrollParent) + scrollDelta + downBufferHeight;
+        Scroll.setTop(scrollParent, scrollPos);
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps): void {
+    const blockKey = this.props.block.getKey();
+    const hadSelection = isBlockOnSelectionEdge(prevProps.selection, blockKey);
+    const hasSelection = isBlockOnSelectionEdge(this.props.selection, blockKey);
+    if (hasSelection && !hadSelection) {
+      this.ensureVisibility();
     }
   }
 
@@ -227,10 +339,7 @@ class DraftEditorBlock extends React.Component<Props> {
         };
 
         return (
-          <DecoratorComponent
-            {...decoratorProps}
-            {...commonProps}
-          >
+          <DecoratorComponent {...decoratorProps} {...commonProps}>
             {leaves}
           </DecoratorComponent>
         );

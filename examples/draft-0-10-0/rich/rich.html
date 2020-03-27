@@ -19,7 +19,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <link rel="stylesheet" href="../../../dist/Draft.css" />
     <link rel="stylesheet" href="RichEditor.css" />
     <style>
-      #target { width: 600px; }
+      #target {
+        width: 600px;
+      }
     </style>
   </head>
   <body>
@@ -33,15 +35,42 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <script type="text/babel">
       'use strict';
 
-      const {Editor, EditorState, RichUtils, getDefaultKeyBinding} = Draft;
+      const {
+        Editor,
+        EditorState,
+        ContentState,
+        RichUtils,
+        getDefaultKeyBinding,
+      } = Draft;
+
+      const lipsum =
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rhoncus  mauris sapien, et pellentesque nibh suscipit ac. Etiam porttitor maximus  sem, nec efficitur sem tincidunt eu. Nulla a fringilla purus, sed  faucibus dui. Quisque id viverra augue. Fusce sit amet nisl neque.  Pellentesque venenatis arcu sed nunc pharetra, eu bibendum erat  convallis. Morbi lobortis nibh velit, porttitor facilisis lorem suscipit  ac. Curabitur non erat et libero rhoncus dapibus vitae in eros. Duis  venenatis molestie eros. Suspendisse vestibulum egestas arcu sit amet  consectetur. Sed ac hendrerit quam, vel aliquam dui. Aliquam eget nibh  ac massa fringilla porta. Morbi convallis massa vitae quam egestas  aliquam.\n' +
+        'Integer aliquam finibus placerat. Etiam ultricies mauris elit, quis  dapibus orci auctor ac. Pellentesque ac vehicula elit. Ut vulputate ante  ut tortor tincidunt, eget suscipit velit rhoncus. Duis ornare iaculis  orci, vel finibus ligula semper at. Proin quis efficitur neque. Duis  tempor mauris ipsum, ac bibendum eros aliquet a. Ut risus ipsum,  convallis et dictum quis, finibus vel dolor. Duis aliquam dui ornare  nunc hendrerit commodo. Phasellus sit amet tempor justo. Sed sed felis  et lectus sagittis lacinia. Sed semper justo eu blandit mattis.\n' +
+        'Sed laoreet tincidunt ex, vitae elementum risus feugiat cursus. Fusce  porttitor lacinia massa in sollicitudin. Pellentesque molestie, eros  fringilla rhoncus fermentum, diam risus tempor velit, sed efficitur  sapien turpis vitae urna. Aliquam sagittis tempor augue, tempus  sollicitudin enim aliquam sed. Praesent fermentum, nulla non suscipit  fringilla, mauris sapien lobortis turpis, at sollicitudin ipsum augue  vestibulum mauris. Morbi sed elit augue. Cras quis aliquam felis.\n' +
+        'Praesent malesuada libero sed turpis fermentum, in fermentum risus  tincidunt. Nullam in dui nulla. Aliquam suscipit semper mauris, eget  molestie diam placerat nec. Mauris luctus condimentum enim, eu lobortis  neque finibus sed. Nulla facilisi. Morbi pulvinar lobortis ipsum sit  amet finibus. Duis ac ante aliquam, laoreet velit sed, sollicitudin  magna. Orci varius natoque penatibus et magnis dis parturient montes,  nascetur ridiculus mus. Aenean egestas semper neque, a aliquam dolor  pretium iaculis. Morbi mauris lacus, cursus eu ex malesuada, suscipit  euismod est. Mauris dignissim tortor quis nulla fringilla scelerisque.\n' +
+        'Morbi iaculis elit tortor, sed facilisis mi tincidunt quis. Maecenas  sollicitudin quam sed lorem gravida dictum. In tincidunt pretium  euismod. Aliquam eget interdum risus. Praesent venenatis est sed est  accumsan sollicitudin. Curabitur volutpat turpis vel viverra feugiat.  Praesent vitae facilisis mauris. Donec luctus maximus mollis. Aenean  aliquet sodales commodo. Morbi sed nibh dictum, consectetur turpis  vitae, ullamcorper nibh.\n' +
+        'Integer a lorem quis nisl bibendum auctor. Etiam libero arcu, consequat  vel neque at, ullamcorper accumsan sem. In non quam sit amet ex luctus  vulputate non eget leo. Curabitur erat lectus, sollicitudin ut dapibus  id, maximus quis sapien. Fusce elementum dictum viverra. Vestibulum  pharetra elit est, a commodo ex consectetur in. Nam varius, ligula in  pulvinar consectetur, lacus nisl facilisis risus, quis cursus sem lacus  sit amet mauris. Nulla blandit lacus eget lectus pharetra semper. Duis  porta cursus nulla, id porta felis maximus ac. Vivamus vulputate  hendrerit tortor et rutrum. In tristique a nulla vel rutrum. Donec  ultrices id dolor eu viverra. Vivamus id viverra lectus. Donec a leo sed  sem condimentum laoreet id non arcu. Nulla faucibus vestibulum tellus,  rutrum placerat turpis iaculis vel. Nam faucibus nisl in purus fermentum  porta.\n' +
+        'Sed sit amet ultricies magna, eu tempor velit. Integer id luctus ante.  Aliquam a tortor nec lectus porta dignissim. Maecenas luctus risus quis  tellus luctus, in posuere massa placerat. Nunc purus turpis, egestas eu  eros vitae, laoreet cursus diam. Quisque commodo efficitur maximus.  Fusce dolor est, condimentum nec mauris ut, molestie ultricies erat.  Vivamus quis condimentum enim, eu maximus odio.\n' +
+        'Duis feugiat iaculis mauris, non venenatis felis pharetra sed. Ut ut  ipsum eros. Sed eu nisi gravida, rhoncus mi non, dapibus metus. Aliquam  eget felis finibus, pulvinar enim eget, cursus urna. Mauris non  vestibulum eros. Maecenas quis risus porttitor, aliquet dui ac, egestas  quam. Donec convallis ultrices libero a mattis. Morbi aliquam volutpat  consectetur. Pellentesque mollis enim luctus dictum dictum. Maecenas sed  dolor dolor. Suspendisse blandit id justo quis sagittis. Phasellus nec  bibendum risus.\n' +
+        'Quisque laoreet, augue efficitur maximus egestas, erat justo semper  arcu, at interdum nunc erat in neque. Quisque et ex nec elit elementum  ullamcorper. Aliquam sit amet tellus odio. Praesent vulputate, erat ut  tincidunt convallis, eros magna egestas nisi, sed maximus metus erat at  ex. Fusce commodo lorem at erat consectetur ullamcorper. Mauris  tincidunt massa eu venenatis eleifend. Morbi felis risus, blandit id  augue ac, malesuada maximus quam.\n' +
+        'In pellentesque, velit nec iaculis volutpat, arcu sem rhoncus ligula,  luctus accumsan erat urna id ex. Aenean consequat justo non diam  volutpat, eget suscipit nibh varius. Cras sed nibh sit amet eros  molestie malesuada. Etiam ac dolor lorem. Sed auctor, ipsum quis  placerat tincidunt, ipsum turpis faucibus tellus, sit amet luctus massa  eros suscipit risus. Vivamus commodo urna magna, eu varius sapien  consectetur nec. Nam a ex feugiat, scelerisque lorem sit amet, elementum  erat. Praesent consectetur, ligula eget lobortis sollicitudin, ex sem  pretium ipsum, nec lacinia mauris nulla tincidunt lacus. Proin mattis  imperdiet luctus. Sed accumsan, ligula nec tempor laoreet, purus velit  tincidunt elit, in laoreet orci justo a ex. In hendrerit pellentesque  purus, bibendum ornare mauris malesuada vitae. Aliquam commodo turpis at  ipsum tincidunt euismod. Sed faucibus turpis eget nisi sagittis, non  convallis orci porttitor.\n' +
+        'In mollis lectus a ipsum lobortis, non vulputate est porttitor. Quisque  vestibulum lectus sit amet augue viverra, vitae volutpat risus  vestibulum. In auctor lectus vehicula, aliquet ante at, aliquam elit.  Donec tristique sagittis dolor vel ullamcorper. Integer fringilla dolor  ut nulla vestibulum, vitae viverra risus scelerisque. Cras posuere arcu  at orci finibus laoreet. Sed vel eros eu nisi laoreet fermentum ut a  dolor. Etiam posuere laoreet maximus. Integer accumsan pulvinar est id  pulvinar. Sed posuere convallis lectus id iaculis. Nam eu egestas felis.\n' +
+        'Duis lectus lorem, tempus non purus vitae, condimentum volutpat tortor.  Donec est magna, viverra sit amet eros a, dignissim vestibulum nisl.  Curabitur volutpat dui eget ex tempus fringilla. Morbi eget odio  pulvinar, hendrerit est ut, facilisis ex. Phasellus eget placerat  tellus. Aenean scelerisque gravida blandit. Pellentesque habitant morbi  tristique senectus et netus et malesuada fames ac turpis egestas.\n' +
+        'Phasellus maximus dui ac accumsan ornare. Morbi scelerisque sollicitudin  arcu. Praesent pulvinar blandit rhoncus. Integer aliquam erat eget  consequat consectetur. Donec commodo mi quis lacus feugiat, ac lacinia  purus tempus. Sed varius enim nec fringilla dignissim. Mauris vitae  accumsan erat. Curabitur et diam orci. Nulla mi metus, pretium eu tellus  et, aliquam feugiat neque. Curabitur hendrerit nunc vitae lacus  elementum lobortis. Ut non tristique elit, eget vulputate ante.\n' +
+        'Quisque vel quam neque. Nam euismod orci purus, eu imperdiet elit  lobortis a. Aenean a risus non eros lobortis imperdiet. Suspendisse non  sollicitudin mi. Nam vitae purus ligula. Morbi id elit in nulla eleifend  ullamcorper nec non turpis. Aliquam accumsan massa at lacus pretium,  non faucibus nunc porttitor.\n' +
+        'Praesent ornare vehicula orci at suscipit. Aliquam nec venenatis velit,  et congue dui. Donec at lacinia nunc. Suspendisse et velit a neque  tempus feugiat. Proin tristique tristique ex vehicula fermentum. Sed nec  velit sit amet dui ultrices varius. Pellentesque commodo massa nec  neque imperdiet convallis. Nunc quam quam, ullamcorper lobortis cursus  quis, sodales in sapien. Nullam accumsan bibendum dolor, at pulvinar  urna ultricies nec. Vivamus lacus augue, efficitur non odio et,  venenatis viverra tortor. Sed a iaculis nibh, tristique tincidunt eros.  Nulla condimentum ornare arcu, vitae rutrum enim. Donec luctus mattis  lorem iaculis fermentum. Maecenas elementum lectus sed sapien sagittis  dignissim.';
 
       class RichEditorExample extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {editorState: EditorState.createEmpty()};
+          this.state = {
+            editorState: EditorState.createWithContent(
+              ContentState.createFromText(lipsum),
+            ),
+          };
 
           this.focus = () => this.refs.editor.focus();
-          this.onChange = (editorState) => this.setState({editorState});
+          this.onChange = editorState => this.setState({editorState});
 
           this.handleKeyCommand = this._handleKeyCommand.bind(this);
           this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
@@ -63,7 +92,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             const newEditorState = RichUtils.onTab(
               e,
               this.state.editorState,
-              4, /* maxDepth */
+              4 /* maxDepth */,
             );
             if (newEditorState !== this.state.editorState) {
               this.onChange(newEditorState);
@@ -75,19 +104,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         _toggleBlockType(blockType) {
           this.onChange(
-            RichUtils.toggleBlockType(
-              this.state.editorState,
-              blockType
-            )
+            RichUtils.toggleBlockType(this.state.editorState, blockType),
           );
         }
 
         _toggleInlineStyle(inlineStyle) {
           this.onChange(
-            RichUtils.toggleInlineStyle(
-              this.state.editorState,
-              inlineStyle
-            )
+            RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle),
           );
         }
 
@@ -99,7 +122,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           let className = 'RichEditor-editor';
           var contentState = editorState.getCurrentContent();
           if (!contentState.hasText()) {
-            if (contentState.getBlockMap().first().getType() !== 'unstyled') {
+            if (
+              contentState
+                .getBlockMap()
+                .first()
+                .getType() !== 'unstyled'
+            ) {
               className += ' RichEditor-hidePlaceholder';
             }
           }
@@ -144,15 +172,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       function getBlockStyle(block) {
         switch (block.getType()) {
-          case 'blockquote': return 'RichEditor-blockquote';
-          default: return null;
+          case 'blockquote':
+            return 'RichEditor-blockquote';
+          default:
+            return null;
         }
       }
 
       class StyleButton extends React.Component {
         constructor() {
           super();
-          this.onToggle = (e) => {
+          this.onToggle = e => {
             e.preventDefault();
             this.props.onToggle(this.props.style);
           };
@@ -185,7 +215,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         {label: 'Code Block', style: 'code-block'},
       ];
 
-      const BlockStyleControls = (props) => {
+      const BlockStyleControls = props => {
         const {editorState} = props;
         const selection = editorState.getSelection();
         const blockType = editorState
@@ -195,7 +225,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         return (
           <div className="RichEditor-controls">
-            {BLOCK_TYPES.map((type) =>
+            {BLOCK_TYPES.map(type => (
               <StyleButton
                 key={type.label}
                 active={type.style === blockType}
@@ -203,7 +233,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 onToggle={props.onToggle}
                 style={type.style}
               />
-            )}
+            ))}
           </div>
         );
       };
@@ -215,12 +245,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         {label: 'Monospace', style: 'CODE'},
       ];
 
-      const InlineStyleControls = (props) => {
+      const InlineStyleControls = props => {
         const currentStyle = props.editorState.getCurrentInlineStyle();
-        
+
         return (
           <div className="RichEditor-controls">
-            {INLINE_STYLES.map((type) =>
+            {INLINE_STYLES.map(type => (
               <StyleButton
                 key={type.label}
                 active={currentStyle.has(type.style)}
@@ -228,14 +258,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 onToggle={props.onToggle}
                 style={type.style}
               />
-            )}
+            ))}
           </div>
         );
       };
 
       ReactDOM.render(
-        <RichEditorExample />,
-        document.getElementById('target')
+        <div>
+          <div
+            style={{
+              height: '300px',
+              overflowY: 'scroll',
+              marginBottom: '100px',
+            }}>
+            <RichEditorExample />
+          </div>
+          <RichEditorExample />
+        </div>,
+        document.getElementById('target'),
       );
     </script>
   </body>

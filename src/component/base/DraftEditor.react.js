@@ -332,6 +332,10 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
       readOnly,
       textAlignment,
       textDirectionality,
+      scrollUpThreshold,
+      scrollUpHeight,
+      scrollDownHeight,
+      scrollDownThreshold,
     } = this.props;
 
     const rootClass = cx({
@@ -372,6 +376,10 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
       editorState,
       preventScroll,
       textDirectionality,
+      scrollUpThreshold,
+      scrollUpHeight,
+      scrollDownThreshold,
+      scrollDownHeight,
     };
 
     return (
