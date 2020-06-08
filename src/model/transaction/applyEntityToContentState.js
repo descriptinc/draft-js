@@ -28,19 +28,33 @@ function applyEntityToContentState(
   const endKey = selectionState.getEndKey();
   const endOffset = selectionState.getEndOffset();
 
-  const newBlocks = blockMap
-    .skipUntil((_, k) => k === startKey)
-    .takeUntil((_, k) => k === endKey)
-    .toOrderedMap()
-    .merge(Immutable.OrderedMap([[endKey, blockMap.get(endKey)]]))
-    .map((block, blockKey) => {
-      const sliceStart = blockKey === startKey ? startOffset : 0;
-      const sliceEnd = blockKey === endKey ? endOffset : block.getLength();
-      return applyEntityToContentBlock(block, sliceStart, sliceEnd, entityKey);
-    });
+  let newBlocks: ?Seq.Keyed<ContentBlock>;
+  if (startKey !== endKey) {
+    newBlocks = blockMap
+      .toSeq()
+      .skipUntil((_, k) => k === startKey)
+      .takeUntil((_, k) => k === endKey)
+      .map((block: ContentBlock, blockKey: string) => {
+        const sliceStart = blockKey === startKey ? startOffset : 0;
+        const sliceEnd = block.getLength();
+        return applyEntityToContentBlock(
+          block,
+          sliceStart,
+          sliceEnd,
+          entityKey,
+        );
+      });
+  }
 
   return contentState.merge({
-    blockMap: blockMap.merge(newBlocks),
+    blockMap: blockMap.merge(newBlocks, {
+      [endKey]: applyEntityToContentBlock(
+        blockMap.get(endKey),
+        endKey === startKey ? startOffset : 0,
+        endOffset,
+        entityKey,
+      ),
+    }),
     selectionBefore: selectionState,
     selectionAfter: selectionState,
   });
