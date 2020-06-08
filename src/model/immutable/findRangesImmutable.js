@@ -35,7 +35,7 @@ function findRangesImmutable<T>(
   let count = 0;
   let lastValue: ?T = null;
   haystack.forEach((value: T, index: number) => {
-    if (lastValue !== null) {
+    if (count > 0) {
       if (!areEqualFn(value, lastValue)) {
         if (filterFn(lastValue)) {
           foundFn(cursor, index);
@@ -48,7 +48,7 @@ function findRangesImmutable<T>(
     return true;
   });
 
-  lastValue !== null && filterFn(lastValue) && foundFn(cursor, count);
+  count > 0 && filterFn(lastValue) && foundFn(cursor, count);
 }
 
 module.exports = findRangesImmutable;
