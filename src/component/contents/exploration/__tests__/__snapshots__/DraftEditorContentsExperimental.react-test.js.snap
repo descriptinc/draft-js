@@ -8,6 +8,7 @@ exports[`renders ContentBlockNode 1`] = `
     data-block={true}
     data-editor="editor"
     data-offset-key="A-0-0"
+    id="block-A"
   >
     <div
       className="public__DraftStyleDefault__block public__DraftStyleDefault__ltr"
@@ -36,6 +37,7 @@ exports[`renders ContentBlockNodes 1`] = `
     data-block={true}
     data-editor="editor"
     data-offset-key="A-0-0"
+    id="block-A"
   >
     <div
       className="public__DraftStyleDefault__block public__DraftStyleDefault__ltr"
@@ -49,6 +51,7 @@ exports[`renders ContentBlockNodes 1`] = `
           data-block={true}
           data-editor="editor"
           data-offset-key="B-0-0"
+          id="block-B"
         >
           <div
             className="public__DraftStyleDefault__block public__DraftStyleDefault__ltr"
@@ -58,6 +61,7 @@ exports[`renders ContentBlockNodes 1`] = `
               data-block={true}
               data-editor="editor"
               data-offset-key="C-0-0"
+              id="block-C"
             >
               <div
                 className="public__DraftStyleDefault__block public__DraftStyleDefault__ltr"
@@ -84,6 +88,7 @@ exports[`renders ContentBlockNodes 1`] = `
     data-block={true}
     data-editor="editor"
     data-offset-key="D-0-0"
+    id="block-D"
   >
     <div
       className="public__DraftStyleDefault__block public__DraftStyleDefault__ltr"
@@ -116,6 +121,7 @@ exports[`renders ContentBlockNodes with root blocks that have wrapperTemplate 1`
       data-block={true}
       data-editor="editor"
       data-offset-key="A-0-0"
+      id="block-A"
     >
       <div
         className="public__DraftStyleDefault__block public__DraftStyleDefault__ltr"
@@ -137,6 +143,7 @@ exports[`renders ContentBlockNodes with root blocks that have wrapperTemplate 1`
       data-block={true}
       data-editor="editor"
       data-offset-key="B-0-0"
+      id="block-B"
     >
       <div
         className="public__DraftStyleDefault__block public__DraftStyleDefault__ltr"
