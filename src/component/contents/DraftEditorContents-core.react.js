@@ -226,6 +226,7 @@ class DraftEditorContents extends React.Component<Props> {
         'data-block': true,
         'data-editor': editorKey,
         'data-offset-key': offsetKey,
+        id: `block-${key}`,
         key,
       };
       if (customEditable !== undefined) {
