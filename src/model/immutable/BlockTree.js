@@ -125,7 +125,7 @@ function generateLeaves(
   offset: number,
 ): List<LeafRange> {
   const leaves = [];
-  const inlineStyles = characters.map(c => c.getStyle()).toList();
+  const inlineStyles = characters.toSeq().map(c => c.getStyle());
   findRangesImmutable(inlineStyles, areEqual, returnTrue, (start, end) => {
     leaves.push(
       new LeafRange({
