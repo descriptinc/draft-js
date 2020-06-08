@@ -178,11 +178,13 @@ const getElementPropsConfig = (
   customConfig: *,
   ref: null | {|current: null | Element|},
 ): Object => {
+  const blockKey = block.getKey();
   let elementProps: Object = {
     'data-block': true,
     'data-editor': editorKey,
     'data-offset-key': offsetKey,
-    key: block.getKey(),
+    id: `block-${blockKey}`,
+    key: blockKey,
     ref,
   };
   const customClass = blockStyleFn(block);
