@@ -48,7 +48,9 @@ function findRangesImmutable<T>(
     return true;
   });
 
-  count > 0 && filterFn(lastValue) && foundFn(cursor, count);
+  if (count > 0 && filterFn(lastValue)) {
+    foundFn(cursor, count);
+  }
 }
 
 module.exports = findRangesImmutable;
