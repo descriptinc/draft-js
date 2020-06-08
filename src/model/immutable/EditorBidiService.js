@@ -34,16 +34,30 @@ const EditorBidiService = {
     }
 
     const blockMap = content.getBlockMap();
-    const nextBidi = blockMap
-      .valueSeq()
-      .map(block => nullthrows(bidiService).getDirection(block.getText()));
-    const bidiMap = OrderedMap(blockMap.keySeq().zip(nextBidi));
 
-    if (prevBidiMap != null && Immutable.is(prevBidiMap, bidiMap)) {
+    let needsNewBidiMap = !prevBidiMap;
+    if (!needsNewBidiMap) {
+      needsNewBidiMap = blockMap.count() !== prevBidiMap.count();
+    }
+    if (!needsNewBidiMap) {
+      needsNewBidiMap = Boolean(
+        blockMap.find((block: ContentBlock, key: string) => {
+          return (
+            !prevBidiMap.has(key) ||
+            prevBidiMap.get(key) !==
+              nullthrows(bidiService).getDirection(block.getText())
+          );
+        }),
+      );
+    }
+    if (!needsNewBidiMap) {
       return prevBidiMap;
     }
 
-    return bidiMap;
+    const nextBidi = blockMap
+      .valueSeq()
+      .map(block => nullthrows(bidiService).getDirection(block.getText()));
+    return OrderedMap(blockMap.keySeq().zip(nextBidi));
   },
 };
 
