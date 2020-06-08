@@ -15,7 +15,6 @@ import type ContentState from 'ContentState';
 import type SelectionState from 'SelectionState';
 
 const applyEntityToContentBlock = require('applyEntityToContentBlock');
-const Immutable = require('immutable');
 
 function applyEntityToContentState(
   contentState: ContentState,
