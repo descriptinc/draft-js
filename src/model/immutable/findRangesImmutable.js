@@ -11,7 +11,8 @@
 
 'use strict';
 
-import type {List} from 'immutable';
+import type {Seq} from 'immutable';
+import {List} from 'immutable';
 
 /**
  * Search through an array to find contiguous stretches of elements that
@@ -21,28 +22,33 @@ import type {List} from 'immutable';
  * the values to the caller.
  */
 function findRangesImmutable<T>(
-  haystack: List<T>,
+  haystack: List<T> | Seq<T>,
   areEqualFn: (a: T, b: T) => boolean,
   filterFn: (value: T) => boolean,
   foundFn: (start: number, end: number) => void,
 ): void {
-  if (!haystack.size) {
+  if (List.isList(haystack) && !haystack.size) {
     return;
   }
 
   let cursor: number = 0;
-
-  haystack.reduce((value: T, nextValue, nextIndex) => {
-    if (!areEqualFn(value, nextValue)) {
-      if (filterFn(value)) {
-        foundFn(cursor, nextIndex);
+  let count = 0;
+  let lastValue: ?T = null;
+  haystack.forEach((value: T, index: number) => {
+    if (lastValue !== null) {
+      if (!areEqualFn(value, lastValue)) {
+        if (filterFn(lastValue)) {
+          foundFn(cursor, index);
+        }
+        cursor = index;
       }
-      cursor = nextIndex;
     }
-    return nextValue;
+    count += 1;
+    lastValue = value;
+    return true;
   });
 
-  filterFn(haystack.last()) && foundFn(cursor, haystack.count());
+  lastValue !== null && filterFn(lastValue) && foundFn(cursor, count);
 }
 
 module.exports = findRangesImmutable;
