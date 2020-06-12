@@ -4,11 +4,11 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
+ * @flow strict-local
  */
 
-'use strict';
+let counter = 0;
 
-module.exports = {
-  initODS: function() {},
-  handleExtensionCausedError: function() {},
-};
+export default function mockUUID(): string {
+  return '' + ++counter;
+}

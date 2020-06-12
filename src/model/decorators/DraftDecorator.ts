@@ -14,8 +14,8 @@
 import React from 'react';
 import {BlockNodeKey} from '../immutable/BlockNode';
 import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
-import ContentState from '../immutable/ContentState';
-import {HTMLDir} from 'UnicodeBidiDirection';
+import {ContentState} from '../immutable/ContentState';
+import {HTMLDir} from '../types';
 
 export type DraftDecoratorStrategy = (
   block: BlockNodeRecord,

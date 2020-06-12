@@ -1,9 +1,5 @@
 /**
  * Copyright 2004-present Facebook. All Rights Reserved.
- *
- * @flow strict
- * @typechecks
- * @format
  */
 
 /**
@@ -16,11 +12,8 @@
  * @param {object} obj An object.
  * @return {array}     The object's values.
  */
-function getOwnObjectValues<TValue>(obj: {
-  +[key: string]: TValue,
-  ...,
-}): Array<TValue> {
+export default function getOwnObjectValues<TValue>(
+  obj: Record<string, TValue>,
+): Array<TValue> {
   return Object.keys(obj).map(key => obj[key]);
 }
-
-module.exports = getOwnObjectValues;

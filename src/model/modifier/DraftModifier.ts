@@ -11,31 +11,9 @@
 
 'use strict';
 
-import { BlockMap } from 'BlockMap';
-import ContentState from 'ContentState';
-import { DraftBlockType } from 'DraftBlockType';
-import { DraftInlineStyle } from 'DraftInlineStyle';
-import { DraftRemovalDirection } from 'DraftRemovalDirection';
-import SelectionState from 'SelectionState';
-import { Map } from 'immutable';
-import { BlockDataMergeBehavior } from 'insertFragmentIntoContentState';
-
-const CharacterMetadata = require('CharacterMetadata');
-const ContentStateInlineStyle = require('ContentStateInlineStyle');
-
-const applyEntityToContentState = require('applyEntityToContentState');
-const getCharacterRemovalRange = require('getCharacterRemovalRange');
-const getContentStateFragment = require('getContentStateFragment');
-const Immutable = require('immutable');
-const insertFragmentIntoContentState = require('insertFragmentIntoContentState');
-const insertTextIntoContentState = require('insertTextIntoContentState');
-const invariant = require('invariant');
-const modifyBlockForContentState = require('modifyBlockForContentState');
-const removeEntitiesAtEdges = require('removeEntitiesAtEdges');
-const removeRangeFromContentState = require('removeRangeFromContentState');
-const splitBlockInContentState = require('splitBlockInContentState');
-
-const {OrderedSet} = Immutable;
+import {ContentState} from '../immutable/ContentState';
+import {SelectionState} from '../immutable/SelectionState';
+import {DraftInlineStyle} from '../immutable/DraftInlineStyle';
 
 /**
  * `DraftModifier` provides a set of convenience methods that apply
@@ -53,7 +31,7 @@ const DraftModifier = {
     rangeToReplace: SelectionState,
     text: string,
     inlineStyle?: DraftInlineStyle,
-    entityKey?: string | null
+    entityKey?: string | null,
   ): ContentState {
     const withoutEntities = removeEntitiesAtEdges(contentState, rangeToReplace);
     const withoutText = removeRangeFromContentState(
@@ -79,7 +57,7 @@ const DraftModifier = {
     targetRange: SelectionState,
     text: string,
     inlineStyle?: DraftInlineStyle,
-    entityKey?: string | null
+    entityKey?: string | null,
   ): ContentState {
     invariant(
       targetRange.isCollapsed(),
@@ -97,7 +75,7 @@ const DraftModifier = {
   moveText: function(
     contentState: ContentState,
     removalRange: SelectionState,
-    targetRange: SelectionState
+    targetRange: SelectionState,
   ): ContentState {
     const movedFragment = getContentStateFragment(contentState, removalRange);
 
@@ -118,7 +96,7 @@ const DraftModifier = {
     contentState: ContentState,
     targetRange: SelectionState,
     fragment: BlockMap,
-    mergeBlockData?: BlockDataMergeBehavior = 'REPLACE_WITH_NEW_DATA'
+    mergeBlockData?: BlockDataMergeBehavior = 'REPLACE_WITH_NEW_DATA',
   ): ContentState {
     const withoutEntities = removeEntitiesAtEdges(contentState, targetRange);
     const withoutText = removeRangeFromContentState(
@@ -137,7 +115,7 @@ const DraftModifier = {
   removeRange: function(
     contentState: ContentState,
     rangeToRemove: SelectionState,
-    removalDirection: DraftRemovalDirection
+    removalDirection: DraftRemovalDirection,
   ): ContentState {
     let startKey, endKey, startBlock, endBlock;
     if (rangeToRemove.getIsBackward()) {
@@ -178,7 +156,10 @@ const DraftModifier = {
     return removeRangeFromContentState(withoutEntities, rangeToRemove);
   },
 
-  splitBlock: function(contentState: ContentState, selectionState: SelectionState): ContentState {
+  splitBlock: function(
+    contentState: ContentState,
+    selectionState: SelectionState,
+  ): ContentState {
     const withoutEntities = removeEntitiesAtEdges(contentState, selectionState);
     const withoutText = removeRangeFromContentState(
       withoutEntities,
@@ -194,7 +175,7 @@ const DraftModifier = {
   applyInlineStyle: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    inlineStyle: string
+    inlineStyle: string,
   ): ContentState {
     return ContentStateInlineStyle.add(
       contentState,
@@ -206,7 +187,7 @@ const DraftModifier = {
   removeInlineStyle: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    inlineStyle: string
+    inlineStyle: string,
   ): ContentState {
     return ContentStateInlineStyle.remove(
       contentState,
@@ -218,7 +199,7 @@ const DraftModifier = {
   setBlockType: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    blockType: DraftBlockType
+    blockType: DraftBlockType,
   ): ContentState {
     return modifyBlockForContentState(contentState, selectionState, block =>
       block.merge({type: blockType, depth: 0}),
@@ -228,7 +209,7 @@ const DraftModifier = {
   setBlockData: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    blockData: Map<any, any>
+    blockData: Map<any, any>,
   ): ContentState {
     return modifyBlockForContentState(contentState, selectionState, block =>
       block.merge({data: blockData}),
@@ -238,7 +219,7 @@ const DraftModifier = {
   mergeBlockData: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    blockData: Map<any, any>
+    blockData: Map<any, any>,
   ): ContentState {
     return modifyBlockForContentState(contentState, selectionState, block =>
       block.merge({data: block.getData().merge(blockData)}),
@@ -248,7 +229,7 @@ const DraftModifier = {
   applyEntity: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    entityKey: string | null
+    entityKey: string | null,
   ): ContentState {
     const withoutEntities = removeEntitiesAtEdges(contentState, selectionState);
     return applyEntityToContentState(
@@ -259,4 +240,4 @@ const DraftModifier = {
   },
 };
 
-module.exports = DraftModifier;
+export default DraftModifier;

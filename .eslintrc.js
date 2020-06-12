@@ -23,7 +23,12 @@ module.exports = {
     '@typescript-eslint/no-parameter-properties': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     'no-var': ['error'],
-    'prefer-const': ['error'],
+    'prefer-const': [
+      'error',
+      {
+        destructuring: 'all',
+      },
+    ],
   },
   plugins: ['prettier'],
   overrides: [

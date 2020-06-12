@@ -7,16 +7,8 @@
  * Provides utilities for handling draftjs keys.
  *
  * @emails oncall+draft_js
- * @flow strict-local
- * @format
  */
 
-'use strict';
-
-function notEmptyKey(key: ?string): boolean %checks {
+export function notEmptyKey(key: string | undefined | null): key is string {
   return key != null && key != '';
 }
-
-module.exports = {
-  notEmptyKey,
-};

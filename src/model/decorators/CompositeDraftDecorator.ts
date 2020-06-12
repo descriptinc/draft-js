@@ -4,20 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-import { BlockNodeRecord } from '../immutable/BlockNodeRecord';
-import ContentState from '../immutable/ContentState';
-import { DraftDecorator } from './DraftDecorator';
-
-const Immutable = require('immutable');
-
-const {List} = Immutable;
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {DraftDecorator} from './DraftDecorator';
+import {ContentState} from '../immutable/ContentState';
 
 const DELIMITER = '.';
 
@@ -40,7 +32,7 @@ const DELIMITER = '.';
  * Thus, when a collision like this is encountered, the earlier match is
  * preserved and the new match is discarded.
  */
-class CompositeDraftDecorator {
+export default class CompositeDraftDecorator {
   _decorators: ReadonlyArray<DraftDecorator>;
 
   constructor(decorators: ReadonlyArray<DraftDecorator>) {
@@ -50,13 +42,16 @@ class CompositeDraftDecorator {
     this._decorators = decorators.slice();
   }
 
-  getDecorations function(block: BlockNodeRecord, contentState: ContentState): List<string | null> {
-    const decorations = Array(block.getText().length).fill(null);
+  getDecorations(
+    block: BlockNodeRecord,
+    contentState: ContentState,
+  ): readonly (string | null)[] {
+    const decorations = new Array(block.text.length).fill(null);
 
-    this._decorators.forEach((/*object*/ decorator, /*number*/ ii) => {
+    this._decorators.forEach((decorator, ii) => {
       let counter = 0;
       const strategy = decorator.strategy;
-      const callback = (/*number*/ start, /*number*/ end) => {
+      const callback = (start: number, end: number) => {
         // Find out if any of our matching range is already occupied
         // by another decorator. If so, discard the match. Otherwise, store
         // the component key for rendering.
@@ -68,17 +63,17 @@ class CompositeDraftDecorator {
       strategy(block, callback, contentState);
     });
 
-    return List(decorations);
+    return decorations;
   }
 
-  getComponentForKey function(key: string): Function {
+  getComponentForKey(key: string): Function {
     const componentKey = parseInt(key.split(DELIMITER)[0], 10);
     return this._decorators[componentKey].component;
   }
 
-  getPropsForKey function(key: string): Object | null {
+  getPropsForKey(key: string): Object | null {
     const componentKey = parseInt(key.split(DELIMITER)[0], 10);
-    return this._decorators[componentKey].props;
+    return this._decorators[componentKey].props || null;
   }
 }
 
@@ -86,7 +81,11 @@ class CompositeDraftDecorator {
  * Determine whether we can occupy the specified slice of the decorations
  * array.
  */
-function canOccupySlice(decorations: Array<string | null>, start: number, end: number): boolean {
+function canOccupySlice(
+  decorations: Array<string | null>,
+  start: number,
+  end: number,
+): boolean {
   for (let ii = start; ii < end; ii++) {
     if (decorations[ii] != null) {
       return false;
@@ -103,11 +102,9 @@ function occupySlice(
   targetArr: Array<string | null>,
   start: number,
   end: number,
-  componentKey: string
+  componentKey: string,
 ): void {
   for (let ii = start; ii < end; ii++) {
     targetArr[ii] = componentKey;
   }
 }
-
-module.exports = CompositeDraftDecorator;

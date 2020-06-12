@@ -12,8 +12,7 @@
 'use strict';
 
 import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
-import ContentState from '../immutable/ContentState';
-import {List} from 'immutable';
+import {ContentState} from '../immutable/ContentState';
 
 /**
  * An interface for document decorator classes, allowing the creation of
@@ -28,7 +27,7 @@ export type DraftDecoratorType = {
   getDecorations: (
     block: BlockNodeRecord,
     contentState: ContentState,
-  ) => List<string | null>;
+  ) => readonly (string | null)[];
   /**
    * Given a decorator key, return the component to use when rendering
    * this decorated range.

@@ -4,41 +4,49 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
+import {ContentState} from '../immutable/ContentState';
+import {
+  getEndKey,
+  getStartKey,
+  SelectionState,
+} from '../immutable/SelectionState';
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
+import {mergeBlockMap} from '../immutable/BlockMap';
 
-'use strict';
-
-import { BlockNodeRecord } from 'BlockNodeRecord';
-import ContentState from 'ContentState';
-import SelectionState from 'SelectionState';
-
-const Immutable = require('immutable');
-
-const {Map} = Immutable;
-
-function modifyBlockForContentState(
+export default function modifyBlockForContentState(
   contentState: ContentState,
   selectionState: SelectionState,
-  operation: ((block: BlockNodeRecord) => BlockNodeRecord)
+  operation: (block: BlockNodeRecord) => BlockNodeRecord,
 ): ContentState {
-  const startKey = selectionState.getStartKey();
-  const endKey = selectionState.getEndKey();
-  const blockMap = contentState.getBlockMap();
-  const newBlocks = blockMap
-    .toSeq()
-    .skipUntil((_, k) => k === startKey)
-    .takeUntil((_, k) => k === endKey)
-    .concat(Map([[endKey, blockMap.get(endKey)]]))
-    .map(operation);
+  const startKey = getStartKey(selectionState);
+  const endKey = getEndKey(selectionState);
+  const blockMap = contentState.blockMap;
 
-  return contentState.merge({
-    blockMap: blockMap.merge(newBlocks),
+  const iter: Iterable<[string, BlockNodeRecord]> = map(
+    flatten<[string, BlockNodeRecord]>([
+      takeUntil(
+        skipUntil(blockMap.entries(), ([k]) => k === startKey),
+        ([k]) => k === endKey,
+      ),
+      [[endKey, blockMap.get(endKey)!]],
+    ]),
+    ([k, block]: [string, BlockNodeRecord]): [string, BlockNodeRecord] => [
+      k,
+      operation(block),
+    ],
+  );
+  const newBlocks: Record<string, BlockNodeRecord> = {};
+  for (const [key, block] of iter) {
+    newBlocks[key] = block;
+  }
+
+  return {
+    ...contentState,
+    blockMap: mergeBlockMap(blockMap, newBlocks),
     selectionBefore: selectionState,
     selectionAfter: selectionState,
-  });
+  };
 }
-
-module.exports = modifyBlockForContentState;

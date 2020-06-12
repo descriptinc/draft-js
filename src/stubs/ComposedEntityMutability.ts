@@ -4,16 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict
  */
 
-'use strict';
-
-var ComposedEntityMutability = {
+const ComposedEntityMutability = {
   MUTABLE: true,
   IMMUTABLE: true,
   SEGMENTED: true,
 };
 
-module.exports = ComposedEntityMutability;
+export default ComposedEntityMutability;

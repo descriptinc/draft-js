@@ -17,12 +17,12 @@ import {first, last} from '../descript/Iterables';
 import {BlockNodeRecord} from './BlockNodeRecord';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
-import DraftEntityInstance from '../entity/DraftEntityInstance';
 import {createFromArray} from './BlockMapBuilder';
 import {sanitizeDraftText} from '../encoding/sanitizeDraftText';
 import {makeContentBlockNode} from './ContentBlockNode';
 import {makeContentBlock} from './ContentBlock';
 import {gkx} from '../../stubs/gkx';
+import DraftEntity from '../entity/DraftEntity';
 
 export type ContentState = Readonly<{
   blockMap: BlockMap;

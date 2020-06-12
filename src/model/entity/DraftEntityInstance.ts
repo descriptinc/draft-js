@@ -12,15 +12,8 @@
 
 'use strict';
 
-import {Record} from 'immutable';
 import {DraftEntityType} from './DraftEntityType';
 import {DraftEntityMutability} from './DraftEntityMutability';
-
-const DraftEntityInstanceRecord = Record({
-  type: 'TOKEN',
-  mutability: 'IMMUTABLE',
-  data: Object,
-}) as any;
 
 /**
  * An instance of a document entity, consisting of a `type` and relevant
@@ -33,16 +26,22 @@ const DraftEntityInstanceRecord = Record({
  * the rendered anchor. For a mention, the ID could be used to retrieve
  * a hovercard.
  */
-export default class DraftEntityInstance extends DraftEntityInstanceRecord {
-  getType = (): DraftEntityType => {
-    return this.get('type');
-  };
+export type DraftEntityInstance = Readonly<{
+  type: DraftEntityType;
+  mutability: DraftEntityMutability;
+  data: Readonly<Record<string, any>>;
+}>;
 
-  getMutability = (): DraftEntityMutability => {
-    return this.get('mutability');
-  };
+const EMPTY_OBJECT = {};
 
-  getData = (): Object => {
-    return this.get('data');
+export function makeDraftEntityInstance({
+  type = 'TOKEN',
+  mutability = 'IMMUTABLE',
+  data = EMPTY_OBJECT,
+}: Partial<DraftEntityInstance>): DraftEntityInstance {
+  return {
+    type,
+    mutability,
+    data,
   };
 }

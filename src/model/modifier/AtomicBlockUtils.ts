@@ -4,40 +4,23 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-import { BlockNodeRecord } from 'BlockNodeRecord';
-import { DraftInsertionType } from 'DraftInsertionType';
-import SelectionState from 'SelectionState';
-
-const BlockMapBuilder = require('BlockMapBuilder');
-const CharacterMetadata = require('CharacterMetadata');
-const ContentBlock = require('ContentBlock');
-const ContentBlockNode = require('ContentBlockNode');
-const DraftModifier = require('DraftModifier');
-const EditorState = require('EditorState');
-
-const generateRandomKey = require('generateRandomKey');
-const gkx = require('gkx');
-const Immutable = require('immutable');
-const moveBlockInContentState = require('moveBlockInContentState');
+import {gkx} from '../../stubs/gkx';
+import {EditorState} from '../immutable/EditorState';
+import generateRandomKey from '../keys/generateRandomKey';
 
 const experimentalTreeDataSupport = gkx('draft_tree_data_support');
-const ContentBlockRecord = experimentalTreeDataSupport
-  ? ContentBlockNode
-  : ContentBlock;
-
-const {List, Repeat} = Immutable;
 
 const AtomicBlockUtils = {
-  insertAtomicBlock: function(editorState: EditorState, entityKey: string, character: string): EditorState {
-    const contentState = editorState.getCurrentContent();
-    const selectionState = editorState.getSelection();
+  insertAtomicBlock: function(
+    editorState: EditorState,
+    entityKey: string,
+    character: string,
+  ): EditorState {
+    const contentState = editorState.currentContent;
+    const selectionState = editorState.selection;
 
     const afterRemoval = DraftModifier.removeRange(
       contentState,
@@ -105,7 +88,7 @@ const AtomicBlockUtils = {
     editorState: EditorState,
     atomicBlock: BlockNodeRecord,
     targetRange: SelectionState,
-    insertionMode?: DraftInsertionType
+    insertionMode?: DraftInsertionType,
   ): EditorState {
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();

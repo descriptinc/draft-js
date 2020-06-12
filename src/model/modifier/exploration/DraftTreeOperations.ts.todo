@@ -11,14 +11,10 @@
  * This is unstable and not part of the public API and should not be used by
  * production systems. This file may be update/removed without notice.
  */
-import type {BlockMap} from 'BlockMap';
-
-const ContentBlockNode = require('ContentBlockNode');
-const DraftTreeInvariants = require('DraftTreeInvariants');
-
-const generateRandomKey = require('generateRandomKey');
-const Immutable = require('immutable');
-const invariant = require('invariant');
+import {BlockMap, mergeBlockMap} from '../../immutable/BlockMap';
+import invariant from '../../../fbjs/invariant';
+import {ContentBlockNode} from '../../immutable/ContentBlockNode';
+import generateRandomKey from '../../keys/generateRandomKey';
 
 type SiblingInsertPosition = 'previous' | 'next';
 
@@ -43,49 +39,55 @@ const updateParentChild = (
   childKey: string,
   position: number,
 ): BlockMap => {
-  const parent = blockMap.get(parentKey);
-  const child = blockMap.get(childKey);
+  const parent = blockMap.get(parentKey) as ContentBlockNode;
+  const child = blockMap.get(childKey) as ContentBlockNode;
   invariant(
     parent != null && child != null,
     'parent & child should exist in the block map',
   );
-  const newBlocks = {};
-  const existingChildren = parent.getChildKeys();
+  const newBlocks: Record<string, ContentBlockNode> = {};
+  const existingChildren = parent.children;
   invariant(
     existingChildren != null &&
       position >= 0 &&
-      position <= existingChildren.count(),
+      position <= existingChildren.length,
     'position is not valid for the number of children',
   );
 
   // add as parent's child
-  newBlocks[parentKey] = parent.merge({
-    children: existingChildren.splice(position, 0, childKey),
-  });
+  const newChildren = [...existingChildren];
+  newChildren.splice(position, 0, childKey);
+  newBlocks[parentKey] = {
+    ...parent,
+    children: newChildren,
+  };
 
   let nextSiblingKey = null;
   let prevSiblingKey = null;
   // link new child as next sibling to the correct existing child
   if (position > 0) {
-    prevSiblingKey = existingChildren.get(position - 1);
-    newBlocks[prevSiblingKey] = blockMap.get(prevSiblingKey).merge({
+    prevSiblingKey = existingChildren[position - 1];
+    newBlocks[prevSiblingKey] = {
+      ...(blockMap.get(prevSiblingKey)! as ContentBlockNode),
       nextSibling: childKey,
-    });
+    };
   }
   // link new child as previous sibling to the correct existing child
-  if (position < existingChildren.count()) {
-    nextSiblingKey = existingChildren.get(position);
-    newBlocks[nextSiblingKey] = blockMap.get(nextSiblingKey).merge({
+  if (position < existingChildren.length) {
+    nextSiblingKey = existingChildren[position];
+    newBlocks[nextSiblingKey] = {
+      ...(blockMap.get(nextSiblingKey)! as ContentBlockNode),
       prevSibling: childKey,
-    });
+    };
   }
   // add parent & siblings to the child
-  newBlocks[childKey] = child.merge({
+  newBlocks[childKey] = {
+    ...child,
     parent: parentKey,
     prevSibling: prevSiblingKey,
     nextSibling: nextSiblingKey,
-  });
-  return blockMap.merge(newBlocks);
+  };
+  return mergeBlockMap(blockMap, newBlocks);
 };
 
 /**
@@ -100,20 +102,22 @@ const updateSibling = (
   prevKey: string,
   nextKey: string,
 ): BlockMap => {
-  const prevSibling = blockMap.get(prevKey);
-  const nextSibling = blockMap.get(nextKey);
+  const prevSibling = blockMap.get(prevKey) as ContentBlockNode;
+  const nextSibling = blockMap.get(nextKey) as ContentBlockNode;
   invariant(
     prevSibling != null && nextSibling != null,
     'siblings should exist in the block map',
   );
-  const newBlocks = {};
-  newBlocks[prevKey] = prevSibling.merge({
+  const newBlocks: Record<string, ContentBlockNode> = {};
+  newBlocks[prevKey] = {
+    ...prevSibling,
     nextSibling: nextKey,
-  });
-  newBlocks[nextKey] = nextSibling.merge({
+  };
+  newBlocks[nextKey] = {
+    ...nextSibling,
     prevSibling: prevKey,
-  });
-  return blockMap.merge(newBlocks);
+  };
+  return mergeBlockMap(blockMap, newBlocks);
 };
 
 /**
@@ -129,24 +133,29 @@ const replaceParentChild = (
   existingChildKey: string,
   newChildKey: string,
 ): BlockMap => {
-  const parent = blockMap.get(parentKey);
-  const newChild = blockMap.get(newChildKey);
+  const parent = blockMap.get(parentKey) as ContentBlockNode;
+  const newChild = blockMap.get(newChildKey) as ContentBlockNode;
   invariant(
     parent != null && newChild != null,
     'parent & child should exist in the block map',
   );
-  const existingChildren = parent.getChildKeys();
-  const newBlocks = {};
-  newBlocks[parentKey] = parent.merge({
-    children: existingChildren.set(
-      existingChildren.indexOf(existingChildKey),
+  const existingChildren = parent.children;
+  const newBlocks: Record<string, ContentBlockNode> = {};
+  const existingIndex = existingChildren.indexOf(existingChildKey);
+  newBlocks[parentKey] = {
+    ...parent,
+    children: [
+      ...existingChildren.slice(0, existingIndex),
       newChildKey,
-    ),
-  });
-  newBlocks[newChildKey] = newChild.merge({
+      ...existingChildren.slice(existingIndex + 1),
+    ],
+  };
+
+  newBlocks[newChildKey] = {
+    ...newChild,
     parent: parentKey,
-  });
-  return blockMap.merge(newBlocks);
+  };
+  return mergeBlockMap(blockMap, newBlocks);
 };
 
 /**

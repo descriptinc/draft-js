@@ -11,16 +11,14 @@
 
 'use strict';
 
-const seenKeys = {};
+const seenKeys: Record<string, true> = {};
 const MULTIPLIER = Math.pow(2, 24);
 
-function generateRandomKey(): string {
-  let key;
+export default function generateRandomKey(): string {
+  let key: string | undefined;
   while (key === undefined || seenKeys.hasOwnProperty(key) || !isNaN(+key)) {
     key = Math.floor(Math.random() * MULTIPLIER).toString(32);
   }
   seenKeys[key] = true;
   return key;
 }
-
-module.exports = generateRandomKey;

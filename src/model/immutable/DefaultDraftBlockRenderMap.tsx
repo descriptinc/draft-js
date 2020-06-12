@@ -10,7 +10,7 @@
 'use strict';
 
 import React from 'react';
-import cx from 'cx';
+import cx from 'fbjs/lib/cx';
 import {CoreDraftBlockType} from '../constants/DraftBlockType';
 import {DraftBlockRenderConfig} from './DraftBlockRenderConfig';
 

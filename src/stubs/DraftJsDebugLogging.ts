@@ -4,17 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @emails oncall+draft_js
- * @flow strict-local
  */
 
-'use strict';
-
-let counter = 0;
-
-function mockUUID(): string {
-  return '' + ++counter;
-}
-
-module.exports = mockUUID;
+const debugLogging = {
+  logBlockedSelectionEvent: () => null,
+  logSelectionStateFailure: () => null,
+};
+export default debugLogging;

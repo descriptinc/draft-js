@@ -6,9 +6,8 @@
  *
  */
 
-'use strict';
-
-module.exports = {
-  logBlockedSelectionEvent: () => null,
-  logSelectionStateFailure: () => null,
+const effects = {
+  initODS: function() {},
+  handleExtensionCausedError: function() {},
 };
+export default effects;

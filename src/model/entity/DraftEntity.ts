@@ -9,19 +9,22 @@
  * @emails oncall+draft_js
  */
 
-import {Map} from 'immutable';
-import invariant from 'invariant';
-import DraftEntityInstance from './DraftEntityInstance';
+import {
+  DraftEntityInstance,
+  makeDraftEntityInstance,
+} from './DraftEntityInstance';
 import {DraftEntityType} from './DraftEntityType';
 import {DraftEntityMutability} from './DraftEntityMutability';
+import uuid from '../../util/uuid';
+import invariant from '../../fbjs/invariant';
 
-let instances: Map<string, DraftEntityInstance> = Map();
+let instances: Map<string, DraftEntityInstance> = new Map();
 let instanceKey: string = uuid();
 
 /**
  * Temporary utility for generating the warnings
  */
-function logWarning(oldMethodCall, newMethodCall) {
+function logWarning(oldMethodCall: string, newMethodCall: string) {
   console.warn(
     'WARNING: ' +
       oldMethodCall +
@@ -36,14 +39,14 @@ export type DraftEntityMapObject = {
   create: (
     type: DraftEntityType,
     mutability: DraftEntityMutability,
-    data?: Object,
+    data?: Record<string, any>,
   ) => string;
   add: (instance: DraftEntityInstance) => string;
   get: (key: string) => DraftEntityInstance;
   mergeData: (key: string, toMerge: Record<string, any>) => DraftEntityInstance;
   replaceData: (
     key: string,
-    newData: {[key: string]: any, ...},
+    newData: Record<string, any>,
   ) => DraftEntityInstance;
   __loadWithEntities: (entities: Map<string, DraftEntityInstance>) => void;
   __getAll: () => Map<string, DraftEntityInstance>;
@@ -51,7 +54,7 @@ export type DraftEntityMapObject = {
   __create: (
     type: DraftEntityType,
     mutability: DraftEntityMutability,
-    data?: Object,
+    data?: Record<string, any>,
   ) => string;
   __add: (instance: DraftEntityInstance) => string;
   __get: (key: string) => DraftEntityInstance;
@@ -112,7 +115,7 @@ const DraftEntity: DraftEntityMapObject = {
   create: function(
     type: DraftEntityType,
     mutability: DraftEntityMutability,
-    data?: Object,
+    data?: Record<string, any>,
   ): string {
     logWarning('DraftEntity.create', 'contentState.createEntity');
     return DraftEntity.__create(type, mutability, data);
@@ -213,11 +216,9 @@ const DraftEntity: DraftEntityMapObject = {
   __create: function(
     type: DraftEntityType,
     mutability: DraftEntityMutability,
-    data?: Object,
+    data?: Record<string, any>,
   ): string {
-    return DraftEntity.__add(
-      new DraftEntityInstance({type, mutability, data: data || {}}),
-    );
+    return DraftEntity.__add(makeDraftEntityInstance({type, mutability, data}));
   },
 
   /**
@@ -236,7 +237,7 @@ const DraftEntity: DraftEntityMapObject = {
   __get: function(key: string): DraftEntityInstance {
     const instance = instances.get(key);
     invariant(!!instance, 'Unknown DraftEntity key: %s.', key);
-    return instance;
+    return instance!;
   },
 
   /**
@@ -251,8 +252,8 @@ const DraftEntity: DraftEntityMapObject = {
     },
   ): DraftEntityInstance {
     const instance = DraftEntity.__get(key);
-    const newData = {...instance.getData(), ...toMerge};
-    const newInstance = instance.set('data', newData);
+    const newData = {...instance.data, ...toMerge};
+    const newInstance = {...instance, data: newData};
     instances = instances.set(key, newInstance);
     return newInstance;
   },
@@ -267,10 +268,9 @@ const DraftEntity: DraftEntityMapObject = {
     },
   ): DraftEntityInstance {
     const instance = DraftEntity.__get(key);
-    const newInstance = instance.set('data', newData);
+    const newInstance = {...instance, data: newData};
     instances = instances.set(key, newInstance);
     return newInstance;
   },
 };
-
-module.exports = DraftEntity;
+export default DraftEntity;

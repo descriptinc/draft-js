@@ -11,7 +11,8 @@
 
 'use strict';
 
-import ContentState from 'ContentState';
+import {ContentState} from '../immutable/ContentState';
+import DraftEntity from '../entity/DraftEntity';
 
 function updateEntityDataInContentState(
   contentState: ContentState,
@@ -19,15 +20,18 @@ function updateEntityDataInContentState(
   data: {
     [K in string]: unknown;
   },
-  merge: boolean
+  merge: boolean,
 ): ContentState {
-  const instance = contentState.getEntity(key);
-  const entityData = instance.getData();
+  const instance = DraftEntity.__get(key);
+  const entityData = instance.data;
   const newData = merge ? {...entityData, ...data} : data;
+  DraftEntity.__replaceData(key, newData);
 
-  const newInstance = instance.set('data', newData);
-  const newEntityMap = contentState.getEntityMap().set(key, newInstance);
-  return contentState.set('entityMap', newEntityMap);
+  // FIXME [mvp]: global entity map
+
+  // const newEntityMap =  contentState.getEntityMap().set(key, newInstance);
+  // return contentState.set('entityMap', newEntityMap);
+  return contentState;
 }
 
 module.exports = updateEntityDataInContentState;

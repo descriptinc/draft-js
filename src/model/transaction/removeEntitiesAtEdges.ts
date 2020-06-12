@@ -4,42 +4,47 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow
  * @emails oncall+draft_js
  */
+import {ContentState} from '../immutable/ContentState';
+import {
+  getEndKey,
+  getEndOffset,
+  getStartKey,
+  getStartOffset,
+  SelectionState,
+} from '../immutable/SelectionState';
+import DraftEntity from '../entity/DraftEntity';
+import {ContentBlock} from '../immutable/ContentBlock';
+import {mergeBlockMap} from '../immutable/BlockMap';
+import {applyEntity, CharacterMetadata} from '../immutable/CharacterMetadata';
+import {findRangesImmutable} from '../immutable/findRangesImmutable';
+import invariant from '../../fbjs/invariant';
+import {DraftRange} from '../modifier/DraftRange';
+import {EntityMap} from '../immutable/EntityMap';
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 
-'use strict';
+export default function removeEntitiesAtEdges(
+  contentState: ContentState,
+  selectionState: SelectionState,
+): ContentState {
+  const blockMap = contentState.blockMap;
+  const entityMap = DraftEntity;
 
-import { BlockNodeRecord } from 'BlockNodeRecord';
-import ContentState from 'ContentState';
-import { EntityMap } from 'EntityMap';
-import SelectionState from 'SelectionState';
-import { List } from 'immutable';
+  const updatedBlocks: Record<string, ContentBlock> = {};
 
-const CharacterMetadata = require('CharacterMetadata');
-
-const findRangesImmutable = require('findRangesImmutable');
-const invariant = require('invariant');
-
-function removeEntitiesAtEdges(contentState: ContentState, selectionState: SelectionState): ContentState {
-  const blockMap = contentState.getBlockMap();
-  const entityMap = contentState.getEntityMap();
-
-  const updatedBlocks = {};
-
-  const startKey = selectionState.getStartKey();
-  const startOffset = selectionState.getStartOffset();
-  const startBlock = blockMap.get(startKey);
+  const startKey = getStartKey(selectionState);
+  const startOffset = getStartOffset(selectionState);
+  const startBlock = blockMap.get(startKey)!;
   const updatedStart = removeForBlock(entityMap, startBlock, startOffset);
 
   if (updatedStart !== startBlock) {
     updatedBlocks[startKey] = updatedStart;
   }
 
-  const endKey = selectionState.getEndKey();
-  const endOffset = selectionState.getEndOffset();
-  let endBlock = blockMap.get(endKey);
+  const endKey = getEndKey(selectionState);
+  const endOffset = getEndOffset(selectionState);
+  let endBlock = blockMap.get(endKey)!;
   if (startKey === endKey) {
     endBlock = updatedStart;
   }
@@ -51,13 +56,17 @@ function removeEntitiesAtEdges(contentState: ContentState, selectionState: Selec
   }
 
   if (!Object.keys(updatedBlocks).length) {
-    return contentState.set('selectionAfter', selectionState);
+    return {
+      ...contentState,
+      selectionAfter: selectionState,
+    };
   }
 
-  return contentState.merge({
-    blockMap: blockMap.merge(updatedBlocks),
+  return {
+    ...contentState,
+    blockMap: mergeBlockMap(blockMap, updatedBlocks),
     selectionAfter: selectionState,
-  });
+  };
 }
 
 /**
@@ -66,14 +75,14 @@ function removeEntitiesAtEdges(contentState: ContentState, selectionState: Selec
  * Note: This method requires that the offset be in an entity range.
  */
 function getRemovalRange(
-  characters: List<CharacterMetadata>,
+  characters: readonly CharacterMetadata[],
   entityKey: string | null,
-  offset: number
+  offset: number,
 ): {
-  start: number,
-  end: number
+  start: number;
+  end: number;
 } {
-  let removalRange;
+  let removalRange: DraftRange | undefined;
 
   // Iterates through a list looking for ranges of matching items
   // based on the 'isEqual' callback.
@@ -84,8 +93,8 @@ function getRemovalRange(
   // Here we use it to find ranges of characters with the same entity key.
   findRangesImmutable(
     characters, // the list to iterate through
-    (a, b) => a.getEntity() === b.getEntity(), // 'isEqual' callback
-    element => element.getEntity() === entityKey, // 'filter' callback
+    (a, b) => a.entity === b.entity, // 'isEqual' callback
+    element => element.entity === entityKey, // 'filter' callback
     (start: number, end: number) => {
       // 'found' callback
       if (start <= offset && end >= offset) {
@@ -98,31 +107,40 @@ function getRemovalRange(
     typeof removalRange === 'object',
     'Removal range must exist within character list.',
   );
-  return removalRange;
+  return removalRange!;
 }
 
-function removeForBlock(entityMap: EntityMap, block: BlockNodeRecord, offset: number): BlockNodeRecord {
-  let chars = block.getCharacterList();
-  const charBefore = offset > 0 ? chars.get(offset - 1) : undefined;
-  const charAfter = offset < chars.count() ? chars.get(offset) : undefined;
-  const entityBeforeCursor = charBefore ? charBefore.getEntity() : undefined;
-  const entityAfterCursor = charAfter ? charAfter.getEntity() : undefined;
+function removeForBlock(
+  entityMap: EntityMap,
+  block: BlockNodeRecord,
+  offset: number,
+): BlockNodeRecord {
+  const chars = block.characterList;
+  const charBefore = offset > 0 ? chars[offset - 1] : undefined;
+  const charAfter = offset < chars.length ? chars[offset] : undefined;
+  const entityBeforeCursor = charBefore ? charBefore.entity : undefined;
+  const entityAfterCursor = charAfter ? charAfter.entity : undefined;
 
   if (entityAfterCursor && entityAfterCursor === entityBeforeCursor) {
     const entity = entityMap.__get(entityAfterCursor);
-    if (entity.getMutability() !== 'MUTABLE') {
+    if (entity.mutability !== 'MUTABLE') {
       let {start, end} = getRemovalRange(chars, entityAfterCursor, offset);
       let current;
-      while (start < end) {
-        current = chars.get(start);
-        chars = chars.set(start, CharacterMetadata.applyEntity(current, null));
-        start++;
+      if (start < end) {
+        const newChars = [...chars];
+        while (start < end) {
+          current = chars[start];
+          newChars[start] = applyEntity(current, null);
+          start++;
+        }
+        // FIXME [perf]: only update char list if it changes?
+        return {
+          ...block,
+          characterList: newChars,
+        };
       }
-      return block.set('characterList', chars);
     }
   }
 
   return block;
 }
-
-module.exports = removeEntitiesAtEdges;

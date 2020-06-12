@@ -70,12 +70,12 @@ const BlockTree = {
 
     findRangesImmutable(decorations, areEqual, returnTrue, (start, end) => {
       leafSets.push(
-        new DecoratorRange({
+        makeDecoratorRange(
           start,
           end,
-          decoratorKey: decorations.get(start),
-          leaves: generateLeaves(chars.slice(start, end).toList(), start),
-        }),
+          decorations[start],
+          generateLeaves(chars.slice(start, end), start),
+        ),
       );
     });
 

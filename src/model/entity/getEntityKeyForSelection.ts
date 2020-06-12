@@ -4,17 +4,20 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-import {notEmptyKey} from 'draftKeyUtils';
-import ContentState from '../immutable/ContentState';
-import SelectionState from '../immutable/SelectionState';
 import {EntityMap} from '../immutable/EntityMap';
+import {ContentState} from '../immutable/ContentState';
+import {
+  getStartKey,
+  getStartOffset,
+  isCollapsed,
+  SelectionState,
+} from '../immutable/SelectionState';
+import {getEntityAt} from '../immutable/ContentBlockNode';
+import DraftEntity from './DraftEntity';
+import {notEmptyKey} from '../../component/utils/draftKeyUtils';
 
 /**
  * Return the entity key that should be used when inserting text for the
@@ -27,29 +30,30 @@ function getEntityKeyForSelection(
 ): string | null {
   let entityKey;
 
-  if (targetSelection.isCollapsed()) {
-    const key = targetSelection.getAnchorKey();
-    const offset = targetSelection.getAnchorOffset();
+  if (isCollapsed(targetSelection)) {
+    const key = targetSelection.anchorKey;
+    const offset = targetSelection.anchorOffset;
     if (offset > 0) {
-      entityKey = contentState.getBlockForKey(key).getEntityAt(offset - 1);
-      if (entityKey !== contentState.getBlockForKey(key).getEntityAt(offset)) {
+      entityKey = getEntityAt(contentState.blockMap.get(key)!, offset - 1);
+
+      if (entityKey !== getEntityAt(contentState.blockMap.get(key)!, offset)) {
         return null;
       }
-      return filterKey(contentState.getEntityMap(), entityKey);
+      return filterKey(DraftEntity, entityKey);
     }
     return null;
   }
 
-  const startKey = targetSelection.getStartKey();
-  const startOffset = targetSelection.getStartOffset();
-  const startBlock = contentState.getBlockForKey(startKey);
+  const startKey = getStartKey(targetSelection);
+  const startOffset = getStartOffset(targetSelection);
+  const startBlock = contentState.blockMap.get(startKey)!;
 
   entityKey =
-    startOffset === startBlock.getLength()
+    startOffset === startBlock.text.length
       ? null
-      : startBlock.getEntityAt(startOffset);
+      : getEntityAt(startBlock, startOffset);
 
-  return filterKey(contentState.getEntityMap(), entityKey);
+  return filterKey(DraftEntity, entityKey);
 }
 
 /**
@@ -62,7 +66,7 @@ function filterKey(
 ): string | null {
   if (notEmptyKey(entityKey)) {
     const entity = entityMap.__get(entityKey);
-    return entity.getMutability() === 'MUTABLE' ? entityKey : null;
+    return entity.mutability === 'MUTABLE' ? entityKey : null;
   }
   return null;
 }

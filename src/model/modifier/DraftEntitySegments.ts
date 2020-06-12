@@ -4,15 +4,11 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-import { DraftRange } from 'DraftRange';
-import { DraftRemovalDirection } from 'DraftRemovalDirection';
+import {DraftRemovalDirection} from '../constants/DraftRemovalDirection';
+import {DraftRange} from './DraftRange';
 
 /**
  * Identify the range to delete from a segmented entity.
@@ -43,7 +39,7 @@ const DraftEntitySegments = {
     selectionEnd: number,
     text: string,
     entityStart: number,
-    direction: DraftRemovalDirection
+    direction: DraftRemovalDirection,
   ): DraftRange {
     let segments = text.split(' ');
     segments = segments.map((/*string*/ segment, /*number*/ ii) => {
@@ -102,5 +98,4 @@ const DraftEntitySegments = {
     };
   },
 };
-
-module.exports = DraftEntitySegments;
+export default DraftEntitySegments;

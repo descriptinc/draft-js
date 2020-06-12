@@ -14,10 +14,10 @@
  * When ranges are found, execute a specified `found` function to supply
  * the values to the caller.
  */
-function findRangesImmutable<T>(
+export function findRangesImmutable<T>(
   haystack: Iterable<T>,
-  areEqualFn: (a: T, b: T | null) => boolean,
-  filterFn: (value: T | null) => boolean,
+  areEqualFn: (a: T, b: T) => boolean,
+  filterFn: (value: T) => boolean,
   foundFn: (start: number, end: number) => void,
 ): void {
   if (Array.isArray(haystack) && haystack.length === 0) {
@@ -30,8 +30,9 @@ function findRangesImmutable<T>(
   let index = 0;
   for (const value of haystack) {
     if (count > 0) {
-      if (!areEqualFn(value, lastValue)) {
-        if (filterFn(lastValue)) {
+      // we know lastValue is defined because count > 0
+      if (!areEqualFn(value, lastValue!)) {
+        if (filterFn(lastValue!)) {
           foundFn(cursor, index);
         }
         cursor = index;
@@ -42,7 +43,7 @@ function findRangesImmutable<T>(
     index += 1;
   }
 
-  if (count > 0 && filterFn(lastValue)) {
+  if (count > 0 && filterFn(lastValue!)) {
     foundFn(cursor, count);
   }
 }

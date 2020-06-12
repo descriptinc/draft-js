@@ -360,3 +360,44 @@ export function makeMemoizedToArray<T, Arg0, Arg1, Arg2>(
     return lastArray;
   };
 }
+
+export function* takeUntil<T>(
+  iter: Iterable<T>,
+  condition: (item: T) => boolean,
+): IterableIterator<T> {
+  for (const item of iter) {
+    if (condition(item)) {
+      return;
+    }
+    yield item;
+  }
+}
+
+export function* skipUntil<T>(
+  iter: Iterable<T>,
+  condition: (item: T) => boolean,
+): IterableIterator<T> {
+  let found = false;
+  for (const item of iter) {
+    if (!found) {
+      found = condition(item);
+    }
+    if (found) {
+      yield item;
+    }
+  }
+}
+
+/**
+ * Drops first element and returns iter for the rest of the elements
+ */
+export function* rest<T>(iter: Iterable<T>): IterableIterator<T> {
+  let isFirst = true;
+  for (const item of iter) {
+    if (!isFirst) {
+      yield item;
+    } else {
+      isFirst = false;
+    }
+  }
+}

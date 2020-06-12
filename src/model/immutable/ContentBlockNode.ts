@@ -92,3 +92,7 @@ export function getInlineStyleAt(
 ): DraftInlineStyle {
   return block.characterList[index].style;
 }
+
+export function getEntityAt(block: BlockNode, index: number): string | null {
+  return block.characterList[index].entity;
+}
