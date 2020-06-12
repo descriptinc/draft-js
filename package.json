@@ -35,6 +35,7 @@
     "test-ci": "cross-env NODE_ENV=test npm run lint && npm run flow && npm run test"
   },
   "dependencies": {
+    "fast-deep-equal": "^3.1.3",
     "fbjs": "^1.0.0",
     "immutable": "~3.7.4",
     "object-assign": "^4.1.1"
@@ -47,6 +48,8 @@
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
     "alex": "^8.0.0",
     "babel-eslint": "^10.0.3",
     "babel-preset-fbjs": "^3.3.0",
@@ -80,6 +83,7 @@
     "react-test-renderer": "^16.0.0",
     "stats-webpack-plugin": "^0.6.2",
     "through2": "^3.0.1",
+    "typescript": "^3.9.5",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack-stream": "5.2.1"
   },
