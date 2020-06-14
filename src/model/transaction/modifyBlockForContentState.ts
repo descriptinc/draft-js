@@ -28,7 +28,7 @@ export default function modifyBlockForContentState(
   const iter: Iterable<[string, BlockNodeRecord]> = map(
     flatten<[string, BlockNodeRecord]>([
       takeUntil(
-        skipUntil(blockMap.entries(), ([k]) => k === startKey),
+        skipUntil(blockMap, ([k]) => k === startKey),
         ([k]) => k === endKey,
       ),
       [[endKey, blockMap.get(endKey)!]],

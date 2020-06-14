@@ -24,7 +24,7 @@ import {notEmptyKey} from '../../component/utils/draftKeyUtils';
  * specified target selection, only if the entity is `MUTABLE`. `IMMUTABLE`
  * and `SEGMENTED` entities should not be used for insertion behavior.
  */
-function getEntityKeyForSelection(
+export default function getEntityKeyForSelection(
   contentState: ContentState,
   targetSelection: SelectionState,
 ): string | null {
@@ -70,5 +70,3 @@ function filterKey(
   }
   return null;
 }
-
-module.exports = getEntityKeyForSelection;

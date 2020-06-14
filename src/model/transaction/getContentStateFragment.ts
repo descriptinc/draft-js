@@ -11,18 +11,28 @@
 
 'use strict';
 
-import { BlockMap } from 'BlockMap';
-import ContentState from 'ContentState';
-import SelectionState from 'SelectionState';
+import {ContentState} from '../immutable/ContentState';
+import {BlockMap} from '../immutable/BlockMap';
+import {
+  getEndKey,
+  getEndOffset,
+  getStartKey,
+  getStartOffset,
+  SelectionState,
+} from '../immutable/SelectionState';
+import removeEntitiesAtEdges from './removeEntitiesAtEdges';
+import {findIndex, map, slice} from '../descript/Iterables';
+import randomizeBlockMapKeys from './randomizeBlockMapKeys';
+import {createFromArray} from '../immutable/BlockMapBuilder';
 
-const randomizeBlockMapKeys = require('randomizeBlockMapKeys');
-const removeEntitiesAtEdges = require('removeEntitiesAtEdges');
-
-const getContentStateFragment = (contentState: ContentState, selectionState: SelectionState): BlockMap => {
-  const startKey = selectionState.getStartKey();
-  const startOffset = selectionState.getStartOffset();
-  const endKey = selectionState.getEndKey();
-  const endOffset = selectionState.getEndOffset();
+const getContentStateFragment = (
+  contentState: ContentState,
+  selectionState: SelectionState,
+): BlockMap => {
+  const startKey = getStartKey(selectionState);
+  const startOffset = getStartOffset(selectionState);
+  const endKey = getEndKey(selectionState);
+  const endOffset = getEndOffset(selectionState);
 
   // Edge entities should be stripped to ensure that we don't preserve
   // invalid partial entities when the fragment is reused. We do, however,
@@ -32,40 +42,43 @@ const getContentStateFragment = (contentState: ContentState, selectionState: Sel
     selectionState,
   );
 
-  const blockMap = contentWithoutEdgeEntities.getBlockMap();
-  const blockKeys = blockMap.keySeq();
-  const startIndex = blockKeys.indexOf(startKey);
-  const endIndex = blockKeys.indexOf(endKey) + 1;
+  const blockMap = contentWithoutEdgeEntities.blockMap;
+  const startIndex = findIndex(blockMap.keys(), k => k === startKey)!;
+  const endIndex = findIndex(blockMap.keys(), k => k === endKey)! + 1;
 
   return randomizeBlockMapKeys(
-    blockMap.slice(startIndex, endIndex).map((block, blockKey) => {
-      const text = block.getText();
-      const chars = block.getCharacterList();
+    createFromArray(
+      map(slice(blockMap, startIndex, endIndex), ([blockKey, block]) => {
+        const text = block.text;
+        const chars = block.characterList;
 
-      if (startKey === endKey) {
-        return block.merge({
-          text: text.slice(startOffset, endOffset),
-          characterList: chars.slice(startOffset, endOffset),
-        });
-      }
+        if (startKey === endKey) {
+          return {
+            ...block,
+            text: text.slice(startOffset, endOffset),
+            characterList: chars.slice(startOffset, endOffset),
+          };
+        }
 
-      if (blockKey === startKey) {
-        return block.merge({
-          text: text.slice(startOffset),
-          characterList: chars.slice(startOffset),
-        });
-      }
+        if (blockKey === startKey) {
+          return {
+            ...block,
+            text: text.slice(startOffset),
+            characterList: chars.slice(startOffset),
+          };
+        }
 
-      if (blockKey === endKey) {
-        return block.merge({
-          text: text.slice(0, endOffset),
-          characterList: chars.slice(0, endOffset),
-        });
-      }
+        if (blockKey === endKey) {
+          return {
+            ...block,
+            text: text.slice(0, endOffset),
+            characterList: chars.slice(0, endOffset),
+          };
+        }
 
-      return block;
-    }),
+        return block;
+      }),
+    ),
   );
 };
-
-module.exports = getContentStateFragment;
+export default getContentStateFragment;

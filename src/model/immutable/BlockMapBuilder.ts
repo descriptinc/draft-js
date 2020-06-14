@@ -13,7 +13,10 @@
 
 import {BlockNodeRecord} from './BlockNodeRecord';
 import {BlockMap} from './BlockMap';
+import {map} from '../descript/Iterables';
 
-export function createFromArray(blocks: Array<BlockNodeRecord>): BlockMap {
-  return new Map(blocks.map(block => [block.key, block]));
+export function createFromArray(blocks: Iterable<BlockNodeRecord>): BlockMap {
+  return new Map(
+    map(blocks, (block): [string, BlockNodeRecord] => [block.key, block]),
+  );
 }

@@ -26,9 +26,7 @@ export function mergeBlockMap(
   const seenKeys = new Set<string>();
   const result: BlockMap = new Map(
     flatten([
-      flatMap(blockMap.entries(), (entry):
-        | [string, BlockNodeRecord]
-        | undefined => {
+      flatMap(blockMap, (entry): [string, BlockNodeRecord] | undefined => {
         const [key, existingBlock] = entry;
         seenKeys.add(key);
         const newBlock = updates[key];

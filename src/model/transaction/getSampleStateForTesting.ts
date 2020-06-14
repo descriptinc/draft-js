@@ -11,69 +11,76 @@
 
 'use strict';
 
-const BlockMapBuilder = require('BlockMapBuilder');
-const CharacterMetadata = require('CharacterMetadata');
-const ContentBlock = require('ContentBlock');
-const ContentState = require('ContentState');
-const EditorState = require('EditorState');
-const SampleDraftInlineStyle = require('SampleDraftInlineStyle');
-const SelectionState = require('SelectionState');
+import {
+  createWithContent,
+  EditorState,
+  forceSelection,
+} from '../immutable/EditorState';
+import {ContentState, makeContentState} from '../immutable/ContentState';
+import {makeSelectionState, SelectionState} from '../immutable/SelectionState';
+import {makeContentBlock} from '../immutable/ContentBlock';
+import {repeat} from '../descript/Iterables';
+import {makeCharacterMetadata} from '../immutable/CharacterMetadata';
+import SampleInlineStyles from '../immutable/SampleDraftInlineStyle';
+import {createFromArray} from '../immutable/BlockMapBuilder';
+import DraftEntity from '../entity/DraftEntity';
 
-const Immutable = require('immutable');
-
-const {BOLD, ITALIC} = SampleDraftInlineStyle;
+const {BOLD, ITALIC} = SampleInlineStyles;
 const ENTITY_KEY = '2';
 
 const BLOCKS = [
-  new ContentBlock({
+  makeContentBlock({
     key: 'a',
     type: 'unstyled',
     text: 'Alpha',
-    characterList: Immutable.List(Immutable.Repeat(CharacterMetadata.EMPTY, 5)),
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'b',
     type: 'unordered-list-item',
     text: 'Bravo',
-    characterList: Immutable.List(
-      Immutable.Repeat(
-        CharacterMetadata.create({style: BOLD, entity: ENTITY_KEY}),
+    characterList: Array.from(
+      repeat(
         5,
+        makeCharacterMetadata({
+          style: BOLD,
+          entity: ENTITY_KEY,
+        }),
       ),
     ),
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'c',
     type: 'code-block',
     text: 'Test',
-    characterList: Immutable.List(Immutable.Repeat(CharacterMetadata.EMPTY, 4)),
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'd',
     type: 'code-block',
     text: '',
-    characterList: Immutable.List(),
+    characterList: [],
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'e',
     type: 'code-block',
-    text: '',
-    characterList: Immutable.List(),
+    characterList: [],
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'f',
     type: 'blockquote',
     text: 'Charlie',
-    characterList: Immutable.List(
-      Immutable.Repeat(
-        CharacterMetadata.create({style: ITALIC, entity: null}),
+    characterList: Array.from(
+      repeat(
         7,
+        makeCharacterMetadata({
+          style: ITALIC,
+          entity: null,
+        }),
       ),
     ),
   }),
 ];
 
-const selectionState = new SelectionState({
+const selectionState = makeSelectionState({
   anchorKey: 'a',
   anchorOffset: 0,
   focusKey: 'a',
@@ -82,27 +89,23 @@ const selectionState = new SelectionState({
   hasFocus: true,
 });
 
-const blockMap = BlockMapBuilder.createFromArray(BLOCKS);
-const contentState = new ContentState({
+const blockMap = createFromArray(BLOCKS);
+const contentState = makeContentState({
   blockMap,
-  entityMap: Immutable.OrderedMap(),
   selectionBefore: selectionState,
   selectionAfter: selectionState,
-}).createEntity({
-  type: 'IMAGE',
-  mutability: 'IMMUTABLE',
-  data: null,
 });
 
-let editorState = EditorState.createWithContent(contentState);
-editorState = EditorState.forceSelection(editorState, selectionState);
+DraftEntity.__create('IMAGE', 'IMMUTABLE');
+
+let editorState = createWithContent(contentState);
+editorState = forceSelection(editorState, selectionState);
 
 const getSampleStateForTesting = (): {
-  editorState: EditorState,
-  contentState: ContentState,
-  selectionState: SelectionState
+  editorState: EditorState;
+  contentState: ContentState;
+  selectionState: SelectionState;
 } => {
   return {editorState, contentState, selectionState};
 };
-
-module.exports = getSampleStateForTesting;
+export default getSampleStateForTesting;

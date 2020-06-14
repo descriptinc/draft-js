@@ -9,6 +9,7 @@
 
 import {EMPTY_CHARACTER} from './CharacterMetadata';
 import {BlockNode} from './BlockNode';
+import {repeat} from '../descript/Iterables';
 
 const EMPTY_MAP = new Map();
 
@@ -20,7 +21,7 @@ export function makeContentBlock({
   text = '',
   depth = 0,
   type = 'unstyled',
-  characterList = new Array(text.length).fill(EMPTY_CHARACTER),
+  characterList = Array.from(repeat(text.length, EMPTY_CHARACTER)),
 }: Partial<ContentBlock>): ContentBlock {
   return {
     characterList,

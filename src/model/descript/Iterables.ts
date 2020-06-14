@@ -240,6 +240,10 @@ export function times<T>(
   return map(range(count), callback);
 }
 
+export function repeat<T>(count: number, value: T): IterableIterator<T> {
+  return map(range(count), () => value);
+}
+
 export function join(iter: Iterable<string>, separator: string): string {
   let isFirst = true;
   let str = '';

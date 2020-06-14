@@ -47,5 +47,3 @@ export function findRangesImmutable<T>(
     foundFn(cursor, count);
   }
 }
-
-module.exports = findRangesImmutable;

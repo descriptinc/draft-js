@@ -129,11 +129,11 @@ const splitBlockInContentState = (
     data: new Map(),
   };
   const blocksBefore = takeUntil(
-    blockMap.entries(),
+    blockMap,
     ([, block]) => block === blockToSplit,
   );
   const blocksAfter = rest(
-    skipUntil(blockMap.entries(), ([, block]) => block === blockToSplit),
+    skipUntil(blockMap, ([, block]) => block === blockToSplit),
   );
 
   const newBlockMap = new Map(
@@ -171,4 +171,4 @@ const splitBlockInContentState = (
   };
 };
 
-module.exports = splitBlockInContentState;
+export default splitBlockInContentState;

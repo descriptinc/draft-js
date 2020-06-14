@@ -4,16 +4,9 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow
  * @emails oncall+draft_js
  */
-
-'use strict';
-
-import UnicodeBidiService from 'UnicodeBidiService';
-import ContentState from './ContentState';
-import {ContentBlock} from './ContentBlock';
+import {ContentState} from './ContentState';
 
 let bidiService: UnicodeBidiService | undefined;
 
@@ -41,5 +34,4 @@ const EditorBidiService = {
     return bidiMap;
   },
 };
-
-module.exports = EditorBidiService;
+export default EditorBidiService;

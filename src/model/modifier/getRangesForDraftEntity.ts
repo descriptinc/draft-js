@@ -4,17 +4,13 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-import { BlockNodeRecord } from 'BlockNodeRecord';
-import { DraftRange } from 'DraftRange';
-
-const invariant = require('invariant');
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {DraftRange} from './DraftRange';
+import {findEntityRanges} from '../immutable/ContentBlockNode';
+import invariant from '../../fbjs/invariant';
 
 /**
  * Obtain the start and end positions of the range that has the
@@ -24,10 +20,14 @@ const invariant = require('invariant');
  * method searches for the first instance of the entity key and returns
  * the subsequent range.
  */
-function getRangesForDraftEntity(block: BlockNodeRecord, key: string): Array<DraftRange> {
-  const ranges = [];
-  block.findEntityRanges(
-    c => c.getEntity() === key,
+export default function getRangesForDraftEntity(
+  block: BlockNodeRecord,
+  key: string,
+): Array<DraftRange> {
+  const ranges: DraftRange[] = [];
+  findEntityRanges(
+    block,
+    c => c.entity === key,
     (start, end) => {
       ranges.push({start, end});
     },
@@ -37,5 +37,3 @@ function getRangesForDraftEntity(block: BlockNodeRecord, key: string): Array<Dra
 
   return ranges;
 }
-
-module.exports = getRangesForDraftEntity;

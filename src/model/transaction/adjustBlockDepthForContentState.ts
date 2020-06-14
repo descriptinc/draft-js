@@ -4,43 +4,66 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 
 'use strict';
 
-import ContentState from 'ContentState';
-import SelectionState from 'SelectionState';
+import {ContentState} from '../immutable/ContentState';
+import {
+  getEndKey,
+  getStartKey,
+  SelectionState,
+} from '../immutable/SelectionState';
+import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {mergeBlockMap} from '../immutable/BlockMap';
 
-function adjustBlockDepthForContentState(
+export default function adjustBlockDepthForContentState(
   contentState: ContentState,
   selectionState: SelectionState,
   adjustment: number,
-  maxDepth: number
+  maxDepth: number,
 ): ContentState {
-  const startKey = selectionState.getStartKey();
-  const endKey = selectionState.getEndKey();
-  let blockMap = contentState.getBlockMap();
-  const blocks = blockMap
-    .toSeq()
-    .skipUntil((_, k) => k === startKey)
-    .takeUntil((_, k) => k === endKey)
-    .concat([[endKey, blockMap.get(endKey)]])
-    .map(block => {
-      let depth = block.getDepth() + adjustment;
+  const startKey = getStartKey(selectionState);
+  const endKey = getEndKey(selectionState);
+  let blockMap = contentState.blockMap;
+
+  const iter = map(
+    flatten<[string, BlockNodeRecord]>([
+      takeUntil(
+        skipUntil(blockMap, ([k]) => k === startKey),
+        ([k]) => k === endKey,
+      ),
+      [[endKey, blockMap.get(endKey)!]],
+    ]),
+    ([blockKey, block]): [string, BlockNodeRecord] => {
+      let depth = block.depth + adjustment;
       depth = Math.max(0, Math.min(depth, maxDepth));
-      return block.set('depth', depth);
-    });
+      if (depth === block.depth) {
+        return [blockKey, block];
+      }
+      return [
+        blockKey,
+        {
+          ...block,
+          depth,
+        },
+      ];
+    },
+  );
 
-  blockMap = blockMap.merge(blocks);
+  const newBlocks: Record<string, BlockNodeRecord> = {};
+  for (const [blockKey, block] of iter) {
+    newBlocks[blockKey] = block;
+  }
 
-  return contentState.merge({
+  blockMap = mergeBlockMap(blockMap, newBlocks);
+
+  return {
+    ...contentState,
     blockMap,
     selectionBefore: selectionState,
     selectionAfter: selectionState,
-  });
+  };
 }
-
-module.exports = adjustBlockDepthForContentState;

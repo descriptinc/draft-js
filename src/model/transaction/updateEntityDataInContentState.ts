@@ -14,7 +14,7 @@
 import {ContentState} from '../immutable/ContentState';
 import DraftEntity from '../entity/DraftEntity';
 
-function updateEntityDataInContentState(
+export default function updateEntityDataInContentState(
   contentState: ContentState,
   key: string,
   data: {
@@ -33,5 +33,3 @@ function updateEntityDataInContentState(
   // return contentState.set('entityMap', newEntityMap);
   return contentState;
 }
-
-module.exports = updateEntityDataInContentState;

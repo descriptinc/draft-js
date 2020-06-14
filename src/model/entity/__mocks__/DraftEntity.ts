@@ -8,7 +8,7 @@
  * @emails oncall+draft_js
  */
 
-const DraftEntity = jest.genMockFromModule('DraftEntity');
+const DraftEntity = jest.genMockFromModule('../DraftEntity');
 
 const DraftEntityInstance = {
   getType: jest.fn(() => ''),
@@ -27,4 +27,4 @@ DraftEntity.get = jest.fn(function() {
   return DraftEntityInstance;
 });
 
-module.exports = DraftEntity;
+export default DraftEntity;

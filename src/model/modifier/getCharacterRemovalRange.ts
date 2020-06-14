@@ -177,5 +177,4 @@ function getEntityRemovalRange(
     isBackward: false,
   });
 }
-
-module.exports = getCharacterRemovalRange;
+export default getCharacterRemovalRange;

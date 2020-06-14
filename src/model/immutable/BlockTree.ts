@@ -4,11 +4,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 import {ContentState} from './ContentState';
 import {BlockNodeRecord} from './BlockNodeRecord';
@@ -82,6 +79,7 @@ const BlockTree = {
     return leafSets;
   },
 };
+export default BlockTree;
 
 /**
  * Generate LeafRange records for a given character list.
@@ -105,5 +103,3 @@ function generateLeaves(
 function areEqual(a: any, b: any): boolean {
   return a === b;
 }
-
-module.exports = BlockTree;

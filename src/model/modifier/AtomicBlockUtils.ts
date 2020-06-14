@@ -166,5 +166,4 @@ const AtomicBlockUtils = {
     return EditorState.push(editorState, newContent, 'move-block');
   },
 };
-
-module.exports = AtomicBlockUtils;
+export default AtomicBlockUtils;

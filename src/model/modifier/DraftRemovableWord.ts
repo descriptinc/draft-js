@@ -71,5 +71,4 @@ const DraftRemovableWord = {
     return getRemovableWord(text, false);
   },
 };
-
-module.exports = DraftRemovableWord;
+export default DraftRemovableWord;

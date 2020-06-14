@@ -373,7 +373,7 @@ const removeRangeFromContentState = (
     flatten<[string, ContentBlock | null]>([
       filter(
         takeUntil(
-          skipUntil(blockMap.entries(), ([k]) => k === startKey),
+          skipUntil(blockMap, ([k]) => k === startKey),
           ([k]) => k === endKey,
         ),
         ([k]) => parentAncestors.indexOf(k) === -1,
@@ -444,4 +444,4 @@ const removeFromList = (
   return targetList;
 };
 
-module.exports = removeRangeFromContentState;
+export default removeRangeFromContentState;

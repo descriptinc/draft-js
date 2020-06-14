@@ -13,16 +13,17 @@ import {
   makeEmptySelection,
   makeNullSelection,
 } from './SelectionState';
-import {first, last} from '../descript/Iterables';
+import {first, last, rest, skipUntil, takeUntil} from '../descript/Iterables';
 import {BlockNodeRecord} from './BlockNodeRecord';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
 import {createFromArray} from './BlockMapBuilder';
-import {sanitizeDraftText} from '../encoding/sanitizeDraftText';
 import {makeContentBlockNode} from './ContentBlockNode';
 import {makeContentBlock} from './ContentBlock';
 import {gkx} from '../../stubs/gkx';
-import DraftEntity from '../entity/DraftEntity';
+import DraftEntity, {DraftEntityMapObject} from '../entity/DraftEntity';
+import {DraftEntityInstance} from '../entity/DraftEntityInstance';
+import sanitizeDraftText from '../encoding/sanitizeDraftText';
 
 export type ContentState = Readonly<{
   blockMap: BlockMap;
@@ -159,4 +160,26 @@ export function createFromText(
     }
   });
   return createFromBlockArray(blocks);
+}
+
+export function getBlockBefore(
+  {blockMap}: ContentState,
+  blockKey: string,
+): BlockNodeRecord | undefined {
+  // FIXME [perf]: cache
+  const before = last(takeUntil(blockMap, ([k]) => k === blockKey));
+  return before?.[1];
+}
+
+export function getBlockAfter(
+  {blockMap}: ContentState,
+  blockKey: string,
+): BlockNodeRecord | undefined {
+  // FIXME [perf]: cache
+  const after = first(rest(skipUntil(blockMap, ([k]) => k === blockKey)));
+  return after?.[1];
+}
+
+export function getEntityMap(_: ContentState): DraftEntityMapObject {
+  return DraftEntity;
 }

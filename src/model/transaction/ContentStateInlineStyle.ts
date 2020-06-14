@@ -4,24 +4,26 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
-
-'use strict';
-
-import ContentState from 'ContentState';
-import SelectionState from 'SelectionState';
-
-const CharacterMetadata = require('CharacterMetadata');
-const {Map} = require('immutable');
+import {ContentState} from '../immutable/ContentState';
+import {
+  getEndKey,
+  getEndOffset,
+  getStartKey,
+  getStartOffset,
+  SelectionState,
+} from '../immutable/SelectionState';
+import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {applyStyle, removeStyle} from '../immutable/CharacterMetadata';
+import {mergeBlockMap} from '../immutable/BlockMap';
 
 const ContentStateInlineStyle = {
   add: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    inlineStyle: string
+    inlineStyle: string,
   ): ContentState {
     return modifyInlineStyle(contentState, selectionState, inlineStyle, true);
   },
@@ -29,7 +31,7 @@ const ContentStateInlineStyle = {
   remove: function(
     contentState: ContentState,
     selectionState: SelectionState,
-    inlineStyle: string
+    inlineStyle: string,
   ): ContentState {
     return modifyInlineStyle(contentState, selectionState, inlineStyle, false);
   },
@@ -39,19 +41,23 @@ function modifyInlineStyle(
   contentState: ContentState,
   selectionState: SelectionState,
   inlineStyle: string,
-  addOrRemove: boolean
+  addOrRemove: boolean,
 ): ContentState {
-  const blockMap = contentState.getBlockMap();
-  const startKey = selectionState.getStartKey();
-  const startOffset = selectionState.getStartOffset();
-  const endKey = selectionState.getEndKey();
-  const endOffset = selectionState.getEndOffset();
+  const blockMap = contentState.blockMap;
+  const startKey = getStartKey(selectionState);
+  const startOffset = getStartOffset(selectionState);
+  const endKey = getEndKey(selectionState);
+  const endOffset = getEndOffset(selectionState);
 
-  const newBlocks = blockMap
-    .skipUntil((_, k) => k === startKey)
-    .takeUntil((_, k) => k === endKey)
-    .concat(Map([[endKey, blockMap.get(endKey)]]))
-    .map((block, blockKey) => {
+  const iter = map(
+    flatten<[string, BlockNodeRecord]>([
+      takeUntil(
+        skipUntil(blockMap, ([k]) => k === startKey),
+        ([k]) => k === endKey,
+      ),
+      [[endKey, blockMap.get(endKey)!]],
+    ]),
+    ([blockKey, block]): [string, BlockNodeRecord] => {
       let sliceStart;
       let sliceEnd;
 
@@ -60,30 +66,42 @@ function modifyInlineStyle(
         sliceEnd = endOffset;
       } else {
         sliceStart = blockKey === startKey ? startOffset : 0;
-        sliceEnd = blockKey === endKey ? endOffset : block.getLength();
+        sliceEnd = blockKey === endKey ? endOffset : block.text.length;
       }
 
-      let chars = block.getCharacterList();
-      let current;
+      if (sliceStart >= sliceEnd) {
+        return [blockKey, block];
+      }
+
+      const chars = [...block.characterList];
       while (sliceStart < sliceEnd) {
-        current = chars.get(sliceStart);
-        chars = chars.set(
-          sliceStart,
-          addOrRemove
-            ? CharacterMetadata.applyStyle(current, inlineStyle)
-            : CharacterMetadata.removeStyle(current, inlineStyle),
-        );
+        const current = chars[sliceStart];
+        chars[sliceStart] = addOrRemove
+          ? applyStyle(current, inlineStyle)
+          : removeStyle(current, inlineStyle);
         sliceStart++;
       }
 
-      return block.set('characterList', chars);
-    });
+      return [
+        blockKey,
+        {
+          ...block,
+          characterList: chars,
+        },
+      ];
+    },
+  );
 
-  return contentState.merge({
-    blockMap: blockMap.merge(newBlocks),
+  const newBlocks: Record<string, BlockNodeRecord> = {};
+  for (const [blockKey, block] of iter) {
+    newBlocks[blockKey] = block;
+  }
+
+  return {
+    ...contentState,
+    blockMap: mergeBlockMap(blockMap, newBlocks),
     selectionBefore: selectionState,
     selectionAfter: selectionState,
-  });
+  };
 }
-
-module.exports = ContentStateInlineStyle;
+export default ContentStateInlineStyle;

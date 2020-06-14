@@ -4,31 +4,28 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
-
-'use strict';
-
-const Immutable = require('immutable');
-const insertIntoList = require('insertIntoList');
-const invariant = require('invariant');
-
-const {Repeat} = Immutable;
-
-import CharacterMetadata from 'CharacterMetadata';
-import ContentState from 'ContentState';
-import SelectionState from 'SelectionState';
+import {ContentState} from '../immutable/ContentState';
+import {
+  getStartKey,
+  getStartOffset,
+  isCollapsed,
+  SelectionState,
+} from '../immutable/SelectionState';
+import invariant from '../../fbjs/invariant';
+import {CharacterMetadata} from '../immutable/CharacterMetadata';
+import {times} from '../descript/Iterables';
+import {mergeBlockMap} from '../immutable/BlockMap';
 
 function insertTextIntoContentState(
   contentState: ContentState,
   selectionState: SelectionState,
   text: string,
-  characterMetadata: CharacterMetadata
+  characterMetadata: CharacterMetadata,
 ): ContentState {
   invariant(
-    selectionState.isCollapsed(),
+    isCollapsed(selectionState),
     '`insertText` should only be called with a collapsed range.',
   );
 
@@ -41,33 +38,33 @@ function insertTextIntoContentState(
     return contentState;
   }
 
-  const blockMap = contentState.getBlockMap();
-  const key = selectionState.getStartKey();
-  const offset = selectionState.getStartOffset();
-  const block = blockMap.get(key);
-  const blockText = block.getText();
+  const blockMap = contentState.blockMap;
+  const key = getStartKey(selectionState);
+  const offset = getStartOffset(selectionState);
+  const block = blockMap.get(key)!;
+  const blockText = block.text;
 
-  const newBlock = block.merge({
-    text:
-      blockText.slice(0, offset) +
-      text +
-      blockText.slice(offset, block.getLength()),
-    characterList: insertIntoList(
-      block.getCharacterList(),
-      Repeat(characterMetadata, len).toList(),
-      offset,
-    ),
-  });
+  const newBlock = {
+    ...block,
+    text: blockText.slice(0, offset) + text + blockText.slice(offset),
+    characterList: [
+      ...block.characterList.slice(0, offset),
+      ...times(len, () => characterMetadata),
+      ...block.characterList.slice(offset),
+    ],
+  };
 
   const newOffset = offset + len;
 
-  return contentState.merge({
-    blockMap: blockMap.set(key, newBlock),
-    selectionAfter: selectionState.merge({
+  return {
+    ...contentState,
+    blockMap: mergeBlockMap(blockMap, {[key]: newBlock}),
+    selectionAfter: {
+      ...selectionState,
       anchorOffset: newOffset,
       focusOffset: newOffset,
-    }),
-  });
+    },
+  };
 }
 
-module.exports = insertTextIntoContentState;
+export default insertTextIntoContentState;

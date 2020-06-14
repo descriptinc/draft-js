@@ -12,3 +12,25 @@
 'use strict';
 
 export type DraftInlineStyle = ReadonlySet<string>;
+
+export function inlineStyleWith(
+  style: DraftInlineStyle,
+  item: string,
+): DraftInlineStyle {
+  if (style.has(item)) {
+    return style;
+  }
+  return new Set([...style, item]);
+}
+
+export function inlineStyleWithout(
+  style: DraftInlineStyle,
+  item: string,
+): DraftInlineStyle {
+  if (!style.has(item)) {
+    return style;
+  }
+  const result = new Set<string>(style);
+  result.delete(item);
+  return result;
+}

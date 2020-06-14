@@ -102,14 +102,14 @@ import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 
 const randomizeContentBlockKeys = (blockMap: BlockMap): BlockMap => {
   return new Map(
-    map(blockMap.entries(), ([, block]): [string, BlockNodeRecord] => {
+    map(blockMap, ([, block]): [string, BlockNodeRecord] => {
       const key = generateRandomKey();
       return [key, {...block, key}];
     }),
   );
 };
 
-const randomizeBlockMapKeys = (blockMap: BlockMap): BlockMap => {
+export default function randomizeBlockMapKeys(blockMap: BlockMap): BlockMap {
   const isTreeBasedBlockMap = blockIsExperimentalTreeBlock(
     first(blockMap.values())!,
   );
@@ -121,6 +121,4 @@ const randomizeBlockMapKeys = (blockMap: BlockMap): BlockMap => {
   throw new Error('not implemented');
 
   // return randomizeContentBlockNodeKeys(blockMap);
-};
-
-module.exports = randomizeBlockMapKeys;
+}

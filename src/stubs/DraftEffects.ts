@@ -7,7 +7,11 @@
  */
 
 const effects = {
-  initODS: function() {},
-  handleExtensionCausedError: function() {},
+  initODS: function() {
+    //
+  },
+  handleExtensionCausedError: function() {
+    //
+  },
 };
 export default effects;
