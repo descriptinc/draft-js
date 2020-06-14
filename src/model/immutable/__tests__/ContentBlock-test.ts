@@ -77,8 +77,6 @@ test('must properly retrieve style at offset', () => {
 test('must correctly identify ranges of styles', () => {
   const block = getSampleBlock();
 
-  console.log(block);
-
   const cb = jest.fn();
   findStyleRanges(block, () => true, cb);
 
