@@ -8,47 +8,45 @@
  * @format
  */
 
-jest.mock('ContentState');
+import {createFromText} from '../../immutable/ContentState';
+import CompositeDraftDecorator from '../CompositeDraftDecorator';
+import {ContentBlock, makeContentBlock} from '../../immutable/ContentBlock';
 
-const CompositeDraftDecorator = require('CompositeDraftDecorator');
-const ContentState = require('ContentState');
+jest.mock('../../immutable/ContentState');
 
-class ContentBlock {
-  constructor(text) {
-    this._text = text;
-  }
-
-  text {
-    return this._text;
-  }
-}
-
-const searchWith = regex => (block, callback, contentState) => {
-  block.text.replace(regex, (match, offset) => {
+const searchWith = (regex: RegExp) => (
+  block: ContentBlock,
+  callback: (start: number, end: number) => void,
+) => {
+  block.text.replace(regex, (match: string, offset: number): string => {
     callback(offset, offset + match.length);
+    return '';
   });
 };
 
 const BarDecorator = {
   strategy: searchWith(/bar/gi),
+  component: () => null,
 };
 
 const BartDecorator = {
   strategy: searchWith(/bart/gi),
+  component: () => null,
 };
 
 const FooDecorator = {
   strategy: searchWith(/foo/gi),
+  component: () => null,
 };
 
 const assertCompositeDraftDecorator = (
-  text,
+  text: string,
   decorators = [FooDecorator, BarDecorator],
 ) => {
   expect(
     new CompositeDraftDecorator(decorators).getDecorations(
-      makeContentBlock(text),
-      ContentState.createFromText(text),
+      makeContentBlock({text}),
+      createFromText(text),
     ),
   ).toMatchSnapshot();
 };

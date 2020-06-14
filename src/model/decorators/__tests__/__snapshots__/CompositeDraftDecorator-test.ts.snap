@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must behave correctly if there are no matches 1`] = `
-Immutable.List [
+Array [
   null,
   null,
   null,
@@ -40,7 +40,7 @@ Immutable.List [
 `;
 
 exports[`must find decoration matches 1`] = `
-Immutable.List [
+Array [
   null,
   null,
   "0.0",
@@ -63,7 +63,7 @@ Immutable.List [
 `;
 
 exports[`must find matches for multiple decorators 1`] = `
-Immutable.List [
+Array [
   null,
   null,
   "0.0",
@@ -82,7 +82,7 @@ Immutable.List [
 `;
 
 exports[`must find matches regardless of text location 1`] = `
-Immutable.List [
+Array [
   null,
   null,
   null,
@@ -100,7 +100,7 @@ Immutable.List [
 `;
 
 exports[`must separate adjacent ranges that have the same decorator 1`] = `
-Immutable.List [
+Array [
   "0.0",
   "0.0",
   "0.0",
@@ -114,7 +114,7 @@ Immutable.List [
 `;
 
 exports[`must throw out matches if earlier match is shorter 1`] = `
-Immutable.List [
+Array [
   "0.0",
   "0.0",
   "0.0",
@@ -133,7 +133,7 @@ Immutable.List [
 `;
 
 exports[`must throw out overlaps with existing decorations 1`] = `
-Immutable.List [
+Array [
   "0.0",
   "0.0",
   "0.0",
