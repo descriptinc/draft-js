@@ -89,8 +89,8 @@ const secondBlock = contentState
   .first();
 const selectionWithinA = selectionState.set('anchorOffset', 3);
 const selectionFromEndOfA = selectionState.merge({
-  anchorOffset: initialBlock.getLength(),
-  focusOffset: initialBlock.getLength(),
+  anchorOffset: initialBlock.text.length,
+  focusOffset: initialBlock.text.length,
 });
 
 test('must return the input ContentState if selection is collapsed', () => {
@@ -120,7 +120,7 @@ test('must remove to the end of the block', () => {
       focusOffset: contentState
         .getBlockMap()
         .first()
-        .getLength(),
+        .text.length,
     }),
   );
 });
@@ -147,7 +147,7 @@ test('must remove from the start of A to the end of B', () => {
   assertRemoveRangeFromContentState(
     selectionState.merge({
       focusKey: 'b',
-      focusOffset: secondBlock.getLength(),
+      focusOffset: secondBlock.text.length,
     }),
   );
 });
@@ -169,7 +169,7 @@ test('must remove from within A to the end of B', () => {
   assertRemoveRangeFromContentState(
     selectionWithinA.merge({
       focusKey: 'b',
-      focusOffset: secondBlock.getLength(),
+      focusOffset: secondBlock.text.length,
     }),
   );
 });
@@ -196,7 +196,7 @@ test('must remove from the end of A to the end of B', () => {
   assertRemoveRangeFromContentState(
     selectionFromEndOfA.merge({
       focusKey: 'b',
-      focusOffset: secondBlock.getLength(),
+      focusOffset: secondBlock.text.length,
     }),
   );
 });
@@ -216,8 +216,8 @@ test('must remove E and F entirely when selection is from end of D to end of F o
     treeSelectionState.merge({
       anchorKey: 'D',
       focusKey: 'F',
-      anchorOffset: contentBlockNodes[3].getLength(),
-      focusOffset: contentBlockNodes[5].getLength(),
+      anchorOffset: contentBlockNodes[3].text.length,
+      focusOffset: contentBlockNodes[5].text.length,
     }),
     treeContentState,
   );
@@ -228,8 +228,8 @@ test('must preserve B and C since E has not been removed', () => {
     treeSelectionState.merge({
       anchorKey: 'A',
       focusKey: 'D',
-      anchorOffset: contentBlockNodes[0].getLength(),
-      focusOffset: contentBlockNodes[3].getLength(),
+      anchorOffset: contentBlockNodes[0].text.length,
+      focusOffset: contentBlockNodes[3].text.length,
     }),
     treeContentState,
   );
@@ -240,8 +240,8 @@ test('must remove B and all its children', () => {
     treeSelectionState.merge({
       anchorKey: 'A',
       focusKey: 'F',
-      anchorOffset: contentBlockNodes[0].getLength(),
-      focusOffset: contentBlockNodes[5].getLength(),
+      anchorOffset: contentBlockNodes[0].text.length,
+      focusOffset: contentBlockNodes[5].text.length,
     }),
     treeContentState,
   );
@@ -252,8 +252,8 @@ test('must retain B since F has not been removed', () => {
     treeSelectionState.merge({
       anchorKey: 'A',
       focusKey: 'E',
-      anchorOffset: contentBlockNodes[0].getLength(),
-      focusOffset: contentBlockNodes[4].getLength(),
+      anchorOffset: contentBlockNodes[0].text.length,
+      focusOffset: contentBlockNodes[4].text.length,
     }),
     treeContentState,
   );
@@ -266,7 +266,7 @@ test('must merge D and E when deleting range from end of D to start of E', () =>
     treeSelectionState.merge({
       anchorKey: 'D',
       focusKey: 'E',
-      anchorOffset: contentBlockNodes[3].getLength(), // end of D
+      anchorOffset: contentBlockNodes[3].text.length, // end of D
       focusOffset: 0, // start of E
     }),
     treeContentState,

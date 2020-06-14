@@ -39,8 +39,8 @@ import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 //   belowBlock: ContentBlockNode,
 // ): BlockMap => {
 //   return blockMap.withMutations(blocks => {
-//     const originalBlockKey = originalBlock.getKey();
-//     const belowBlockKey = belowBlock.getKey();
+//     const originalBlockKey = originalBlock.key;
+//     const belowBlockKey = belowBlock.key;
 //
 //     // update block parent
 //     transformBlock(originalBlock.getParentKey(), blocks, block => {

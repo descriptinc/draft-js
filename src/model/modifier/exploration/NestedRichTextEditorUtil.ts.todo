@@ -76,7 +76,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     const content = editorState.getCurrentContent();
     const startKey = selection.getStartKey();
     const block = content.getBlockForKey(startKey);
-    const length = block.getLength();
+    const length = block.text.length;
 
     // The cursor is somewhere within the text. Behave normally.
     if (selection.getStartOffset() < length) {
@@ -85,13 +85,13 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
     const blockAfter = content.getBlockAfter(startKey);
 
-    if (!blockAfter || blockAfter.getType() !== 'atomic') {
+    if (!blockAfter || blockAfter.type !== 'atomic') {
       return null;
     }
 
     const atomicBlockTarget = selection.merge({
-      focusKey: blockAfter.getKey(),
-      focusOffset: blockAfter.getLength(),
+      focusKey: blockAfter.key,
+      focusOffset: blockAfter.text.length,
     });
 
     const withoutAtomicBlock = DraftModifier.removeRange(
@@ -121,9 +121,9 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       !selection.isCollapsed() ||
       selection.getAnchorOffset() ||
       selection.getFocusOffset() ||
-      (currentBlock.getType() === 'unstyled' &&
+      (currentBlock.type === 'unstyled' &&
         previousBlockKey &&
-        content.getBlockForKey(previousBlockKey).getType() !== 'atomic')
+        content.getBlockForKey(previousBlockKey).type !== 'atomic')
     ) {
       return null;
     }
@@ -132,14 +132,14 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     const blockBefore = content.getBlockBefore(startKey);
 
     // we want to delete that block completely
-    if (blockBefore && blockBefore.getType() === 'atomic') {
+    if (blockBefore && blockBefore.type === 'atomic') {
       const withoutAtomicBlock = DraftModifier.removeRange(
         content,
         selection.merge({
-          focusKey: blockBefore.getKey(),
-          focusOffset: blockBefore.getText().length,
+          focusKey: blockBefore.key,
+          focusOffset: blockBefore.text.length,
           anchorKey: startKey,
-          anchorOffset: content.getBlockForKey(startKey).getText().length,
+          anchorOffset: content.getBlockForKey(startKey).text.length,
           isBackward: false,
         }),
         'forward',
@@ -173,8 +173,8 @@ const NestedRichTextEditorUtil: RichTextUtils = {
         withoutBlockStyle,
         withoutBlockStyle
           .getBlockMap()
-          .get(currentBlock.getKey())
-          .getType() === 'unstyled'
+          .get(currentBlock.key)
+          .type === 'unstyled'
           ? 'change-block-type'
           : 'adjust-depth',
       );
@@ -208,7 +208,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       blockType,
     );
     const isCurrentBlockOfUnsupportedNestingBlockType = NESTING_DISABLED_TYPES.includes(
-      currentBlock.getType(),
+      currentBlock.type,
     );
 
     // we don't allow this operations to avoid corrupting the document data model
@@ -226,7 +226,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       isSelectionCollapsed ||
       isUnsupportedNestingBlockType ||
       isMultiBlockSelection ||
-      currentBlock.getType() === blockType ||
+      currentBlock.type === blockType ||
       !currentBlock.getChildKeys().isEmpty()
     ) {
       return RichTextEditorUtil.toggleBlockType(editorState, blockType);
@@ -247,11 +247,11 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     const entityMap = contentState.getEntityMap();
     return contentState
       .getBlockForKey(selection.getAnchorKey())
-      .getCharacterList()
+      .characterList
       .slice(selection.getStartOffset(), selection.getEndOffset())
       .some(v => {
         const entity = v.getEntity();
-        return !!entity && entityMap.__get(entity).getType() === 'LINK';
+        return !!entity && entityMap.__get(entity).type === 'LINK';
       });
   },
 
@@ -260,7 +260,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     return editorState
       .getCurrentContent()
       .getBlockForKey(selection.getStartKey())
-      .getType();
+      .type;
   },
 
   getDataObjectForLinkURL: (uri: URI): DataObjectForLink => {
@@ -301,7 +301,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
     let content = editorState.getCurrentContent();
     const block = content.getBlockForKey(key);
-    const type = block.getType();
+    const type = block.type;
     if (type !== 'unordered-list-item' && type !== 'ordered-list-item') {
       return editorState;
     }
@@ -460,13 +460,13 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       const content = editorState.getCurrentContent();
       const block = content.getBlockForKey(key);
 
-      const type = block.getType();
+      const type = block.type;
       const blockBefore = content.getBlockBefore(key);
       if (
         type === 'code-block' &&
         blockBefore &&
-        blockBefore.getType() === 'code-block' &&
-        blockBefore.getLength() !== 0
+        blockBefore.type === 'code-block' &&
+        blockBefore.text.length !== 0
       ) {
         return null;
       }
@@ -492,7 +492,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 };
 
 const onUntab = (blockMap: BlockMap, block: ContentBlockNode): BlockMap => {
-  const key = block.getKey();
+  const key = block.key;
   const parentKey = block.getParentKey();
   const nextSiblingKey = block.getNextSiblingKey();
   if (parentKey == null) {
@@ -512,7 +512,7 @@ const onUntab = (blockMap: BlockMap, block: ContentBlockNode): BlockMap => {
       key: generateRandomKey(),
       text: '',
       depth: parent.getDepth(),
-      type: parent.getType(),
+      type: parent.type,
       children: nextChildren,
       parent: parent.getParentKey(),
     });
@@ -521,17 +521,17 @@ const onUntab = (blockMap: BlockMap, block: ContentBlockNode): BlockMap => {
     invariant(nextSiblingKey != null, 'block must have a next sibling here');
     const blocks = blockMap.toSeq();
     blockMap = blocks
-      .takeUntil(block => block.getKey() === nextSiblingKey)
+      .takeUntil(block => block.key === nextSiblingKey)
       .concat(
-        [[newBlock.getKey(), newBlock]],
-        blocks.skipUntil(block => block.getKey() === nextSiblingKey),
+        [[newBlock.key, newBlock]],
+        blocks.skipUntil(block => block.key === nextSiblingKey),
       )
       .toOrderedMap();
 
     // set the nextChildren's parent to the new block
     blockMap = blockMap.map(block =>
-      nextChildren.includes(block.getKey())
-        ? block.merge({parent: newBlock.getKey()})
+      nextChildren.includes(block.key)
+        ? block.merge({parent: newBlock.key})
         : block,
     );
     // update the next/previous pointers for the children at the split
@@ -545,14 +545,14 @@ const onUntab = (blockMap: BlockMap, block: ContentBlockNode): BlockMap => {
     if (parentNextSiblingKey != null) {
       blockMap = DraftTreeOperations.updateSibling(
         blockMap,
-        newBlock.getKey(),
+        newBlock.key,
         parentNextSiblingKey,
       );
     }
     blockMap = DraftTreeOperations.updateSibling(
       blockMap,
       parentKey,
-      newBlock.getKey(),
+      newBlock.key,
     );
     blockMap = DraftTreeOperations.moveChildUp(blockMap, key);
   }

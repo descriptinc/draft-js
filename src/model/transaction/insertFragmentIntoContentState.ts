@@ -151,7 +151,7 @@ const updateTail = (
 //   block: ContentBlockNode,
 //   blockMap: BlockMap,
 // ): Array<string> => {
-//   const headKey = block.getKey();
+//   const headKey = block.key;
 //   let rootBlock = block;
 //   const rootBlocks = [];
 //
@@ -184,8 +184,8 @@ const updateTail = (
 //   fragmentHeadBlock: ContentBlockNode,
 // ): BlockMap => {
 //   return blockMap.withMutations(blockMapState => {
-//     const targetKey = targetBlock.getKey();
-//     const headKey = fragmentHeadBlock.getKey();
+//     const targetKey = targetBlock.key;
+//     const headKey = fragmentHeadBlock.key;
 //     const targetNextKey = targetBlock.getNextSiblingKey();
 //     const targetParentKey = targetBlock.getParentKey();
 //     const fragmentRootBlocks = getRootBlocks(fragmentHeadBlock, blockMap);

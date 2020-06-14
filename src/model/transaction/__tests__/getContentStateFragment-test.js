@@ -97,13 +97,13 @@ const assertGetContentStateFragment = (blocksArray, selection = {}) => {
 
 test('must be able to return all selected contentBlocks', () => {
   assertGetContentStateFragment(contentBlocks, {
-    focusOffset: contentBlocks[3].getLength(),
+    focusOffset: contentBlocks[3].text.length,
   });
 });
 
 test('must be able to return all selected contentBlockNodes', () => {
   assertGetContentStateFragment(contentBlockNodes, {
-    focusOffset: contentBlockNodes[3].getLength(),
+    focusOffset: contentBlockNodes[3].text.length,
   });
 });
 
@@ -111,7 +111,7 @@ test('must be able to return contentBlocks selected within', () => {
   assertGetContentStateFragment(contentBlocks, {
     anchorKey: 'B',
     focusKey: 'C',
-    focusOffset: contentBlockNodes[2].getLength(),
+    focusOffset: contentBlockNodes[2].text.length,
   });
 });
 
@@ -119,7 +119,7 @@ test('must be able to return contentBlockNodes selected within', () => {
   assertGetContentStateFragment(contentBlockNodes, {
     anchorKey: 'B',
     focusKey: 'C',
-    focusOffset: contentBlockNodes[2].getLength(),
+    focusOffset: contentBlockNodes[2].text.length,
   });
 });
 
@@ -127,7 +127,7 @@ test('must be able to return first ContentBlock selected', () => {
   assertGetContentStateFragment(contentBlocks, {
     anchorKey: 'A',
     focusKey: 'A',
-    focusOffset: contentBlocks[0].getLength(),
+    focusOffset: contentBlocks[0].text.length,
   });
 });
 
@@ -135,7 +135,7 @@ test('must be able to return first ContentBlockNode selected', () => {
   assertGetContentStateFragment(contentBlockNodes, {
     anchorKey: 'A',
     focusKey: 'A',
-    focusOffset: contentBlockNodes[0].getLength(),
+    focusOffset: contentBlockNodes[0].text.length,
   });
 });
 
@@ -143,7 +143,7 @@ test('must be able to return last ContentBlock selected', () => {
   assertGetContentStateFragment(contentBlocks, {
     anchorKey: 'D',
     focusKey: 'D',
-    focusOffset: contentBlocks[3].getLength(),
+    focusOffset: contentBlocks[3].text.length,
   });
 });
 
@@ -151,6 +151,6 @@ test('must be able to return last ContentBlockNode selected', () => {
   assertGetContentStateFragment(contentBlockNodes, {
     anchorKey: 'D',
     focusKey: 'D',
-    focusOffset: contentBlockNodes[3].getLength(),
+    focusOffset: contentBlockNodes[3].text.length,
   });
 });

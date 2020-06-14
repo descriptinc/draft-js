@@ -533,11 +533,11 @@ function lookUpwardForInlineStyle(
     .reverse()
     .skipUntil((_, k) => k === fromKey)
     .skip(1)
-    .skipUntil((block, _) => block.getLength())
+    .skipUntil((block, _) => block.text.length)
     .first();
 
   if (lastNonEmpty) {
-    return lastNonEmpty.getInlineStyleAt(lastNonEmpty.getLength() - 1);
+    return lastNonEmpty.getInlineStyleAt(lastNonEmpty.text.length - 1);
   }
   return OrderedSet();
 }

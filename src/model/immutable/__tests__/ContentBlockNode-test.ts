@@ -51,28 +51,28 @@ test('must have appropriate default values', () => {
     Immutable.Repeat(CharacterMetadata.EMPTY, text.length),
   );
 
-  expect(block.getKey()).toBe('a');
-  expect(block.getText()).toBe('Alpha');
-  expect(block.getType()).toBe('unstyled');
-  expect(block.getLength()).toBe(5);
-  expect(block.getCharacterList().count()).toBe(5);
-  expect(block.getCharacterList()).toEqual(characterList);
+  expect(block.key).toBe('a');
+  expect(block.text).toBe('Alpha');
+  expect(block.type).toBe('unstyled');
+  expect(block.text.length).toBe(5);
+  expect(block.characterList.count()).toBe(5);
+  expect(block.characterList).toEqual(characterList);
 });
 
 test('must provide default values', () => {
   const block = new ContentBlockNode();
-  expect(block.getType()).toBe('unstyled');
-  expect(block.getText()).toBe('');
-  expect(Immutable.is(block.getCharacterList(), Immutable.List())).toBe(true);
+  expect(block.type).toBe('unstyled');
+  expect(block.text).toBe('');
+  expect(Immutable.is(block.characterList, Immutable.List())).toBe(true);
 });
 
 test('must retrieve properties', () => {
   const block = getSampleBlock();
-  expect(block.getKey()).toBe('a');
-  expect(block.getText()).toBe('Alpha');
-  expect(block.getType()).toBe('unstyled');
-  expect(block.getLength()).toBe(5);
-  expect(block.getCharacterList().count()).toBe(5);
+  expect(block.key).toBe('a');
+  expect(block.text).toBe('Alpha');
+  expect(block.type).toBe('unstyled');
+  expect(block.text.length).toBe(5);
+  expect(block.characterList.count()).toBe(5);
 });
 
 test('must properly retrieve style at offset', () => {

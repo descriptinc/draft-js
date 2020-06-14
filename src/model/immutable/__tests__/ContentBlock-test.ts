@@ -4,82 +4,83 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @emails oncall+draft_js
- * @flow strict-local
  * @format
  */
-
-'use strict';
-
-const CharacterMetadata = require('CharacterMetadata');
-const ContentBlock = require('ContentBlock');
-const {BOLD} = require('SampleDraftInlineStyle');
-
-const Immutable = require('immutable');
+import {makeContentBlock} from '../ContentBlock';
+import {EMPTY_CHARACTER, makeCharacterMetadata} from '../CharacterMetadata';
+import {BOLD} from '../SampleDraftInlineStyle';
+import fastDeepEqual from 'fast-deep-equal/es6';
+import {
+  findEntityRanges,
+  findStyleRanges,
+  getEntityAt,
+  getInlineStyleAt,
+} from '../ContentBlockNode';
 
 const ENTITY_KEY = 'x';
 
 const getSampleBlock = () => {
-  return new ContentBlock({
+  return makeContentBlock({
     key: 'a',
     type: 'unstyled',
     text: 'Alpha',
-    characterList: Immutable.List.of(
-      CharacterMetadata.create({style: BOLD, entity: ENTITY_KEY}),
-      CharacterMetadata.EMPTY,
-      CharacterMetadata.EMPTY,
-      CharacterMetadata.create({style: BOLD}),
-      CharacterMetadata.create({entity: ENTITY_KEY}),
-    ),
+    characterList: [
+      makeCharacterMetadata({style: BOLD, entity: ENTITY_KEY}),
+      EMPTY_CHARACTER,
+      EMPTY_CHARACTER,
+      makeCharacterMetadata({style: BOLD}),
+      makeCharacterMetadata({entity: ENTITY_KEY}),
+    ],
   });
 };
 
 test('must have appropriate default values', () => {
   const text = 'Alpha';
-  const block = new ContentBlock({
+  const block = makeContentBlock({
     key: 'a',
     type: 'unstyled',
     text,
   });
 
-  expect(block.getKey()).toMatchSnapshot();
-  expect(block.getText()).toMatchSnapshot();
-  expect(block.getType()).toMatchSnapshot();
-  expect(block.getLength()).toMatchSnapshot();
-  expect(block.getCharacterList().count()).toMatchSnapshot();
-  expect(block.getCharacterList().toJS()).toMatchSnapshot();
+  expect(block.key).toMatchSnapshot();
+  expect(block.text).toMatchSnapshot();
+  expect(block.type).toMatchSnapshot();
+  expect(block.text.length).toMatchSnapshot();
+  expect(block.characterList.length).toMatchSnapshot();
+  expect(block.characterList).toMatchSnapshot();
 });
 
 test('must provide default values', () => {
-  const block = new ContentBlock({});
-  expect(block.getType()).toMatchSnapshot();
-  expect(block.getText()).toMatchSnapshot();
-  expect(
-    Immutable.is(block.getCharacterList(), Immutable.List()),
-  ).toMatchSnapshot();
+  const block = makeContentBlock({});
+  expect(block.type).toMatchSnapshot();
+  expect(block.text).toMatchSnapshot();
+  expect(fastDeepEqual(block.characterList, [])).toMatchSnapshot();
 });
 
 test('must retrieve properties', () => {
   const block = getSampleBlock();
-  expect(block.getKey()).toMatchSnapshot();
-  expect(block.getText()).toMatchSnapshot();
-  expect(block.getType()).toMatchSnapshot();
-  expect(block.getLength()).toMatchSnapshot();
-  expect(block.getCharacterList().count()).toMatchSnapshot();
+  expect(block.key).toMatchSnapshot();
+  expect(block.text).toMatchSnapshot();
+  expect(block.type).toMatchSnapshot();
+  expect(block.text.length).toMatchSnapshot();
+  expect(block.characterList.length).toMatchSnapshot();
 });
 
 test('must properly retrieve style at offset', () => {
   const block = getSampleBlock();
 
   for (let i = 0; i <= 4; i++) {
-    expect(block.getInlineStyleAt(i).toJS()).toMatchSnapshot();
+    expect(getInlineStyleAt(block, i)).toMatchSnapshot();
   }
 });
 
 test('must correctly identify ranges of styles', () => {
   const block = getSampleBlock();
+
+  console.log(block);
+
   const cb = jest.fn();
-  block.findStyleRanges(() => true, cb);
+  findStyleRanges(block, () => true, cb);
 
   expect(cb.mock.calls).toMatchSnapshot();
 });
@@ -88,14 +89,14 @@ test('must properly retrieve entity at offset', () => {
   const block = getSampleBlock();
 
   for (let i = 0; i <= 4; i++) {
-    expect(block.getEntityAt(i)).toMatchSnapshot();
+    expect(getEntityAt(block, i)).toMatchSnapshot();
   }
 });
 
 test('must correctly identify ranges of entities', () => {
   const block = getSampleBlock();
   const cb = jest.fn();
-  block.findEntityRanges(() => true, cb);
+  findEntityRanges(block, () => true, cb);
 
   expect(cb.mock.calls).toMatchSnapshot();
 });

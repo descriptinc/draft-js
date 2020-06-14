@@ -49,7 +49,7 @@ const boldBlock = new ContentBlock({
   text: 'Burnley',
   characterList: List(Repeat(CharacterMetadata.create({style: BOLD}), 7)),
 });
-const boldA = List(Repeat('x', boldBlock.getLength()));
+const boldA = List(Repeat('x', boldBlock.text.length));
 const emptyBlockA = new ContentBlock({
   key: 'emptyA',
   text: '',
@@ -105,7 +105,7 @@ const assertGetCurrentInlineStyle = (selection, state = UNDECORATED_STATE) => {
 beforeEach(() => {
   Decorator.prototype.getDecorations.mockClear();
   Decorator.prototype.getDecorations.mockImplementation((v, c) => {
-    return v === boldBlock ? boldA : List(Repeat(undefined, v.getLength()));
+    return v === boldBlock ? boldA : List(Repeat(undefined, v.text.length));
   });
 });
 
@@ -189,7 +189,7 @@ test('uses left of the start if starting at end of block', () => {
   assertGetCurrentInlineStyle(
     collapsedSelection.merge({
       anchorKey: 'b',
-      anchorOffset: blockB.getLength(),
+      anchorOffset: blockB.text.length,
       focusKey: 'c',
       focusOffset: 3,
     }),
@@ -223,12 +223,12 @@ test('falls back to no style if in empty block at document start', () => {
 test('must set a new decorator', () => {
   const decorator = new Decorator();
   const editorState = getSampleEditorState('DECORATED', decorator);
-  const boldB = List(Repeat('y', boldBlock.getLength()));
+  const boldB = List(Repeat('y', boldBlock.text.length));
 
   expect(decorator.getDecorations.mock.calls.length).toMatchSnapshot();
 
   Decorator.prototype.getDecorations.mockImplementation((v, c) => {
-    return v === boldBlock ? boldB : List(Repeat(undefined, v.getLength()));
+    return v === boldBlock ? boldB : List(Repeat(undefined, v.text.length));
   });
 
   class NextDecorator {}
@@ -237,7 +237,7 @@ test('must set a new decorator', () => {
   const newDecorator = new NextDecorator();
 
   NextDecorator.prototype.getDecorations.mockImplementation((v, c) => {
-    return v === boldBlock ? boldB : List(Repeat(undefined, v.getLength()));
+    return v === boldBlock ? boldB : List(Repeat(undefined, v.text.length));
   });
 
   const withNewDecorator = EditorState.set(editorState, {
@@ -258,13 +258,13 @@ test('must set a new decorator', () => {
 
   // Preserve block trees that had the same decorator list.
   expect(
-    editorState.getBlockTree(boldBlock.getKey()) ===
-      withNewDecorator.getBlockTree(boldBlock.getKey()),
+    editorState.getBlockTree(boldBlock.key) ===
+      withNewDecorator.getBlockTree(boldBlock.key),
   ).toMatchSnapshot();
 
   expect(
-    editorState.getBlockTree(italicBlock.getKey()) !==
-      withNewDecorator.getBlockTree(italicBlock.getKey()),
+    editorState.getBlockTree(italicBlock.key) !==
+      withNewDecorator.getBlockTree(italicBlock.key),
   ).toMatchSnapshot();
 });
 

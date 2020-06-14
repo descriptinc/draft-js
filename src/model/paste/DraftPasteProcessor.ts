@@ -73,7 +73,7 @@ const DraftPasteProcessor = {
         }));
         blockNodeConfig = {
           ...blockNodeConfig,
-          prevSibling: previousBlock.getKey(),
+          prevSibling: previousBlock.key,
         };
       }
 

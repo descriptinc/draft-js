@@ -73,8 +73,8 @@ test('must insert at the end', () => {
     'xx',
     CharacterMetadata.create({style: BOLD}),
     selectionState.merge({
-      focusOffset: initialBlock.getLength(),
-      anchorOffset: initialBlock.getLength(),
+      focusOffset: initialBlock.text.length,
+      anchorOffset: initialBlock.text.length,
       isBackward: false,
     }),
   );

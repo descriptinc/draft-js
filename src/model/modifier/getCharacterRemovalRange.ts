@@ -166,7 +166,7 @@ function getEntityRemovalRange(
   const removalRange = DraftEntitySegments.getRemovalRange(
     start,
     end,
-    block.getText().slice(entityRange.start, entityRange.end),
+    block.text.slice(entityRange.start, entityRange.end),
     entityRange.start,
     direction,
   );

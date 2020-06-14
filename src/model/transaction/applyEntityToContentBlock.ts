@@ -22,7 +22,7 @@
 //   entityKey: string | null
 // ): BlockNodeRecord {
 //   let start = startArg;
-//   let characterList = contentBlock.getCharacterList();
+//   let characterList = contentBlock.characterList;
 //   while (start < end) {
 //     characterList = characterList.set(
 //       start,

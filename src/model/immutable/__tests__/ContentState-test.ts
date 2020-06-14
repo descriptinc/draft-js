@@ -79,7 +79,7 @@ test('block fetching must retrieve or fail fetching block for key', () => {
   const block = state.getBlockForKey('a');
 
   expect(block instanceof ContentBlock).toMatchSnapshot();
-  expect(block.getText()).toMatchSnapshot();
+  expect(block.text).toMatchSnapshot();
   expect(state.getBlockForKey('x')).toMatchSnapshot();
 });
 

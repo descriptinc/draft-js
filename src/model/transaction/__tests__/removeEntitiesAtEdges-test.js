@@ -73,7 +73,7 @@ test('must remove if cursor is within entity', () => {
 });
 
 test('must not remove if cursor is at end of entity', () => {
-  const length = contentState.getBlockForKey('b').getLength();
+  const length = contentState.getBlockForKey('b').text.length;
   assertRemoveEntitiesAtEdges(
     selectionOnEntity.merge({
       anchorOffset: length,
@@ -146,7 +146,7 @@ test('must remove entity at end of selection', () => {
 
 test('must remove entities at both ends of selection', () => {
   const cBlock = contentState.getBlockForKey('c');
-  const len = cBlock.getLength();
+  const len = cBlock.text.length;
   const modifiedC = applyEntityToContentBlock(cBlock, 0, len, '456');
   const newBlockMap = contentState.getBlockMap().set('c', modifiedC);
   const newContent = contentState.set('blockMap', newBlockMap);

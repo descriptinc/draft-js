@@ -112,7 +112,7 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 //   // note that we need to make sure we refer to the original block since this
 //   // function is called within a withMutations
 //   let nextValidSiblingKey = originalBlockMap
-//     .get(block.getKey())
+//     .get(block.key)
 //     .getNextSiblingKey();
 //
 //   while (nextValidSiblingKey && !blockMap.get(nextValidSiblingKey)) {
@@ -135,7 +135,7 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 //   // note that we need to make sure we refer to the original block since this
 //   // function is called within a withMutations
 //   let prevValidSiblingKey = originalBlockMap
-//     .get(block.getKey())
+//     .get(block.key)
 //     .getPrevSiblingKey();
 //
 //   while (prevValidSiblingKey && !blockMap.get(prevValidSiblingKey)) {
@@ -154,7 +154,7 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 // ): BlockMap => {
 //   return blockMap.withMutations(blocks => {
 //     // update start block if its retained
-//     transformBlock(startBlock.getKey(), blocks, block =>
+//     transformBlock(startBlock.key, blocks, block =>
 //       block.merge({
 //         nextSibling: getNextValidSibling(block, blocks, originalBlockMap),
 //         prevSibling: getPrevValidSibling(block, blocks, originalBlockMap),
@@ -162,7 +162,7 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 //     );
 //
 //     // update endblock if its retained
-//     transformBlock(endBlock.getKey(), blocks, block =>
+//     transformBlock(endBlock.key, blocks, block =>
 //       block.merge({
 //         nextSibling: getNextValidSibling(block, blocks, originalBlockMap),
 //         prevSibling: getPrevValidSibling(block, blocks, originalBlockMap),
@@ -170,7 +170,7 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 //     );
 //
 //     // update start block parent ancestors
-//     getAncestorsKeys(startBlock.getKey(), originalBlockMap).forEach(parentKey =>
+//     getAncestorsKeys(startBlock.key, originalBlockMap).forEach(parentKey =>
 //       transformBlock(parentKey, blocks, block =>
 //         block.merge({
 //           children: block.getChildKeys().filter(key => blocks.get(key)),
@@ -209,7 +209,7 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 //     );
 //
 //     // update end block parent ancestors
-//     getAncestorsKeys(endBlock.getKey(), originalBlockMap).forEach(parentKey => {
+//     getAncestorsKeys(endBlock.key, originalBlockMap).forEach(parentKey => {
 //       transformBlock(parentKey, blocks, block =>
 //         block.merge({
 //           children: block.getChildKeys().filter(key => blocks.get(key)),
@@ -232,21 +232,21 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 //
 //     // if parent (startBlock) was deleted
 //     if (
-//       blockMap.get(startBlock.getKey()) == null &&
-//       blockMap.get(endBlock.getKey()) != null &&
-//       endBlock.getParentKey() === startBlock.getKey() &&
+//       blockMap.get(startBlock.key) == null &&
+//       blockMap.get(endBlock.key) != null &&
+//       endBlock.getParentKey() === startBlock.key &&
 //       endBlock.getPrevSiblingKey() == null
 //     ) {
 //       const prevSiblingKey = startBlock.getPrevSiblingKey();
 //       // endBlock becomes next sibling of parent's prevSibling
-//       transformBlock(endBlock.getKey(), blocks, block =>
+//       transformBlock(endBlock.key, blocks, block =>
 //         block.merge({
 //           prevSibling: prevSiblingKey,
 //         }),
 //       );
 //       transformBlock(prevSiblingKey, blocks, block =>
 //         block.merge({
-//           nextSibling: endBlock.getKey(),
+//           nextSibling: endBlock.key,
 //         }),
 //       );
 //

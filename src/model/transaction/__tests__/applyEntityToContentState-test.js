@@ -19,20 +19,20 @@ const getSampleStateForTesting = require('getSampleStateForTesting');
 const {contentState, selectionState} = getSampleStateForTesting();
 
 const initialBlock = contentState.getBlockMap().first();
-const secondBlock = contentState.getBlockAfter(initialBlock.getKey());
+const secondBlock = contentState.getBlockAfter(initialBlock.key);
 
 const selectBlock = new SelectionState({
-  anchorKey: initialBlock.getKey(),
+  anchorKey: initialBlock.key,
   anchorOffset: 0,
-  focusKey: initialBlock.getKey(),
-  focusOffset: initialBlock.getLength(),
+  focusKey: initialBlock.key,
+  focusOffset: initialBlock.text.length,
 });
 
 const selectAdjacentBlocks = new SelectionState({
-  anchorKey: initialBlock.getKey(),
+  anchorKey: initialBlock.key,
   anchorOffset: 0,
-  focusKey: secondBlock?.getKey(),
-  focusOffset: secondBlock?.getLength(),
+  focusKey: secondBlock?.key,
+  focusOffset: secondBlock?.text.length,
 });
 
 const assertApplyEntityToContentState = (

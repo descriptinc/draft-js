@@ -53,7 +53,7 @@ test('onBackspace does not handle non-zero-offset or non-collapsed selections', 
 test('onBackspace resets the current block type if empty', () => {
   const contentState = editorState.getCurrentContent();
   const lastBlock = contentState.getLastBlock();
-  const lastBlockKey = lastBlock.getKey();
+  const lastBlockKey = lastBlock.key;
 
   // Remove the current text from the blockquote.
   const resetBlockquote = DraftModifier.removeRange(
@@ -62,7 +62,7 @@ test('onBackspace resets the current block type if empty', () => {
       anchorKey: lastBlockKey,
       anchorOffset: 0,
       focusKey: lastBlockKey,
-      focusOffset: lastBlock.getLength(),
+      focusOffset: lastBlock.text.length,
     }),
     'backward',
   );
@@ -109,7 +109,7 @@ test('onBackspace removes a preceding atomic block', () => {
   const blockMap = contentState.getBlockMap();
   expect(blockMap.size === blockSizeBeforeRemove + 1).toMatchSnapshot();
   expect(
-    blockMap.some(block => block.getType() === 'atomic'),
+    blockMap.some(block => block.type === 'atomic'),
   ).toMatchSnapshot();
 });
 
@@ -132,12 +132,12 @@ test('onDelete removes a following atomic block', () => {
   const content = withAtomicBlock.getCurrentContent();
   const atomicKey = content
     .getBlockMap()
-    .find(block => block.getType() === 'atomic')
-    .getKey();
+    .find(block => block.type === 'atomic')
+    .key;
 
   const blockBefore = content.getBlockBefore(atomicKey);
-  const keyBefore = blockBefore.getKey();
-  const lengthBefore = blockBefore.getLength();
+  const keyBefore = blockBefore.key;
+  const lengthBefore = blockBefore.text.length;
 
   const withSelectionAboveAtomic = EditorState.forceSelection(
     withAtomicBlock,
@@ -153,7 +153,7 @@ test('onDelete removes a following atomic block', () => {
   const blockMapAfterDelete = afterDelete.getCurrentContent().getBlockMap();
 
   expect(
-    blockMapAfterDelete.some(block => block.getType() === 'atomic'),
+    blockMapAfterDelete.some(block => block.type === 'atomic'),
   ).toMatchSnapshot();
 
   expect(

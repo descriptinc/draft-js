@@ -75,7 +75,7 @@ test('must not return key if segmented with collapsed selection', () => {
 
 test('must return null if start is at end of block', () => {
   const startsAtEnd = NON_COLLAPSED_SELECTION.merge({
-    anchorOffset: contentState.getBlockForKey('b').getLength(),
+    anchorOffset: contentState.getBlockForKey('b').text.length,
   });
   const key = getEntityKeyForSelection(contentState, startsAtEnd);
   expect(key).toMatchSnapshot();

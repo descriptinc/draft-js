@@ -128,7 +128,7 @@ const AtomicBlockUtils = {
           'before',
         );
       } else if (
-        selectionAfterRemoval.getEndOffset() === targetBlock.getLength()
+        selectionAfterRemoval.getEndOffset() === targetBlock.text.length
       ) {
         withMovedAtomicBlock = moveBlockInContentState(
           afterRemoval,

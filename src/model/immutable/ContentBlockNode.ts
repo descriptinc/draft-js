@@ -19,7 +19,7 @@
 
 import {BlockNode, BlockNodeKey} from './BlockNode';
 import {CharacterMetadata, EMPTY_CHARACTER} from './CharacterMetadata';
-import fastDeepEqual from 'fast-deep-equal';
+import fastDeepEqual from 'fast-deep-equal/es6';
 import {findRangesImmutable} from './findRangesImmutable';
 import {DraftInlineStyle} from './DraftInlineStyle';
 

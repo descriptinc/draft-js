@@ -5,24 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
- * @format
  */
-
-'use strict';
-
-const findRangesImmutable = require('findRangesImmutable');
-const Immutable = require('immutable');
-
-const {List} = Immutable;
+import {findRangesImmutable} from '../findRangesImmutable';
 
 const returnTrue = () => true;
 
-const SAMPLE_LIST = List.of(1, 1, 1, 1, 1);
+const SAMPLE_LIST = [1, 1, 1, 1, 1];
 
-const assertFindRangesImmutable = (
-  list,
-  areEqualFn = returnTrue,
+const assertFindRangesImmutable = <T>(
+  list: T[],
+  areEqualFn: (a: T, b: T) => boolean = returnTrue,
   filterFn = returnTrue,
   foundFn = jest.fn(),
 ) => {
@@ -31,7 +23,7 @@ const assertFindRangesImmutable = (
 };
 
 test('must be a no-op for an empty list', () => {
-  assertFindRangesImmutable(List());
+  assertFindRangesImmutable([]);
 });
 
 test('must identify the full list as a single range', () => {
@@ -50,8 +42,8 @@ test('must properly use `filterFn`', () => {
 
 test('must identify each range', () => {
   assertFindRangesImmutable(
-    List.of(0, 0, 1, 1, 0, 0, 2, 2),
-    (a, b) => a === b,
+    [0, 0, 1, 1, 0, 0, 2, 2],
+    (a: number, b: number) => a === b,
     returnTrue,
   );
 });

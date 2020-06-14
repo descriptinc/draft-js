@@ -52,23 +52,23 @@ exports[`must have appropriate default values 6`] = `
 Array [
   Object {
     "entity": null,
-    "style": Array [],
+    "style": Set {},
   },
   Object {
     "entity": null,
-    "style": Array [],
+    "style": Set {},
   },
   Object {
     "entity": null,
-    "style": Array [],
+    "style": Set {},
   },
   Object {
     "entity": null,
-    "style": Array [],
+    "style": Set {},
   },
   Object {
     "entity": null,
-    "style": Array [],
+    "style": Set {},
   },
 ]
 `;
@@ -84,22 +84,22 @@ exports[`must properly retrieve entity at offset 4`] = `null`;
 exports[`must properly retrieve entity at offset 5`] = `"x"`;
 
 exports[`must properly retrieve style at offset 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
-exports[`must properly retrieve style at offset 2`] = `Array []`;
+exports[`must properly retrieve style at offset 2`] = `Set {}`;
 
-exports[`must properly retrieve style at offset 3`] = `Array []`;
+exports[`must properly retrieve style at offset 3`] = `Set {}`;
 
 exports[`must properly retrieve style at offset 4`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
-exports[`must properly retrieve style at offset 5`] = `Array []`;
+exports[`must properly retrieve style at offset 5`] = `Set {}`;
 
 exports[`must provide default values 1`] = `"unstyled"`;
 

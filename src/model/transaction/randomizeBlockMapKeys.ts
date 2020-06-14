@@ -22,7 +22,7 @@ import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 //     blockMap
 //       .withMutations(blockMapState => {
 //         blockMapState.forEach((block, index) => {
-//           const oldKey = block.getKey();
+//           const oldKey = block.key;
 //           const nextKey = block.getNextSiblingKey();
 //           const prevKey = block.getPrevSiblingKey();
 //           const childrenKeys = block.getChildKeys();
@@ -60,7 +60,7 @@ import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 //             blockMapState.setIn(
 //               [parentKey, 'children'],
 //               parentChildrenList.set(
-//                 parentChildrenList.indexOf(block.getKey()),
+//                 parentChildrenList.indexOf(block.key),
 //                 key,
 //               ),
 //             );
@@ -69,10 +69,10 @@ import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 //             blockMapState.setIn([oldKey, 'parent'], null);
 //
 //             if (lastRootBlock) {
-//               blockMapState.setIn([lastRootBlock.getKey(), 'nextSibling'], key);
+//               blockMapState.setIn([lastRootBlock.key, 'nextSibling'], key);
 //               blockMapState.setIn(
 //                 [oldKey, 'prevSibling'],
-//                 newKeysRef[lastRootBlock.getKey()],
+//                 newKeysRef[lastRootBlock.key],
 //               );
 //             }
 //
@@ -94,8 +94,8 @@ import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 //       })
 //       .toArray()
 //       .map(block => [
-//         newKeysRef[block.getKey()],
-//         block.set('key', newKeysRef[block.getKey()]),
+//         newKeysRef[block.key],
+//         block.set('key', newKeysRef[block.key]),
 //       ]),
 //   );
 // };

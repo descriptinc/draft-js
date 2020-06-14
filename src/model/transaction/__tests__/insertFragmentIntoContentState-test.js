@@ -104,8 +104,8 @@ test('must apply fragment at the end', () => {
   assertInsertFragmentIntoContentState(
     createFragment(),
     selectionState.merge({
-      focusOffset: initialBlock.getLength(),
-      anchorOffset: initialBlock.getLength(),
+      focusOffset: initialBlock.text.length,
+      anchorOffset: initialBlock.text.length,
       isBackward: false,
     }),
   );

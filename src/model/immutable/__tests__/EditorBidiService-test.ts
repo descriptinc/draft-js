@@ -33,7 +33,7 @@ const empty = new ContentBlock({
 });
 
 const getContentState = blocks => {
-  const keys = Seq(blocks.map(b => b.getKey()));
+  const keys = Seq(blocks.map(b => b.key));
   const values = Seq(blocks);
   const blockMap = OrderedMap(keys.zip(values));
   return new ContentState({blockMap});

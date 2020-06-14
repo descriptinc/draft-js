@@ -35,7 +35,7 @@
 //     .merge(Immutable.OrderedMap([[endKey, blockMap.get(endKey)]]))
 //     .map((block, blockKey) => {
 //       const sliceStart = blockKey === startKey ? startOffset : 0;
-//       const sliceEnd = blockKey === endKey ? endOffset : block.getLength();
+//       const sliceEnd = blockKey === endKey ? endOffset : block.text.length;
 //       return applyEntityToContentBlock(block, sliceStart, sliceEnd, entityKey);
 //     });
 //

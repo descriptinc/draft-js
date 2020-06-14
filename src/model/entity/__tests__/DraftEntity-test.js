@@ -29,7 +29,7 @@ test('must create instances', () => {
 test('must retrieve an instance given a key', () => {
   const key = createLink();
   const retrieved = DraftEntity.__get(key);
-  expect(retrieved.getType()).toMatchSnapshot();
+  expect(retrieved.type).toMatchSnapshot();
   expect(retrieved.getMutability()).toMatchSnapshot();
   expect(retrieved.getData()).toMatchSnapshot();
 });

@@ -118,7 +118,7 @@ test('must split at the end of a block', () => {
   const SPLIT_OFFSET = contentState
     .getBlockMap()
     .first()
-    .getLength();
+    .text.length;
 
   assertSplitBlockInContentState(
     selectionState.merge({
@@ -188,7 +188,7 @@ test('must split within a nested ContentBlock', () => {
 });
 
 test('must split at the end of a root ContentBlock', () => {
-  const SPLIT_OFFSET = contentBlockNodes[0].getLength();
+  const SPLIT_OFFSET = contentBlockNodes[0].text.length;
   assertSplitBlockInContentState(
     treeSelectionState.merge({
       anchorOffset: SPLIT_OFFSET,
@@ -199,7 +199,7 @@ test('must split at the end of a root ContentBlock', () => {
 });
 
 test('must split at the end of a nested ContentBlock', () => {
-  const SPLIT_OFFSET = contentBlockNodes[3].getLength();
+  const SPLIT_OFFSET = contentBlockNodes[3].text.length;
   assertSplitBlockInContentState(
     treeSelectionState.merge({
       anchorOffset: SPLIT_OFFSET,

@@ -18,13 +18,13 @@ class ContentBlock {
     this._text = text;
   }
 
-  getText() {
+  text {
     return this._text;
   }
 }
 
 const searchWith = regex => (block, callback, contentState) => {
-  block.getText().replace(regex, (match, offset) => {
+  block.text.replace(regex, (match, offset) => {
     callback(offset, offset + match.length);
   });
 };

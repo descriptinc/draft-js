@@ -57,8 +57,8 @@ import {
 //   // // possible values of 'insertionMode' are: 'after', 'before'
 //   // const isInsertedAfterTarget = insertionMode === 'after';
 //   //
-//   // const originalBlockKey = originalBlockToBeMoved.getKey();
-//   // const originalTargetKey = originalTargetBlock.getKey();
+//   // const originalBlockKey = originalBlockToBeMoved.key;
+//   // const originalTargetKey = originalTargetBlock.key;
 //   // const originalParentKey = originalBlockToBeMoved.getParentKey();
 //   // const originalNextSiblingKey = originalBlockToBeMoved.getNextSiblingKey();
 //   // const originalPrevSiblingKey = originalBlockToBeMoved.getPrevSiblingKey();
@@ -176,9 +176,9 @@ const moveBlockInContentState = (
   //
   //     blocks
   //       .toSeq()
-  //       .skipUntil(block => block.getKey() === blockKey)
+  //       .skipUntil(block => block.key === blockKey)
   //       .takeWhile(block => {
-  //         const key = block.getKey();
+  //         const key = block.key;
   //         const isBlockToBeMoved = key === blockKey;
   //         const hasNextSiblingAndIsNotNextSibling =
   //           nextSiblingKey && key !== nextSiblingKey;
@@ -195,7 +195,7 @@ const moveBlockInContentState = (
   //       })
   //       .forEach(block => {
   //         blocksToBeMoved.push(block);
-  //         blocks.delete(block.getKey());
+  //         blocks.delete(block.key);
   //       });
   //   });
   // }
