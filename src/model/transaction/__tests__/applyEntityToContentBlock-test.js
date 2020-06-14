@@ -15,7 +15,7 @@ const ContentBlock = require('ContentBlock');
 
 const applyEntityToContentBlock = require('applyEntityToContentBlock');
 
-const sampleBlock = new ContentBlock({
+const sampleBlock = makeContentBlock({
   key: 'a',
   text: 'Hello',
 });

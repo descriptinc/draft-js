@@ -24,15 +24,15 @@ const moveBlockInContentState = require('moveBlockInContentState');
 const {List} = Immutable;
 
 const contentBlocks = [
-  new ContentBlock({
+  makeContentBlock({
     key: 'A',
     text: 'Alpha',
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'B',
     text: 'Beta',
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'C',
     text: 'Charlie',
   }),

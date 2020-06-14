@@ -16,7 +16,7 @@ import {
 import invariant from '../../fbjs/invariant';
 import {CharacterMetadata} from '../immutable/CharacterMetadata';
 import {times} from '../descript/Iterables';
-import {mergeBlockMap} from '../immutable/BlockMap';
+import {mergeMapUpdates} from '../immutable/BlockMap';
 
 function insertTextIntoContentState(
   contentState: ContentState,
@@ -58,7 +58,7 @@ function insertTextIntoContentState(
 
   return {
     ...contentState,
-    blockMap: mergeBlockMap(blockMap, {[key]: newBlock}),
+    blockMap: mergeMapUpdates(blockMap, {[key]: newBlock}),
     selectionAfter: {
       ...selectionState,
       anchorOffset: newOffset,

@@ -58,7 +58,7 @@ test('onBackspace resets the current block type if empty', () => {
   // Remove the current text from the blockquote.
   const resetBlockquote = DraftModifier.removeRange(
     contentState,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: lastBlockKey,
       anchorOffset: 0,
       focusKey: lastBlockKey,
@@ -141,7 +141,7 @@ test('onDelete removes a following atomic block', () => {
 
   const withSelectionAboveAtomic = EditorState.forceSelection(
     withAtomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: keyBefore,
       anchorOffset: lengthBefore,
       focusKey: keyBefore,

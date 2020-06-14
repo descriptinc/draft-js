@@ -1,35 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`does not discard style override when adjusting depth 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
 exports[`does not discard style override when changing block type 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
 exports[`does not discard style override when splitting block 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
-exports[`falls back to no style if in empty block at document start 1`] = `Array []`;
+exports[`falls back to no style if in empty block at document start 1`] = `Set {}`;
 
 exports[`looks upward through empty blocks to find a character 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
 exports[`looks upward through empty blocks to find a character with collapsed selection 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
 exports[`must call decorator with correct argument types and order 1`] = `2`;
@@ -54,26 +54,26 @@ exports[`must set a new decorator 6`] = `true`;
 
 exports[`must set a new decorator 7`] = `true`;
 
-exports[`uses left of the caret, at position \`1+\` 1`] = `Array []`;
+exports[`uses left of the caret, at position \`1+\` 1`] = `Set {}`;
 
 exports[`uses left of the start if starting at end of block 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
 exports[`uses previous block at offset \`0\` within empty block 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
-exports[`uses right of the caret at document start 1`] = `Array []`;
+exports[`uses right of the caret at document start 1`] = `Set {}`;
 
 exports[`uses right of the caret at offset \`0\` within document 1`] = `
-Array [
+Set {
   "BOLD",
-]
+}
 `;
 
-exports[`uses right of the start for blocks with text 1`] = `Array []`;
+exports[`uses right of the start for blocks with text 1`] = `Set {}`;

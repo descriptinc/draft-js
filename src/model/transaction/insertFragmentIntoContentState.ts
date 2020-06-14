@@ -18,7 +18,7 @@ import {
   isCollapsed,
   SelectionState,
 } from '../immutable/SelectionState';
-import {BlockMap, mergeBlockMap} from '../immutable/BlockMap';
+import {BlockMap, mergeMapUpdates} from '../immutable/BlockMap';
 import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {first, last, slice} from '../descript/Iterables';
 import {blockIsExperimentalTreeBlock} from './exploration/getNextDelimiterBlockKey';
@@ -81,7 +81,7 @@ const updateExistingBlock = (
 
   return {
     ...contentState,
-    blockMap: mergeBlockMap(blockMap, {[targetKey]: newBlock}),
+    blockMap: mergeMapUpdates(blockMap, {[targetKey]: newBlock}),
     selectionBefore: selectionState,
     selectionAfter: {
       ...selectionState,

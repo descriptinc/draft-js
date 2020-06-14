@@ -14,7 +14,7 @@ import {
 } from '../immutable/SelectionState';
 import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
-import {mergeBlockMap} from '../immutable/BlockMap';
+import {mergeMapUpdates} from '../immutable/BlockMap';
 
 export default function modifyBlockForContentState(
   contentState: ContentState,
@@ -45,7 +45,7 @@ export default function modifyBlockForContentState(
 
   return {
     ...contentState,
-    blockMap: mergeBlockMap(blockMap, newBlocks),
+    blockMap: mergeMapUpdates(blockMap, newBlocks),
     selectionBefore: selectionState,
     selectionAfter: selectionState,
   };

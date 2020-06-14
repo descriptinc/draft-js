@@ -17,8 +17,8 @@ let bidiService: UnicodeBidiService | undefined;
 const EditorBidiService = {
   getDirectionMap: function(
     content: ContentState,
-    prevBidiMap: Map<any, any> | null,
-  ): Map<any, any> {
+    prevBidiMap: ReadonlyMap<any, any> | null,
+  ): ReadonlyMap<any, any> {
     if (!bidiService) {
       bidiService = new UnicodeBidiService();
     } else {

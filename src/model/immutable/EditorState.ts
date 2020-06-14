@@ -7,6 +7,7 @@
  * @emails oncall+draft_js
  */
 
+import fastDeepEqual from 'fast-deep-equal/es6';
 import {
   ContentState,
   createFromText,
@@ -26,33 +27,41 @@ import {
 import {DraftDecoratorType} from '../decorators/DraftDecoratorType';
 import {DraftInlineStyle} from './DraftInlineStyle';
 import {EditorChangeType} from './EditorChangeType';
-import {contains, map} from '../descript/Iterables';
-import {BlockMap} from './BlockMap';
+import {flatMap, map} from '../descript/Iterables';
+import {BlockMap, mergeMapUpdates} from './BlockMap';
 import {getInlineStyleAt} from './ContentBlockNode';
+import EditorBidiService from './EditorBidiService';
+import BlockTree from './BlockTree';
+import {BlockNodeRecord} from './BlockNodeRecord';
+import {EMPTY_SET} from './CharacterMetadata';
+
+export type Stack<T> = readonly T[];
 
 export type EditorState = Readonly<{
   currentContent: ContentState;
   decorator: DraftDecoratorType | null;
-  directionMap: Map<string, string>;
+  directionMap: ReadonlyMap<string, string>;
   forceSelection: boolean;
   inCompositionMode: boolean;
   inlineStyleOverride: DraftInlineStyle | null;
   lastChangeType: EditorChangeType | null;
   nativelyRenderedContent: ContentState | null;
   selection: SelectionState;
-  treeMap: Map<string, readonly any[]>;
+  treeMap: ReadonlyMap<string, readonly any[]>;
 
   // FIXME [mvp]: skipping undo/redo logic in refactor because we don't use it
-  allowUndo: false;
-  // allowUndo: boolean,
-  // redoStack: Stack<ContentState>,
-  // undoStack: Stack<ContentState>
+  allowUndo: boolean;
+  redoStack: Stack<ContentState>;
+  undoStack: Stack<ContentState>;
 }>;
 
+const EMPTY_CONTENT_STACK: ContentState[] = [];
+
 export function createEditorState({
+  allowUndo = true,
   currentContent,
   decorator = null,
-  directionMap = EditorBidiService.getDirectionMap(currentContent),
+  directionMap = EditorBidiService.getDirectionMap(currentContent, null),
   forceSelection = false,
   inCompositionMode = false,
   inlineStyleOverride = null,
@@ -60,10 +69,12 @@ export function createEditorState({
   nativelyRenderedContent = null,
   selection,
   treeMap = generateNewTreeMap(currentContent, decorator),
+  undoStack = EMPTY_CONTENT_STACK,
+  redoStack = EMPTY_CONTENT_STACK,
 }: Partial<EditorState> &
   Pick<EditorState, 'currentContent' | 'selection'>): EditorState {
   return {
-    allowUndo: false,
+    allowUndo,
     currentContent,
     decorator,
     directionMap,
@@ -74,7 +85,19 @@ export function createEditorState({
     nativelyRenderedContent,
     selection,
     treeMap,
+    undoStack,
+    redoStack,
   };
+}
+
+export function pushStack<T>(stack: Stack<T>, item: T): Stack<T> {
+  return stack.concat([item]);
+}
+export function popStack<T>(stack: Stack<T>): [T | undefined, Stack<T>] {
+  if (stack.length === 0) {
+    return [undefined, stack];
+  }
+  return [stack[stack.length - 1], stack.slice(0, stack.length - 1)];
 }
 
 export function createEmpty(
@@ -173,14 +196,14 @@ export function getCurrentInlineStyle(
   if (isCollapsed(selection)) {
     return getInlineStyleForCollapsedSelection(currentContent, selection);
   }
-  return getInlieStyleForNonCollapsedSelection(currentContent, selection);
+  return getInlineStyleForNonCollapsedSelection(currentContent, selection);
 }
 
 export function getBlockTree(
   {treeMap}: EditorState,
   blockKey: string,
 ): readonly any[] {
-  const res = treeMap.treeMap.get(blockKey);
+  const res = treeMap.get(blockKey);
   if (!res) {
     throw new Error('Invalid block key');
   }
@@ -295,67 +318,68 @@ export function pushContent(
     editorState.directionMap,
   );
 
-  // if (!editorState.allowUndo) {
-  return setEditorState(editorState, {
-    currentContent: contentState,
+  if (!editorState.allowUndo) {
+    return setEditorState(editorState, {
+      currentContent: contentState,
+      directionMap,
+      lastChangeType: changeType,
+      selection: contentState.selectionAfter,
+      forceSelection,
+      inlineStyleOverride: null,
+    });
+  }
+
+  const selection = editorState.selection;
+  const currentContent = editorState.currentContent;
+  let undoStack = editorState.undoStack;
+  let newContent = contentState;
+
+  if (
+    selection !== currentContent.selectionAfter ||
+    mustBecomeBoundary(editorState, changeType)
+  ) {
+    undoStack = pushStack(undoStack, currentContent);
+    newContent = {
+      ...newContent,
+      selectionBefore: selection,
+    };
+  } else if (
+    changeType === 'insert-characters' ||
+    changeType === 'backspace-character' ||
+    changeType === 'delete-character'
+  ) {
+    // Preserve the previous selection.
+    newContent = {
+      ...newContent,
+      selectionBefore: currentContent.selectionBefore,
+    };
+  }
+
+  let inlineStyleOverride = editorState.inlineStyleOverride;
+
+  // Don't discard inline style overrides for the following change types:
+  const overrideChangeTypes = [
+    'adjust-depth',
+    'change-block-type',
+    'split-block',
+  ];
+
+  if (overrideChangeTypes.indexOf(changeType) === -1) {
+    inlineStyleOverride = null;
+  }
+
+  const editorStateChanges = {
+    currentContent: newContent,
     directionMap,
+    undoStack,
+    redoStack: EMPTY_CONTENT_STACK,
     lastChangeType: changeType,
     selection: contentState.selectionAfter,
     forceSelection,
-    inlineStyleOverride: null,
-  });
-  // }
+    inlineStyleOverride,
+  };
 
-  // TODO [mvp]: undo
-
-  // const selection = editorState.getSelection();
-  // const currentContent = editorState.getCurrentContent();
-  // let undoStack = editorState.getUndoStack();
-  // let newContent = contentState;
-  //
-  // if (
-  //   selection !== currentContent.getSelectionAfter() ||
-  //   mustBecomeBoundary(editorState, changeType)
-  // ) {
-  //   undoStack = undoStack.push(currentContent);
-  //   newContent = newContent.set('selectionBefore', selection);
-  // } else if (
-  //   changeType === 'insert-characters' ||
-  //   changeType === 'backspace-character' ||
-  //   changeType === 'delete-character'
-  // ) {
-  //   // Preserve the previous selection.
-  //   newContent = newContent.set(
-  //     'selectionBefore',
-  //     currentContent.getSelectionBefore(),
-  //   );
-  // }
-  //
-  // let inlineStyleOverride = editorState.getInlineStyleOverride();
-  //
-  // // Don't discard inline style overrides for the following change types:
-  // const overrideChangeTypes = [
-  //   'adjust-depth',
-  //   'change-block-type',
-  //   'split-block',
-  // ];
-  //
-  // if (overrideChangeTypes.indexOf(changeType) === -1) {
-  //   inlineStyleOverride = null;
-  // }
-  //
-  // const editorStateChanges = {
-  //   currentContent: newContent,
-  //   directionMap,
-  //   undoStack,
-  //   redoStack: Stack(),
-  //   lastChangeType: changeType,
-  //   selection: contentState.getSelectionAfter(),
-  //   forceSelection,
-  //   inlineStyleOverride,
-  // };
-  //
-  // return EditorState.set(editorState, editorStateChanges);
+  return setEditorState(editorState, editorStateChanges);
 }
 
 /**
@@ -384,9 +408,10 @@ function generateNewTreeMap(
   decorator?: DraftDecoratorType | null,
 ): Map<string, readonly any[]> {
   return new Map(
-    map(contentState.blockMap.values(), block =>
-      BlockTree.generate(contentState, block, decorator),
-    ),
+    map(contentState.blockMap, ([key, block]): [string, readonly any[]] => [
+      key,
+      BlockTree.generate(contentState, block, decorator || null),
+    ]),
   );
 }
 
@@ -399,11 +424,7 @@ function regenerateTreeForNewBlocks(
   editorState: EditorState,
   newBlockMap: BlockMap,
   decorator?: DraftDecoratorType | null,
-): Map<string, readonly any[]> {
-  if (newBlockMap.size !== editorState.currentContent.blockMap.size) {
-    throw new Error('TODO: is this supposed to be allowed?');
-  }
-
+): ReadonlyMap<string, readonly any[]> {
   // TODO [mvp]: using global entity map
   // const contentState = editorState
   //   .getCurrentContent()
@@ -411,17 +432,24 @@ function regenerateTreeForNewBlocks(
   const contentState = editorState.currentContent;
   const prevBlockMap = contentState.blockMap;
   const prevTreeMap = editorState.treeMap;
-  return new Map<string, readonly any[]>(
-    map(prevTreeMap.entries(), entry => {
-      const [key] = entry;
-      const newBlock = newBlockMap.get(key);
-      if (prevBlockMap.get(key) === newBlock) {
-        // block did not change
-        return entry;
-      }
-      return [key, BlockTree.generate(contentState, newBlock, decorator)];
-    }),
-  );
+  const iter = flatMap(prevTreeMap, (entry):
+    | [string, readonly any[]]
+    | undefined => {
+    const [key] = entry;
+    const newBlock = newBlockMap.get(key)!;
+    if (prevBlockMap.get(key) === newBlock) {
+      // block did not change
+      return undefined;
+    }
+    return [key, BlockTree.generate(contentState, newBlock, decorator || null)];
+  });
+
+  // FIXME [polish]: refactor this common pattern into a single helper
+  const res: Record<string, readonly any[]> = {};
+  for (const [key, value] of iter) {
+    res[key] = value;
+  }
+  return mergeMapUpdates(prevTreeMap, res);
 }
 
 /**
@@ -435,27 +463,30 @@ function regenerateTreeForNewBlocks(
 function regenerateTreeForNewDecorator(
   content: ContentState,
   blockMap: BlockMap,
-  previousTreeMap: Map<string, readonly any[]>,
+  previousTreeMap: ReadonlyMap<string, readonly any[]>,
   decorator: DraftDecoratorType,
   existingDecorator: DraftDecoratorType,
-): Map<string, readonly any[]> {
-  if (blockMap !== content.blockMap) {
-    throw new Error('TODO: is this expected?');
+): ReadonlyMap<string, readonly any[]> {
+  const iter = flatMap(previousTreeMap, (entry):
+    | [string, readonly any[]]
+    | undefined => {
+    const [key] = entry;
+    const block = blockMap.get(key)!;
+    if (
+      fastDeepEqual(
+        decorator.getDecorations(block, content),
+        existingDecorator.getDecorations(block, content),
+      )
+    ) {
+      return undefined;
+    }
+    return [key, BlockTree.generate(content, block, decorator)];
+  });
+  const updates: Record<string, readonly any[]> = {};
+  for (const [key, value] of iter) {
+    updates[key] = value;
   }
-
-  return new Map<string, readonly any[]>(
-    map(previousTreeMap.entries(), entry => {
-      const [key] = entry;
-      const block = blockMap.get(key);
-      if (
-        decorator.getDecorations(block, content) !==
-        existingDecorator.getDecorations(block, content)
-      ) {
-        return entry;
-      }
-      return BlockTree.generate(content, block, decorator);
-    }),
-  );
+  return mergeMapUpdates(previousTreeMap, updates);
 }
 
 /**
@@ -527,17 +558,18 @@ function lookUpwardForInlineStyle(
   content: ContentState,
   fromKey: string,
 ): DraftInlineStyle {
-
-  const lastNonEmpty = content
-    .getBlockMap()
-    .reverse()
-    .skipUntil((_, k) => k === fromKey)
-    .skip(1)
-    .skipUntil((block, _) => block.text.length)
-    .first();
+  let lastNonEmpty: BlockNodeRecord | undefined;
+  for (const [key, block] of content.blockMap) {
+    if (key === fromKey) {
+      break;
+    }
+    if (block.text.length > 0) {
+      lastNonEmpty = block;
+    }
+  }
 
   if (lastNonEmpty) {
-    return lastNonEmpty.getInlineStyleAt(lastNonEmpty.text.length - 1);
+    return getInlineStyleAt(lastNonEmpty, lastNonEmpty.text.length - 1);
   }
-  return OrderedSet();
+  return EMPTY_SET;
 }

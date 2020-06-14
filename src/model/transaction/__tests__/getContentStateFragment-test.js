@@ -25,19 +25,19 @@ const Immutable = require('immutable');
 const {List} = Immutable;
 
 const contentBlocks = [
-  new ContentBlock({
+  makeContentBlock({
     key: 'A',
     text: 'Alpha',
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'B',
     text: 'Beta',
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'C',
     text: 'Charlie',
   }),
-  new ContentBlock({
+  makeContentBlock({
     key: 'D',
     text: 'Delta',
   }),
@@ -81,7 +81,7 @@ const assertGetContentStateFragment = (blocksArray, selection = {}) => {
     EditorState.createWithContent(
       ContentState.createFromBlockArray([...blocksArray]),
     ),
-    new SelectionState({
+    makeSelectionState({
       ...DEFAULT_SELECTION,
       ...selection,
     }),

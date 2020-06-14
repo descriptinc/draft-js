@@ -18,15 +18,15 @@ export type BlockMap = ReadonlyMap<string, BlockNodeRecord>;
 
 // FIXME [mvp]: dealing with order of `updates`
 
-export function mergeBlockMap(
-  blockMap: BlockMap,
-  updates: Record<string, BlockNodeRecord | null>,
-): BlockMap {
+export function mergeMapUpdates<T>(
+  originalMap: ReadonlyMap<string, T>,
+  updates: Record<string, T | null>,
+): ReadonlyMap<string, T> {
   let didChange = false;
   const seenKeys = new Set<string>();
-  const result: BlockMap = new Map(
+  const result: ReadonlyMap<string, T> = new Map(
     flatten([
-      flatMap(blockMap, (entry): [string, BlockNodeRecord] | undefined => {
+      flatMap(originalMap, (entry): [string, T] | undefined => {
         const [key, existingBlock] = entry;
         seenKeys.add(key);
         const newBlock = updates[key];
@@ -40,9 +40,7 @@ export function mergeBlockMap(
         didChange = true;
         return [key, newBlock];
       }),
-      flatMap(Object.entries(updates), (entry):
-        | [string, BlockNodeRecord]
-        | undefined => {
+      flatMap(Object.entries(updates), (entry): [string, T] | undefined => {
         const [key, block] = entry;
         if (!block || seenKeys.has(key)) {
           return undefined;
@@ -52,5 +50,5 @@ export function mergeBlockMap(
       }),
     ]),
   );
-  return didChange ? result : blockMap;
+  return didChange ? result : originalMap;
 }

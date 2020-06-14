@@ -47,7 +47,7 @@ const assertCompositeDraftDecorator = (
 ) => {
   expect(
     new CompositeDraftDecorator(decorators).getDecorations(
-      new ContentBlock(text),
+      makeContentBlock(text),
       ContentState.createFromText(text),
     ),
   ).toMatchSnapshot();

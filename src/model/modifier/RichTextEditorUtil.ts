@@ -37,7 +37,7 @@ import {
 } from '../immutable/SelectionState';
 import {DraftEditorCommand} from '../constants/DraftEditorCommand';
 import DraftModifier from './DraftModifier';
-import {mergeBlockMap} from '../immutable/BlockMap';
+import {mergeMapUpdates} from '../immutable/BlockMap';
 import adjustBlockDepthForContentState from '../transaction/adjustBlockDepthForContentState';
 import {skipUntil, some, takeUntil} from '../descript/Iterables';
 import {
@@ -134,7 +134,7 @@ const RichTextEditorUtil: RichTextUtils = {
     const blockBefore = getBlockBefore(content, startKey);
 
     if (blockBefore && blockBefore.type === 'atomic') {
-      const blockMap = mergeBlockMap(content.blockMap, {
+      const blockMap = mergeMapUpdates(content.blockMap, {
         [blockBefore.key]: null,
       });
       const withoutAtomicBlock = {

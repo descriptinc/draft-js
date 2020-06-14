@@ -36,19 +36,19 @@ beforeEach(() => {
 
 test('must be able to randomize keys for ContentBlocks BlockMap', () => {
   assertRandomizeBlockMapKeys([
-    new ContentBlock({
+    makeContentBlock({
       key: 'A',
       text: 'Alpha',
     }),
-    new ContentBlock({
+    makeContentBlock({
       key: 'B',
       text: 'Beta',
     }),
-    new ContentBlock({
+    makeContentBlock({
       key: 'C',
       text: 'Charlie',
     }),
-    new ContentBlock({
+    makeContentBlock({
       key: 'D',
       text: 'Delta',
     }),

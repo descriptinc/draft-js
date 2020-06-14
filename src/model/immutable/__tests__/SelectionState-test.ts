@@ -37,7 +37,7 @@ const getSample = (type, config = {}) => {
 
   switch (type) {
     case 'MULTI_BLOCK':
-      selectionState = new SelectionState({
+      selectionState = makeSelectionState({
         ...DEFAULT_CONFIG,
         anchorKey: 'b',
         focusKey: 'c',
@@ -47,7 +47,7 @@ const getSample = (type, config = {}) => {
       });
       break;
     case 'WITHIN_BLOCK':
-      selectionState = new SelectionState({
+      selectionState = makeSelectionState({
         ...DEFAULT_CONFIG,
         anchorOffset: 10,
         focusOffset: 20,
@@ -56,7 +56,7 @@ const getSample = (type, config = {}) => {
       break;
     case 'COLLAPSED':
     default:
-      selectionState = new SelectionState({
+      selectionState = makeSelectionState({
         ...DEFAULT_CONFIG,
         ...config,
       });

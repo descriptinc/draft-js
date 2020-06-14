@@ -21,14 +21,14 @@ const {contentState, selectionState} = getSampleStateForTesting();
 const initialBlock = contentState.getBlockMap().first();
 const secondBlock = contentState.getBlockAfter(initialBlock.key);
 
-const selectBlock = new SelectionState({
+const selectBlock = makeSelectionState({
   anchorKey: initialBlock.key,
   anchorOffset: 0,
   focusKey: initialBlock.key,
   focusOffset: initialBlock.text.length,
 });
 
-const selectAdjacentBlocks = new SelectionState({
+const selectAdjacentBlocks = makeSelectionState({
   anchorKey: initialBlock.key,
   anchorOffset: 0,
   focusKey: secondBlock?.key,

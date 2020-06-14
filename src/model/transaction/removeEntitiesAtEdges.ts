@@ -16,7 +16,7 @@ import {
 } from '../immutable/SelectionState';
 import DraftEntity from '../entity/DraftEntity';
 import {ContentBlock} from '../immutable/ContentBlock';
-import {mergeBlockMap} from '../immutable/BlockMap';
+import {mergeMapUpdates} from '../immutable/BlockMap';
 import {applyEntity, CharacterMetadata} from '../immutable/CharacterMetadata';
 import {findRangesImmutable} from '../immutable/findRangesImmutable';
 import invariant from '../../fbjs/invariant';
@@ -64,7 +64,7 @@ export default function removeEntitiesAtEdges(
 
   return {
     ...contentState,
-    blockMap: mergeBlockMap(blockMap, updatedBlocks),
+    blockMap: mergeMapUpdates(blockMap, updatedBlocks),
     selectionAfter: selectionState,
   };
 }

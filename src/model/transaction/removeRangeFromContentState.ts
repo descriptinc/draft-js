@@ -17,7 +17,7 @@ import {
 } from '../immutable/SelectionState';
 import {blockIsExperimentalTreeBlock} from './exploration/getNextDelimiterBlockKey';
 import {ContentBlock} from '../immutable/ContentBlock';
-import {mergeBlockMap} from '../immutable/BlockMap';
+import {mergeMapUpdates} from '../immutable/BlockMap';
 import {BlockNode} from '../immutable/BlockNode';
 import {
   filter,
@@ -389,7 +389,7 @@ const removeRangeFromContentState = (
     newBlocks[key] = block;
   }
 
-  const updatedBlockMap = mergeBlockMap(blockMap, newBlocks);
+  const updatedBlockMap = mergeMapUpdates(blockMap, newBlocks);
 
   // Only update tree block pointers if the range is across blocks
   if (isExperimentalTreeBlock && startBlock !== endBlock) {

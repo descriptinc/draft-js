@@ -129,7 +129,7 @@ test('must move atomic at start of block with collapsed selection', () => {
 
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: firstBlock.key,
       focusKey: firstBlock.key,
     }),
@@ -150,7 +150,7 @@ test('must move atomic at end of block with collapsed selection', () => {
   // Move atomic block at end of the last block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: lastBlock.key,
       anchorOffset: lastBlock.text.length,
       focusKey: lastBlock.key,
@@ -176,7 +176,7 @@ test('must move atomic inbetween block with collapsed selection', () => {
   // Move atomic block inbetween the split parts of the third block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: thirdBlock.key,
       anchorOffset: 2,
       focusKey: thirdBlock.key,
@@ -199,7 +199,7 @@ test('must move atomic before block with collapsed selection', () => {
   // Move atomic block before the first block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: firstBlock.key,
     }),
     resultEditor,
@@ -220,7 +220,7 @@ test('must move atomic after block with collapsed selection', () => {
   // Move atomic block after the last block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       focusKey: lastBlock.key,
     }),
     resultEditor,
@@ -256,7 +256,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: beforeAtomicBlock.key,
         anchorOffset: beforeAtomicBlock.text.length,
         focusKey: beforeAtomicBlock.key,
@@ -270,7 +270,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: beforeAtomicBlock.key,
         focusKey: beforeAtomicBlock.key,
       }),
@@ -283,7 +283,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: atomicBlock.key,
         focusKey: atomicBlock.key,
         anchorOffset: atomicBlock.text.length,
@@ -297,7 +297,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: atomicBlock.key,
       }),
       'before',
@@ -309,7 +309,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: afterAtomicBlock.key,
         focusKey: afterAtomicBlock.key,
       }),
@@ -321,7 +321,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: afterAtomicBlock.key,
         focusKey: afterAtomicBlock.key,
       }),
@@ -334,7 +334,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: atomicBlock.key,
         anchorOffset: atomicBlock.text.length,
         focusKey: atomicBlock.key,
@@ -348,7 +348,7 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         focusKey: atomicBlock.key,
       }),
       'after',
@@ -426,7 +426,7 @@ test('must move atomic at start of block', () => {
   // Move atomic block at start of the last block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: lastBlock.key,
       anchorOffset: 0,
       focusKey: lastBlock.key,
@@ -449,7 +449,7 @@ test('must move atomic at end of block', () => {
   // Move atomic block at end of the last block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: lastBlock.key,
       anchorOffset: lastBlock.text.length - 2,
       focusKey: lastBlock.key,
@@ -475,7 +475,7 @@ test('must move atomic inbetween block', () => {
   // Move atomic block inbetween the split parts of the third block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: thirdBlock.key,
       anchorOffset: 1,
       focusKey: thirdBlock.key,
@@ -499,7 +499,7 @@ test('must move atomic before block', () => {
   // Move atomic block before the first block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: firstBlock.key,
       anchorOffset: 2,
       focusKey: lastBlock.key,
@@ -524,7 +524,7 @@ test('must move atomic after block', () => {
   // Move atomic block after the last block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: firstBlock.key,
       anchorOffset: 2,
       focusKey: lastBlock.key,
@@ -563,7 +563,7 @@ test("mustn't move atomic next to itself", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: beforeAtomicBlock.key,
         anchorOffset: beforeAtomicBlock.text.length - 2,
         focusKey: beforeAtomicBlock.key,
@@ -578,7 +578,7 @@ test("mustn't move atomic next to itself", () => {
     AtomicBlockUtils.moveAtomicBlock(
       resultEditor,
       atomicBlock,
-      new SelectionState({
+      makeSelectionState({
         anchorKey: afterAtomicBlock.key,
         anchorOffset: 0,
         focusKey: afterAtomicBlock.key,
@@ -643,7 +643,7 @@ test('must be able to move atomic block when experimentalTreeDataSupport is enab
   // Move atomic block at end of the last block
   assertMoveAtomicBlock(
     atomicBlock,
-    new SelectionState({
+    makeSelectionState({
       anchorKey: lastBlock.key,
       anchorOffset: lastBlock.text.length,
       focusKey: lastBlock.key,

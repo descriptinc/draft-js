@@ -17,7 +17,7 @@ import {
 import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
 import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {applyStyle, removeStyle} from '../immutable/CharacterMetadata';
-import {mergeBlockMap} from '../immutable/BlockMap';
+import {mergeMapUpdates} from '../immutable/BlockMap';
 
 const ContentStateInlineStyle = {
   add: function(
@@ -99,7 +99,7 @@ function modifyInlineStyle(
 
   return {
     ...contentState,
-    blockMap: mergeBlockMap(blockMap, newBlocks),
+    blockMap: mergeMapUpdates(blockMap, newBlocks),
     selectionBefore: selectionState,
     selectionAfter: selectionState,
   };
