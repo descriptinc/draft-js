@@ -69,17 +69,17 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
   onDelete: (editorState: EditorState): ?EditorState => {
     const selection = editorState.getSelection();
-    if (!selection.isCollapsed()) {
+    if (!isCollapsed(selection)) {
       return null;
     }
 
     const content = editorState.getCurrentContent();
-    const startKey = selection.getStartKey();
+    const startKey = getStartKey(selection);
     const block = content.getBlockForKey(startKey);
     const length = block.text.length;
 
     // The cursor is somewhere within the text. Behave normally.
-    if (selection.getStartOffset() < length) {
+    if (getStartOffset(selection) < length) {
       return null;
     }
 
@@ -114,11 +114,11 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   onBackspace: (editorState: EditorState): ?EditorState => {
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
-    const currentBlock = content.getBlockForKey(selection.getStartKey());
+    const currentBlock = content.getBlockForKey(getStartKey(selection));
     const previousBlockKey = currentBlock.getPrevSiblingKey();
 
     if (
-      !selection.isCollapsed() ||
+      !isCollapsed(selection) ||
       selection.getAnchorOffset() ||
       selection.getFocusOffset() ||
       (currentBlock.type === 'unstyled' &&
@@ -128,7 +128,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       return null;
     }
 
-    const startKey = selection.getStartKey();
+    const startKey = getStartKey(selection);
     const blockBefore = content.getBlockBefore(startKey);
 
     // we want to delete that block completely
@@ -199,9 +199,9 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   ): EditorState => {
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
-    const currentBlock = content.getBlockForKey(selection.getStartKey());
+    const currentBlock = content.getBlockForKey(getStartKey(selection));
     const haveChildren = !currentBlock.getChildKeys().isEmpty();
-    const isSelectionCollapsed = selection.isCollapsed();
+    const isSelectionCollapsed = isCollapsed(selection);
     const isMultiBlockSelection =
       selection.getAnchorKey() !== selection.getFocusKey();
     const isUnsupportedNestingBlockType = NESTING_DISABLED_TYPES.includes(
@@ -248,7 +248,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     return contentState
       .getBlockForKey(selection.getAnchorKey())
       .characterList
-      .slice(selection.getStartOffset(), selection.getEndOffset())
+      .slice(getStartOffset(selection), getEndOffset(selection))
       .some(v => {
         const entity = v.getEntity();
         return !!entity && entityMap.__get(entity).type === 'LINK';
@@ -259,7 +259,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     const selection = editorState.getSelection();
     return editorState
       .getCurrentContent()
-      .getBlockForKey(selection.getStartKey())
+      .getBlockForKey(getStartKey(selection))
       .type;
   },
 
@@ -378,7 +378,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     const anchorKey = selection.getAnchorKey();
     const focusKey = selection.getFocusKey();
 
-    if (selection.isCollapsed() || anchorKey !== focusKey) {
+    if (isCollapsed(selection) || anchorKey !== focusKey) {
       return RichTextEditorUtil.toggleBlockType(editorState, 'code-block');
     }
 
@@ -401,7 +401,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     // If the selection is collapsed, toggle the specified style on or off and
     // set the result as the new inline style override. This will then be
     // used as the inline style for the next character to be inserted.
-    if (selection.isCollapsed()) {
+    if (isCollapsed(selection)) {
       return EditorState.setInlineStyleOverride(
         editorState,
         currentStyle.has(inlineStyle)
@@ -455,7 +455,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   tryToRemoveBlockStyle: (editorState: EditorState): ?ContentState => {
     const selection = editorState.getSelection();
     const offset = selection.getAnchorOffset();
-    if (selection.isCollapsed() && offset === 0) {
+    if (isCollapsed(selection) && offset === 0) {
       const key = selection.getAnchorKey();
       const content = editorState.getCurrentContent();
       const block = content.getBlockForKey(key);

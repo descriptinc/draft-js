@@ -55,12 +55,6 @@ Array [
 ]
 `;
 
-exports[`must serialize properties correctly 1`] = `"Anchor: a:0, Focus: a:0, Is Backward: false, Has Focus: true"`;
-
-exports[`must serialize properties correctly 2`] = `"Anchor: a:10, Focus: a:20, Is Backward: false, Has Focus: true"`;
-
-exports[`must serialize properties correctly 3`] = `"Anchor: b:10, Focus: c:15, Is Backward: false, Has Focus: true"`;
-
 exports[`properly identifies start and end keys 1`] = `"a"`;
 
 exports[`properly identifies start and end keys 2`] = `"a"`;

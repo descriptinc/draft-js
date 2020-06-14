@@ -19,7 +19,7 @@ const {contentState, selectionState} = getSampleStateForTesting();
 
 const initialSelection = selectionState.set(
   'focusOffset',
-  contentState.getBlockForKey(selectionState.getStartKey()).text.length,
+  contentState.getBlockForKey(getStartKey(selectionState)).text.length,
 );
 
 const assertAddContentStateInlineStyle = (
@@ -87,7 +87,7 @@ test('must remove styles', () => {
 });
 
 test('must add and remove styles accross multiple blocks', () => {
-  const nextBlock = contentState.getBlockAfter(selectionState.getStartKey());
+  const nextBlock = contentState.getBlockAfter(getStartKey(selectionState));
   const selection = selectionState.merge({
     focusKey: nextBlock?.key,
     focusOffset: nextBlock?.text.length,

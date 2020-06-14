@@ -5,13 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
- * @format
  */
-
-'use strict';
-
-const SelectionState = require('SelectionState');
+import {
+  getEndKey,
+  getEndOffset,
+  getStartKey,
+  getStartOffset,
+  hasEdgeWithin,
+  isCollapsed,
+  makeSelectionState,
+  SelectionState,
+} from '../SelectionState';
 
 const DEFAULT_CONFIG = {
   anchorKey: 'a',
@@ -22,17 +26,18 @@ const DEFAULT_CONFIG = {
   hasFocus: true,
 };
 
-const flip = selectionState => {
-  return selectionState.merge({
-    anchorKey: selectionState.getFocusKey(),
-    anchorOffset: selectionState.getFocusOffset(),
-    focusKey: selectionState.getAnchorKey(),
-    focusOffset: selectionState.getAnchorOffset(),
-    isBackward: !selectionState.getIsBackward(),
-  });
+const flip = (selectionState: SelectionState) => {
+  return {
+    ...selectionState,
+    anchorKey: selectionState.focusKey,
+    anchorOffset: selectionState.focusOffset,
+    focusKey: selectionState.anchorKey,
+    focusOffset: selectionState.anchorOffset,
+    isBackward: !selectionState.isBackward,
+  };
 };
 
-const getSample = (type, config = {}) => {
+const getSample = (type: string, config = {}) => {
   let selectionState;
 
   switch (type) {
@@ -62,7 +67,7 @@ const getSample = (type, config = {}) => {
       });
   }
 
-  expect(selectionState.toJS()).toMatchSnapshot();
+  expect(selectionState).toMatchSnapshot();
 
   return selectionState;
 };
@@ -71,95 +76,89 @@ const COLLAPSED = getSample('COLLAPSED');
 const MULTI_BLOCK = getSample('MULTI_BLOCK');
 const WITHIN_BLOCK = getSample('WITHIN_BLOCK');
 
-test('must create a new instance', () => {
-  const state = COLLAPSED;
-  expect(state instanceof SelectionState).toBe(true);
-});
-
 test('must retrieve properties correctly', () => {
   const state = COLLAPSED;
   expect([
-    state.getAnchorKey(),
-    state.getAnchorOffset(),
-    state.getFocusKey(),
-    state.getFocusOffset(),
-    state.getIsBackward(),
-    state.getHasFocus(),
+    state.anchorKey,
+    state.anchorOffset,
+    state.focusKey,
+    state.focusOffset,
+    state.isBackward,
+    state.hasFocus,
   ]).toMatchSnapshot();
-});
-
-test('must serialize properties correctly', () => {
-  expect(COLLAPSED.serialize()).toMatchSnapshot();
-  expect(WITHIN_BLOCK.serialize()).toMatchSnapshot();
-  expect(MULTI_BLOCK.serialize()).toMatchSnapshot();
 });
 
 describe('hasEdgeWithin', () => {
   test('is false for non-edge block keys', () => {
-    expect(COLLAPSED.hasEdgeWithin('b', 0, 0)).toBe(false);
-    expect(WITHIN_BLOCK.hasEdgeWithin('b', 0, 0)).toBe(false);
-    expect(MULTI_BLOCK.hasEdgeWithin('d', 0, 0)).toBe(false);
+    expect(hasEdgeWithin(COLLAPSED, 'b', 0, 0)).toBe(false);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'b', 0, 0)).toBe(false);
+    expect(hasEdgeWithin(MULTI_BLOCK, 'd', 0, 0)).toBe(false);
   });
 
   test('is false if offset is outside the selection range', () => {
-    expect(COLLAPSED.hasEdgeWithin('a', 1, 1)).toBe(false);
-    expect(WITHIN_BLOCK.hasEdgeWithin('a', 1, 1)).toBe(false);
-    expect(MULTI_BLOCK.hasEdgeWithin('b', 1, 1)).toBe(false);
+    expect(hasEdgeWithin(COLLAPSED, 'a', 1, 1)).toBe(false);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'a', 1, 1)).toBe(false);
+    expect(hasEdgeWithin(MULTI_BLOCK, 'b', 1, 1)).toBe(false);
   });
 
   test('is true if key match and offset equals selection edge', () => {
-    expect(COLLAPSED.hasEdgeWithin('a', 0, 1)).toBe(true);
-    expect(WITHIN_BLOCK.hasEdgeWithin('a', 10, 15)).toBe(true);
-    expect(WITHIN_BLOCK.hasEdgeWithin('a', 15, 20)).toBe(true);
-    expect(MULTI_BLOCK.hasEdgeWithin('b', 10, 20)).toBe(true);
-    expect(MULTI_BLOCK.hasEdgeWithin('c', 15, 20)).toBe(true);
+    expect(hasEdgeWithin(COLLAPSED, 'a', 0, 1)).toBe(true);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'a', 10, 15)).toBe(true);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'a', 15, 20)).toBe(true);
+    expect(hasEdgeWithin(MULTI_BLOCK, 'b', 10, 20)).toBe(true);
+    expect(hasEdgeWithin(MULTI_BLOCK, 'c', 15, 20)).toBe(true);
   });
 
   test('is true if selection range is entirely within test range', () => {
     expect(
-      getSample('COLLAPSED', {
-        anchorOffset: 5,
-        focusOffset: 5,
-      }).hasEdgeWithin('a', 0, 10),
+      hasEdgeWithin(
+        getSample('COLLAPSED', {
+          anchorOffset: 5,
+          focusOffset: 5,
+        }),
+        'a',
+        0,
+        10,
+      ),
     ).toBe(true);
-    expect(WITHIN_BLOCK.hasEdgeWithin('a', 0, 40)).toBe(true);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'a', 0, 40)).toBe(true);
   });
 
   test('is true if selection range edge overlaps test range', () => {
-    expect(WITHIN_BLOCK.hasEdgeWithin('a', 5, 15)).toBe(true);
-    expect(WITHIN_BLOCK.hasEdgeWithin('a', 15, 25)).toBe(true);
-    expect(MULTI_BLOCK.hasEdgeWithin('b', 5, 20)).toBe(true);
-    expect(MULTI_BLOCK.hasEdgeWithin('c', 5, 20)).toBe(true);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'a', 5, 15)).toBe(true);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'a', 15, 25)).toBe(true);
+    expect(hasEdgeWithin(MULTI_BLOCK, 'b', 5, 20)).toBe(true);
+    expect(hasEdgeWithin(MULTI_BLOCK, 'c', 5, 20)).toBe(true);
   });
 
   test('is false if test range is entirely within selection range', () => {
-    expect(WITHIN_BLOCK.hasEdgeWithin('a', 12, 15)).toBe(false);
-    expect(MULTI_BLOCK.hasEdgeWithin('b', 12, 15)).toBe(false);
+    expect(hasEdgeWithin(WITHIN_BLOCK, 'a', 12, 15)).toBe(false);
+    expect(hasEdgeWithin(MULTI_BLOCK, 'b', 12, 15)).toBe(false);
   });
 });
 
 test('detects collapsed selection properly', () => {
-  expect(COLLAPSED.isCollapsed()).toBe(true);
-  expect(WITHIN_BLOCK.isCollapsed()).toBe(false);
-  expect(MULTI_BLOCK.isCollapsed()).toBe(false);
+  expect(isCollapsed(COLLAPSED)).toBe(true);
+  expect(isCollapsed(WITHIN_BLOCK)).toBe(false);
+  expect(isCollapsed(MULTI_BLOCK)).toBe(false);
 });
 
 test('properly identifies start and end keys', () => {
-  expect(COLLAPSED.getStartKey()).toMatchSnapshot();
-  expect(WITHIN_BLOCK.getStartKey()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getStartKey()).toMatchSnapshot();
-  expect(COLLAPSED.getEndKey()).toMatchSnapshot();
-  expect(WITHIN_BLOCK.getEndKey()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getEndKey()).toMatchSnapshot();
+  expect(getStartKey(COLLAPSED)).toMatchSnapshot();
+  expect(getStartKey(WITHIN_BLOCK)).toMatchSnapshot();
+  expect(getStartKey(MULTI_BLOCK)).toMatchSnapshot();
+  expect(getEndKey(COLLAPSED)).toMatchSnapshot();
+  expect(getEndKey(WITHIN_BLOCK)).toMatchSnapshot();
+  expect(getEndKey(MULTI_BLOCK)).toMatchSnapshot();
 });
 
 test('properly identifies start and end offsets', () => {
-  expect(COLLAPSED.getStartOffset()).toMatchSnapshot();
-  expect(WITHIN_BLOCK.getStartOffset()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getStartOffset()).toMatchSnapshot();
-  expect(COLLAPSED.getEndOffset()).toMatchSnapshot();
-  expect(WITHIN_BLOCK.getEndOffset()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getEndOffset()).toMatchSnapshot();
+  expect(getStartOffset(COLLAPSED)).toMatchSnapshot();
+  expect(getStartOffset(WITHIN_BLOCK)).toMatchSnapshot();
+  expect(getStartOffset(MULTI_BLOCK)).toMatchSnapshot();
+  expect(getEndOffset(COLLAPSED)).toMatchSnapshot();
+  expect(getEndOffset(WITHIN_BLOCK)).toMatchSnapshot();
+  expect(getEndOffset(MULTI_BLOCK)).toMatchSnapshot();
 });
 
 test('properly identifies start and end keys when backward', () => {
@@ -168,10 +167,10 @@ test('properly identifies start and end keys when backward', () => {
     isBackward: true,
   });
 
-  expect(withinBlock.getStartKey()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getStartKey()).toMatchSnapshot();
-  expect(withinBlock.getEndKey()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getEndKey()).toMatchSnapshot();
+  expect(getStartKey(withinBlock)).toMatchSnapshot();
+  expect(getStartKey(MULTI_BLOCK)).toMatchSnapshot();
+  expect(getEndKey(withinBlock)).toMatchSnapshot();
+  expect(getEndKey(MULTI_BLOCK)).toMatchSnapshot();
 });
 
 test('properly identifies start and end offsets when backward', () => {
@@ -180,8 +179,8 @@ test('properly identifies start and end offsets when backward', () => {
     isBackward: true,
   });
 
-  expect(withinBlock.getStartOffset()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getStartOffset()).toMatchSnapshot();
-  expect(withinBlock.getEndOffset()).toMatchSnapshot();
-  expect(MULTI_BLOCK.getEndOffset()).toMatchSnapshot();
+  expect(getStartOffset(withinBlock)).toMatchSnapshot();
+  expect(getStartOffset(MULTI_BLOCK)).toMatchSnapshot();
+  expect(getEndOffset(withinBlock)).toMatchSnapshot();
+  expect(getEndOffset(MULTI_BLOCK)).toMatchSnapshot();
 });
