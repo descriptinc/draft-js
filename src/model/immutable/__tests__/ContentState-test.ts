@@ -5,19 +5,24 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
- * @format
  */
 
-'use strict';
+import {
+  createEntity,
+  getBlockAfter,
+  getBlockBefore,
+  getBlockForKey,
+  getEntity,
+  getLastCreatedEntityKey,
+  hasText,
+  makeContentState,
+  mergeEntityData,
+  replaceEntityData,
+} from '../ContentState';
+import {createFromArray} from '../BlockMapBuilder';
+import {ContentBlock, makeContentBlock} from '../ContentBlock';
 
-jest.mock('SelectionState');
-
-let contentState;
-
-const BlockMapBuilder = require('BlockMapBuilder');
-const ContentBlock = require('ContentBlock');
-const ContentState = require('ContentState');
+jest.mock('../SelectionState');
 
 const SINGLE_BLOCK = [{text: 'Lorem ipsum', key: 'a'}];
 const MULTI_BLOCK = [
@@ -26,35 +31,20 @@ const MULTI_BLOCK = [
 ];
 const ZERO_WIDTH_CHAR_BLOCK = [{text: unescape('%u200B%u200B'), key: 'a'}];
 
-const SelectionState = require('SelectionState');
-
 const createLink = () => {
-  return contentState.createEntity('LINK', 'MUTABLE', {uri: 'zombo.com'});
+  return createEntity('LINK', 'MUTABLE', {uri: 'zombo.com'});
 };
 
-const getSample = textBlocks => {
-  const contentBlocks = textBlocks.map(block => new ContentBlock(block));
-  const blockMap = BlockMapBuilder.createFromArray(contentBlocks);
-  return new ContentState({
+const getSample = (textBlocks: Partial<ContentBlock>[]) => {
+  const contentBlocks = textBlocks.map(block => makeContentBlock(block));
+  const blockMap = createFromArray(contentBlocks);
+  return makeContentState({
     blockMap,
-    selectionBefore: new SelectionState(),
-    selectionAfter: new SelectionState(),
   });
 };
 
 beforeEach(() => {
-  contentState = ContentState.createFromText('');
   jest.resetModules();
-});
-
-test('must create a new instance', () => {
-  const state = getSample(SINGLE_BLOCK);
-  expect(state instanceof ContentState).toMatchSnapshot();
-});
-
-test('must create properly with an empty block array', () => {
-  const state = ContentState.createFromBlockArray([]);
-  expect(state instanceof ContentState).toMatchSnapshot();
 });
 
 test('key fetching must succeed or fail properly', () => {
@@ -64,79 +54,71 @@ test('key fetching must succeed or fail properly', () => {
   const firstKey = MULTI_BLOCK[0].key;
   const secondKey = MULTI_BLOCK[1].key;
 
-  expect(singleBlock.getKeyAfter(key)).toMatchSnapshot();
-  expect(singleBlock.getKeyBefore(key)).toMatchSnapshot();
-  expect(singleBlock.getKeyAfter(key)).toMatchSnapshot();
+  expect(getBlockAfter(singleBlock, key)?.key).toMatchSnapshot();
+  expect(getBlockBefore(singleBlock, key)?.key).toMatchSnapshot();
+  expect(getBlockAfter(singleBlock, key)?.key).toMatchSnapshot();
 
-  expect(multiBlock.getKeyBefore(firstKey)).toMatchSnapshot();
-  expect(multiBlock.getKeyAfter(firstKey)).toMatchSnapshot();
-  expect(multiBlock.getKeyBefore(secondKey)).toMatchSnapshot();
-  expect(multiBlock.getKeyAfter(secondKey)).toMatchSnapshot();
+  expect(getBlockBefore(multiBlock, firstKey)?.key).toMatchSnapshot();
+  expect(getBlockAfter(multiBlock, firstKey)?.key).toMatchSnapshot();
+  expect(getBlockBefore(multiBlock, secondKey)?.key).toMatchSnapshot();
+  expect(getBlockAfter(multiBlock, secondKey)?.key).toMatchSnapshot();
 });
 
 test('block fetching must retrieve or fail fetching block for key', () => {
   const state = getSample(SINGLE_BLOCK);
-  const block = state.getBlockForKey('a');
+  const block = getBlockForKey(state, 'a');
 
-  expect(block instanceof ContentBlock).toMatchSnapshot();
+  expect(block !== undefined).toMatchSnapshot();
   expect(block.text).toMatchSnapshot();
-  expect(state.getBlockForKey('x')).toMatchSnapshot();
+  expect(() => getBlockForKey(state, 'x')).toThrowError();
 });
 
 test('must not include zero width chars for has text', () => {
-  expect(getSample(ZERO_WIDTH_CHAR_BLOCK).hasText()).toMatchSnapshot();
-  expect(getSample(SINGLE_BLOCK).hasText()).toMatchSnapshot();
-  expect(getSample(MULTI_BLOCK).hasText()).toMatchSnapshot();
+  expect(hasText(getSample(ZERO_WIDTH_CHAR_BLOCK))).toMatchSnapshot();
+  expect(hasText(getSample(SINGLE_BLOCK))).toMatchSnapshot();
+  expect(hasText(getSample(MULTI_BLOCK))).toMatchSnapshot();
 });
 
 test('must create entities instances', () => {
-  const contentState = createLink();
-  expect(typeof contentState.getLastCreatedEntityKey()).toMatchSnapshot();
+  createLink();
+  expect(typeof getLastCreatedEntityKey()).toMatchSnapshot();
 });
 
 test('must retrieve an entities instance given a key', () => {
-  const contentState = createLink();
-  const retrieved = contentState.getEntity(
-    contentState.getLastCreatedEntityKey(),
-  );
-  expect(retrieved.toJS()).toMatchSnapshot();
+  const retrieved = getEntity(getLastCreatedEntityKey());
+  expect(retrieved).toMatchSnapshot();
 });
 
 test('must throw when retrieving entities for an invalid key', () => {
-  const contentState = createLink();
-  expect(() => contentState.getEntity('asdfzxcvqweriuop')).toThrow();
+  createLink();
+  expect(() => getEntity('asdfzxcvqweriuop')).toThrow();
 });
 
 test('must merge entities data', () => {
-  const contentState = createLink();
-  const key = contentState.getLastCreatedEntityKey();
+  createLink();
+  const key = getLastCreatedEntityKey();
 
   // Merge new property.
-  const contentStateWithNewProp = contentState.mergeEntityData(key, {
-    foo: 'bar',
-  });
-  const updatedEntity = contentStateWithNewProp.getEntity(key);
+  mergeEntityData(key, {foo: 'bar'});
+  const updatedEntity = getEntity(key);
 
   // Replace existing property.
-  const contentStateWithUpdatedProp = contentStateWithNewProp.mergeEntityData(
-    key,
-    {uri: 'homestarrunner.com'},
-  );
-  const entityWithNewURI = contentStateWithUpdatedProp.getEntity(key);
+  mergeEntityData(key, {uri: 'homestarrunner.com'});
+  const entityWithNewURI = getEntity(key);
 
-  expect(updatedEntity.getData()).toMatchSnapshot();
-  expect(entityWithNewURI.getData()).toMatchSnapshot();
+  expect(updatedEntity.data).toMatchSnapshot();
+  expect(entityWithNewURI.data).toMatchSnapshot();
 });
 
 test('must replace entities data', () => {
-  const contentState = createLink();
-  const key = contentState.getLastCreatedEntityKey();
+  createLink();
+  const key = getLastCreatedEntityKey();
 
-  const updatedContentState = contentState.replaceEntityData(key, {
+  replaceEntityData(key, {
     uri: 'something.com',
     newProp: 'baz',
   });
-  const entityWithReplacedData = updatedContentState.getEntity(key);
+  const entityWithReplacedData = getEntity(key);
 
-  expect(entityWithReplacedData.getData()).toMatchSnapshot();
+  expect(entityWithReplacedData.data).toMatchSnapshot();
 });

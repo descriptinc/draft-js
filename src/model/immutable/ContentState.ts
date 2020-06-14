@@ -33,9 +33,9 @@ export type ContentState = Readonly<{
 
 export function makeContentState({
   blockMap,
-  selectionAfter,
-  selectionBefore,
-}: ContentState): ContentState {
+  selectionAfter = makeEmptySelection(first(blockMap.keys())!),
+  selectionBefore = makeEmptySelection(first(blockMap.keys())!),
+}: Partial<ContentState> & Pick<ContentState, 'blockMap'>): ContentState {
   // FIXME [perf]: force type to be exact and don't create a new object?
   return {
     blockMap,
