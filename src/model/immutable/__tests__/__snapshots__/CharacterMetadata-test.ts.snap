@@ -13,7 +13,7 @@ exports[`must apply style 3`] = `true`;
 exports[`must have appropriate default values 1`] = `
 Object {
   "entity": null,
-  "style": Array [],
+  "style": Set {},
 }
 `;
 
