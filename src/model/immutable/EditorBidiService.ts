@@ -7,6 +7,10 @@
  * @emails oncall+draft_js
  */
 import {ContentState} from './ContentState';
+import UnicodeBidiService from 'fbjs/lib/UnicodeBidiService';
+import {nullthrows} from '../../fbjs/nullthrows';
+import fastDeepEqual from 'fast-deep-equal/es6';
+import {map} from '../descript/Iterables';
 
 let bidiService: UnicodeBidiService | undefined;
 
@@ -21,13 +25,14 @@ const EditorBidiService = {
       bidiService.reset();
     }
 
-    const blockMap = content.getBlockMap();
-    const nextBidi = blockMap
-      .valueSeq()
-      .map(block => nullthrows(bidiService).getDirection(block.text));
-    const bidiMap = OrderedMap(blockMap.keySeq().zip(nextBidi));
+    const bidiMap = new Map(
+      map(content.blockMap, ([blockKey, block]): [string, string] => [
+        blockKey,
+        nullthrows(bidiService).getDirection(block.text),
+      ]),
+    );
 
-    if (prevBidiMap != null && Immutable.is(prevBidiMap, bidiMap)) {
+    if (prevBidiMap != null && fastDeepEqual(prevBidiMap, bidiMap)) {
       return prevBidiMap;
     }
 
