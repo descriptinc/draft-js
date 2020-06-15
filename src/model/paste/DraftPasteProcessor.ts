@@ -79,5 +79,4 @@ const DraftPasteProcessor = {
     }, []);
   },
 };
-
-module.exports = DraftPasteProcessor;
+export default DraftPasteProcessor;

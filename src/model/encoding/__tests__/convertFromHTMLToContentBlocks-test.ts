@@ -12,9 +12,8 @@ import {DefaultDraftBlockRenderMap} from '../../immutable/DefaultDraftBlockRende
 import getSafeBodyFromHTML from '../../paste/__mocks__/getSafeBodyFromHTML';
 import NonASCIIStringSnapshotSerializer from '../../../NonASCIIStringSnapshotSerializer';
 import {ContentBlock} from '../../immutable/ContentBlock';
-import mockUUID from '../../keys/mockUUID';
 import convertFromHTMLToContentBlocks from '../convertFromHTMLToContentBlocks';
-import {blockNodeToJson} from '../../../util/blockMapToJson';
+import {blockToJson} from '../../../util/blockMapToJson';
 import {resetRandomKeys} from '../../keys/generateRandomKey';
 import GKX from '../../../stubs/gkx';
 import {resetUuids} from '../../../util/uuid';
@@ -129,7 +128,7 @@ const assertConvertFromHTMLToContentBlocks = (
 ) => {
   expect(
     (convertFromHTML(html_string, config)?.contentBlocks || []).map(
-      blockNodeToJson,
+      blockToJson,
     ),
   ).toMatchSnapshot();
 };

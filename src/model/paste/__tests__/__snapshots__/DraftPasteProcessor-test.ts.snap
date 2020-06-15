@@ -499,11 +499,26 @@ exports[`must create ContentBlocks when experimentalTreeDataSupport is disabled 
 Array [
   Object {
     "characterList": Array [
-      Array [],
-      Array [],
-      Array [],
-      Array [],
-      Array [],
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
     ],
     "data": Object {},
     "depth": 0,
@@ -513,10 +528,22 @@ Array [
   },
   Object {
     "characterList": Array [
-      Array [],
-      Array [],
-      Array [],
-      Array [],
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
     ],
     "data": Object {},
     "depth": 0,
@@ -526,13 +553,34 @@ Array [
   },
   Object {
     "characterList": Array [
-      Array [],
-      Array [],
-      Array [],
-      Array [],
-      Array [],
-      Array [],
-      Array [],
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
+      Object {
+        "entity": null,
+        "style": Array [],
+      },
     ],
     "data": Object {},
     "depth": 0,
@@ -786,19 +834,19 @@ Array [
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
@@ -988,15 +1036,15 @@ Array [
       Object {
         "entity": null,
         "style": Array [
-          "ITALIC",
           "BOLD",
+          "ITALIC",
         ],
       },
       Object {
         "entity": null,
         "style": Array [
-          "ITALIC",
           "BOLD",
+          "ITALIC",
         ],
       },
       Object {
@@ -1670,19 +1718,19 @@ Array [
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
@@ -1988,47 +2036,47 @@ Array [
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [
           "ITALIC",
         ],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [
           "ITALIC",
         ],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [
           "ITALIC",
         ],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [
           "ITALIC",
         ],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
-        "entity": "2",
+        "entity": "1",
         "style": Array [],
       },
       Object {
