@@ -8,29 +8,36 @@
  * @flow strict-local
  * @format
  */
-
-'use strict';
-
-const CharacterMetadata = require('CharacterMetadata');
-const {BOLD} = require('SampleDraftInlineStyle');
-
-const getSampleStateForTesting = require('getSampleStateForTesting');
-const insertTextIntoContentState = require('insertTextIntoContentState');
+import getSampleStateForTesting from '../getSampleStateForTesting';
+import {
+  CharacterMetadata,
+  EMPTY_CHARACTER,
+  makeCharacterMetadata,
+} from '../../immutable/CharacterMetadata';
+import {getFirstBlock} from '../../immutable/ContentState';
+import insertTextIntoContentState from '../insertTextIntoContentState';
+import {blockMapToJsonObject} from '../../../util/blockMapToJson';
+import {BOLD} from '../../immutable/SampleDraftInlineStyle';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
-const EMPTY = CharacterMetadata.EMPTY;
-const initialBlock = contentState.getBlockMap().first();
+const EMPTY = EMPTY_CHARACTER;
+const initialBlock = getFirstBlock(contentState);
 
 const assertInsertTextIntoContentState = (
-  text,
-  characterMetadata,
+  text: string,
+  characterMetadata: CharacterMetadata,
   selection = selectionState,
 ) => {
   expect(
-    insertTextIntoContentState(contentState, selection, text, characterMetadata)
-      .getBlockMap()
-      .toJS(),
+    blockMapToJsonObject(
+      insertTextIntoContentState(
+        contentState,
+        selection,
+        text,
+        characterMetadata,
+      ).blockMap,
+    ),
   ).toMatchSnapshot();
 };
 
@@ -38,7 +45,7 @@ test('must throw if selection is not collapsed', () => {
   expect(() => {
     insertTextIntoContentState(
       contentState,
-      selectionState.set('focusOffset', 2),
+      {...selectionState, focusOffset: 2},
       'hey',
       EMPTY,
     );
@@ -50,32 +57,23 @@ test('must return early if no text is provided', () => {
 });
 
 test('must insert at the start', () => {
-  assertInsertTextIntoContentState(
-    'xx',
-    CharacterMetadata.create({style: BOLD}),
-  );
+  assertInsertTextIntoContentState('xx', makeCharacterMetadata({style: BOLD}));
 });
 
 test('must insert within block', () => {
-  assertInsertTextIntoContentState(
-    'xx',
-    CharacterMetadata.create({style: BOLD}),
-    selectionState.merge({
-      focusOffset: 2,
-      anchorOffset: 2,
-      isBackward: false,
-    }),
-  );
+  assertInsertTextIntoContentState('xx', makeCharacterMetadata({style: BOLD}), {
+    ...selectionState,
+    focusOffset: 2,
+    anchorOffset: 2,
+    isBackward: false,
+  });
 });
 
 test('must insert at the end', () => {
-  assertInsertTextIntoContentState(
-    'xx',
-    CharacterMetadata.create({style: BOLD}),
-    selectionState.merge({
-      focusOffset: initialBlock.text.length,
-      anchorOffset: initialBlock.text.length,
-      isBackward: false,
-    }),
-  );
+  assertInsertTextIntoContentState('xx', makeCharacterMetadata({style: BOLD}), {
+    ...selectionState,
+    focusOffset: initialBlock.text.length,
+    anchorOffset: initialBlock.text.length,
+    isBackward: false,
+  });
 });
