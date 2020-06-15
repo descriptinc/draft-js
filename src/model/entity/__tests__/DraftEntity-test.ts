@@ -5,13 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
- * @format
  */
 
-'use strict';
-
-const DraftEntity = require('DraftEntity');
+import DraftEntity from '../DraftEntity';
 
 beforeEach(() => {
   jest.resetModules();
@@ -30,8 +26,8 @@ test('must retrieve an instance given a key', () => {
   const key = createLink();
   const retrieved = DraftEntity.__get(key);
   expect(retrieved.type).toMatchSnapshot();
-  expect(retrieved.getMutability()).toMatchSnapshot();
-  expect(retrieved.getData()).toMatchSnapshot();
+  expect(retrieved.mutability).toMatchSnapshot();
+  expect(retrieved.data).toMatchSnapshot();
 });
 
 test('must throw when retrieving for an invalid key', () => {
@@ -52,6 +48,6 @@ test('must merge data', () => {
   DraftEntity.__mergeData(key, withNewURI);
   const entityWithNewURI = DraftEntity.__get(key);
 
-  expect(newEntity.getData()).toMatchSnapshot();
-  expect(entityWithNewURI.getData()).toMatchSnapshot();
+  expect(newEntity.data).toMatchSnapshot();
+  expect(entityWithNewURI.data).toMatchSnapshot();
 });

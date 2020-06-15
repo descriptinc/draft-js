@@ -8,36 +8,49 @@
  * @flow strict-local
  * @format
  */
-
-const getEntityKeyForSelection = require('getEntityKeyForSelection');
-const getSampleStateForTesting = require('getSampleStateForTesting');
+import getSampleStateForTesting from '../../transaction/getSampleStateForTesting';
+import DraftEntity from '../DraftEntity';
+import getEntityKeyForSelection from '../getEntityKeyForSelection';
+import {getBlockForKey} from '../../immutable/ContentState';
+import {DraftEntityMutability} from '../DraftEntityMutability';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
-const initialSelectionState = selectionState.merge({
+const initialSelectionState = {
+  ...selectionState,
   anchorKey: 'b',
   focusKey: 'b',
-});
+};
 
-const COLLAPSED_SELECTION = initialSelectionState.merge({
+const COLLAPSED_SELECTION = {
+  ...initialSelectionState,
   anchorOffset: 2,
   focusOffset: 2,
-});
+};
 
-const COLLAPSED_SELECTION_ENTITY_END = initialSelectionState.merge({
+const COLLAPSED_SELECTION_ENTITY_END = {
+  ...initialSelectionState,
   anchorOffset: 5,
   focusOffset: 5,
-});
+};
 
-const NON_COLLAPSED_SELECTION = initialSelectionState.merge({
+const NON_COLLAPSED_SELECTION = {
+  ...initialSelectionState,
   anchorOffset: 2,
   focusKey: 'c',
   focusOffset: 2,
+};
+
+const origGet = DraftEntity.__get;
+afterEach(() => {
+  DraftEntity.__get = origGet;
 });
 
-const setEntityMutability = mutability => {
-  contentState.getEntityMap().__get = () => ({
-    getMutability: () => mutability,
+const setEntityMutability = (mutability: DraftEntityMutability) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  DraftEntity.__get = () => ({
+    mutability,
   });
 };
 
@@ -74,9 +87,10 @@ test('must not return key if segmented with collapsed selection', () => {
 });
 
 test('must return null if start is at end of block', () => {
-  const startsAtEnd = NON_COLLAPSED_SELECTION.merge({
-    anchorOffset: contentState.getBlockForKey('b').text.length,
-  });
+  const startsAtEnd = {
+    ...NON_COLLAPSED_SELECTION,
+    anchorOffset: getBlockForKey(contentState, 'b').text.length,
+  };
   const key = getEntityKeyForSelection(contentState, startsAtEnd);
   expect(key).toMatchSnapshot();
 });

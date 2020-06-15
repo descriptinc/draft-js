@@ -4,12 +4,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 import {
   createWithContent,
@@ -21,11 +17,10 @@ import {makeSelectionState, SelectionState} from '../immutable/SelectionState';
 import {makeContentBlock} from '../immutable/ContentBlock';
 import {repeat} from '../descript/Iterables';
 import {makeCharacterMetadata} from '../immutable/CharacterMetadata';
-import SampleInlineStyles from '../immutable/SampleDraftInlineStyle';
 import {createFromArray} from '../immutable/BlockMapBuilder';
 import DraftEntity from '../entity/DraftEntity';
+import {BOLD, ITALIC} from '../immutable/SampleDraftInlineStyle';
 
-const {BOLD, ITALIC} = SampleInlineStyles;
 const ENTITY_KEY = '2';
 
 const BLOCKS = [

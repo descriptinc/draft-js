@@ -94,5 +94,5 @@ export function getInlineStyleAt(
 }
 
 export function getEntityAt(block: BlockNode, index: number): string | null {
-  return block.characterList[index].entity;
+  return block.characterList[index]?.entity || null;
 }
