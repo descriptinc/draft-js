@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 const EditorState = require('EditorState');
 
@@ -19,10 +19,7 @@ const EditorState = require('EditorState');
  * The user has begun using an IME input system. Switching to `composite` mode
  * allows handling composition input and disables other edit behavior.
  */
-function editOnCompositionStart(
-  editor: DraftEditor,
-  e: SyntheticEvent<>,
-): void {
+function editOnCompositionStart(editor: DraftEditor, e: React.SyntheticEvent): void {
   editor.setMode('composite');
   editor.update(
     EditorState.set(editor._latestEditorState, {inCompositionMode: true}),

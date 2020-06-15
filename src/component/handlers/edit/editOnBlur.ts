@@ -11,15 +11,15 @@
 
 'use strict';
 
-import type {SelectionObject} from 'DraftDOMTypes';
-import type DraftEditor from 'DraftEditor.react';
+import { SelectionObject } from 'DraftDOMTypes';
+import DraftEditor from 'DraftEditor.react';
 
 const EditorState = require('EditorState');
 
 const containsNode = require('containsNode');
 const getActiveElement = require('getActiveElement');
 
-function editOnBlur(editor: DraftEditor, e: SyntheticEvent<HTMLElement>): void {
+function editOnBlur(editor: DraftEditor, e: React.SyntheticEvent): void {
   // In a contentEditable element, when you select a range and then click
   // another active element, this does trigger a `blur` event but will not
   // remove the DOM selection from the contenteditable.

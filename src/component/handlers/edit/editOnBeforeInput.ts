@@ -11,8 +11,8 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
-import type {DraftInlineStyle} from 'DraftInlineStyle';
+import DraftEditor from 'DraftEditor.react';
+import { DraftInlineStyle } from 'DraftInlineStyle';
 
 const DraftModifier = require('DraftModifier');
 const EditorState = require('EditorState');
@@ -50,8 +50,8 @@ function replaceText(
   editorState: EditorState,
   text: string,
   inlineStyle: DraftInlineStyle,
-  entityKey: ?string,
-  forceSelection: boolean,
+  entityKey: string | null,
+  forceSelection: boolean
 ): EditorState {
   const contentState = DraftModifier.replaceText(
     editorState.currentContent,
@@ -77,10 +77,7 @@ function replaceText(
  * preserve spellcheck highlighting, which disappears or flashes if re-render
  * occurs on the relevant text nodes.
  */
-function editOnBeforeInput(
-  editor: DraftEditor,
-  e: SyntheticInputEvent<HTMLElement>,
-): void {
+function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLElement>): void {
   if (editor._pendingStateFromBeforeInput !== undefined) {
     editor.update(editor._pendingStateFromBeforeInput);
     editor._pendingStateFromBeforeInput = undefined;

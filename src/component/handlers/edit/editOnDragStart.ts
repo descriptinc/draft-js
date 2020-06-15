@@ -11,14 +11,14 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 /**
- * Drag behavior has begun from outside the editor element.
+ * A `dragstart` event has begun within the text editor component.
  */
-function editOnDragOver(editor: DraftEditor, e: SyntheticDragEvent<>): void {
+function editOnDragStart(editor: DraftEditor): void {
+  editor._internalDrag = true;
   editor.setMode('drag');
-  e.preventDefault();
 }
 
-module.exports = editOnDragOver;
+module.exports = editOnDragStart;

@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 const DOMObserver = require('DOMObserver');
 const DraftModifier = require('DraftModifier');
@@ -95,7 +95,7 @@ const DraftEditorCompositionHandler = {
    * the arrow keys are used to commit, prevent default so that the cursor
    * doesn't move, otherwise it will jump back noticeably on re-render.
    */
-  onKeyDown: function(editor: DraftEditor, e: SyntheticKeyboardEvent<>): void {
+  onKeyDown: function(editor: DraftEditor, e: React.KeyboardEvent): void {
     if (!stillComposing) {
       // If a keydown event is received after compositionend but before the
       // 20ms timer expires (ex: type option-E then backspace, or type A then
@@ -116,7 +116,7 @@ const DraftEditorCompositionHandler = {
    * characters that we do not want. `preventDefault` allows the composition
    * to be committed while preventing the extra characters.
    */
-  onKeyPress: function(editor: DraftEditor, e: SyntheticKeyboardEvent<>): void {
+  onKeyPress: function(editor: DraftEditor, e: React.KeyboardEvent): void {
     if (e.which === Keys.RETURN) {
       e.preventDefault();
     }

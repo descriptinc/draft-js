@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 const DraftJsDebugLogging = require('DraftJsDebugLogging');
 const EditorState = require('EditorState');

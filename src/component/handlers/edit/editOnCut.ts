@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 const DraftModifier = require('DraftModifier');
 const EditorState = require('EditorState');
@@ -30,7 +30,7 @@ const isNode = require('isInstanceOfNode');
  * In addition, we can keep a copy of the removed fragment, including all
  * styles and entities, for use as an internal paste.
  */
-function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
+function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent): void {
   const editorState = editor._latestEditorState;
   const selection = editorState.selection;
   const element = e.target;
@@ -45,7 +45,7 @@ function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   // Track the current scroll position so that it can be forced back in place
   // after the editor regains control of the DOM.
   if (isNode(element)) {
-    const node: Node = (element: any);
+    const node: Node = element as any;
     scrollPosition = getScrollPosition(Style.getScrollParent(node));
   }
 

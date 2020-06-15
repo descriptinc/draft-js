@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 const UserAgent = require('UserAgent');
 
@@ -31,7 +31,7 @@ const onSelect = require('editOnSelect');
 const isChrome = UserAgent.isBrowser('Chrome');
 const isFirefox = UserAgent.isBrowser('Firefox');
 
-const selectionHandler: (e: DraftEditor) => void =
+const selectionHandler: ((e: DraftEditor) => void) =
   isChrome || isFirefox ? onSelect : e => {};
 
 const DraftEditorEditHandler = {

@@ -11,9 +11,9 @@
 
 'use strict';
 
-import type {BlockMap} from 'BlockMap';
-import type DraftEditor from 'DraftEditor.react';
-import type {EntityMap} from 'EntityMap';
+import { BlockMap } from 'BlockMap';
+import DraftEditor from 'DraftEditor.react';
+import { EntityMap } from 'EntityMap';
 
 const BlockMapBuilder = require('BlockMapBuilder');
 const CharacterMetadata = require('CharacterMetadata');
@@ -31,13 +31,13 @@ const splitTextIntoTextBlocks = require('splitTextIntoTextBlocks');
 /**
  * Paste content.
  */
-function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
+function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
   e.preventDefault();
   const data = new DataTransfer(e.clipboardData);
 
   // Get files, unless this is likely to be a string the user wants inline.
   if (!data.isRichText()) {
-    const files: Array<Blob> = (data.getFiles(): any);
+    const files: Array<Blob> = data.getFiles() as any;
     const defaultFileText = data.text;
     if (files.length > 0) {
       // Allow customized paste handling for images, etc. Otherwise, fall
@@ -94,8 +94,8 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   }
 
   let textBlocks: Array<string> = [];
-  const text: string = (data.text: any);
-  const html: string = (data.getHTML(): any);
+  const text: string = data.text as any;
+  const html: string = data.getHTML() as any;
   const editorState = editor._latestEditorState;
 
   if (
@@ -197,11 +197,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   }
 }
 
-function insertFragment(
-  editorState: EditorState,
-  fragment: BlockMap,
-  entityMap: ?EntityMap,
-): EditorState {
+function insertFragment(editorState: EditorState, fragment: BlockMap, entityMap: EntityMap | null): EditorState {
   const newContent = DraftModifier.replaceWithFragment(
     editorState.currentContent,
     editorState.selection,
@@ -218,10 +214,7 @@ function insertFragment(
   );
 }
 
-function areTextBlocksAndClipboardEqual(
-  textBlocks: Array<string>,
-  blockMap: BlockMap,
-): boolean {
+function areTextBlocksAndClipboardEqual(textBlocks: Array<string>, blockMap: BlockMap): boolean {
   return (
     textBlocks.length === blockMap.size &&
     blockMap.valueSeq().every((block, ii) => block.text === textBlocks[ii])

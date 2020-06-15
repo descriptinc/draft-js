@@ -11,12 +11,12 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 const EditorState = require('EditorState');
 const UserAgent = require('UserAgent');
 
-function editOnFocus(editor: DraftEditor, e: SyntheticFocusEvent<>): void {
+function editOnFocus(editor: DraftEditor, e: SyntheticFocusEvent): void {
   const editorState = editor._latestEditorState;
   const currentSelection = editorState.selection;
   if (currentSelection.getHasFocus()) {

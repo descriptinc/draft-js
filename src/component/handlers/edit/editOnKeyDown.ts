@@ -11,8 +11,8 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
-import type {DraftEditorCommand} from 'DraftEditorCommand';
+import DraftEditor from 'DraftEditor.react';
+import { DraftEditorCommand } from 'DraftEditorCommand';
 
 const DraftModifier = require('DraftModifier');
 const EditorState = require('EditorState');
@@ -42,7 +42,7 @@ const isChrome = UserAgent.isBrowser('Chrome');
 function onKeyCommand(
   command: DraftEditorCommand | string,
   editorState: EditorState,
-  e: SyntheticKeyboardEvent<HTMLElement>,
+  e: React.KeyboardEvent
 ): EditorState {
   switch (command) {
     case 'redo':
@@ -83,20 +83,11 @@ function onKeyCommand(
  * See `getDefaultKeyBinding` for defaults. Alternatively, the top-level
  * component may provide a custom mapping via the `keyBindingFn` prop.
  */
-function editOnKeyDown(
-  editor: DraftEditor,
-  e: SyntheticKeyboardEvent<HTMLElement>,
-): void {
+function editOnKeyDown(editor: DraftEditor, e: React.KeyboardEvent): void {
   const keyCode = e.which;
   const editorState = editor._latestEditorState;
   function callDeprecatedHandler(
-    handlerName:
-      | 'onDownArrow'
-      | 'onEscape'
-      | 'onLeftArrow'
-      | 'onRightArrow'
-      | 'onTab'
-      | 'onUpArrow',
+    handlerName: "onDownArrow" | "onEscape" | "onLeftArrow" | "onRightArrow" | "onTab" | "onUpArrow"
   ): boolean {
     const deprecatedHandler = editor.props[handlerName];
     if (deprecatedHandler) {

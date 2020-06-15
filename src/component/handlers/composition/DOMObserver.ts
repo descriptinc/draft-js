@@ -21,9 +21,11 @@ const nullthrows = require('nullthrows');
 
 const {Map} = Immutable;
 
-type MutationRecordT =
-  | MutationRecord
-  | {|type: 'characterData', target: Node, removedNodes?: void|};
+type MutationRecordT = MutationRecord | {
+  type: "characterData",
+  target: Node,
+  removedNodes?: void
+};
 
 // Heavily based on Prosemirror's DOMObserver https://github.com/ProseMirror/prosemirror-view/blob/master/src/domobserver.js
 
@@ -38,14 +40,15 @@ const DOM_OBSERVER_OPTIONS = {
 const USE_CHAR_DATA = UserAgent.isBrowser('IE <= 11');
 
 class DOMObserver {
-  observer: ?MutationObserver;
+  observer: MutationObserver | null;
   container: HTMLElement;
   mutations: Map<string, string>;
-  onCharData: ?({
-    target: EventTarget,
-    type: string,
-    ...
-  }) => void;
+  onCharData: ((
+    arg0: {
+      target: EventTarget,
+      type: string
+    }
+  ) => void) | null;
 
   constructor(container: HTMLElement) {
     this.container = container;
@@ -69,7 +72,7 @@ class DOMObserver {
     }
   }
 
-  start(): void {
+  start function(): void {
     if (this.observer) {
       this.observer.observe(this.container, DOM_OBSERVER_OPTIONS);
     } else {
@@ -82,7 +85,7 @@ class DOMObserver {
     }
   }
 
-  stopAndFlushMutations(): Map<string, string> {
+  stopAndFlushMutations function(): Map<string, string> {
     const {observer} = this;
     if (observer) {
       this.registerMutations(observer.takeRecords());
@@ -100,13 +103,13 @@ class DOMObserver {
     return mutations;
   }
 
-  registerMutations(mutations: Array<MutationRecord>): void {
+  registerMutations function(mutations: Array<MutationRecord>): void {
     for (let i = 0; i < mutations.length; i++) {
       this.registerMutation(mutations[i]);
     }
   }
 
-  getMutationTextContent(mutation: MutationRecordT): ?string {
+  getMutationTextContent function(mutation: MutationRecordT): string | null {
     const {type, target, removedNodes} = mutation;
     if (type === 'characterData') {
       // When `textContent` is '', there is a race condition that makes
@@ -141,7 +144,7 @@ class DOMObserver {
     return null;
   }
 
-  registerMutation(mutation: MutationRecordT): void {
+  registerMutation function(mutation: MutationRecordT): void {
     const textContent = this.getMutationTextContent(mutation);
     if (textContent != null) {
       const offsetKey = nullthrows(findAncestorOffsetKey(mutation.target));

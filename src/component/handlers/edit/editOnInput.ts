@@ -11,8 +11,8 @@
 
 'use strict';
 
-import type {SelectionObject} from 'DraftDOMTypes';
-import type DraftEditor from 'DraftEditor.react';
+import { SelectionObject } from 'DraftDOMTypes';
+import DraftEditor from 'DraftEditor.react';
 
 const DraftModifier = require('DraftModifier');
 const DraftOffsetKey = require('DraftOffsetKey');
@@ -59,19 +59,21 @@ function onInputType(inputType: string, editorState: EditorState): EditorState {
  * when an `input` change leads to a DOM/model mismatch, the change should be
  * due to a spellcheck change, and we can incorporate it into our model.
  */
-function editOnInput(editor: DraftEditor, e: SyntheticInputEvent<>): void {
+function editOnInput(editor: DraftEditor, e: SyntheticInputEvent): void {
   if (editor._pendingStateFromBeforeInput !== undefined) {
     editor.update(editor._pendingStateFromBeforeInput);
     editor._pendingStateFromBeforeInput = undefined;
   }
   // at this point editor is not null for sure (after input)
-  const castedEditorElement: HTMLElement = (editor.editor: any);
-  const domSelection = castedEditorElement.ownerDocument.defaultView.getSelection() as SelectionObject;
+  const castedEditorElement: HTMLElement = editor.editor as any;
+  const domSelection = castedEditorElement.ownerDocument.defaultView.getSelection()asSelectionObject;
 
   const {anchorNode, isCollapsed} = domSelection;
   const isNotTextOrElementNode =
-    anchorNode?.nodeType !== Node.TEXT_NODE &&
-    anchorNode?.nodeType !== Node.ELEMENT_NODE;
+    // Auto generated from flowToTs. Please clean me!
+    (anchorNode === null || anchorNode === undefined ? undefined : anchorNode.nodeType) !== Node.TEXT_NODE &&
+    // Auto generated from flowToTs. Please clean me!
+    (anchorNode === null || anchorNode === undefined ? undefined : anchorNode.nodeType) !== Node.ELEMENT_NODE;
 
   if (anchorNode == null || isNotTextOrElementNode) {
     // TODO: (t16149272) figure out context for this change
