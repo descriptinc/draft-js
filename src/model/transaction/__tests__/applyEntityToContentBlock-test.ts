@@ -27,9 +27,7 @@ const assertApplyEntityToContentBlock = (
   contentBlock = sampleBlock,
 ) => {
   expect(
-    blockToJson(
-      applyEntityToContentBlock(contentBlock, start, end, entityKey),
-    ),
+    blockToJson(applyEntityToContentBlock(contentBlock, start, end, entityKey)),
   ).toMatchSnapshot();
 };
 

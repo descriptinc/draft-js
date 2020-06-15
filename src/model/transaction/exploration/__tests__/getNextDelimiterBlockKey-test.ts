@@ -11,17 +11,17 @@
 
 'use strict';
 
+import {makeContentBlock} from '../../../immutable/ContentBlock';
+import {makeContentBlockNode} from '../../../immutable/ContentBlockNode';
+import {createWithContent} from '../../../immutable/EditorState';
+import {
+  createFromBlockArray,
+  getBlockForKey,
+} from '../../../immutable/ContentState';
+import getNextDelimiterBlockKey from '../getNextDelimiterBlockKey';
+import {BlockNodeRecord} from '../../../immutable/BlockNodeRecord';
+
 jest.mock('generateRandomKey');
-
-const ContentBlock = require('ContentBlock');
-const ContentBlockNode = require('ContentBlockNode');
-const ContentState = require('ContentState');
-const EditorState = require('EditorState');
-
-const getNextDelimiterBlockKey = require('getNextDelimiterBlockKey');
-const Immutable = require('immutable');
-
-const {List} = Immutable;
 
 const contentBlocks = [
   makeContentBlock({
@@ -47,7 +47,7 @@ const contentBlockNodes = [
   makeContentBlockNode({
     key: 'B',
     text: '',
-    children: List(['C']),
+    children: ['C'],
     nextSibling: 'D',
     prevSibling: 'A',
   }),
@@ -60,7 +60,7 @@ const contentBlockNodes = [
     key: 'D',
     text: '',
     prevSibling: 'B',
-    children: List(['E', 'F']),
+    children: ['E', 'F'],
   }),
   makeContentBlockNode({
     key: 'E',
@@ -77,17 +77,15 @@ const contentBlockNodes = [
 ];
 
 const assertGetNextDelimiterBlockKey = (
-  targetBlockKey,
-  blocksArray = contentBlockNodes,
+  targetBlockKey: string,
+  blocksArray: BlockNodeRecord[] = contentBlockNodes,
 ) => {
-  const editor = EditorState.createWithContent(
-    ContentState.createFromBlockArray(blocksArray),
-  );
+  const editor = createWithContent(createFromBlockArray(blocksArray));
   const contentState = editor.currentContent;
-  const targetBlock = contentState.getBlockForKey(targetBlockKey);
+  const targetBlock = getBlockForKey(contentState, targetBlockKey);
 
   expect(
-    getNextDelimiterBlockKey(targetBlock, contentState.getBlockMap()),
+    getNextDelimiterBlockKey(targetBlock, contentState.blockMap),
   ).toMatchSnapshot();
 };
 
