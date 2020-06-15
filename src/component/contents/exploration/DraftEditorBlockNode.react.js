@@ -90,7 +90,7 @@ const shouldNotAddWrapperElement = (
   const nextSiblingKey = block.getNextSiblingKey();
 
   return nextSiblingKey
-    ? contentState.getBlockForKey(nextSiblingKey).getType() === block.getType()
+    ? contentState.getBlockForKey(nextSiblingKey).type === block.type
     : false;
 };
 
@@ -135,7 +135,7 @@ const getDraftRenderConfig = (
   blockRenderMap: DraftBlockRenderMap,
 ): DraftRenderConfig => {
   const configForType =
-    blockRenderMap.get(block.getType()) || blockRenderMap.get('unstyled');
+    blockRenderMap.get(block.type) || blockRenderMap.get('unstyled');
 
   const wrapperTemplate = configForType.wrapper;
   const Element =

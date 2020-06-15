@@ -18,3 +18,7 @@ export default function generateRandomKey(): string {
   seenKeys[key] = true;
   return key;
 }
+
+export function resetRandomKeys() {
+  //
+}

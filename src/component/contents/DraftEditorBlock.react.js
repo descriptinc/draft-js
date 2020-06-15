@@ -145,7 +145,7 @@ class DraftEditorBlock extends React.Component<Props> {
   _renderChildren(): Array<React.Node> {
     const block = this.props.block;
     const blockKey = block.getKey();
-    const text = block.getText();
+    const text = block.text;
     const lastLeafSet = this.props.tree.size - 1;
     const hasSelection = isBlockOnSelectionEdge(this.props.selection, blockKey);
 

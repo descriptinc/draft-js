@@ -9,13 +9,15 @@
  * @emails oncall+draft_js
  */
 
-const isElement = require('isElement');
-
-function isHTMLBRElement(node: ?Node): boolean {
+export default function isHTMLElement(node?: Node): node is HTMLElement {
   if (!node || !node.ownerDocument) {
     return false;
   }
-  return isElement(node) && node.nodeName === 'BR';
+  if (!node.ownerDocument.defaultView) {
+    return node instanceof HTMLElement;
+  }
+  if (node instanceof node.ownerDocument.defaultView.HTMLElement) {
+    return true;
+  }
+  return false;
 }
-
-module.exports = isHTMLBRElement;

@@ -48,7 +48,7 @@ function moveSelectionBackward(
     } else {
       focusKey = keyBefore;
       const blockBefore = content.getBlockForKey(keyBefore);
-      focusOffset = blockBefore.getText().length;
+      focusOffset = blockBefore.text.length;
     }
   } else {
     focusOffset = offset - maxDistance;

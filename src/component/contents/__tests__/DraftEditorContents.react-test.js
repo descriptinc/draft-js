@@ -52,7 +52,7 @@ test('defaults to "unstyled" block type for unknown block types', () => {
       );
     };
     blockRenderFn(block) {
-      if (block.getType() === CUSTOM_BLOCK_TYPE) {
+      if (block.type === CUSTOM_BLOCK_TYPE) {
         return {
           component: CustomText,
           editable: true,

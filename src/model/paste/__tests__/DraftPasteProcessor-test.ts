@@ -5,54 +5,46 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @format
  */
 
-'use strict';
+jest.mock('../../keys/generateRandomKey');
 
-jest.mock('generateRandomKey');
+const CUSTOM_BLOCK_MAP = new Map(
+  Object.entries({
+    'header-one': {
+      element: 'h1',
+    },
+    'header-two': {
+      element: 'h2',
+    },
+    'header-three': {
+      element: 'h3',
+    },
+    'unordered-list-item': {
+      element: 'li',
+    },
+    'ordered-list-item': {
+      element: 'li',
+    },
+    blockquote: {
+      element: 'blockquote',
+    },
+    'code-block': {
+      element: 'pre',
+    },
+    paragraph: {
+      element: 'p',
+    },
+    unstyled: {
+      element: 'div',
+    },
+  }),
+);
 
-const DraftPasteProcessor = require('DraftPasteProcessor');
+const EMPTY_CHAR_METADATA = new Set();
 
-const Immutable = require('immutable');
-const mockUUID = require('mockUUID');
-
-const {OrderedSet, Map} = Immutable;
-
-const CUSTOM_BLOCK_MAP = Map({
-  'header-one': {
-    element: 'h1',
-  },
-  'header-two': {
-    element: 'h2',
-  },
-  'header-three': {
-    element: 'h3',
-  },
-  'unordered-list-item': {
-    element: 'li',
-  },
-  'ordered-list-item': {
-    element: 'li',
-  },
-  blockquote: {
-    element: 'blockquote',
-  },
-  'code-block': {
-    element: 'pre',
-  },
-  paragraph: {
-    element: 'p',
-  },
-  unstyled: {
-    element: 'div',
-  },
-});
-
-const EMPTY_CHAR_METADATA = OrderedSet();
-
-const toggleExperimentalTreeDataSupport = enabled => {
-  jest.doMock('gkx', () => name => {
+const toggleExperimentalTreeDataSupport = (enabled: boolean) => {
+  jest.doMock('gkx', () => (name: string) => {
     return name === 'draft_tree_data_support' ? enabled : false;
   });
 };

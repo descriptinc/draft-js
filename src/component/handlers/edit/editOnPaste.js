@@ -38,7 +38,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   // Get files, unless this is likely to be a string the user wants inline.
   if (!data.isRichText()) {
     const files: Array<Blob> = (data.getFiles(): any);
-    const defaultFileText = data.getText();
+    const defaultFileText = data.text;
     if (files.length > 0) {
       // Allow customized paste handling for images, etc. Otherwise, fall
       // through to insert text contents into the editor.
@@ -94,7 +94,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   }
 
   let textBlocks: Array<string> = [];
-  const text: string = (data.getText(): any);
+  const text: string = (data.text: any);
   const html: string = (data.getHTML(): any);
   const editorState = editor._latestEditorState;
 
@@ -128,7 +128,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
         // whether the pasted text matches the internal clipboard.
         (textBlocks.length === 1 &&
           internalClipboard.size === 1 &&
-          internalClipboard.first().getText() === text)
+          internalClipboard.first().text === text)
       ) {
         editor.update(
           insertFragment(editor._latestEditorState, internalClipboard),
@@ -224,7 +224,7 @@ function areTextBlocksAndClipboardEqual(
 ): boolean {
   return (
     textBlocks.length === blockMap.size &&
-    blockMap.valueSeq().every((block, ii) => block.getText() === textBlocks[ii])
+    blockMap.valueSeq().every((block, ii) => block.text === textBlocks[ii])
   );
 }
 

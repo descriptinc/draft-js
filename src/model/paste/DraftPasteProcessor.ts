@@ -4,40 +4,28 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow
  * @emails oncall+draft_js
  */
-
-'use strict';
-
-import { BlockNodeRecord } from 'BlockNodeRecord';
-import CharacterMetadata from 'CharacterMetadata';
-import { DraftBlockRenderMap } from 'DraftBlockRenderMap';
-import { DraftBlockType } from 'DraftBlockType';
-import { EntityMap } from 'EntityMap';
-
-const ContentBlock = require('ContentBlock');
-const ContentBlockNode = require('ContentBlockNode');
-
-const convertFromHTMLToContentBlocks = require('convertFromHTMLToContentBlocks');
-const generateRandomKey = require('generateRandomKey');
-const getSafeBodyFromHTML = require('getSafeBodyFromHTML');
-const gkx = require('gkx');
-const Immutable = require('immutable');
-const sanitizeDraftText = require('sanitizeDraftText');
-
-const {List, Repeat} = Immutable;
+import {gkx} from '../../stubs/gkx';
+import {makeContentBlockNode} from '../immutable/ContentBlockNode';
+import {makeContentBlock} from '../immutable/ContentBlock';
+import {DraftBlockRenderMap} from '../immutable/DraftBlockRenderMap';
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {EntityMap} from '../immutable/EntityMap';
+import getSafeBodyFromHTML from './__mocks__/getSafeBodyFromHTML';
 
 const experimentalTreeDataSupport = gkx('draft_tree_data_support');
-const ContentBlockRecord = experimentalTreeDataSupport
-  ? ContentBlockNode
-  : ContentBlock;
+const makeBlock = experimentalTreeDataSupport
+  ? makeContentBlockNode
+  : makeContentBlock;
 
 const DraftPasteProcessor = {
-  processHTML(html: string, blockRenderMap?: DraftBlockRenderMap): {
-    contentBlocks: Array<BlockNodeRecord> | null,
-    entityMap: EntityMap
+  processHTML(
+    html: string,
+    blockRenderMap?: DraftBlockRenderMap,
+  ): {
+    contentBlocks: Array<BlockNodeRecord> | null;
+    entityMap: EntityMap;
   } | null {
     return convertFromHTMLToContentBlocks(
       html,
@@ -49,7 +37,7 @@ const DraftPasteProcessor = {
   processText(
     textBlocks: Array<string>,
     character: CharacterMetadata,
-    type: DraftBlockType
+    type: DraftBlockType,
   ): Array<BlockNodeRecord> {
     return textBlocks.reduce((acc, textLine, index) => {
       textLine = sanitizeDraftText(textLine);

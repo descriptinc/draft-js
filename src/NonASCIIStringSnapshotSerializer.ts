@@ -6,8 +6,6 @@
  * @format
  */
 
-'use strict';
-
 const MAX_ASCII_CHARACTER = 127;
 
 /**
@@ -16,7 +14,7 @@ const MAX_ASCII_CHARACTER = 127;
  * "Source code should only include printable US-ASCII bytes"
  */
 const NonASCIIStringSnapshotSerializer = {
-  test(val: mixed): boolean {
+  test(val: any): boolean {
     if (typeof val !== 'string') {
       return false;
     }
@@ -48,4 +46,4 @@ const NonASCIIStringSnapshotSerializer = {
   },
 };
 
-module.exports = NonASCIIStringSnapshotSerializer;
+export default NonASCIIStringSnapshotSerializer;

@@ -164,7 +164,7 @@ function hashtagStrategy(contentBlock, callback, contentState) {
 }
 
 function findWithRegex(regex, contentBlock, callback) {
-  const text = contentBlock.getText();
+  const text = contentBlock.text;
   let matchArr = regex.exec(text);
   while (matchArr !== null) {
     callback(matchArr.index, matchArr.index + matchArr[0].length);

@@ -224,7 +224,7 @@ test('must allow update when `tree` has changed', () => {
   const decorator = new Decorator();
 
   const newTree = BlockTree.generate(
-    ContentState.createFromText(helloBlock.getText()),
+    ContentState.createFromText(helloBlock.text),
     helloBlock,
     decorator,
   );

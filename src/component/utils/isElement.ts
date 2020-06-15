@@ -5,17 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict-local
+ * @flow strict
  * @emails oncall+draft_js
  */
 
-const isElement = require('isElement');
-
-function isHTMLImageElement(node: ?Node): boolean {
+export default function isElement(node?: Node): boolean {
   if (!node || !node.ownerDocument) {
     return false;
   }
-  return isElement(node) && node.nodeName === 'IMG';
+  return node.nodeType === Node.ELEMENT_NODE;
 }
-
-module.exports = isHTMLImageElement;

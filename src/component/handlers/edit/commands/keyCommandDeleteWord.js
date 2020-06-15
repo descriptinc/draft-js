@@ -31,7 +31,7 @@ function keyCommandDeleteWord(editorState: EditorState): EditorState {
       const content = strategyState.currentContent;
       const text = content
         .getBlockForKey(key)
-        .getText()
+        .text
         .slice(offset);
       const toRemove = DraftRemovableWord.getForward(text);
 

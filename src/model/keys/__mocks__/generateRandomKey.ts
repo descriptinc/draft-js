@@ -8,9 +8,10 @@
  */
 
 let count = 0;
-
-function generateRandomKey() {
+export default function generateRandomKey() {
   return `key${count++}`;
 }
 
-module.exports = generateRandomKey;
+export function resetRandomKeys() {
+  count = 0;
+}

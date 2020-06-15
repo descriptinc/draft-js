@@ -30,7 +30,7 @@ function keyCommandPlainDelete(editorState: EditorState): EditorState {
       const content = strategyState.currentContent;
       const key = selection.getanchorKey;
       const offset = selection.getAnchorOffset();
-      const charAhead = content.getBlockForKey(key).getText()[offset];
+      const charAhead = content.getBlockForKey(key).text[offset];
       return moveSelectionForward(
         strategyState,
         charAhead ? UnicodeUtils.getUTF16Length(charAhead, 0) : 1,

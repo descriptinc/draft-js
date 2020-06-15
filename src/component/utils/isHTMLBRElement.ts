@@ -8,12 +8,11 @@
  * @flow strict
  * @emails oncall+draft_js
  */
+import isElement from './isElement';
 
-function isElement(node: ?Node): boolean {
+export default function isHTMLBRElement(node?: Node): node is HTMLBRElement {
   if (!node || !node.ownerDocument) {
     return false;
   }
-  return node.nodeType === Node.ELEMENT_NODE;
+  return isElement(node) && node.nodeName === 'BR';
 }
-
-module.exports = isElement;

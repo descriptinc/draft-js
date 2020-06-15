@@ -153,7 +153,7 @@ class DraftEditorContents extends React.Component<Props> {
     for (let ii = 0; ii < blocksAsArray.length; ii++) {
       const block = blocksAsArray[ii];
       const key = block.getKey();
-      const blockType = block.getType();
+      const blockType = block.type;
 
       const customRenderer = blockRendererFn(block);
       let CustomComponent, customProps, customEditable;

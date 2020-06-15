@@ -35,7 +35,7 @@ function keyCommandBackspaceWord(editorState: EditorState): EditorState {
       const content = strategyState.currentContent;
       const text = content
         .getBlockForKey(key)
-        .getText()
+        .text
         .slice(0, offset);
       const toRemove = DraftRemovableWord.getBackward(text);
       return moveSelectionBackward(strategyState, toRemove.length || 1);

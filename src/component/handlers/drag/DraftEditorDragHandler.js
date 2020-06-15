@@ -130,7 +130,7 @@ const DraftEditorDragHandler = {
         insertTextAtSelection(
           editorState,
           dropSelection,
-          (data.getText(): any),
+          (data.text: any),
         ),
       );
     }

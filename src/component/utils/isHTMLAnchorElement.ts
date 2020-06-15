@@ -8,14 +8,13 @@
  * @flow strict-local
  * @emails oncall+draft_js
  */
+import isElement from './isElement';
 
-const isElement = require('isElement');
-
-function isHTMLAnchorElement(node: ?Node): boolean {
+export default function isHTMLAnchorElement(
+  node?: Node,
+): node is HTMLAnchorElement {
   if (!node || !node.ownerDocument) {
     return false;
   }
   return isElement(node) && node.nodeName === 'A';
 }
-
-module.exports = isHTMLAnchorElement;

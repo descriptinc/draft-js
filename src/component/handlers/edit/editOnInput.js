@@ -114,7 +114,7 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent<>): void {
 
   const content = editorState.currentContent;
   const block = content.getBlockForKey(blockKey);
-  const modelText = block.getText().slice(start, end);
+  const modelText = block.text.slice(start, end);
 
   // Special-case soft newlines here. If the DOM text ends in a soft newline,
   // we will have manually inserted an extra soft newline in DraftEditorLeaf.

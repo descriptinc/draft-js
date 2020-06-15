@@ -43,7 +43,7 @@ function moveSelectionForward(
 
   const block = content.getBlockForKey(key);
 
-  if (maxDistance > block.getText().length - offset) {
+  if (maxDistance > block.text.length - offset) {
     focusKey = content.getKeyAfter(key);
     focusOffset = 0;
   } else {

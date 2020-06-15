@@ -28,7 +28,7 @@ const validateFormat =
  */
 
 export default function invariant(
-  condition: boolean,
+  condition: any,
   format: string | undefined,
   ...rest: any[]
 ): void {

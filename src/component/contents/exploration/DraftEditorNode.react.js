@@ -61,7 +61,7 @@ class DraftEditorNode extends React.Component<Props> {
     } = this.props;
 
     const blockKey = block.getKey();
-    const text = block.getText();
+    const text = block.text;
     const lastLeafSet = tree.size - 1;
 
     const children =

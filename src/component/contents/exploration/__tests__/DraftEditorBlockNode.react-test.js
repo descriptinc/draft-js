@@ -347,7 +347,7 @@ test('renders block with nested children with decorator', () => {
   const decorator = new CompositeDraftDecorator([
     {
       strategy: (block, callback, contentState) => {
-        if (block.getType() === 'header-one') {
+        if (block.type === 'header-one') {
           callback(0, block.getLength());
         }
       },
@@ -431,7 +431,7 @@ test('renders block with nested children with custom component', () => {
     ...PROPS,
     block: rootBlock,
     blockRendererFn: block => {
-      if (block.getType() === 'header-one') {
+      if (block.type === 'header-one') {
         return {
           component: CustomBlock,
         };
@@ -480,7 +480,7 @@ test('renders block with nested children with custom component and editable prop
     ...PROPS,
     block: rootBlock,
     blockRendererFn: block => {
-      if (block.getType() === 'header-one') {
+      if (block.type === 'header-one') {
         return {
           component: CustomBlock,
           editable: false,
@@ -525,7 +525,7 @@ test('renders block with nested children with blockStyleFn', () => {
     ...PROPS,
     block: rootBlock,
     blockStyleFn: block => {
-      if (block.getType() === 'header-one') {
+      if (block.type === 'header-one') {
         return 'My-fancy-custom-class';
       }
       return null;
