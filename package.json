@@ -112,6 +112,9 @@
     "setupFiles": [
       "<rootDir>/scripts/jest/shims.js"
     ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/scripts/jest/setupAfterEnv.ts"
+    ],
     "haste": {
       "hasteImplModulePath": "<rootDir>/scripts/jest/hasteImpl.js"
     },

@@ -14,9 +14,7 @@ import NonASCIIStringSnapshotSerializer from '../../../NonASCIIStringSnapshotSer
 import {ContentBlock} from '../../immutable/ContentBlock';
 import convertFromHTMLToContentBlocks from '../convertFromHTMLToContentBlocks';
 import {blockToJson} from '../../../util/blockMapToJson';
-import {resetRandomKeys} from '../../keys/generateRandomKey';
 import GKX from '../../../stubs/gkx';
-import {resetUuids} from '../../../util/uuid';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -75,13 +73,8 @@ const toggleExperimentalTreeDataSupport = (enabled: boolean) => {
   };
 };
 
-jest.mock('../../keys/generateRandomKey');
-jest.mock('../../../util/uuid');
-
 beforeEach(() => {
   jest.resetModules();
-  resetRandomKeys();
-  resetUuids();
 });
 
 const convertFromHTML = (html_string: string, config?: any) => {

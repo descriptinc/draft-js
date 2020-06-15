@@ -9,12 +9,8 @@
 
 import DraftPasteProcessor from '../DraftPasteProcessor';
 import {EMPTY_CHARACTER} from '../../immutable/CharacterMetadata';
-import {resetUuids} from '../../../util/uuid';
 import GKX from '../../../stubs/gkx';
 import {blockToJson} from '../../../util/blockMapToJson';
-import {resetRandomKeys} from '../../keys/generateRandomKey';
-
-jest.mock('../../keys/generateRandomKey');
 
 const CUSTOM_BLOCK_MAP = {
   'header-one': {
@@ -84,13 +80,8 @@ const assertDraftPasteProcessorProcessHTML = (
   expect(contentBlocks!.map(blockToJson)).toMatchSnapshot();
 };
 
-jest.mock('../../keys/generateRandomKey');
-jest.mock('../../../util/uuid');
-
 beforeEach(() => {
   jest.resetModules();
-  resetRandomKeys();
-  resetUuids();
 });
 
 test('must identify italics text', () => {
