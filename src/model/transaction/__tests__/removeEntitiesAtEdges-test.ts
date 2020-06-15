@@ -8,38 +8,49 @@
  * @flow strict-local
  * @format
  */
-
-'use strict';
-
-const applyEntityToContentBlock = require('applyEntityToContentBlock');
-const getSampleStateForTesting = require('getSampleStateForTesting');
-const removeEntitiesAtEdges = require('removeEntitiesAtEdges');
+import getSampleStateForTesting from '../getSampleStateForTesting';
+import {DraftEntityMutability} from '../../entity/DraftEntityMutability';
+import DraftEntity from '../../entity/DraftEntity';
+import {DraftEntityInstance} from '../../entity/DraftEntityInstance';
+import {SelectionState} from '../../immutable/SelectionState';
+import removeEntitiesAtEdges from '../removeEntitiesAtEdges';
+import {blockMapToJsonObject} from '../../../util/blockMapToJson';
+import {getBlockForKey} from '../../immutable/ContentState';
+import applyEntityToContentBlock from '../applyEntityToContentBlock';
+import {mergeMapUpdates} from '../../immutable/BlockMap';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
-const selectionOnEntity = selectionState.merge({
+const selectionOnEntity = {
+  ...selectionState,
   anchorKey: 'b',
   anchorOffset: 2,
   focusKey: 'b',
   focusOffset: 2,
-});
+};
 
-const setEntityMutability = (mutability, content = contentState) => {
-  content.getEntityMap().__get = () => ({
-    getMutability: () => mutability,
-  });
+const origGet = DraftEntity.__get;
+afterEach(() => {
+  DraftEntity.__get = origGet;
+});
+const setEntityMutability = (
+  mutability: DraftEntityMutability,
+  _ = contentState,
+) => {
+  DraftEntity.__get = () =>
+    ({
+      mutability,
+    } as DraftEntityInstance);
 };
 
 const assertRemoveEntitiesAtEdges = (
-  selection,
-  mutability = 'IMMUTABLE',
+  selection: SelectionState,
+  mutability: DraftEntityMutability = 'IMMUTABLE',
   content = contentState,
 ) => {
   setEntityMutability(mutability, content);
   expect(
-    removeEntitiesAtEdges(content, selection)
-      .getBlockMap()
-      .toJS(),
+    blockMapToJsonObject(removeEntitiesAtEdges(content, selection).blockMap),
   ).toMatchSnapshot();
 };
 
@@ -60,12 +71,11 @@ test('must remove segmented entities', () => {
 });
 
 test('must not remove if cursor is at start of entity', () => {
-  assertRemoveEntitiesAtEdges(
-    selectionOnEntity.merge({
-      anchorOffset: 0,
-      focusOffset: 0,
-    }),
-  );
+  assertRemoveEntitiesAtEdges({
+    ...selectionOnEntity,
+    anchorOffset: 0,
+    focusOffset: 0,
+  });
 });
 
 test('must remove if cursor is within entity', () => {
@@ -73,91 +83,83 @@ test('must remove if cursor is within entity', () => {
 });
 
 test('must not remove if cursor is at end of entity', () => {
-  const length = contentState.getBlockForKey('b').text.length;
-  assertRemoveEntitiesAtEdges(
-    selectionOnEntity.merge({
-      anchorOffset: length,
-      focusOffset: length,
-    }),
-  );
+  const length = getBlockForKey(contentState, 'b').text.length;
+  assertRemoveEntitiesAtEdges({
+    ...selectionOnEntity,
+    anchorOffset: length,
+    focusOffset: length,
+  });
 });
 
 test('must remove for non-collapsed cursor within a single entity', () => {
-  assertRemoveEntitiesAtEdges(selectionOnEntity.set('anchorOffset', 1));
+  assertRemoveEntitiesAtEdges({...selectionOnEntity, anchorOffset: 1});
 });
 
 test('must remove for non-collapsed cursor on multiple entities', () => {
-  const block = contentState.getBlockForKey('b');
+  const block = getBlockForKey(contentState, 'b');
   const newBlock = applyEntityToContentBlock(block, 3, 5, '456');
-  const newBlockMap = contentState.getBlockMap().set('b', newBlock);
-  const newContent = contentState.set('blockMap', newBlockMap);
+  const newBlockMap = mergeMapUpdates(contentState.blockMap, {b: newBlock});
+  const newContent = {...contentState, blockMap: newBlockMap};
 
   assertRemoveEntitiesAtEdges(
-    selectionOnEntity.merge({
-      anchorOffset: 1,
-      focusOffset: 4,
-    }),
+    {...selectionOnEntity, anchorOffset: 1, focusOffset: 4},
     'IMMUTABLE',
     newContent,
   );
 });
 
 test('must ignore an entity that is entirely within the selection', () => {
-  const block = contentState.getBlockForKey('b');
+  const block = getBlockForKey(contentState, 'b');
 
   // Remove entity from beginning and end of block.
   let newBlock = applyEntityToContentBlock(block, 0, 1, null);
   newBlock = applyEntityToContentBlock(newBlock, 4, 5, null);
 
-  const newBlockMap = contentState.getBlockMap().set('b', newBlock);
-  const newContent = contentState.set('blockMap', newBlockMap);
+  const newBlockMap = mergeMapUpdates(contentState.blockMap, {b: newBlock});
+  const newContent = {...contentState, blockMap: newBlockMap};
 
   assertRemoveEntitiesAtEdges(
-    selectionOnEntity.merge({
-      anchorOffset: 0,
-      focusOffset: 5,
-    }),
+    {...selectionOnEntity, anchorOffset: 0, focusOffset: 5},
     'IMMUTABLE',
     newContent,
   );
 });
 
 test('must remove entity at start of selection', () => {
-  assertRemoveEntitiesAtEdges(
-    selectionState.merge({
-      anchorKey: 'b',
-      anchorOffset: 3,
-      focusKey: 'c',
-      focusOffset: 3,
-    }),
-  );
+  assertRemoveEntitiesAtEdges({
+    ...selectionState,
+    anchorKey: 'b',
+    anchorOffset: 3,
+    focusKey: 'c',
+    focusOffset: 3,
+  });
 });
 
 test('must remove entity at end of selection', () => {
-  assertRemoveEntitiesAtEdges(
-    selectionState.merge({
-      anchorKey: 'a',
-      anchorOffset: 3,
-      focusKey: 'b',
-      focusOffset: 3,
-    }),
-  );
+  assertRemoveEntitiesAtEdges({
+    ...selectionState,
+    anchorKey: 'a',
+    anchorOffset: 3,
+    focusKey: 'b',
+    focusOffset: 3,
+  });
 });
 
 test('must remove entities at both ends of selection', () => {
-  const cBlock = contentState.getBlockForKey('c');
+  const cBlock = getBlockForKey(contentState, 'c');
   const len = cBlock.text.length;
   const modifiedC = applyEntityToContentBlock(cBlock, 0, len, '456');
-  const newBlockMap = contentState.getBlockMap().set('c', modifiedC);
-  const newContent = contentState.set('blockMap', newBlockMap);
+  const newBlockMap = mergeMapUpdates(contentState.blockMap, {c: modifiedC});
+  const newContent = {...contentState, blockMap: newBlockMap};
 
   assertRemoveEntitiesAtEdges(
-    selectionState.merge({
+    {
+      ...selectionState,
       anchorKey: 'b',
       anchorOffset: 3,
       focusKey: 'c',
       focusOffset: 3,
-    }),
+    },
     'IMMUTABLE',
     newContent,
   );
