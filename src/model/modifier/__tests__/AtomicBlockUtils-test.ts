@@ -574,7 +574,7 @@ test("mustn't move atomic next to itself", () => {
 //           ]),
 //         ),
 //       ),
-//       SelectionState.createEmpty('A'),
+//       makeEmptySelection('A'),
 //     ),
 //     ENTITY_KEY,
 //     CHARACTER,

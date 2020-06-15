@@ -35,7 +35,7 @@ jest.mock('DOMObserver', () => {
 jest.mock('getContentEditableContainer');
 jest.mock('getDraftEditorSelection', () => {
   return jest.fn().mockReturnValue({
-    selectionState: SelectionState.createEmpty('anchor-key'),
+    selectionState: makeEmptySelection('anchor-key'),
   });
 });
 

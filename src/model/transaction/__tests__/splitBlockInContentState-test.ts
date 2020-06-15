@@ -73,7 +73,7 @@ const contentBlockNodes = [
     type: 'unordered-list-item',
   }),
 ];
-const treeSelectionState = SelectionState.createEmpty('A');
+const treeSelectionState = makeEmptySelection('A');
 const treeContentState = contentState.set(
   'blockMap',
   BlockMapBuilder.createFromArray(contentBlockNodes),
