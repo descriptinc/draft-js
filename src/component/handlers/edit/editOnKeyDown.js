@@ -165,7 +165,7 @@ function editOnKeyDown(
       // Chrome from scrolling. Insert a nbsp into the editor as OSX would for
       // other browsers.
       const contentState = DraftModifier.replaceText(
-        editorState.getCurrentContent(),
+        editorState.currentContent,
         editorState.getSelection(),
         '\u00a0',
       );

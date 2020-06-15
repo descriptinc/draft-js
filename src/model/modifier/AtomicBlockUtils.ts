@@ -8,8 +8,24 @@
  */
 
 import {gkx} from '../../stubs/gkx';
-import {EditorState} from '../immutable/EditorState';
+import {EditorState, pushContent} from '../immutable/EditorState';
 import generateRandomKey from '../keys/generateRandomKey';
+import DraftModifier from './DraftModifier';
+import {makeCharacterMetadata} from '../immutable/CharacterMetadata';
+import {repeat} from '../descript/Iterables';
+import {createFromArray} from '../immutable/BlockMapBuilder';
+import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {
+  getEndKey,
+  getEndOffset,
+  getStartKey,
+  getStartOffset,
+  SelectionState,
+} from '../immutable/SelectionState';
+import {DraftInsertionType} from '../constants/DraftInsertionType';
+import {getBlockForKey} from '../immutable/ContentState';
+import moveBlockInContentState from '../transaction/moveBlockInContentState';
+import {makeContentBlock} from '../immutable/ContentBlock';
 
 const experimentalTreeDataSupport = gkx('draft_tree_data_support');
 
@@ -28,9 +44,9 @@ const AtomicBlockUtils = {
       'backward',
     );
 
-    const targetSelection = afterRemoval.getSelectionAfter();
+    const targetSelection = afterRemoval.selectionAfter;
     const afterSplit = DraftModifier.splitBlock(afterRemoval, targetSelection);
-    const insertionTarget = afterSplit.getSelectionAfter();
+    const insertionTarget = afterSplit.selectionAfter;
 
     const asAtomicBlock = DraftModifier.setBlockType(
       afterSplit,
@@ -38,37 +54,39 @@ const AtomicBlockUtils = {
       'atomic',
     );
 
-    const charData = CharacterMetadata.create({entity: entityKey});
+    const charData = makeCharacterMetadata({entity: entityKey});
 
-    let atomicBlockConfig = {
+    const atomicBlockConfig = {
       key: generateRandomKey(),
       type: 'atomic',
       text: character,
-      characterList: List(Repeat(charData, character.length)),
+      characterList: Array.from(repeat(character.length, charData)),
     };
 
-    let atomicDividerBlockConfig = {
+    const atomicDividerBlockConfig = {
       key: generateRandomKey(),
       type: 'unstyled',
     };
 
     if (experimentalTreeDataSupport) {
-      atomicBlockConfig = {
-        ...atomicBlockConfig,
-        nextSibling: atomicDividerBlockConfig.key,
-      };
-      atomicDividerBlockConfig = {
-        ...atomicDividerBlockConfig,
-        prevSibling: atomicBlockConfig.key,
-      };
+      throw new Error('not implemented');
+      // atomicBlockConfig = {
+      //   ...atomicBlockConfig,
+      //   nextSibling: atomicDividerBlockConfig.key,
+      // };
+      // atomicDividerBlockConfig = {
+      //   ...atomicDividerBlockConfig,
+      //   prevSibling: atomicBlockConfig.key,
+      // };
     }
 
+    // FIXME [mvp]: tree impl
     const fragmentArray = [
-      new ContentBlockRecord(atomicBlockConfig),
-      new ContentBlockRecord(atomicDividerBlockConfig),
+      makeContentBlock(atomicBlockConfig),
+      makeContentBlock(atomicDividerBlockConfig),
     ];
 
-    const fragment = BlockMapBuilder.createFromArray(fragmentArray);
+    const fragment = createFromArray(fragmentArray);
 
     const withAtomicBlock = DraftModifier.replaceWithFragment(
       asAtomicBlock,
@@ -76,27 +94,32 @@ const AtomicBlockUtils = {
       fragment,
     );
 
-    const newContent = withAtomicBlock.merge({
+    const newContent = {
+      ...withAtomicBlock,
       selectionBefore: selectionState,
-      selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
-    });
+      // FIXME [perf]: helper function to add/remove focus cleanly
+      selectionAfter: withAtomicBlock.selectionAfter.hasFocus
+        ? withAtomicBlock.selectionAfter
+        : {...withAtomicBlock.selectionAfter, hasFocus: true},
+    };
 
-    return EditorState.push(editorState, newContent, 'insert-fragment');
+    return pushContent(editorState, newContent, 'insert-fragment');
   },
 
   moveAtomicBlock: function(
     editorState: EditorState,
     atomicBlock: BlockNodeRecord,
     targetRange: SelectionState,
-    insertionMode?: DraftInsertionType,
+    insertionMode: DraftInsertionType | null = null,
   ): EditorState {
-    const contentState = editorState.getCurrentContent();
-    const selectionState = editorState.getSelection();
+    const contentState = editorState.currentContent;
+    const selectionState = editorState.selection;
 
     let withMovedAtomicBlock;
 
     if (insertionMode === 'before' || insertionMode === 'after') {
-      const targetBlock = contentState.getBlockForKey(
+      const targetBlock = getBlockForKey(
+        contentState,
         insertionMode === 'before'
           ? getStartKey(targetRange)
           : getEndKey(targetRange),
@@ -115,9 +138,10 @@ const AtomicBlockUtils = {
         'backward',
       );
 
-      const selectionAfterRemoval = afterRemoval.getSelectionAfter();
-      const targetBlock = afterRemoval.getBlockForKey(
-        selectionAfterRemoval.getFocusKey(),
+      const selectionAfterRemoval = afterRemoval.selectionAfter;
+      const targetBlock = getBlockForKey(
+        afterRemoval,
+        selectionAfterRemoval.focusKey,
       );
 
       if (getStartOffset(selectionAfterRemoval) === 0) {
@@ -142,9 +166,10 @@ const AtomicBlockUtils = {
           selectionAfterRemoval,
         );
 
-        const selectionAfterSplit = afterSplit.getSelectionAfter();
-        const targetBlock = afterSplit.getBlockForKey(
-          selectionAfterSplit.getFocusKey(),
+        const selectionAfterSplit = afterSplit.selectionAfter;
+        const targetBlock = getBlockForKey(
+          afterSplit,
+          selectionAfterSplit.focusKey,
         );
 
         withMovedAtomicBlock = moveBlockInContentState(
@@ -156,14 +181,15 @@ const AtomicBlockUtils = {
       }
     }
 
-    const newContent = withMovedAtomicBlock.merge({
+    const newContent = {
+      ...withMovedAtomicBlock,
       selectionBefore: selectionState,
-      selectionAfter: withMovedAtomicBlock
-        .getSelectionAfter()
-        .set('hasFocus', true),
-    });
+      selectionAfter: withMovedAtomicBlock.selectionAfter.hasFocus
+        ? withMovedAtomicBlock.selectionAfter
+        : {...withMovedAtomicBlock.selectionAfter, hasFocus: true},
+    };
 
-    return EditorState.push(editorState, newContent, 'move-block');
+    return pushContent(editorState, newContent, 'move-block');
   },
 };
 export default AtomicBlockUtils;

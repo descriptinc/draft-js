@@ -5,26 +5,26 @@ Object {
   "characterList": Array [
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": Map {},
   "depth": 0,
   "key": "a",
   "text": "Hello",
@@ -37,26 +37,26 @@ Object {
   "characterList": Array [
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": Map {},
   "depth": 0,
   "key": "a",
   "text": "Hello",
@@ -69,26 +69,26 @@ Object {
   "characterList": Array [
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": Map {},
   "depth": 0,
   "key": "a",
   "text": "Hello",
@@ -101,26 +101,26 @@ Object {
   "characterList": Array [
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": "x",
-      "style": Array [],
+      "style": Set {},
     },
     Object {
       "entity": null,
-      "style": Array [],
+      "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": Map {},
   "depth": 0,
   "key": "a",
   "text": "Hello",

@@ -28,7 +28,7 @@ function keyCommandDeleteWord(editorState: EditorState): EditorState {
       const selection = strategyState.getSelection();
       const offset = selection.getStartOffset();
       const key = selection.getStartKey();
-      const content = strategyState.getCurrentContent();
+      const content = strategyState.currentContent;
       const text = content
         .getBlockForKey(key)
         .getText()
@@ -41,7 +41,7 @@ function keyCommandDeleteWord(editorState: EditorState): EditorState {
     'forward',
   );
 
-  if (afterRemoval === editorState.getCurrentContent()) {
+  if (afterRemoval === editorState.currentContent) {
     return editorState;
   }
 

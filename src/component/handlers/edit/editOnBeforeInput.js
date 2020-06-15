@@ -54,7 +54,7 @@ function replaceText(
   forceSelection: boolean,
 ): EditorState {
   const contentState = DraftModifier.replaceText(
-    editorState.getCurrentContent(),
+    editorState.currentContent,
     editorState.getSelection(),
     text,
     inlineStyle,
@@ -116,7 +116,7 @@ function editOnBeforeInput(
   // is not collapsed, we will re-render.
   const selection = editorState.getSelection();
   const selectionStart = selection.getStartOffset();
-  const anchorKey = selection.getAnchorKey();
+  const anchorKey = selection.getanchorKey;
 
   if (!selection.isCollapsed()) {
     e.preventDefault();
@@ -126,7 +126,7 @@ function editOnBeforeInput(
         chars,
         editorState.getCurrentInlineStyle(),
         getEntityKeyForSelection(
-          editorState.getCurrentContent(),
+          editorState.currentContent,
           editorState.getSelection(),
         ),
         true,
@@ -140,7 +140,7 @@ function editOnBeforeInput(
     chars,
     editorState.getCurrentInlineStyle(),
     getEntityKeyForSelection(
-      editorState.getCurrentContent(),
+      editorState.currentContent,
       editorState.getSelection(),
     ),
     false,
@@ -238,7 +238,7 @@ function editOnBeforeInput(
 
   // We made it all the way! Let the browser do its thing and insert the char.
   newEditorState = EditorState.set(newEditorState, {
-    nativelyRenderedContent: newEditorState.getCurrentContent(),
+    nativelyRenderedContent: newEditorState.currentContent,
   });
   // The native event is allowed to occur. To allow user onChange handlers to
   // change the inserted text, we wait until the text is actually inserted

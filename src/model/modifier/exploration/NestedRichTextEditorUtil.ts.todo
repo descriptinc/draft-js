@@ -73,7 +73,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       return null;
     }
 
-    const content = editorState.getCurrentContent();
+    const content = editorState.currentContent;
     const startKey = getStartKey(selection);
     const block = content.getBlockForKey(startKey);
     const length = block.text.length;
@@ -113,7 +113,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
    */
   onBackspace: (editorState: EditorState): ?EditorState => {
     const selection = editorState.getSelection();
-    const content = editorState.getCurrentContent();
+    const content = editorState.currentContent;
     const currentBlock = content.getBlockForKey(getStartKey(selection));
     const previousBlockKey = currentBlock.getPrevSiblingKey();
 
@@ -198,12 +198,12 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     blockType: DraftBlockType,
   ): EditorState => {
     const selection = editorState.getSelection();
-    const content = editorState.getCurrentContent();
+    const content = editorState.currentContent;
     const currentBlock = content.getBlockForKey(getStartKey(selection));
     const haveChildren = !currentBlock.getChildKeys().isEmpty();
     const isSelectionCollapsed = isCollapsed(selection);
     const isMultiBlockSelection =
-      selection.getAnchorKey() !== selection.getFocusKey();
+      selection.getanchorKey !== selection.focusKey;
     const isUnsupportedNestingBlockType = NESTING_DISABLED_TYPES.includes(
       blockType,
     );
@@ -243,10 +243,10 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
   currentBlockContainsLink: (editorState: EditorState): boolean => {
     const selection = editorState.getSelection();
-    const contentState = editorState.getCurrentContent();
+    const contentState = editorState.currentContent;
     const entityMap = contentState.getEntityMap();
     return contentState
-      .getBlockForKey(selection.getAnchorKey())
+      .getBlockForKey(selection.getanchorKey)
       .characterList
       .slice(getStartOffset(selection), getEndOffset(selection))
       .some(v => {
@@ -258,7 +258,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   getCurrentBlockType: (editorState: EditorState): DraftBlockType => {
     const selection = editorState.getSelection();
     return editorState
-      .getCurrentContent()
+      .currentContent
       .getBlockForKey(getStartKey(selection))
       .type;
   },
@@ -269,7 +269,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
   insertSoftNewline: (editorState: EditorState): EditorState => {
     const contentState = DraftModifier.insertText(
-      editorState.getCurrentContent(),
+      editorState.currentContent,
       editorState.getSelection(),
       '\n',
       editorState.getCurrentInlineStyle(),
@@ -294,12 +294,12 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     maxDepth: number,
   ): EditorState => {
     const selection = editorState.getSelection();
-    const key = selection.getAnchorKey();
-    if (key !== selection.getFocusKey()) {
+    const key = selection.getanchorKey;
+    if (key !== selection.focusKey) {
       return editorState;
     }
 
-    let content = editorState.getCurrentContent();
+    let content = editorState.currentContent;
     const block = content.getBlockForKey(key);
     const type = block.type;
     if (type !== 'unordered-list-item' && type !== 'ordered-list-item') {
@@ -314,7 +314,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     }
 
     // implement nested tree behaviour for onTab
-    let blockMap = editorState.getCurrentContent().getBlockMap();
+    let blockMap = editorState.currentContent.getBlockMap();
     const prevSiblingKey = block.getPrevSiblingKey();
     const nextSiblingKey = block.getNextSiblingKey();
     if (!event.shiftKey) {
@@ -359,7 +359,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       }
       blockMap = onUntab(blockMap, block);
     }
-    content = editorState.getCurrentContent().merge({
+    content = editorState.currentContent.merge({
       blockMap: blockMap,
     });
 
@@ -375,8 +375,8 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
   toggleCode: (editorState: EditorState): EditorState => {
     const selection = editorState.getSelection();
-    const anchorKey = selection.getAnchorKey();
-    const focusKey = selection.getFocusKey();
+    const anchorKey = selection.getanchorKey;
+    const focusKey = selection.focusKey;
 
     if (isCollapsed(selection) || anchorKey !== focusKey) {
       return RichTextEditorUtil.toggleBlockType(editorState, 'code-block');
@@ -412,7 +412,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
     // If characters are selected, immediately apply or remove the
     // inline style on the document state itself.
-    const content = editorState.getCurrentContent();
+    const content = editorState.currentContent;
     let newContent;
 
     // If the style is already present for the selection range, remove it.
@@ -440,7 +440,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     entityKey: ?string,
   ): EditorState => {
     const withoutLink = DraftModifier.applyEntity(
-      editorState.getCurrentContent(),
+      editorState.currentContent,
       targetSelection,
       entityKey,
     );
@@ -456,8 +456,8 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     const selection = editorState.getSelection();
     const offset = selection.getAnchorOffset();
     if (isCollapsed(selection) && offset === 0) {
-      const key = selection.getAnchorKey();
-      const content = editorState.getCurrentContent();
+      const key = selection.getanchorKey;
+      const content = editorState.currentContent;
       const block = content.getBlockForKey(key);
 
       const type = block.type;

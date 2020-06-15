@@ -126,9 +126,9 @@ function setDraftEditorSelection(
   }
 
   const selection: SelectionObject = documentObject.defaultView.getSelection();
-  let anchorKey = selectionState.getAnchorKey();
+  let anchorKey = selectionState.getanchorKey;
   let anchorOffset = selectionState.getAnchorOffset();
-  let focusKey = selectionState.getFocusKey();
+  let focusKey = selectionState.focusKey;
   let focusOffset = selectionState.getFocusOffset();
   let isBackward = selectionState.getIsBackward();
 

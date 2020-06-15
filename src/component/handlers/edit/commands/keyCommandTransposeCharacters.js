@@ -32,8 +32,8 @@ function keyCommandTransposeCharacters(editorState: EditorState): EditorState {
     return editorState;
   }
 
-  const blockKey = selection.getAnchorKey();
-  const content = editorState.getCurrentContent();
+  const blockKey = selection.getanchorKey;
+  const content = editorState.currentContent;
   const block = content.getBlockForKey(blockKey);
   const length = block.getLength();
 

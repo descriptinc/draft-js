@@ -427,7 +427,7 @@ function regenerateTreeForNewBlocks(
 ): ReadonlyMap<string, readonly any[]> {
   // TODO [mvp]: using global entity map
   // const contentState = editorState
-  //   .getCurrentContent()
+  //   .currentContent
   //   .set('entityMap', newEntityMap);
   const contentState = editorState.currentContent;
   const prevBlockMap = contentState.blockMap;

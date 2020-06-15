@@ -83,7 +83,7 @@ const assertGetNextDelimiterBlockKey = (
   const editor = EditorState.createWithContent(
     ContentState.createFromBlockArray(blocksArray),
   );
-  const contentState = editor.getCurrentContent();
+  const contentState = editor.currentContent;
   const targetBlock = contentState.getBlockForKey(targetBlockKey);
 
   expect(

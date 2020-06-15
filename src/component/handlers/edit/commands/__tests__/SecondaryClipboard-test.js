@@ -113,7 +113,7 @@ const assertCutOperation = (
     ),
   );
   const expected = result
-    .getCurrentContent()
+    .currentContent
     .getBlockMap()
     .toJS();
 

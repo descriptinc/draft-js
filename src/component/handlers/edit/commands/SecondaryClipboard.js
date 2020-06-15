@@ -28,12 +28,12 @@ let clipboard: ?BlockMap = null;
  */
 const SecondaryClipboard = {
   cut: function(editorState: EditorState): EditorState {
-    const content = editorState.getCurrentContent();
+    const content = editorState.currentContent;
     const selection = editorState.getSelection();
     let targetRange: ?SelectionState = null;
 
     if (selection.isCollapsed()) {
-      const anchorKey = selection.getAnchorKey();
+      const anchorKey = selection.getanchorKey;
       const blockEnd = content.getBlockForKey(anchorKey).getLength();
 
       if (blockEnd === selection.getAnchorOffset()) {
@@ -73,7 +73,7 @@ const SecondaryClipboard = {
     }
 
     const newContent = DraftModifier.replaceWithFragment(
-      editorState.getCurrentContent(),
+      editorState.currentContent,
       editorState.getSelection(),
       clipboard,
     );

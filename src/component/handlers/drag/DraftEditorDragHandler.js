@@ -161,7 +161,7 @@ function moveText(
   targetSelection: SelectionState,
 ): EditorState {
   const newContentState = DraftModifier.moveText(
-    editorState.getCurrentContent(),
+    editorState.currentContent,
     editorState.getSelection(),
     targetSelection,
   );
@@ -177,7 +177,7 @@ function insertTextAtSelection(
   text: string,
 ): EditorState {
   const newContentState = DraftModifier.insertText(
-    editorState.getCurrentContent(),
+    editorState.currentContent,
     selection,
     text,
     editorState.getCurrentInlineStyle(),

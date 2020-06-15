@@ -1,162 +1,162 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must apply entity key 1`] = `
-Object {
-  "a": Object {
+Map {
+  "a" => Object {
     "characterList": Array [
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
+  "b" => Object {
     "characterList": Array [
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
+  "c" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
+  "d" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
+  "e" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
+  "f" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -166,162 +166,162 @@ Object {
 `;
 
 exports[`must apply entity key accross multiple blocks 1`] = `
-Object {
-  "a": Object {
+Map {
+  "a" => Object {
     "characterList": Array [
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": "x",
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
+  "b" => Object {
     "characterList": Array [
       Object {
         "entity": "x",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "x",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "x",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "x",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "x",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
+  "c" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
+  "d" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
+  "e" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
+  "f" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -331,162 +331,162 @@ Object {
 `;
 
 exports[`must apply null entity 1`] = `
-Object {
-  "a": Object {
+Map {
+  "a" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
+  "b" => Object {
     "characterList": Array [
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": "2",
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
+  "c" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
+  "d" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
+  "e" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
+  "f" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -496,162 +496,162 @@ Object {
 `;
 
 exports[`must apply null entity key accross multiple blocks 1`] = `
-Object {
-  "a": Object {
+Map {
+  "a" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
+  "b" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "BOLD",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
+  "c" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
       Object {
         "entity": null,
-        "style": Array [],
+        "style": Set {},
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
+  "d" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
+  "e" => Object {
     "characterList": Array [],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
+  "f" => Object {
     "characterList": Array [
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
       Object {
         "entity": null,
-        "style": Array [
+        "style": Set {
           "ITALIC",
-        ],
+        },
       },
     ],
-    "data": Object {},
+    "data": Map {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",

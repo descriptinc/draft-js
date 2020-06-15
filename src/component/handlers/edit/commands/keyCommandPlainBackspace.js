@@ -27,8 +27,8 @@ function keyCommandPlainBackspace(editorState: EditorState): EditorState {
     editorState,
     strategyState => {
       const selection = strategyState.getSelection();
-      const content = strategyState.getCurrentContent();
-      const key = selection.getAnchorKey();
+      const content = strategyState.currentContent;
+      const key = selection.getanchorKey;
       const offset = selection.getAnchorOffset();
       const charBehind = content.getBlockForKey(key).getText()[offset - 1];
       return moveSelectionBackward(
@@ -39,7 +39,7 @@ function keyCommandPlainBackspace(editorState: EditorState): EditorState {
     'backward',
   );
 
-  if (afterRemoval === editorState.getCurrentContent()) {
+  if (afterRemoval === editorState.currentContent) {
     return editorState;
   }
 

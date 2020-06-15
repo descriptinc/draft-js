@@ -97,7 +97,7 @@ const toggleExperimentalTreeDataSupport = enabled => {
 
 const insertAtomicBlock = targetEditorState => {
   const entityKey = targetEditorState
-    .getCurrentContent()
+    .currentContent
     .createEntity('TEST', 'IMMUTABLE', null)
     .getLastCreatedEntityKey();
   const character = ' ';
@@ -126,7 +126,7 @@ const assertNestedUtilOperation = (
   const expected =
     result instanceof EditorState
       ? result
-          .getCurrentContent()
+          .currentContent
           .getBlockMap()
           .toJS()
       : result;
@@ -1039,10 +1039,10 @@ test('onDelete does not handle non-block-end or non-collapsed selections', () =>
 });
 
 test('onDelete removes a following atomic block', () => {
-  const blockSizeBeforeRemove = editorState.getCurrentContent().getBlockMap()
+  const blockSizeBeforeRemove = editorState.currentContent.getBlockMap()
     .size;
   const withAtomicBlock = insertAtomicBlock(editorState);
-  const content = withAtomicBlock.getCurrentContent();
+  const content = withAtomicBlock.currentContent;
   const atomicKey = content
     .getBlockMap()
     .find(block => block.type === 'atomic')
@@ -1063,7 +1063,7 @@ test('onDelete removes a following atomic block', () => {
   );
 
   const afterDelete = onDelete(withSelectionAboveAtomic);
-  const blockMapAfterDelete = afterDelete.getCurrentContent().getBlockMap();
+  const blockMapAfterDelete = afterDelete.currentContent.getBlockMap();
 
   expect(
     blockMapAfterDelete.some(block => block.type === 'atomic'),

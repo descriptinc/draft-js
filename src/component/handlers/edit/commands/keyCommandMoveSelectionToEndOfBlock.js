@@ -21,7 +21,7 @@ function keyCommandMoveSelectionToEndOfBlock(
 ): EditorState {
   const selection = editorState.getSelection();
   const endKey = selection.getEndKey();
-  const content = editorState.getCurrentContent();
+  const content = editorState.currentContent;
   const textLength = content.getBlockForKey(endKey).getLength();
   return EditorState.set(editorState, {
     selection: selection.merge({

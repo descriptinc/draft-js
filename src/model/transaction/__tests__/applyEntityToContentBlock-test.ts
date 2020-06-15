@@ -11,9 +11,8 @@
 
 'use strict';
 
-const ContentBlock = require('ContentBlock');
-
-const applyEntityToContentBlock = require('applyEntityToContentBlock');
+import {makeContentBlock} from '../../immutable/ContentBlock';
+import applyEntityToContentBlock from '../applyEntityToContentBlock';
 
 const sampleBlock = makeContentBlock({
   key: 'a',
@@ -21,13 +20,13 @@ const sampleBlock = makeContentBlock({
 });
 
 const assertApplyEntityToContentBlock = (
-  start,
-  end,
+  start: number,
+  end: number,
   entityKey = 'x',
   contentBlock = sampleBlock,
 ) => {
   expect(
-    applyEntityToContentBlock(contentBlock, start, end, entityKey).toJS(),
+    applyEntityToContentBlock(contentBlock, start, end, entityKey),
   ).toMatchSnapshot();
 };
 

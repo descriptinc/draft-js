@@ -87,7 +87,7 @@ const assertMoveBlockInContentState = (
   const editor = EditorState.createWithContent(
     ContentState.createFromBlockArray(blocksArray),
   );
-  const contentState = editor.getCurrentContent();
+  const contentState = editor.currentContent;
   const blockToBeMoved = contentState.getBlockForKey(blockToBeMovedKey);
   const targetBlock = contentState.getBlockForKey(targetBlockKey);
 

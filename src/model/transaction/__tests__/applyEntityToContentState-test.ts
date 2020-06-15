@@ -4,22 +4,17 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @emails oncall+draft_js
- * @flow strict-local
  * @format
  */
-
-'use strict';
-
-const SelectionState = require('SelectionState');
-
-const applyEntityToContentState = require('applyEntityToContentState');
-const getSampleStateForTesting = require('getSampleStateForTesting');
+import getSampleStateForTesting from '../getSampleStateForTesting';
+import {makeSelectionState} from '../../immutable/SelectionState';
+import {getBlockAfter, getFirstBlock} from '../../immutable/ContentState';
+import applyEntityToContentState from '../applyEntityToContentState';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
-const initialBlock = contentState.getBlockMap().first();
-const secondBlock = contentState.getBlockAfter(initialBlock.key);
+const initialBlock = getFirstBlock(contentState);
+const secondBlock = getBlockAfter(contentState, initialBlock.key);
 
 const selectBlock = makeSelectionState({
   anchorKey: initialBlock.key,
@@ -36,14 +31,12 @@ const selectAdjacentBlocks = makeSelectionState({
 });
 
 const assertApplyEntityToContentState = (
-  entityKey,
+  entityKey: string | null,
   selection = selectionState,
   content = contentState,
 ) => {
   expect(
-    applyEntityToContentState(content, selection, entityKey)
-      .getBlockMap()
-      .toJS(),
+    applyEntityToContentState(content, selection, entityKey).blockMap,
   ).toMatchSnapshot();
 };
 

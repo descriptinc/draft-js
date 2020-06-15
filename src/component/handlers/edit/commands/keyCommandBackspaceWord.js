@@ -32,7 +32,7 @@ function keyCommandBackspaceWord(editorState: EditorState): EditorState {
         return moveSelectionBackward(strategyState, 1);
       }
       const key = selection.getStartKey();
-      const content = strategyState.getCurrentContent();
+      const content = strategyState.currentContent;
       const text = content
         .getBlockForKey(key)
         .getText()
@@ -43,7 +43,7 @@ function keyCommandBackspaceWord(editorState: EditorState): EditorState {
     'backward',
   );
 
-  if (afterRemoval === editorState.getCurrentContent()) {
+  if (afterRemoval === editorState.currentContent) {
     return editorState;
   }
 

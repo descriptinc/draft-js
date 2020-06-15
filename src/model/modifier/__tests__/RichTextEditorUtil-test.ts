@@ -26,7 +26,7 @@ const {
 
 const insertAtomicBlock = targetEditorState => {
   const entityKey = targetEditorState
-    .getCurrentContent()
+    .currentContent
     .createEntity('TEST', 'IMMUTABLE', null)
     .getLastCreatedEntityKey();
   const character = ' ';
@@ -51,7 +51,7 @@ test('onBackspace does not handle non-zero-offset or non-collapsed selections', 
 });
 
 test('onBackspace resets the current block type if empty', () => {
-  const contentState = editorState.getCurrentContent();
+  const contentState = editorState.currentContent;
   const lastBlock = contentState.getLastBlock();
   const lastBlockKey = lastBlock.key;
 
@@ -74,13 +74,13 @@ test('onBackspace resets the current block type if empty', () => {
   );
 
   const afterBackspace = onBackspace(withEmptyBlockquote);
-  const lastBlockNow = afterBackspace.getCurrentContent().getLastBlock();
+  const lastBlockNow = afterBackspace.currentContent.getLastBlock();
 
   expect(lastBlockNow.toJS()).toMatchSnapshot();
 });
 
 test('onBackspace resets the current block type at the start of the first block', () => {
-  const contentState = editorState.getCurrentContent();
+  const contentState = editorState.currentContent;
 
   const setListItem = DraftModifier.setBlockType(
     contentState,
@@ -95,17 +95,17 @@ test('onBackspace resets the current block type at the start of the first block'
   );
 
   const afterBackspace = onBackspace(withListItem);
-  const firstBlockNow = afterBackspace.getCurrentContent().getFirstBlock();
+  const firstBlockNow = afterBackspace.currentContent.getFirstBlock();
 
   expect(firstBlockNow.toJS()).toMatchSnapshot();
 });
 
 test('onBackspace removes a preceding atomic block', () => {
-  const blockSizeBeforeRemove = editorState.getCurrentContent().getBlockMap()
+  const blockSizeBeforeRemove = editorState.currentContent.getBlockMap()
     .size;
   const withAtomicBlock = insertAtomicBlock(editorState);
   const afterBackspace = onBackspace(withAtomicBlock);
-  const contentState = afterBackspace.getCurrentContent();
+  const contentState = afterBackspace.currentContent;
   const blockMap = contentState.getBlockMap();
   expect(blockMap.size === blockSizeBeforeRemove + 1).toMatchSnapshot();
   expect(
@@ -126,10 +126,10 @@ test('onDelete does not handle non-block-end or non-collapsed selections', () =>
 });
 
 test('onDelete removes a following atomic block', () => {
-  const blockSizeBeforeRemove = editorState.getCurrentContent().getBlockMap()
+  const blockSizeBeforeRemove = editorState.currentContent.getBlockMap()
     .size;
   const withAtomicBlock = insertAtomicBlock(editorState);
-  const content = withAtomicBlock.getCurrentContent();
+  const content = withAtomicBlock.currentContent;
   const atomicKey = content
     .getBlockMap()
     .find(block => block.type === 'atomic')
@@ -150,7 +150,7 @@ test('onDelete removes a following atomic block', () => {
   );
 
   const afterDelete = onDelete(withSelectionAboveAtomic);
-  const blockMapAfterDelete = afterDelete.getCurrentContent().getBlockMap();
+  const blockMapAfterDelete = afterDelete.currentContent.getBlockMap();
 
   expect(
     blockMapAfterDelete.some(block => block.type === 'atomic'),
@@ -178,14 +178,14 @@ describe('onTab on list block', () => {
     EditorState.push(editorState, setListItem, 'change-block-type');
   const getFirstBlockDepth = contentState =>
     contentState
-      .getCurrentContent()
+      .currentContent
       .getFirstBlock()
       .getDepth();
   const addTab = (contentState, maxDepth = 2) =>
     onTab({preventDefault: () => {}}, contentState, maxDepth);
 
   test('increases the depth of unordered-list-item', () => {
-    const contentState = editorState.getCurrentContent();
+    const contentState = editorState.currentContent;
     const setListItem = setListBlock(contentState, 'unordered-list-item');
     const withListItem = changeBlockType(setListItem);
 
@@ -201,7 +201,7 @@ describe('onTab on list block', () => {
   });
 
   test('increases the depth of unordered-list-item', () => {
-    const contentState = editorState.getCurrentContent();
+    const contentState = editorState.currentContent;
     const setListItem = setListBlock(contentState, 'ordered-list-item');
     const withListItem = changeBlockType(setListItem);
 

@@ -126,8 +126,8 @@ test(`at end of a leaf block and sibling is another leaf block forward delete co
         editorState,
         strategyState => {
           const selection = strategyState.getSelection();
-          const content = strategyState.getCurrentContent();
-          const key = selection.getAnchorKey();
+          const content = strategyState.currentContent;
+          const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();
           const charAhead = content.getBlockForKey(key).getText()[offset];
           return moveSelectionForward(
@@ -154,8 +154,8 @@ test(`at end of a leaf block and sibling is not another leaf block forward delet
         editorState,
         strategyState => {
           const selection = strategyState.getSelection();
-          const content = strategyState.getCurrentContent();
-          const key = selection.getAnchorKey();
+          const content = strategyState.currentContent;
+          const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();
           const charAhead = content.getBlockForKey(key).getText()[offset];
           return moveSelectionForward(
@@ -179,8 +179,8 @@ test(`at end of a leaf block and sibling is not another leaf block forward delet
         editorState,
         strategyState => {
           const selection = strategyState.getSelection();
-          const content = strategyState.getCurrentContent();
-          const key = selection.getAnchorKey();
+          const content = strategyState.currentContent;
+          const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();
           const charAhead = content.getBlockForKey(key).getText()[offset];
           return moveSelectionForward(
@@ -206,8 +206,8 @@ test(`across blocks with forward delete is a no-op`, () => {
         editorState,
         strategyState => {
           const selection = strategyState.getSelection();
-          const content = strategyState.getCurrentContent();
-          const key = selection.getAnchorKey();
+          const content = strategyState.currentContent;
+          const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();
           const charAhead = content.getBlockForKey(key).getText()[offset];
           return moveSelectionForward(

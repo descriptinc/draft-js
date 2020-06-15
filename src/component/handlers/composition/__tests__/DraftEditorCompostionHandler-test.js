@@ -73,7 +73,7 @@ function getEditorStateFromHTML(html: string) {
 }
 
 function editorTextContent() {
-  return editor._latestEditorState.getCurrentContent().getPlainText();
+  return editor._latestEditorState.currentContent.getPlainText();
 }
 
 function withGlobalGetSelectionAs(getSelectionValue, callback) {
@@ -160,7 +160,7 @@ test('Can handle mutations in the same block in multiple leaf nodes', () => {
       '<div>react <b>draft</b> graphql</div>',
     ));
     const blockKey = editorState
-      .getCurrentContent()
+      .currentContent
       .getBlockMap()
       .first()
       .getKey();

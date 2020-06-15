@@ -34,7 +34,7 @@ function moveSelectionBackward(
     selection.isCollapsed(),
     'moveSelectionBackward should only be called with a collapsed SelectionState',
   );
-  const content = editorState.getCurrentContent();
+  const content = editorState.currentContent;
   const key = selection.getStartKey();
   const offset = selection.getStartOffset();
 

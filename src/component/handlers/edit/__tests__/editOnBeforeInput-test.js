@@ -113,7 +113,7 @@ test('editor is updated with new text if it does not match current selection', (
   expect(update).toHaveBeenCalledTimes(1);
 
   const newEditorState = update.mock.calls[0][0];
-  expect(newEditorState.getCurrentContent()).toMatchSnapshot();
+  expect(newEditorState.currentContent).toMatchSnapshot();
 });
 
 test('editor selectionstate is updated if new text matches current selection', () => {

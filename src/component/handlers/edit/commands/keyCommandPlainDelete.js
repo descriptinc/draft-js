@@ -27,8 +27,8 @@ function keyCommandPlainDelete(editorState: EditorState): EditorState {
     editorState,
     strategyState => {
       const selection = strategyState.getSelection();
-      const content = strategyState.getCurrentContent();
-      const key = selection.getAnchorKey();
+      const content = strategyState.currentContent;
+      const key = selection.getanchorKey;
       const offset = selection.getAnchorOffset();
       const charAhead = content.getBlockForKey(key).getText()[offset];
       return moveSelectionForward(
@@ -39,7 +39,7 @@ function keyCommandPlainDelete(editorState: EditorState): EditorState {
     'forward',
   );
 
-  if (afterRemoval === editorState.getCurrentContent()) {
+  if (afterRemoval === editorState.currentContent) {
     return editorState;
   }
 

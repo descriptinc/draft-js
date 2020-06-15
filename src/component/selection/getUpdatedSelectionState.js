@@ -73,9 +73,9 @@ function getUpdatedSelectionState(
   const focusBlockOffset = focusLeaf ? focusLeafStart + focusOffset : null;
 
   const areEqual =
-    selection.getAnchorKey() === anchorBlockKey &&
+    selection.getanchorKey === anchorBlockKey &&
     selection.getAnchorOffset() === anchorBlockOffset &&
-    selection.getFocusKey() === focusBlockKey &&
+    selection.focusKey === focusBlockKey &&
     selection.getFocusOffset() === focusBlockOffset;
 
   if (areEqual) {
@@ -93,7 +93,7 @@ function getUpdatedSelectionState(
     }
   } else {
     const startKey = editorState
-      .getCurrentContent()
+      .currentContent
       .getBlockMap()
       .keySeq()
       .skipUntil(v => v === anchorBlockKey || v === focusBlockKey)

@@ -32,10 +32,10 @@ function removeTextWithStrategy(
   direction: DraftRemovalDirection,
 ): ContentState {
   const selection = editorState.getSelection();
-  const content = editorState.getCurrentContent();
+  const content = editorState.currentContent;
   let target = selection;
-  const anchorKey = selection.getAnchorKey();
-  const focusKey = selection.getFocusKey();
+  const anchorKey = selection.getanchorKey;
+  const focusKey = selection.focusKey;
   const anchorBlock = content.getBlockForKey(anchorKey);
   if (experimentalTreeDataSupport) {
     if (direction === 'forward') {

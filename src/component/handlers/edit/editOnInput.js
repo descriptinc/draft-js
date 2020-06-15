@@ -112,7 +112,7 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent<>): void {
     .getBlockTree(blockKey)
     .getIn([decoratorKey, 'leaves', leafKey]);
 
-  const content = editorState.getCurrentContent();
+  const content = editorState.currentContent;
   const block = content.getBlockForKey(blockKey);
   const modelText = block.getText().slice(start, end);
 

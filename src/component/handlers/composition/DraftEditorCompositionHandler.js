@@ -174,7 +174,7 @@ const DraftEditorCompositionHandler = {
     //   return;
     // }
 
-    let contentState = editorState.getCurrentContent();
+    let contentState = editorState.currentContent;
     mutations.forEach((composedChars, offsetKey) => {
       const {blockKey, decoratorKey, leafKey} = DraftOffsetKey.decode(
         offsetKey,

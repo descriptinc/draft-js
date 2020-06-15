@@ -92,16 +92,13 @@ export function hasEdgeWithin(
 
 export function makeSelectionState({
   anchorKey,
-  anchorOffset,
-  focusKey,
-  focusOffset,
+  anchorOffset = 0,
+  focusKey = anchorKey,
+  focusOffset = 0,
   isBackward = false,
   hasFocus = false,
 }: Partial<SelectionState> &
-  Pick<
-    SelectionState,
-    'anchorKey' | 'anchorOffset' | 'focusKey' | 'focusOffset'
-  >): SelectionState {
+  Pick<SelectionState, 'anchorKey'>): SelectionState {
   return {
     anchorKey,
     anchorOffset,

@@ -89,7 +89,7 @@ const assertGetContentStateFragment = (blocksArray, selection = {}) => {
 
   expect(
     getContentStateFragment(
-      editor.getCurrentContent(),
+      editor.currentContent,
       editor.getSelection(),
     ).toJS(),
   ).toMatchSnapshot();

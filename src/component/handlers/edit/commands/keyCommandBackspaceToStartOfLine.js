@@ -52,7 +52,7 @@ function keyCommandBackspaceToStartOfLine(
     'backward',
   );
 
-  if (afterRemoval === editorState.getCurrentContent()) {
+  if (afterRemoval === editorState.currentContent) {
     return editorState;
   }
 

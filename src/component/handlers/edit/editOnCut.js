@@ -65,7 +65,7 @@ function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
 
 function removeFragment(editorState: EditorState): EditorState {
   const newContent = DraftModifier.removeRange(
-    editorState.getCurrentContent(),
+    editorState.currentContent,
     editorState.getSelection(),
     'forward',
   );

@@ -36,7 +36,7 @@ function moveSelectionForward(
   );
   const key = selection.getStartKey();
   const offset = selection.getStartOffset();
-  const content = editorState.getCurrentContent();
+  const content = editorState.currentContent;
 
   let focusKey = key;
   let focusOffset;

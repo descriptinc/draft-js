@@ -79,14 +79,14 @@ class DraftEditorContentsExperimental extends React.Component<Props> {
     if (
       prevEditorState === nextEditorState ||
       (nextNativeContent !== null &&
-        nextEditorState.getCurrentContent() === nextNativeContent) ||
+        nextEditorState.currentContent === nextNativeContent) ||
       (wasComposing && nowComposing)
     ) {
       return false;
     }
 
-    const prevContent = prevEditorState.getCurrentContent();
-    const nextContent = nextEditorState.getCurrentContent();
+    const prevContent = prevEditorState.currentContent;
+    const nextContent = nextEditorState.currentContent;
     const prevDecorator = prevEditorState.getDecorator();
     const nextDecorator = nextEditorState.getDecorator();
     return (
@@ -109,7 +109,7 @@ class DraftEditorContentsExperimental extends React.Component<Props> {
       textDirectionality,
     } = this.props;
 
-    const content = editorState.getCurrentContent();
+    const content = editorState.currentContent;
     const selection = editorState.getSelection();
     const forceSelection = editorState.mustForceSelection();
     const decorator = editorState.getDecorator();

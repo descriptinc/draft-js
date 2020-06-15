@@ -75,7 +75,7 @@ const isBlockOnSelectionEdge = (
   selection: SelectionState,
   key: string,
 ): boolean => {
-  return selection.getAnchorKey() === key || selection.getFocusKey() === key;
+  return selection.getanchorKey === key || selection.focusKey === key;
 };
 
 /**

@@ -92,9 +92,9 @@ export function createEntity(
   type: DraftEntityType,
   mutability: DraftEntityMutability,
   data?: Object,
-): void {
+): string {
   // TODO: update this when we fully remove DraftEntity
-  DraftEntity.__create(type, mutability, data);
+  return DraftEntity.__create(type, mutability, data);
 }
 
 export function mergeEntityData(
