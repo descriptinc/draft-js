@@ -107,7 +107,7 @@ function getNodeLength(node: Node): number {
  * to programatically create a backward selection. Thus, for all IE
  * versions, we use the old IE API to create our selections.
  */
-function setDraftEditorSelection(
+export function setDraftEditorSelection(
   selectionState: SelectionState,
   node: Node,
   blockKey: string,

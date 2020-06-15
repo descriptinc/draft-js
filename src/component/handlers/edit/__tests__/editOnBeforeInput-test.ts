@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type DraftEditor from 'DraftEditor.react';
+import DraftEditor from 'DraftEditor.react';
 
 const CompositeDraftDecorator = require('CompositeDraftDecorator');
 const ContentBlock = require('ContentBlock');
@@ -51,13 +51,12 @@ const getEditorState = (text: string = 'Arsenal') => {
   );
 };
 
-const getDraftEditor = (obj): DraftEditor => (obj: any);
+const getDraftEditor = (obj): DraftEditor => obj as any;
 
-const getInputEvent = (data): SyntheticInputEvent<HTMLElement> =>
-  ({
-    data,
-    preventDefault: jest.fn(),
-  }: any);
+const getInputEvent = (data): SyntheticInputEvent<HTMLElement> => {
+  data,
+  preventDefault: jest.fn(),
+} as any;
 
 test('editor is not updated if no character data is provided', () => {
   const editorState = EditorState.acceptSelection(

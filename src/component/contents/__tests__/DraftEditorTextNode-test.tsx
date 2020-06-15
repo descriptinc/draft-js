@@ -9,28 +9,27 @@
  * @flow strict-local
  */
 
-'use strict';
+import DraftEditorTextNode from '../DraftEditorTextNode.react';
 
-jest.mock('UserAgent');
+jest.mock('fbjs/lib/UserAgent');
+
+import React, {ReactInstance, ReactNode} from 'react';
+import UserAgent from 'fbjs/lib/UserAgent';
+import ReactDOM from 'react-dom';
 
 const BLOCK_DELIMITER_CHAR = '\n';
 const TEST_A = 'Hello';
 const TEST_B = ' World!';
 
-const DraftEditorTextNode = require('DraftEditorTextNode.react');
-const React = require('React');
-const ReactDOM = require('ReactDOM');
-const UserAgent = require('UserAgent');
-
-let container;
+let container: HTMLElement;
 
 beforeEach(() => {
   jest.resetModules();
   container = document.createElement('div');
 });
 
-const renderIntoContainer = element => {
-  return ReactDOM.render(element, container);
+const renderIntoContainer = (element: any): HTMLElement => {
+  return ReactDOM.render(element, container) as HTMLElement;
 };
 
 const initializeAsIE = () => {
@@ -47,9 +46,9 @@ const initializeAsNonIE = () => {
   UserAgent.isBrowser.mockImplementation(() => false);
 };
 
-const expectPopulatedSpan = (stub, testString) => {
+const expectPopulatedSpan = (stub: ReactInstance, testString: string) => {
   // $FlowExpectedError node could be null
-  const node: Element = ReactDOM.findDOMNode(stub);
+  const node = ReactDOM.findDOMNode(stub) as HTMLElement;
   expect(node.tagName).toBe('SPAN');
   expect(node.childNodes.length).toBe(1);
   expect(node.firstChild && node.firstChild.textContent).toBe(testString);
@@ -61,7 +60,7 @@ test('must initialize correctly with an empty string, non-IE', function() {
     <DraftEditorTextNode>{''}</DraftEditorTextNode>,
   );
   // $FlowExpectedError we know node is an Element
-  expect(ReactDOM.findDOMNode(stub).tagName).toBe('BR');
+  expect((ReactDOM.findDOMNode(stub) as Element).tagName).toBe('BR');
 });
 
 test('must initialize correctly with an empty string, IE', function() {
@@ -188,7 +187,7 @@ test('must update from non-empty to empty, non-IE', function() {
   renderIntoContainer(<DraftEditorTextNode>{''}</DraftEditorTextNode>);
 
   // $FlowExpectedError we know node is an Element
-  expect(ReactDOM.findDOMNode(stub).tagName).toBe('BR');
+  expect((ReactDOM.findDOMNode(stub) as Element).tagName).toBe('BR');
 });
 
 test('must update from non-empty to empty, IE', function() {
@@ -218,10 +217,10 @@ test('must force unchanged text back into the DOM', function() {
   );
 
   // $FlowExpectedError we know node is not null
-  ReactDOM.findDOMNode(stub).textContent = TEST_B;
+  (ReactDOM.findDOMNode(stub) as Text).textContent = TEST_B;
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
 
   // $FlowExpectedError we know node is not null
-  expect(ReactDOM.findDOMNode(stub).textContent).toBe(TEST_A);
+  expect((ReactDOM.findDOMNode(stub) as Text).textContent).toBe(TEST_A);
 });

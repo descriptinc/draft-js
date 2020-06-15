@@ -11,17 +11,17 @@
 
 'use strict';
 
-import type {BlockNodeRecord} from 'BlockNodeRecord';
-import type {DraftBlockRenderMap} from 'DraftBlockRenderMap';
-import type {DraftDragType} from 'DraftDragType';
-import type DraftEditor from 'DraftEditor.react';
-import type {DraftEditorCommand} from 'DraftEditorCommand';
-import type {DraftHandleValue} from 'DraftHandleValue';
-import type {DraftInlineStyle} from 'DraftInlineStyle';
-import type {DraftTextAlignment} from 'DraftTextAlignment';
-import type EditorState from 'EditorState';
-import type SelectionState from 'SelectionState';
-import type {BidiDirection} from 'UnicodeBidiDirection';
+import { BlockNodeRecord } from 'BlockNodeRecord';
+import { DraftBlockRenderMap } from 'DraftBlockRenderMap';
+import { DraftDragType } from 'DraftDragType';
+import DraftEditor from 'DraftEditor.react';
+import { DraftEditorCommand } from 'DraftEditorCommand';
+import { DraftHandleValue } from 'DraftHandleValue';
+import { DraftInlineStyle } from 'DraftInlineStyle';
+import { DraftTextAlignment } from 'DraftTextAlignment';
+import EditorState from 'EditorState';
+import SelectionState from 'SelectionState';
+import { BidiDirection } from 'UnicodeBidiDirection';
 
 export type DraftEditorProps = {
   /**
@@ -35,7 +35,7 @@ export type DraftEditorProps = {
    * text inputs.
    */
   editorState: EditorState,
-  onChange: (editorState: EditorState) => void,
+  onChange: ((editorState: EditorState) => void),
   // specify editorKey when rendering serverside. If you do not set this prop
   // react will complain that there is a server/client mismatch because Draft
   // will generate a random editorKey when rendering in each context. The key
@@ -54,19 +54,18 @@ export type DraftEditorProps = {
   // For a given `ContentBlock` object, return an object that specifies
   // a custom block component and/or props. If no object is returned,
   // the default `DraftEditorBlock` is used.
-  blockRendererFn: (block: BlockNodeRecord) => ?Object,
+  blockRendererFn: ((block: BlockNodeRecord) => Object | null),
   // Function that returns a cx map corresponding to block-level styles.
-  blockStyleFn: (block: BlockNodeRecord) => string,
+  blockStyleFn: ((block: BlockNodeRecord) => string),
   // If supplied, a ref which will be passed to the contenteditable.
   // Currently, only object refs are supported.
-  editorRef?: ?(
-    | {|current: null | HTMLElement|}
-    | ((HTMLElement | null) => void)
-  ),
+  editorRef?: {
+    current: null | HTMLElement
+  } | ((arg0: HTMLElement | null) => void) | null,
   // A function that accepts a synthetic key event and returns
   // the matching DraftEditorCommand constant, or a custom string,
   // or null if no command should be invoked.
-  keyBindingFn: (e: SyntheticKeyboardEvent<>) => ?string,
+  keyBindingFn: ((e: React.KeyboardEvent) => string | null),
   // Set whether the editor should prevent scrolling into view on mount
   // if it happens offscreen. By default, `false` to match the native behavior.
   preventScroll?: boolean,
@@ -109,61 +108,43 @@ export type DraftEditorProps = {
 
   // Useful for managing special behavior for pressing the `Return` key. E.g.
   // removing the style from an empty list item.
-  handleReturn?: (
-    e: SyntheticKeyboardEvent<>,
-    editorState: EditorState,
-  ) => DraftHandleValue,
+  handleReturn?: ((e: React.KeyboardEvent, editorState: EditorState) => DraftHandleValue),
   // Map a key command string provided by your key binding function to a
   // specified behavior.
-  handleKeyCommand?: (
+  handleKeyCommand?: ((
     command: DraftEditorCommand | string,
     editorState: EditorState,
-    eventTimeStamp: number,
-  ) => DraftHandleValue,
+    eventTimeStamp: number
+  ) => DraftHandleValue),
   // Handle intended text insertion before the insertion occurs. This may be
   // useful in cases where the user has entered characters that you would like
   // to trigger some special behavior. E.g. immediately converting `:)` to an
   // emoji Unicode character, or replacing ASCII quote characters with smart
   // quotes.
-  handleBeforeInput?: (
-    chars: string,
-    editorState: EditorState,
-    eventTimeStamp: number,
-  ) => DraftHandleValue,
-  handlePastedText?: (
-    text: string,
-    html?: string,
-    editorState: EditorState,
-  ) => DraftHandleValue,
-  handlePastedFiles?: (files: Array<Blob>) => DraftHandleValue,
+  handleBeforeInput?: ((chars: string, editorState: EditorState, eventTimeStamp: number) => DraftHandleValue),
+  handlePastedText?: ((text: string, html?: string, editorState: EditorState) => DraftHandleValue),
+  handlePastedFiles?: ((files: Array<Blob>) => DraftHandleValue),
   // Handle dropped files
-  handleDroppedFiles?: (
-    selection: SelectionState,
-    files: Array<Blob>,
-  ) => DraftHandleValue,
+  handleDroppedFiles?: ((selection: SelectionState, files: Array<Blob>) => DraftHandleValue),
   // Handle other drops to prevent default text movement/insertion behaviour
-  handleDrop?: (
-    selection: SelectionState,
-    dataTransfer: Object,
-    isInternal: DraftDragType,
-  ) => DraftHandleValue,
+  handleDrop?: ((selection: SelectionState, dataTransfer: Object, isInternal: DraftDragType) => DraftHandleValue),
   /**
    * Deprecated event triggers.
    */
-  onEscape?: (e: SyntheticKeyboardEvent<>) => void,
-  onTab?: (e: SyntheticKeyboardEvent<>) => void,
-  onUpArrow?: (e: SyntheticKeyboardEvent<>) => void,
-  onRightArrow?: (e: SyntheticKeyboardEvent<>) => void,
-  onDownArrow?: (e: SyntheticKeyboardEvent<>) => void,
-  onLeftArrow?: (e: SyntheticKeyboardEvent<>) => void,
-  onBlur?: (e: SyntheticEvent<>) => void,
-  onFocus?: (e: SyntheticEvent<>) => void,
+  onEscape?: ((e: React.KeyboardEvent) => void),
+  onTab?: ((e: React.KeyboardEvent) => void),
+  onUpArrow?: ((e: React.KeyboardEvent) => void),
+  onRightArrow?: ((e: React.KeyboardEvent) => void),
+  onDownArrow?: ((e: React.KeyboardEvent) => void),
+  onLeftArrow?: ((e: React.KeyboardEvent) => void),
+  onBlur?: ((e: React.SyntheticEvent) => void),
+  onFocus?: ((e: React.SyntheticEvent) => void),
   // Provide a map of inline style names corresponding to CSS style objects
   // that will be rendered for matching ranges.
   customStyleMap?: Object,
   // Provide a function that will construct CSS style objects given inline
   // style names.
-  customStyleFn?: (style: DraftInlineStyle, block: BlockNodeRecord) => ?Object,
+  customStyleFn?: ((style: DraftInlineStyle, block: BlockNodeRecord) => Object | null),
   // Provide a map of block rendering configurations. Each block type maps to
   // an element tag and an optional react element wrapper. This configuration
   // is used for both rendering and paste processing.
@@ -174,20 +155,18 @@ export type DraftEditorProps = {
   preserveSelectionOnBlur?: boolean,
   // Overrides for cut, copy & paste, which can be used to implement custom
   // behavior like entity cut/copy/paste (see PR #1784)."
-  onPaste?: (DraftEditor, SyntheticClipboardEvent<>) => void | Promise<void>,
-  onCut?: (DraftEditor, SyntheticClipboardEvent<>) => void,
-  onCopy?: (DraftEditor, SyntheticClipboardEvent<>) => void,
-  ...
+  onPaste?: ((draftEditor: DraftEditor, syntheticClipboardEvent: SyntheticClipboardEvent) => void | Promise<void>),
+  onCut?: ((draftEditor: DraftEditor, syntheticClipboardEvent: SyntheticClipboardEvent) => void),
+  onCopy?: ((draftEditor: DraftEditor, syntheticClipboardEvent: SyntheticClipboardEvent) => void)
 };
 
 export type DraftEditorDefaultProps = {
   ariaDescribedBy: string,
   blockRenderMap: DraftBlockRenderMap,
-  blockRendererFn: (block: BlockNodeRecord) => ?Object,
-  blockStyleFn: (block: BlockNodeRecord) => string,
-  keyBindingFn: (e: SyntheticKeyboardEvent<>) => ?string,
+  blockRendererFn: ((block: BlockNodeRecord) => Object | null),
+  blockStyleFn: ((block: BlockNodeRecord) => string),
+  keyBindingFn: ((e: React.KeyboardEvent) => string | null),
   readOnly: boolean,
   spellCheck: boolean,
-  stripPastedStyles: boolean,
-  ...
+  stripPastedStyles: boolean
 };

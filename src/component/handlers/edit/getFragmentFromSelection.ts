@@ -4,29 +4,22 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 
-'use strict';
+import {EditorState} from '../../../model/immutable/EditorState';
+import {BlockMap} from '../../../model/immutable/BlockMap';
+import getContentStateFragment from '../../../model/transaction/getContentStateFragment';
+import {isCollapsed} from '../../../model/immutable/SelectionState';
 
-import { BlockMap } from 'BlockMap';
-import EditorState from 'EditorState';
-
-const getContentStateFragment = require('getContentStateFragment');
-
-function getFragmentFromSelection(editorState: EditorState): BlockMap | null {
+export default function getFragmentFromSelection(
+  editorState: EditorState,
+): BlockMap | null {
   const selectionState = editorState.selection;
 
-  if (selectionState.isCollapsed()) {
+  if (isCollapsed(selectionState)) {
     return null;
   }
 
-  return getContentStateFragment(
-    editorState.currentContent,
-    selectionState,
-  );
+  return getContentStateFragment(editorState.currentContent, selectionState);
 }
-
-module.exports = getFragmentFromSelection;

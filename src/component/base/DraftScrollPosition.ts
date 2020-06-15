@@ -11,7 +11,7 @@
 
 'use strict';
 
-export type DraftScrollPosition = $ReadOnly<{|
-  x: number,
-  y: number,
-|}>;
+export type DraftScrollPosition = {
+ readonly x: number,
+ readonly y: number
+};

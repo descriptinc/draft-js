@@ -9,36 +9,31 @@
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-import type {BlockNodeRecord} from 'BlockNodeRecord';
-import type {DraftBlockRenderMap} from 'DraftBlockRenderMap';
-import type {DraftInlineStyle} from 'DraftInlineStyle';
-import type EditorState from 'EditorState';
-import type {BidiDirection} from 'UnicodeBidiDirection';
-
-const DraftEditorBlock = require('DraftEditorBlock.react');
-const DraftOffsetKey = require('DraftOffsetKey');
-const React = require('React');
-
-const cx = require('cx');
-const joinClasses: (
-  className?: ?string,
-  ...classes: Array<?string>
-) => string = require('joinClasses');
-const nullthrows = require('nullthrows');
+import {BidiDirection} from 'fbjs/lib/UnicodeBidiDirection';
+import {DraftBlockRenderMap} from '../../model/immutable/DraftBlockRenderMap';
+import {BlockNodeRecord} from '../../model/immutable/BlockNodeRecord';
+import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
+import {EditorState, getBlockTree} from '../../model/immutable/EditorState';
+import React from 'react';
+import cx from 'fbjs/lib/cx';
+import joinClasses from 'fbjs/lib/joinClasses';
+import {nullthrows} from '../../fbjs/nullthrows';
+import DraftOffsetKey from '../selection/DraftOffsetKey';
+import DraftEditorBlock from './DraftEditorBlock.react';
 
 type Props = {
-  blockRenderMap: DraftBlockRenderMap,
-  blockRendererFn: (block: BlockNodeRecord) => ?Object,
-  blockStyleFn?: (block: BlockNodeRecord) => string,
-  customStyleFn?: (style: DraftInlineStyle, block: BlockNodeRecord) => ?Object,
-  customStyleMap?: Object,
-  editorKey?: string,
-  editorState: EditorState,
-  preventScroll?: boolean,
-  textDirectionality?: BidiDirection,
-  ...
+  blockRenderMap: DraftBlockRenderMap;
+  blockRendererFn: (block: BlockNodeRecord) => Record<string, any> | null;
+  blockStyleFn?: (block: BlockNodeRecord) => string;
+  customStyleFn?: (
+    style: DraftInlineStyle,
+    block: BlockNodeRecord,
+  ) => Record<string, any> | null;
+  customStyleMap?: Record<string, any>;
+  editorKey?: string;
+  editorState: EditorState;
+  preventScroll?: boolean;
+  textDirectionality?: BidiDirection;
 };
 
 /**
@@ -82,25 +77,25 @@ class DraftEditorContents extends React.Component<Props> {
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
 
-    const prevDirectionMap = prevEditorState.getDirectionMap();
-    const nextDirectionMap = nextEditorState.getDirectionMap();
+    const prevDirectionMap = prevEditorState.directionMap;
+    const nextDirectionMap = nextEditorState.directionMap;
 
     // Text direction has changed for one or more blocks. We must re-render.
     if (prevDirectionMap !== nextDirectionMap) {
       return true;
     }
 
-    const didHaveFocus = prevEditorState.selection.getHasFocus();
-    const nowHasFocus = nextEditorState.selection.getHasFocus();
+    const didHaveFocus = prevEditorState.selection.hasFocus;
+    const nowHasFocus = nextEditorState.selection.hasFocus;
 
     if (didHaveFocus !== nowHasFocus) {
       return true;
     }
 
-    const nextNativeContent = nextEditorState.getNativelyRenderedContent();
+    const nextNativeContent = nextEditorState.nativelyRenderedContent;
 
-    const wasComposing = prevEditorState.isInCompositionMode();
-    const nowComposing = nextEditorState.isInCompositionMode();
+    const wasComposing = prevEditorState.inCompositionMode;
+    const nowComposing = nextEditorState.inCompositionMode;
 
     // If the state is unchanged or we're currently rendering a natively
     // rendered state, there's nothing new to be done.
@@ -115,17 +110,17 @@ class DraftEditorContents extends React.Component<Props> {
 
     const prevContent = prevEditorState.currentContent;
     const nextContent = nextEditorState.currentContent;
-    const prevDecorator = prevEditorState.getDecorator();
-    const nextDecorator = nextEditorState.getDecorator();
+    const prevDecorator = prevEditorState.decorator;
+    const nextDecorator = nextEditorState.decorator;
     return (
       wasComposing !== nowComposing ||
       prevContent !== nextContent ||
       prevDecorator !== nextDecorator ||
-      nextEditorState.mustForceSelection()
+      nextEditorState.forceSelection
     );
   }
 
-  render(): React.Node {
+  render(): React.ReactNode {
     const {
       blockRenderMap,
       blockRendererFn,
@@ -140,19 +135,17 @@ class DraftEditorContents extends React.Component<Props> {
 
     const content = editorState.currentContent;
     const selection = editorState.selection;
-    const forceSelection = editorState.mustForceSelection();
-    const decorator = editorState.getDecorator();
-    const directionMap = nullthrows(editorState.getDirectionMap());
+    const forceSelection = editorState.forceSelection;
+    const decorator = editorState.decorator;
+    const directionMap = nullthrows(editorState.directionMap);
 
-    const blocksAsArray = content.getBlocksAsArray();
     const processedBlocks = [];
 
     let currentDepth = null;
     let lastWrapperTemplate = null;
 
-    for (let ii = 0; ii < blocksAsArray.length; ii++) {
-      const block = blocksAsArray[ii];
-      const key = block.getKey();
+    for (const block of content.blockMap.values()) {
+      const key = block.key;
       const blockType = block.type;
 
       const customRenderer = blockRendererFn(block);
@@ -180,17 +173,17 @@ class DraftEditorContents extends React.Component<Props> {
         offsetKey,
         preventScroll,
         selection,
-        tree: editorState.getBlockTree(key),
+        tree: getBlockTree(editorState, key),
       };
 
       const configForType =
-        blockRenderMap.get(blockType) || blockRenderMap.get('unstyled');
+        blockRenderMap[blockType] || blockRenderMap['unstyled'];
       const wrapperTemplate = configForType.wrapper;
 
       const Element =
-        configForType.element || blockRenderMap.get('unstyled').element;
+        configForType.element || blockRenderMap['unstyled'].element;
 
-      const depth = block.getDepth();
+      const depth = block.depth;
       let className = '';
       if (blockStyleFn) {
         className = blockStyleFn(block);
@@ -210,7 +203,7 @@ class DraftEditorContents extends React.Component<Props> {
       }
 
       const Component = CustomComponent || DraftEditorBlock;
-      let childProps = {
+      let childProps: Record<string, any> = {
         className,
         'data-block': true,
         'data-editor': editorKey,
@@ -242,7 +235,7 @@ class DraftEditorContents extends React.Component<Props> {
       });
 
       if (wrapperTemplate) {
-        currentDepth = block.getDepth();
+        currentDepth = block.depth;
       } else {
         currentDepth = null;
       }

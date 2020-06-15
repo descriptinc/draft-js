@@ -9,50 +9,52 @@
  * @emails oncall+draft_js
  */
 
-'use strict';
+import React from 'react';
+import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
+import {BlockNodeRecord} from '../../model/immutable/BlockNodeRecord';
+import {
+  hasEdgeWithin,
+  SelectionState,
+} from '../../model/immutable/SelectionState';
+import invariant from '../../fbjs/invariant';
+import isHTMLBRElement from '../utils/isHTMLBRElement';
+import {setDraftEditorSelection} from '../selection/setDraftEditorSelection';
+import DraftEditorTextNode from './DraftEditorTextNode.react';
 
-import type {BlockNodeRecord} from 'BlockNodeRecord';
-import type {DraftInlineStyle} from 'DraftInlineStyle';
-import type SelectionState from 'SelectionState';
+type CSSStyleObject = {
+  [K in string]: string | number;
+};
 
-const DraftEditorTextNode = require('DraftEditorTextNode.react');
-const React = require('React');
+type CustomStyleMap = {
+  [K in string]: CSSStyleObject;
+};
 
-const invariant = require('invariant');
-const isHTMLBRElement = require('isHTMLBRElement');
-const setDraftEditorSelection = require('setDraftEditorSelection')
-  .setDraftEditorSelection;
-
-type CSSStyleObject = {[property: string]: string | number, ...};
-
-type CustomStyleMap = {[name: string]: CSSStyleObject, ...};
 type CustomStyleFn = (
   style: DraftInlineStyle,
   block: BlockNodeRecord,
-) => ?CSSStyleObject;
+) => CSSStyleObject | null;
 
 type Props = {
   // The block that contains this leaf.
-  block: BlockNodeRecord,
+  block: BlockNodeRecord;
   // Mapping of style names to CSS declarations.
-  customStyleMap: CustomStyleMap,
+  customStyleMap: CustomStyleMap;
   // Function that maps style names to CSS style objects.
-  customStyleFn: CustomStyleFn,
+  customStyleFn: CustomStyleFn;
   // Whether to force the DOM selection after render.
-  forceSelection: boolean,
+  forceSelection: boolean;
   // Whether this leaf is the last in its block. Used for a DOM hack.
-  isLast: boolean,
-  offsetKey: string,
+  isLast: boolean;
+  offsetKey: string;
   // The current `SelectionState`, used to represent a selection range in the
   // editor
-  selection: ?SelectionState,
+  selection: SelectionState | null;
   // The offset of this string within its block.
-  start: number,
+  start: number;
   // The set of style(s) names to apply to the node.
-  styleSet: DraftInlineStyle,
+  styleSet: DraftInlineStyle;
   // The full text to be rendered within this node.
-  text: string,
-  ...
+  text: string;
 };
 
 /**
@@ -64,7 +66,7 @@ type Props = {
  * DOM Selection API. In this way, top-level components can declaratively
  * maintain the selection state.
  */
-class DraftEditorLeaf extends React.Component<Props> {
+export default class DraftEditorLeaf extends React.Component<Props> {
   /**
    * By making individual leaf instances aware of their context within
    * the text of the editor, we can set our selection range more
@@ -75,20 +77,20 @@ class DraftEditorLeaf extends React.Component<Props> {
    * text nodes, this would be harder.
    */
 
-  leaf: ?HTMLElement;
+  leaf: HTMLElement | null = null;
 
   _setSelection(): void {
     const {selection} = this.props;
 
     // If selection state is irrelevant to the parent block, no-op.
-    if (selection == null || !selection.getHasFocus()) {
+    if (selection == null || !selection.hasFocus) {
       return;
     }
 
     const {block, start, text} = this.props;
-    const blockKey = block.getKey();
+    const blockKey = block.key;
     const end = start + text.length;
-    if (!selection.hasEdgeWithin(blockKey, start, end)) {
+    if (!hasEdgeWithin(selection, blockKey, start, end)) {
       return;
     }
 
@@ -97,27 +99,27 @@ class DraftEditorLeaf extends React.Component<Props> {
     // <span> itself as the selection target.
     const node = this.leaf;
     invariant(node, 'Missing node');
-    const child = node.firstChild;
+    const child = node!.firstChild;
     invariant(child, 'Missing child');
-    let targetNode;
+    let targetNode: Node | null;
 
-    if (child.nodeType === Node.TEXT_NODE) {
+    if (child!.nodeType === Node.TEXT_NODE) {
       targetNode = child;
     } else if (isHTMLBRElement(child)) {
       targetNode = node;
     } else {
-      targetNode = child.firstChild;
+      targetNode = child!.firstChild;
       invariant(targetNode, 'Missing targetNode');
     }
 
-    setDraftEditorSelection(selection, targetNode, blockKey, start, end);
+    setDraftEditorSelection(selection, targetNode!, blockKey, start, end);
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
     const leafNode = this.leaf;
     invariant(leafNode, 'Missing leafNode');
     const shouldUpdate =
-      leafNode.textContent !== nextProps.text ||
+      leafNode!.textContent !== nextProps.text ||
       nextProps.styleSet !== this.props.styleSet ||
       nextProps.forceSelection;
     return shouldUpdate;
@@ -131,7 +133,7 @@ class DraftEditorLeaf extends React.Component<Props> {
     this._setSelection();
   }
 
-  render(): React.Node {
+  render(): React.ReactNode {
     const {block} = this.props;
     let {text} = this.props;
 
@@ -144,19 +146,29 @@ class DraftEditorLeaf extends React.Component<Props> {
     }
 
     const {customStyleMap, customStyleFn, offsetKey, styleSet} = this.props;
-    let styleObj = styleSet.reduce((map, styleName) => {
-      const mergedStyles = {};
-      const style = customStyleMap[styleName];
+    // FIXME [perf]: cleaner/faster way to do this?
+    let styleObj = [...styleSet].reduce(
+      (map: React.CSSProperties, styleName) => {
+        const mergedStyles: React.CSSProperties = {};
+        const style = customStyleMap[styleName];
 
-      if (style !== undefined && map.textDecoration !== style.textDecoration) {
-        // .trim() is necessary for IE9/10/11 and Edge
-        mergedStyles.textDecoration = [map.textDecoration, style.textDecoration]
-          .join(' ')
-          .trim();
-      }
+        if (
+          style !== undefined &&
+          map.textDecoration !== style.textDecoration
+        ) {
+          // .trim() is necessary for IE9/10/11 and Edge
+          mergedStyles.textDecoration = [
+            map.textDecoration,
+            style.textDecoration,
+          ]
+            .join(' ')
+            .trim();
+        }
 
-      return Object.assign(map, style, mergedStyles);
-    }, {});
+        return Object.assign(map, style, mergedStyles);
+      },
+      {},
+    );
 
     if (customStyleFn) {
       const newStyles = customStyleFn(styleSet, block);
@@ -173,5 +185,3 @@ class DraftEditorLeaf extends React.Component<Props> {
     );
   }
 }
-
-module.exports = DraftEditorLeaf;

@@ -9,9 +9,6 @@
  * @emails oncall+draft_js
  */
 
-const ReactDOMComet = require('ReactDOMComet');
+'use strict';
 
-const flushControlled: void | ((fn: () => void) => void) =
-  ReactDOMComet.unstable_flushControlled;
-
-module.exports = flushControlled;
+export type DraftTextAlignment = "left" | "center" | "right";

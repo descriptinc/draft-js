@@ -11,10 +11,10 @@
 
 'use strict';
 
-import type ContentState from 'ContentState';
-import type {DraftRemovalDirection} from 'DraftRemovalDirection';
-import type EditorState from 'EditorState';
-import type SelectionState from 'SelectionState';
+import ContentState from 'ContentState';
+import { DraftRemovalDirection } from 'DraftRemovalDirection';
+import EditorState from 'EditorState';
+import SelectionState from 'SelectionState';
 
 const DraftModifier = require('DraftModifier');
 
@@ -28,8 +28,8 @@ const experimentalTreeDataSupport = gkx('draft_tree_data_support');
  */
 function removeTextWithStrategy(
   editorState: EditorState,
-  strategy: (editorState: EditorState) => SelectionState,
-  direction: DraftRemovalDirection,
+  strategy: ((editorState: EditorState) => SelectionState),
+  direction: DraftRemovalDirection
 ): ContentState {
   const selection = editorState.selection;
   const content = editorState.currentContent;

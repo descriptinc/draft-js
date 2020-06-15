@@ -11,8 +11,8 @@
 
 'use strict';
 
-import type {BlockMap} from 'BlockMap';
-import type SelectionState from 'SelectionState';
+import { BlockMap } from 'BlockMap';
+import SelectionState from 'SelectionState';
 
 const DraftModifier = require('DraftModifier');
 const EditorState = require('EditorState');
@@ -20,7 +20,7 @@ const EditorState = require('EditorState');
 const getContentStateFragment = require('getContentStateFragment');
 const nullthrows = require('nullthrows');
 
-let clipboard: ?BlockMap = null;
+let clipboard: BlockMap | null = null;
 
 /**
  * Some systems offer a "secondary" clipboard to allow quick internal cut
@@ -30,7 +30,7 @@ const SecondaryClipboard = {
   cut: function(editorState: EditorState): EditorState {
     const content = editorState.currentContent;
     const selection = editorState.selection;
-    let targetRange: ?SelectionState = null;
+    let targetRange: SelectionState | null = null;
 
     if (selection.isCollapsed()) {
       const anchorKey = selection.anchorKey;

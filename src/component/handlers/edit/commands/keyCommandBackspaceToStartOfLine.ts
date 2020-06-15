@@ -11,7 +11,7 @@
 
 'use strict';
 
-import type {SelectionObject} from 'DraftDOMTypes';
+import { SelectionObject } from 'DraftDOMTypes';
 
 const EditorState = require('EditorState');
 
@@ -20,10 +20,7 @@ const getDraftEditorSelectionWithNodes = require('getDraftEditorSelectionWithNod
 const moveSelectionBackward = require('moveSelectionBackward');
 const removeTextWithStrategy = require('removeTextWithStrategy');
 
-function keyCommandBackspaceToStartOfLine(
-  editorState: EditorState,
-  e: SyntheticKeyboardEvent<HTMLElement>,
-): EditorState {
+function keyCommandBackspaceToStartOfLine(editorState: EditorState, e: React.KeyboardEvent): EditorState {
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {

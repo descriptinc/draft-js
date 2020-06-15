@@ -11,8 +11,8 @@
 
 'use strict';
 
-import type EditorState from 'EditorState';
-import type SelectionState from 'SelectionState';
+import EditorState from 'EditorState';
+import SelectionState from 'SelectionState';
 
 const warning = require('warning');
 
@@ -24,10 +24,7 @@ const warning = require('warning');
  * This function is not Unicode-aware, so surrogate pairs will be treated
  * as having length 2.
  */
-function moveSelectionBackward(
-  editorState: EditorState,
-  maxDistance: number,
-): SelectionState {
+function moveSelectionBackward(editorState: EditorState, maxDistance: number): SelectionState {
   const selection = editorState.selection;
   // Should eventually make this an invariant
   warning(

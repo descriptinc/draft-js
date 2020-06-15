@@ -18,9 +18,7 @@ const EditorState = require('EditorState');
  * for Firefox versions that attempt to navigate forward/backward instead of
  * moving the cursor. Other browsers are able to move the cursor natively.
  */
-function keyCommandMoveSelectionToStartOfBlock(
-  editorState: EditorState,
-): EditorState {
+function keyCommandMoveSelectionToStartOfBlock(editorState: EditorState): EditorState {
   const selection = editorState.selection;
   const startKey = selection.getStartKey();
   return EditorState.set(editorState, {

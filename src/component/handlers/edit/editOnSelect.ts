@@ -4,20 +4,16 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 
-'use strict';
-
 import DraftEditor from 'DraftEditor.react';
-
-const DraftJsDebugLogging = require('DraftJsDebugLogging');
-const EditorState = require('EditorState');
-
-const getContentEditableContainer = require('getContentEditableContainer');
-const getDraftEditorSelection = require('getDraftEditorSelection');
+import DraftJsDebugLogging from '../../../stubs/DraftJsDebugLogging';
+import getDraftEditorSelection from '../../selection/getDraftEditorSelection';
+import {
+  acceptSelection,
+  forceSelection,
+} from '../../../model/immutable/EditorState';
 
 function editOnSelect(editor: DraftEditor): void {
   if (
@@ -46,15 +42,9 @@ function editOnSelect(editor: DraftEditor): void {
 
   if (updatedSelectionState !== editorState.selection) {
     if (documentSelection.needsRecovery) {
-      editorState = EditorState.forceSelection(
-        editorState,
-        updatedSelectionState,
-      );
+      editorState = forceSelection(editorState, updatedSelectionState);
     } else {
-      editorState = EditorState.acceptSelection(
-        editorState,
-        updatedSelectionState,
-      );
+      editorState = acceptSelection(editorState, updatedSelectionState);
     }
     editor.update(editorState);
   }

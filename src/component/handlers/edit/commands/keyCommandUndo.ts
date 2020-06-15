@@ -14,9 +14,9 @@
 const EditorState = require('EditorState');
 
 function keyCommandUndo(
-  e: SyntheticKeyboardEvent<>,
+  e: React.KeyboardEvent,
   editorState: EditorState,
-  updateFn: (editorState: EditorState) => void,
+  updateFn: ((editorState: EditorState) => void)
 ): void {
   const undoneState = EditorState.undo(editorState);
 

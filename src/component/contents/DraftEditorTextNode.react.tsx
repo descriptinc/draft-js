@@ -9,13 +9,10 @@
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-const React = require('React');
-const UserAgent = require('UserAgent');
-
-const invariant = require('invariant');
-const isElement = require('isElement');
+import UserAgent from 'fbjs/lib/UserAgent';
+import React from 'react';
+import invariant from '../../fbjs/invariant';
+import isElement from '../utils/isElement';
 
 // In IE, spans with <br> tags render as two newlines. By rendering a span
 // with only a newline character, we can be sure to render a single line.
@@ -39,7 +36,7 @@ function isNewline(node: Element): boolean {
  * See http://jsfiddle.net/9khdavod/ for the failure case, and
  * http://jsfiddle.net/7pg143f7/ for the fixed case.
  */
-const NEWLINE_A = ref =>
+const NEWLINE_A = (ref: (x: HTMLElement | null) => void) =>
   useNewlineChar ? (
     <span key="A" data-text="true" ref={ref}>
       {'\n'}
@@ -48,7 +45,7 @@ const NEWLINE_A = ref =>
     <br key="A" data-text="true" ref={ref} />
   );
 
-const NEWLINE_B = ref =>
+const NEWLINE_B = (ref: (x: HTMLElement | null) => void) =>
   useNewlineChar ? (
     <span key="B" data-text="true" ref={ref}>
       {'\n'}
@@ -57,7 +54,9 @@ const NEWLINE_B = ref =>
     <br key="B" data-text="true" ref={ref} />
   );
 
-type Props = {children: string, ...};
+type Props = {
+  children: string;
+};
 
 /**
  * The lowest-level component in a `DraftEditor`, the text node component
@@ -66,9 +65,9 @@ type Props = {children: string, ...};
  * nodes with DOM state that already matches the expectations of our immutable
  * editor state.
  */
-class DraftEditorTextNode extends React.Component<Props> {
+export default class DraftEditorTextNode extends React.Component<Props> {
   _forceFlag: boolean;
-  _node: ?(HTMLSpanElement | HTMLBRElement);
+  _node: HTMLSpanElement | HTMLBRElement | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -82,7 +81,7 @@ class DraftEditorTextNode extends React.Component<Props> {
     const shouldBeNewline = nextProps.children === '';
 
     invariant(isElement(node), 'node is not an Element');
-    const elementNode: Element = (node: any);
+    const elementNode: Element = node as any;
     if (shouldBeNewline) {
       return !isNewline(elementNode);
     }
@@ -97,7 +96,7 @@ class DraftEditorTextNode extends React.Component<Props> {
     this._forceFlag = !this._forceFlag;
   }
 
-  render(): React.Node {
+  render(): React.ReactNode {
     if (this.props.children === '') {
       return this._forceFlag
         ? NEWLINE_A(ref => (this._node = ref))
@@ -113,5 +112,3 @@ class DraftEditorTextNode extends React.Component<Props> {
     );
   }
 }
-
-module.exports = DraftEditorTextNode;
