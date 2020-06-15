@@ -150,18 +150,23 @@ export function isEmpty<T>(iter: Iterable<T>): boolean {
   return first(iter) === undefined;
 }
 
+/**
+ * Gets the nth item of the iterable (0 returns the first item, etc.)
+ * - max size returns undefined
+ * - < 0 or > max size throws
+ */
 export function takeNth<T>(iter: Iterable<T>, n: number): T | undefined {
-  if (n <= 0) {
-    throw new RangeError('n <= 0');
+  if (n < 0) {
+    throw new RangeError('n < 0');
   }
   for (const item of iter) {
-    n -= 1;
     if (n === 0) {
       return item;
     }
+    n -= 1;
   }
-  if (n > 1) {
-    throw new RangeError(`less than n-1 items`);
+  if (n > 0) {
+    throw new RangeError(`less than n items`);
   }
   return undefined;
 }

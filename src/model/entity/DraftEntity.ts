@@ -54,7 +54,7 @@ export type DraftEntityMapObject = {
   __create: (
     type: DraftEntityType,
     mutability: DraftEntityMutability,
-    data?: Record<string, any>,
+    data?: Record<string, any> | null,
   ) => string;
   __add: (instance: DraftEntityInstance) => string;
   __get: (key: string) => DraftEntityInstance;
@@ -216,9 +216,11 @@ const DraftEntity: DraftEntityMapObject = {
   __create: function(
     type: DraftEntityType,
     mutability: DraftEntityMutability,
-    data?: Record<string, any>,
+    data?: Record<string, any> | null,
   ): string {
-    return DraftEntity.__add(makeDraftEntityInstance({type, mutability, data}));
+    return DraftEntity.__add(
+      makeDraftEntityInstance({type, mutability, data: data || undefined}),
+    );
   },
 
   /**

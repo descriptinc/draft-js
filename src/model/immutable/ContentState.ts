@@ -91,7 +91,7 @@ export function hasText(content: ContentState): boolean {
 export function createEntity(
   type: DraftEntityType,
   mutability: DraftEntityMutability,
-  data?: Object,
+  data?: Object | null,
 ): string {
   // TODO: update this when we fully remove DraftEntity
   return DraftEntity.__create(type, mutability, data);

@@ -437,7 +437,7 @@ function regenerateTreeForNewBlocks(
     | undefined => {
     const [key] = entry;
     const newBlock = newBlockMap.get(key)!;
-    if (prevBlockMap.get(key) === newBlock) {
+    if (!newBlock || prevBlockMap.get(key) === newBlock) {
       // block did not change
       return undefined;
     }

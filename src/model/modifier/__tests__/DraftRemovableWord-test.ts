@@ -5,18 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
- * @format
  */
 
-'use strict';
+import NonASCIIStringSnapshotSerializer from '../../../NonASCIIStringSnapshotSerializer';
+import DraftRemovableWord from '../DraftRemovableWord';
 
-expect.addSnapshotSerializer(require('NonASCIIStringSnapshotSerializer'));
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+expect.addSnapshotSerializer(NonASCIIStringSnapshotSerializer);
 
-const DraftRemovableWord = require('DraftRemovableWord');
-
-let forward;
-let backward;
+let forward: (str: string) => string;
+let backward: (str: string) => string;
 
 const accents = 'th\u00e9 f\u00e0bregas';
 const arabic = '\u0637\u0638\u0639 \u063A\u063B\u063C';

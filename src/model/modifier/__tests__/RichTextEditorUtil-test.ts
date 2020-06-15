@@ -7,14 +7,28 @@
  * @emails oncall+draft_js
  * @format
  */
-
-const AtomicBlockUtils = require('AtomicBlockUtils');
-const DraftModifier = require('DraftModifier');
-const EditorState = require('EditorState');
-const RichTextEditorUtil = require('RichTextEditorUtil');
-const SelectionState = require('SelectionState');
-
-const getSampleStateForTesting = require('getSampleStateForTesting');
+import getSampleStateForTesting from '../../transaction/getSampleStateForTesting';
+import RichTextEditorUtil from '../RichTextEditorUtil';
+import {
+  EditorState,
+  forceSelection,
+  moveSelectionToEnd,
+  pushContent,
+} from '../../immutable/EditorState';
+import AtomicBlockUtils from '../AtomicBlockUtils';
+import {
+  ContentState,
+  createEntity,
+  getBlockBefore,
+  getFirstBlock,
+  getLastBlock,
+  getLastCreatedEntityKey,
+} from '../../immutable/ContentState';
+import DraftModifier from '../DraftModifier';
+import {makeSelectionState} from '../../immutable/SelectionState';
+import {find, some} from '../../descript/Iterables';
+import {DraftBlockType} from '../../constants/DraftBlockType';
+import {blockToJson} from '../../../util/blockMapToJson';
 
 const {editorState, selectionState} = getSampleStateForTesting();
 const {
@@ -24,13 +38,11 @@ const {
   tryToRemoveBlockStyle,
 } = RichTextEditorUtil;
 
-const insertAtomicBlock = targetEditorState => {
-  const entityKey = targetEditorState
-    .currentContent
-    .createEntity('TEST', 'IMMUTABLE', null)
-    .getLastCreatedEntityKey();
+const insertAtomicBlock = (targetEditorState: EditorState) => {
+  createEntity('TEST', 'IMMUTABLE', null);
+  const entityKey = getLastCreatedEntityKey();
   const character = ' ';
-  const movedSelection = EditorState.moveSelectionToEnd(targetEditorState);
+  const movedSelection = moveSelectionToEnd(targetEditorState);
   return AtomicBlockUtils.insertAtomicBlock(
     movedSelection,
     entityKey,
@@ -39,20 +51,18 @@ const insertAtomicBlock = targetEditorState => {
 };
 
 test('onBackspace does not handle non-zero-offset or non-collapsed selections', () => {
-  const nonZero = selectionState.merge({anchorOffset: 2, focusOffset: 2});
-  expect(
-    onBackspace(EditorState.forceSelection(editorState, nonZero)),
-  ).toMatchSnapshot();
+  const nonZero = {...selectionState, anchorOffset: 2, focusOffset: 2};
+  expect(onBackspace(forceSelection(editorState, nonZero))).toMatchSnapshot();
 
-  const nonCollapsed = nonZero.merge({anchorOffset: 0});
+  const nonCollapsed = {...nonZero, anchorOffset: 0};
   expect(
-    onBackspace(EditorState.forceSelection(editorState, nonCollapsed)),
+    onBackspace(forceSelection(editorState, nonCollapsed)),
   ).toMatchSnapshot();
 });
 
 test('onBackspace resets the current block type if empty', () => {
   const contentState = editorState.currentContent;
-  const lastBlock = contentState.getLastBlock();
+  const lastBlock = getLastBlock(contentState);
   const lastBlockKey = lastBlock.key;
 
   // Remove the current text from the blockquote.
@@ -67,16 +77,16 @@ test('onBackspace resets the current block type if empty', () => {
     'backward',
   );
 
-  const withEmptyBlockquote = EditorState.push(
+  const withEmptyBlockquote = pushContent(
     editorState,
     resetBlockquote,
     'remove-range',
   );
 
-  const afterBackspace = onBackspace(withEmptyBlockquote);
-  const lastBlockNow = afterBackspace.currentContent.getLastBlock();
+  const afterBackspace = onBackspace(withEmptyBlockquote)!;
+  const lastBlockNow = getLastBlock(afterBackspace.currentContent);
 
-  expect(lastBlockNow.toJS()).toMatchSnapshot();
+  expect(blockToJson(lastBlockNow)).toMatchSnapshot();
 });
 
 test('onBackspace resets the current block type at the start of the first block', () => {
@@ -88,58 +98,56 @@ test('onBackspace resets the current block type at the start of the first block'
     'unordered-list-item',
   );
 
-  const withListItem = EditorState.push(
+  const withListItem = pushContent(
     editorState,
     setListItem,
     'change-block-type',
   );
 
-  const afterBackspace = onBackspace(withListItem);
-  const firstBlockNow = afterBackspace.currentContent.getFirstBlock();
+  const afterBackspace = onBackspace(withListItem)!;
+  const firstBlockNow = getFirstBlock(afterBackspace.currentContent);
 
-  expect(firstBlockNow.toJS()).toMatchSnapshot();
+  expect(blockToJson(firstBlockNow)).toMatchSnapshot();
 });
 
 test('onBackspace removes a preceding atomic block', () => {
-  const blockSizeBeforeRemove = editorState.currentContent.getBlockMap()
-    .size;
+  const blockSizeBeforeRemove = editorState.currentContent.blockMap.size;
   const withAtomicBlock = insertAtomicBlock(editorState);
-  const afterBackspace = onBackspace(withAtomicBlock);
+  const afterBackspace = onBackspace(withAtomicBlock)!;
   const contentState = afterBackspace.currentContent;
-  const blockMap = contentState.getBlockMap();
+  const blockMap = contentState.blockMap;
   expect(blockMap.size === blockSizeBeforeRemove + 1).toMatchSnapshot();
   expect(
-    blockMap.some(block => block.type === 'atomic'),
+    some(blockMap.values(), block => block.type === 'atomic'),
   ).toMatchSnapshot();
 });
 
 test('onDelete does not handle non-block-end or non-collapsed selections', () => {
-  const nonZero = selectionState.merge({anchorOffset: 2, focusOffset: 2});
+  const nonZero = {...selectionState, anchorOffset: 2, focusOffset: 2};
   expect(
-    onDelete(EditorState.forceSelection(editorState, nonZero)) === null,
+    onDelete(forceSelection(editorState, nonZero)) === null,
   ).toMatchSnapshot();
 
-  const nonCollapsed = nonZero.merge({anchorOffset: 0});
+  const nonCollapsed = {...nonZero, anchorOffset: 0};
   expect(
-    onDelete(EditorState.forceSelection(editorState, nonCollapsed)) === null,
+    onDelete(forceSelection(editorState, nonCollapsed)) === null,
   ).toMatchSnapshot();
 });
 
 test('onDelete removes a following atomic block', () => {
-  const blockSizeBeforeRemove = editorState.currentContent.getBlockMap()
-    .size;
+  const blockSizeBeforeRemove = editorState.currentContent.blockMap.size;
   const withAtomicBlock = insertAtomicBlock(editorState);
   const content = withAtomicBlock.currentContent;
-  const atomicKey = content
-    .getBlockMap()
-    .find(block => block.type === 'atomic')
-    .key;
+  const atomicKey = find(
+    content.blockMap.values(),
+    block => block.type === 'atomic',
+  )!.key;
 
-  const blockBefore = content.getBlockBefore(atomicKey);
+  const blockBefore = getBlockBefore(content, atomicKey)!;
   const keyBefore = blockBefore.key;
   const lengthBefore = blockBefore.text.length;
 
-  const withSelectionAboveAtomic = EditorState.forceSelection(
+  const withSelectionAboveAtomic = forceSelection(
     withAtomicBlock,
     makeSelectionState({
       anchorKey: keyBefore,
@@ -149,11 +157,11 @@ test('onDelete removes a following atomic block', () => {
     }),
   );
 
-  const afterDelete = onDelete(withSelectionAboveAtomic);
-  const blockMapAfterDelete = afterDelete.currentContent.getBlockMap();
+  const afterDelete = onDelete(withSelectionAboveAtomic)!;
+  const blockMapAfterDelete = afterDelete.currentContent.blockMap;
 
   expect(
-    blockMapAfterDelete.some(block => block.type === 'atomic'),
+    some(blockMapAfterDelete.values(), block => block.type === 'atomic'),
   ).toMatchSnapshot();
 
   expect(
@@ -162,27 +170,24 @@ test('onDelete removes a following atomic block', () => {
 });
 
 test('tryToRemoveBlockStyleonDelete breaks out of code block on enter two blank lines', () => {
-  const blankLine = selectionState.merge({anchorKey: 'e', focusKey: 'e'});
-  const withBlankLine = EditorState.forceSelection(editorState, blankLine);
+  const blankLine = {...selectionState, anchorKey: 'e', focusKey: 'e'};
+  const withBlankLine = forceSelection(editorState, blankLine);
 
-  const afterEnter = tryToRemoveBlockStyle(withBlankLine);
-  const lastBlock = afterEnter.getLastBlock();
+  const afterEnter = tryToRemoveBlockStyle(withBlankLine)!;
+  const lastBlock = getLastBlock(afterEnter);
 
-  expect(lastBlock.toJS()).toMatchSnapshot();
+  expect(blockToJson(lastBlock)).toMatchSnapshot();
 });
 
 describe('onTab on list block', () => {
-  const setListBlock = (contentState, type) =>
+  const setListBlock = (contentState: ContentState, type: DraftBlockType) =>
     DraftModifier.setBlockType(contentState, selectionState, type);
-  const changeBlockType = setListItem =>
-    EditorState.push(editorState, setListItem, 'change-block-type');
-  const getFirstBlockDepth = contentState =>
-    contentState
-      .currentContent
-      .getFirstBlock()
-      .getDepth();
-  const addTab = (contentState, maxDepth = 2) =>
-    onTab({preventDefault: () => {}}, contentState, maxDepth);
+  const changeBlockType = (setListItem: ContentState): EditorState =>
+    pushContent(editorState, setListItem, 'change-block-type');
+  const getFirstBlockDepth = (edState: EditorState) =>
+    getFirstBlock(edState.currentContent).depth;
+  const addTab = (edState: EditorState, maxDepth = 2) =>
+    onTab({preventDefault: () => {}}, edState, maxDepth);
 
   test('increases the depth of unordered-list-item', () => {
     const contentState = editorState.currentContent;
