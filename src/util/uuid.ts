@@ -16,3 +16,7 @@ export default function uuid(): string {
     return v.toString(16);
   });
 }
+
+export function resetUuids(): void {
+  //
+}

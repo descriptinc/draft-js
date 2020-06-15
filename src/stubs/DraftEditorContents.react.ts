@@ -5,10 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import GKX from './gkx';
 
-import {gkx} from './gkx';
-
-const experimentalTreeDataSupport = gkx('draft_tree_data_support');
+const experimentalTreeDataSupport = GKX.gkx('draft_tree_data_support');
 
 const component = experimentalTreeDataSupport
   ? require('DraftEditorContentsExperimental.react')

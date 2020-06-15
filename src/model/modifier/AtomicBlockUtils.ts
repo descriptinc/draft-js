@@ -7,7 +7,6 @@
  * @emails oncall+draft_js
  */
 
-import {gkx} from '../../stubs/gkx';
 import {EditorState, pushContent} from '../immutable/EditorState';
 import generateRandomKey from '../keys/generateRandomKey';
 import DraftModifier from './DraftModifier';
@@ -26,8 +25,9 @@ import {DraftInsertionType} from '../constants/DraftInsertionType';
 import {getBlockForKey} from '../immutable/ContentState';
 import moveBlockInContentState from '../transaction/moveBlockInContentState';
 import {makeContentBlock} from '../immutable/ContentBlock';
+import GKX from '../../stubs/gkx';
 
-const experimentalTreeDataSupport = gkx('draft_tree_data_support');
+const experimentalTreeDataSupport = GKX.gkx('draft_tree_data_support');
 
 const AtomicBlockUtils = {
   insertAtomicBlock: function(

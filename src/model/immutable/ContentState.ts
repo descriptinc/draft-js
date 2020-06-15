@@ -20,10 +20,10 @@ import {DraftEntityMutability} from '../entity/DraftEntityMutability';
 import {createFromArray} from './BlockMapBuilder';
 import {makeContentBlockNode} from './ContentBlockNode';
 import {makeContentBlock} from './ContentBlock';
-import {gkx} from '../../stubs/gkx';
 import DraftEntity, {DraftEntityMapObject} from '../entity/DraftEntity';
 import {DraftEntityInstance} from '../entity/DraftEntityInstance';
 import sanitizeDraftText from '../encoding/sanitizeDraftText';
+import GKX from '../../stubs/gkx';
 
 export type ContentState = Readonly<{
   blockMap: BlockMap;
@@ -149,7 +149,7 @@ export function createFromText(
   const strings = text.split(delimiter);
   const blocks = strings.map(block => {
     block = sanitizeDraftText(block);
-    if (gkx('draft_tree_data_support')) {
+    if (GKX.gkx('draft_tree_data_support')) {
       return makeContentBlockNode({
         text: block,
       });

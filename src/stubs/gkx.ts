@@ -6,9 +6,12 @@
  *
  */
 
-export function gkx(name: string): boolean {
-  if (typeof window !== 'undefined' && window.__DRAFT_GKX) {
-    return !!window.__DRAFT_GKX[name];
-  }
-  return false;
-}
+const GKX = {
+  gkx: (name: string): boolean => {
+    if (typeof window !== 'undefined' && window.__DRAFT_GKX) {
+      return !!window.__DRAFT_GKX[name];
+    }
+    return false;
+  },
+};
+export default GKX;

@@ -11,7 +11,6 @@
 
 import URI from 'fbjs/lib/URI';
 import cx from 'fbjs/lib/cx';
-import {gkx} from '../../stubs/gkx';
 import {DraftBlockRenderMap} from '../immutable/DraftBlockRenderMap';
 import isHTMLElement from '../../component/utils/isHTMLElement';
 import isHTMLAnchorElement from '../../component/utils/isHTMLAnchorElement';
@@ -31,8 +30,11 @@ import {makeContentBlock} from '../immutable/ContentBlock';
 import getSafeBodyFromHTML from '../paste/__mocks__/getSafeBodyFromHTML';
 import {DefaultDraftBlockRenderMap} from '../immutable/DefaultDraftBlockRenderMap';
 import isHTMLBRElement from '../../component/utils/isHTMLBRElement';
+import GKX from '../../stubs/gkx';
 
-const experimentalTreeDataSupport = gkx('draft_tree_data_support');
+function getExperimentalTreeDataSupport(): boolean {
+  return GKX.gkx('draft_tree_data_support');
+}
 
 const NBSP = '&nbsp;';
 const SPACE = ' ';
@@ -354,7 +356,7 @@ class ContentBlocksBuilder {
     entityMap: EntityMap;
   } {
     if (this.contentBlocks.length === 0) {
-      if (experimentalTreeDataSupport) {
+      if (getExperimentalTreeDataSupport()) {
         this._toContentBlocks(this.blockConfigs);
       } else {
         this._toFlatContentBlocks(this.blockConfigs);
@@ -457,7 +459,7 @@ class ContentBlocksBuilder {
         }
 
         if (
-          !experimentalTreeDataSupport &&
+          !getExperimentalTreeDataSupport() &&
           isHTMLElement(node) &&
           (blockType === 'unordered-list-item' ||
             blockType === 'ordered-list-item')
@@ -623,7 +625,7 @@ class ContentBlocksBuilder {
     // The child text node cannot just have a space or return as content (since
     // we strip those out), unless the image is for presentation only.
     // See https://github.com/facebook/draft-js/issues/231 for some context.
-    if (gkx('draftjs_fix_paste_for_img')) {
+    if (GKX.gkx('draftjs_fix_paste_for_img')) {
       if (image.getAttribute('role') !== 'presentation') {
         this._appendText('\ud83d\udcf7', style);
       }
