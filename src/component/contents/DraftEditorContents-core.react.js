@@ -90,8 +90,8 @@ class DraftEditorContents extends React.Component<Props> {
       return true;
     }
 
-    const didHaveFocus = prevEditorState.getSelection().getHasFocus();
-    const nowHasFocus = nextEditorState.getSelection().getHasFocus();
+    const didHaveFocus = prevEditorState.selection.getHasFocus();
+    const nowHasFocus = nextEditorState.selection.getHasFocus();
 
     if (didHaveFocus !== nowHasFocus) {
       return true;
@@ -139,7 +139,7 @@ class DraftEditorContents extends React.Component<Props> {
     } = this.props;
 
     const content = editorState.currentContent;
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const forceSelection = editorState.mustForceSelection();
     const decorator = editorState.getDecorator();
     const directionMap = nullthrows(editorState.getDirectionMap());

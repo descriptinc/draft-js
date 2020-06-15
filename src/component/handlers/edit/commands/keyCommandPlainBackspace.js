@@ -26,7 +26,7 @@ function keyCommandPlainBackspace(editorState: EditorState): EditorState {
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {
-      const selection = strategyState.getSelection();
+      const selection = strategyState.selection;
       const content = strategyState.currentContent;
       const key = selection.getanchorKey;
       const offset = selection.getAnchorOffset();
@@ -43,7 +43,7 @@ function keyCommandPlainBackspace(editorState: EditorState): EditorState {
     return editorState;
   }
 
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
   return EditorState.push(
     editorState,
     afterRemoval.set('selectionBefore', selection),

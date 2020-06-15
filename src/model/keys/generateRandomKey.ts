@@ -4,12 +4,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 const seenKeys: Record<string, true> = {};
 const MULTIPLIER = Math.pow(2, 24);

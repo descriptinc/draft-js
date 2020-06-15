@@ -25,7 +25,7 @@ function keyCommandDeleteWord(editorState: EditorState): EditorState {
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {
-      const selection = strategyState.getSelection();
+      const selection = strategyState.selection;
       const offset = selection.getStartOffset();
       const key = selection.getStartKey();
       const content = strategyState.currentContent;

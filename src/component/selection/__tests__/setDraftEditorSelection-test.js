@@ -85,7 +85,7 @@ describe('addFocusToSelection', () => {
       selection,
       storedFocusNode,
       storedFocusOffset,
-      editorState.getSelection(),
+      editorState.selection,
     );
     expect(selection).toMatchSnapshot();
   });
@@ -99,7 +99,7 @@ describe('addFocusToSelection', () => {
       selection,
       storedFocusNode,
       storedFocusOffset,
-      editorState.getSelection(),
+      editorState.selection,
     );
     expect(selection).toMatchSnapshot();
   });

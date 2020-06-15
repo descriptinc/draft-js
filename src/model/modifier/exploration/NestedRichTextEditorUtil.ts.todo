@@ -68,7 +68,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   },
 
   onDelete: (editorState: EditorState): ?EditorState => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     if (!isCollapsed(selection)) {
       return null;
     }
@@ -112,7 +112,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
    * a nested parent we add its text to the neareast previous leaf node
    */
   onBackspace: (editorState: EditorState): ?EditorState => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const content = editorState.currentContent;
     const currentBlock = content.getBlockForKey(getStartKey(selection));
     const previousBlockKey = currentBlock.getPrevSiblingKey();
@@ -197,7 +197,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     editorState: EditorState,
     blockType: DraftBlockType,
   ): EditorState => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const content = editorState.currentContent;
     const currentBlock = content.getBlockForKey(getStartKey(selection));
     const haveChildren = !currentBlock.getChildKeys().isEmpty();
@@ -242,7 +242,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   },
 
   currentBlockContainsLink: (editorState: EditorState): boolean => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const contentState = editorState.currentContent;
     const entityMap = contentState.getEntityMap();
     return contentState
@@ -256,7 +256,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   },
 
   getCurrentBlockType: (editorState: EditorState): DraftBlockType => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     return editorState
       .currentContent
       .getBlockForKey(getStartKey(selection))
@@ -270,7 +270,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   insertSoftNewline: (editorState: EditorState): EditorState => {
     const contentState = DraftModifier.insertText(
       editorState.currentContent,
-      editorState.getSelection(),
+      editorState.selection,
       '\n',
       editorState.getCurrentInlineStyle(),
       null,
@@ -293,7 +293,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     editorState: EditorState,
     maxDepth: number,
   ): EditorState => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const key = selection.getanchorKey;
     if (key !== selection.focusKey) {
       return editorState;
@@ -374,7 +374,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
   },
 
   toggleCode: (editorState: EditorState): EditorState => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const anchorKey = selection.getanchorKey;
     const focusKey = selection.focusKey;
 
@@ -395,7 +395,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     editorState: EditorState,
     inlineStyle: string,
   ): EditorState => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const currentStyle = editorState.getCurrentInlineStyle();
 
     // If the selection is collapsed, toggle the specified style on or off and
@@ -453,7 +453,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
    * type to 'unstyled'. Returns null if selection does not meet that criteria.
    */
   tryToRemoveBlockStyle: (editorState: EditorState): ?ContentState => {
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     const offset = selection.getAnchorOffset();
     if (isCollapsed(selection) && offset === 0) {
       const key = selection.getanchorKey;

@@ -22,7 +22,7 @@ const getFragmentFromSelection = require('getFragmentFromSelection');
  */
 function editOnCopy(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   const editorState = editor._latestEditorState;
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
 
   // No selection, so there's nothing to copy.
   if (selection.isCollapsed()) {

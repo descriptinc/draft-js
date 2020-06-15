@@ -28,7 +28,7 @@ function moveSelectionBackward(
   editorState: EditorState,
   maxDistance: number,
 ): SelectionState {
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
   // Should eventually make this an invariant
   warning(
     selection.isCollapsed(),

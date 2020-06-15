@@ -18,7 +18,7 @@ const UserAgent = require('UserAgent');
 
 function editOnFocus(editor: DraftEditor, e: SyntheticFocusEvent<>): void {
   const editorState = editor._latestEditorState;
-  const currentSelection = editorState.getSelection();
+  const currentSelection = editorState.selection;
   if (currentSelection.getHasFocus()) {
     return;
   }

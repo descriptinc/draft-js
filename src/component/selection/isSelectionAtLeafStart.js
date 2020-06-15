@@ -14,7 +14,7 @@
 import type EditorState from 'EditorState';
 
 function isSelectionAtLeafStart(editorState: EditorState): boolean {
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
   const anchorKey = selection.getanchorKey;
   const blockTree = editorState.getBlockTree(anchorKey);
   const offset = selection.getStartOffset();

@@ -17,7 +17,7 @@ import type EditorState from 'EditorState';
 const getContentStateFragment = require('getContentStateFragment');
 
 function getFragmentFromSelection(editorState: EditorState): ?BlockMap {
-  const selectionState = editorState.getSelection();
+  const selectionState = editorState.selection;
 
   if (selectionState.isCollapsed()) {
     return null;

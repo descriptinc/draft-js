@@ -22,7 +22,7 @@ const getContentStateFragment = require('getContentStateFragment');
  * characters.
  */
 function keyCommandTransposeCharacters(editorState: EditorState): EditorState {
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
   if (!selection.isCollapsed()) {
     return editorState;
   }

@@ -36,13 +36,13 @@ class DraftEditorPlaceholder extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
     return (
       this.props.text !== nextProps.text ||
-      this.props.editorState.getSelection().getHasFocus() !==
-        nextProps.editorState.getSelection().getHasFocus()
+      this.props.editorState.selection.getHasFocus() !==
+        nextProps.editorState.selection.getHasFocus()
     );
   }
 
   render(): React.Node {
-    const hasFocus = this.props.editorState.getSelection().getHasFocus();
+    const hasFocus = this.props.editorState.selection.getHasFocus();
 
     const className = cx({
       'public/DraftEditorPlaceholder/root': true,

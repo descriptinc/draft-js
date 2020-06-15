@@ -125,7 +125,7 @@ test(`at end of a leaf block and sibling is another leaf block forward delete co
       removeTextWithStrategy(
         editorState,
         strategyState => {
-          const selection = strategyState.getSelection();
+          const selection = strategyState.selection;
           const content = strategyState.currentContent;
           const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();
@@ -153,7 +153,7 @@ test(`at end of a leaf block and sibling is not another leaf block forward delet
       removeTextWithStrategy(
         editorState,
         strategyState => {
-          const selection = strategyState.getSelection();
+          const selection = strategyState.selection;
           const content = strategyState.currentContent;
           const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();
@@ -178,7 +178,7 @@ test(`at end of a leaf block and sibling is not another leaf block forward delet
       removeTextWithStrategy(
         editorState,
         strategyState => {
-          const selection = strategyState.getSelection();
+          const selection = strategyState.selection;
           const content = strategyState.currentContent;
           const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();
@@ -205,7 +205,7 @@ test(`across blocks with forward delete is a no-op`, () => {
       removeTextWithStrategy(
         editorState,
         strategyState => {
-          const selection = strategyState.getSelection();
+          const selection = strategyState.selection;
           const content = strategyState.currentContent;
           const key = selection.getanchorKey;
           const offset = selection.getAnchorOffset();

@@ -26,7 +26,7 @@ function editOnSelect(editor: DraftEditor): void {
   ) {
     if (editor._blockSelectEvents) {
       const editorState = editor.props.editorState;
-      const selectionState = editorState.getSelection();
+      const selectionState = editorState.selection;
       DraftJsDebugLogging.logBlockedSelectionEvent({
         // For now I don't think we need any other info
         anonymizedDom: 'N/A',
@@ -44,7 +44,7 @@ function editOnSelect(editor: DraftEditor): void {
   );
   const updatedSelectionState = documentSelection.selectionState;
 
-  if (updatedSelectionState !== editorState.getSelection()) {
+  if (updatedSelectionState !== editorState.selection) {
     if (documentSelection.needsRecovery) {
       editorState = EditorState.forceSelection(
         editorState,

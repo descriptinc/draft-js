@@ -162,7 +162,7 @@ function moveText(
 ): EditorState {
   const newContentState = DraftModifier.moveText(
     editorState.currentContent,
-    editorState.getSelection(),
+    editorState.selection,
     targetSelection,
   );
   return EditorState.push(editorState, newContentState, 'insert-fragment');

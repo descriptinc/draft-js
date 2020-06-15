@@ -55,7 +55,7 @@ function replaceText(
 ): EditorState {
   const contentState = DraftModifier.replaceText(
     editorState.currentContent,
-    editorState.getSelection(),
+    editorState.selection,
     text,
     inlineStyle,
     entityKey,
@@ -114,7 +114,7 @@ function editOnBeforeInput(
   // If selection is collapsed, conditionally allow native behavior. This
   // reduces re-renders and preserves spellcheck highlighting. If the selection
   // is not collapsed, we will re-render.
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
   const selectionStart = selection.getStartOffset();
   const anchorKey = selection.getanchorKey;
 
@@ -127,7 +127,7 @@ function editOnBeforeInput(
         editorState.getCurrentInlineStyle(),
         getEntityKeyForSelection(
           editorState.currentContent,
-          editorState.getSelection(),
+          editorState.selection,
         ),
         true,
       ),
@@ -141,7 +141,7 @@ function editOnBeforeInput(
     editorState.getCurrentInlineStyle(),
     getEntityKeyForSelection(
       editorState.currentContent,
-      editorState.getSelection(),
+      editorState.selection,
     ),
     false,
   );

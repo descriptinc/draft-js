@@ -125,7 +125,7 @@ function setDraftEditorSelection(
     return;
   }
 
-  const selection: SelectionObject = documentObject.defaultView.getSelection();
+  const selection: SelectionObject = documentObject.defaultView.selection;
   let anchorKey = selectionState.getanchorKey;
   let anchorOffset = selectionState.getAnchorOffset();
   let focusKey = selectionState.focusKey;

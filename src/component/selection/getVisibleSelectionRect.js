@@ -23,7 +23,7 @@ const getRangeBoundingClientRect = require('getRangeBoundingClientRect');
  * When using from an iframe, you should pass the iframe window object
  */
 function getVisibleSelectionRect(global: any): ?FakeClientRect {
-  const selection = global.getSelection();
+  const selection = global.selection;
   if (!selection.rangeCount) {
     return null;
   }

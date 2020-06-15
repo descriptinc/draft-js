@@ -64,7 +64,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
           style: editorState.getCurrentInlineStyle(),
           entity: getEntityKeyForSelection(
             editorState.currentContent,
-            editorState.getSelection(),
+            editorState.selection,
           ),
         });
         const currentBlockType = RichTextEditorUtil.getCurrentBlockType(
@@ -80,7 +80,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
 
         const withInsertedText = DraftModifier.replaceWithFragment(
           editorState.currentContent,
-          editorState.getSelection(),
+          editorState.selection,
           fragment,
         );
 
@@ -178,7 +178,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
       style: editorState.getCurrentInlineStyle(),
       entity: getEntityKeyForSelection(
         editorState.currentContent,
-        editorState.getSelection(),
+        editorState.selection,
       ),
     });
 
@@ -204,7 +204,7 @@ function insertFragment(
 ): EditorState {
   const newContent = DraftModifier.replaceWithFragment(
     editorState.currentContent,
-    editorState.getSelection(),
+    editorState.selection,
     fragment,
   );
   // TODO: merge the entity map once we stop using DraftEntity

@@ -25,7 +25,7 @@ function getUpdatedSelectionState(
   focusKey: string,
   focusOffset: number,
 ): SelectionState {
-  const selection: SelectionState = nullthrows(editorState.getSelection());
+  const selection: SelectionState = nullthrows(editorState.selection);
   if (!anchorKey || !focusKey) {
     // If we cannot make sense of the updated selection state, stick to the current one.
     if (__DEV__) {

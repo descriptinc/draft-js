@@ -27,12 +27,12 @@ function keyCommandBackspaceToStartOfLine(
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {
-      const selection = strategyState.getSelection();
+      const selection = strategyState.selection;
       if (selection.isCollapsed() && selection.getAnchorOffset() === 0) {
         return moveSelectionBackward(strategyState, 1);
       }
       const {ownerDocument} = e.currentTarget;
-      const domSelection: SelectionObject = ownerDocument.defaultView.getSelection();
+      const domSelection: SelectionObject = ownerDocument.defaultView.selection;
       // getRangeAt can technically throw if there's no selection, but we know
       // there is one here because text editor has focus (the cursor is a
       // selection of length 0). Therefore, we don't need to wrap this in a

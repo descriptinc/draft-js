@@ -21,7 +21,7 @@ const EditorState = require('EditorState');
 function keyCommandMoveSelectionToStartOfBlock(
   editorState: EditorState,
 ): EditorState {
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
   const startKey = selection.getStartKey();
   return EditorState.set(editorState, {
     selection: selection.merge({

@@ -166,7 +166,7 @@ function editOnKeyDown(
       // other browsers.
       const contentState = DraftModifier.replaceText(
         editorState.currentContent,
-        editorState.getSelection(),
+        editorState.selection,
         '\u00a0',
       );
       editor.update(

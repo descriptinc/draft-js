@@ -29,7 +29,7 @@ let clipboard: ?BlockMap = null;
 const SecondaryClipboard = {
   cut: function(editorState: EditorState): EditorState {
     const content = editorState.currentContent;
-    const selection = editorState.getSelection();
+    const selection = editorState.selection;
     let targetRange: ?SelectionState = null;
 
     if (selection.isCollapsed()) {
@@ -74,7 +74,7 @@ const SecondaryClipboard = {
 
     const newContent = DraftModifier.replaceWithFragment(
       editorState.currentContent,
-      editorState.getSelection(),
+      editorState.selection,
       clipboard,
     );
 

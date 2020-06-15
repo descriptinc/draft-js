@@ -7,8 +7,6 @@
  * @format
  */
 
-'use strict';
-
 let count = 0;
 
 function generateRandomKey() {

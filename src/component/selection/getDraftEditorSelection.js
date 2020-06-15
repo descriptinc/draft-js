@@ -25,7 +25,7 @@ function getDraftEditorSelection(
   editorState: EditorState,
   root: HTMLElement,
 ): DOMDerivedSelection {
-  const selection: SelectionObject = root.ownerDocument.defaultView.getSelection();
+  const selection: SelectionObject = root.ownerDocument.defaultView.selection;
   const {
     anchorNode,
     anchorOffset,
@@ -43,7 +43,7 @@ function getDraftEditorSelection(
     focusNode == null
   ) {
     return {
-      selectionState: editorState.getSelection().set('hasFocus', false),
+      selectionState: editorState.selection.set('hasFocus', false),
       needsRecovery: false,
     };
   }

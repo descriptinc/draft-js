@@ -134,7 +134,7 @@ test('editor selectionstate is updated if new text matches current selection', (
   expect(update).toHaveBeenCalledTimes(1);
 
   const newEditorState = update.mock.calls[0][0];
-  expect(newEditorState.getSelection()).toMatchSnapshot();
+  expect(newEditorState.selection).toMatchSnapshot();
 });
 
 test('editor selectionstate is updated if new text matches current selection and user selected backwards', () => {
@@ -155,7 +155,7 @@ test('editor selectionstate is updated if new text matches current selection and
   expect(update).toHaveBeenCalledTimes(1);
 
   const newEditorState = update.mock.calls[0][0];
-  expect(newEditorState.getSelection()).toMatchSnapshot();
+  expect(newEditorState.selection).toMatchSnapshot();
 });
 
 const HASHTAG_REGEX = /#[a-z]+/g;

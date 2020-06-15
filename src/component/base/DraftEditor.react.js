@@ -503,7 +503,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
     scrollPosition?: DraftScrollPosition,
   ): void => {
     const {editorState} = this.props;
-    const alreadyHasFocus = editorState.getSelection().getHasFocus();
+    const alreadyHasFocus = editorState.selection.getHasFocus();
     const editorNode = this.editor;
 
     if (!editorNode) {
@@ -532,7 +532,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
     // Put the cursor back where it was before the blur.
     if (!alreadyHasFocus) {
       this.update(
-        EditorState.forceSelection(editorState, editorState.getSelection()),
+        EditorState.forceSelection(editorState, editorState.selection),
       );
     }
   };

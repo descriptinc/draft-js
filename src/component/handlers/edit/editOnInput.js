@@ -66,7 +66,7 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent<>): void {
   }
   // at this point editor is not null for sure (after input)
   const castedEditorElement: HTMLElement = (editor.editor: any);
-  const domSelection: SelectionObject = castedEditorElement.ownerDocument.defaultView.getSelection();
+  const domSelection: SelectionObject = castedEditorElement.ownerDocument.defaultView.selection;
 
   const {anchorNode, isCollapsed} = domSelection;
   const isNotTextOrElementNode =
@@ -147,7 +147,7 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent<>): void {
     return;
   }
 
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
 
   // We'll replace the entire leaf with the text content of the target.
   const targetRange = selection.merge({

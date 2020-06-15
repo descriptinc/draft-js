@@ -32,7 +32,7 @@ const isNode = require('isInstanceOfNode');
  */
 function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   const editorState = editor._latestEditorState;
-  const selection = editorState.getSelection();
+  const selection = editorState.selection;
   const element = e.target;
   let scrollPosition;
 
@@ -66,7 +66,7 @@ function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
 function removeFragment(editorState: EditorState): EditorState {
   const newContent = DraftModifier.removeRange(
     editorState.currentContent,
-    editorState.getSelection(),
+    editorState.selection,
     'forward',
   );
   return EditorState.push(editorState, newContent, 'remove-range');
