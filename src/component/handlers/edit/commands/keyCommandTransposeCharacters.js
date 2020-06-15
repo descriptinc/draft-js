@@ -27,12 +27,12 @@ function keyCommandTransposeCharacters(editorState: EditorState): EditorState {
     return editorState;
   }
 
-  const offset = selection.getAnchorOffset();
+  const offset = selection.anchorOffset;
   if (offset === 0) {
     return editorState;
   }
 
-  const blockKey = selection.getanchorKey;
+  const blockKey = selection.anchorKey;
   const content = editorState.currentContent;
   const block = content.getBlockForKey(blockKey);
   const length = block.getLength();
@@ -65,7 +65,7 @@ function keyCommandTransposeCharacters(editorState: EditorState): EditorState {
 
   // After the removal, the insertion target is one character back.
   const selectionAfter = afterRemoval.getSelectionAfter();
-  const targetOffset = selectionAfter.getAnchorOffset() - 1;
+  const targetOffset = selectionAfter.anchorOffset - 1;
   const targetRange = selectionAfter.merge({
     anchorOffset: targetOffset,
     focusOffset: targetOffset,

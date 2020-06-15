@@ -24,7 +24,7 @@ type LeafRange = Readonly<{
   end: number;
 }>;
 
-type DecoratorRange = LeafRange &
+export type DecoratorRange = LeafRange &
   Readonly<{
     decoratorKey: string | null;
     leaves: readonly LeafRange[];

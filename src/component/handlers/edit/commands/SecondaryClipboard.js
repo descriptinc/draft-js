@@ -33,10 +33,10 @@ const SecondaryClipboard = {
     let targetRange: ?SelectionState = null;
 
     if (selection.isCollapsed()) {
-      const anchorKey = selection.getanchorKey;
+      const anchorKey = selection.anchorKey;
       const blockEnd = content.getBlockForKey(anchorKey).getLength();
 
-      if (blockEnd === selection.getAnchorOffset()) {
+      if (blockEnd === selection.anchorOffset) {
         const keyAfter = content.getKeyAfter(anchorKey);
         if (keyAfter == null) {
           return editorState;

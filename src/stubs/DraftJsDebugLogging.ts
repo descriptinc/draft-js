@@ -6,8 +6,8 @@
  *
  */
 
-const debugLogging = {
-  logBlockedSelectionEvent: () => null,
-  logSelectionStateFailure: () => null,
+const DraftJsDebugLogging = {
+  logBlockedSelectionEvent: (..._: any[]) => null,
+  logSelectionStateFailure: (..._: any[]) => null,
 };
-export default debugLogging;
+export default DraftJsDebugLogging;

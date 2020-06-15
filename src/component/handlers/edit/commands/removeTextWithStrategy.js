@@ -34,7 +34,7 @@ function removeTextWithStrategy(
   const selection = editorState.selection;
   const content = editorState.currentContent;
   let target = selection;
-  const anchorKey = selection.getanchorKey;
+  const anchorKey = selection.anchorKey;
   const focusKey = selection.focusKey;
   const anchorBlock = content.getBlockForKey(anchorKey);
   if (experimentalTreeDataSupport) {
@@ -53,7 +53,7 @@ function removeTextWithStrategy(
       }
       if (experimentalTreeDataSupport) {
         const isAtEndOfBlock =
-          selection.getAnchorOffset() ===
+          selection.anchorOffset ===
           content.getBlockForKey(anchorKey).getLength();
         if (isAtEndOfBlock) {
           const anchorBlockSibling = content.getBlockForKey(

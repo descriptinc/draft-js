@@ -26,7 +26,7 @@ function keyCommandDeleteWord(editorState: EditorState): EditorState {
     editorState,
     strategyState => {
       const selection = strategyState.selection;
-      const offset = selection.getStartOffset();
+      const offset = getStartOffset(selection);
       const key = selection.getStartKey();
       const content = strategyState.currentContent;
       const text = content

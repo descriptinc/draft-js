@@ -119,8 +119,8 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
     if (
       !isCollapsed(selection) ||
-      selection.getAnchorOffset() ||
-      selection.getFocusOffset() ||
+      selection.anchorOffset ||
+      selection.focusOffset ||
       (currentBlock.type === 'unstyled' &&
         previousBlockKey &&
         content.getBlockForKey(previousBlockKey).type !== 'atomic')
@@ -294,7 +294,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
     maxDepth: number,
   ): EditorState => {
     const selection = editorState.selection;
-    const key = selection.getanchorKey;
+    const key = selection.anchorKey;
     if (key !== selection.focusKey) {
       return editorState;
     }
@@ -375,7 +375,7 @@ const NestedRichTextEditorUtil: RichTextUtils = {
 
   toggleCode: (editorState: EditorState): EditorState => {
     const selection = editorState.selection;
-    const anchorKey = selection.getanchorKey;
+    const anchorKey = selection.anchorKey;
     const focusKey = selection.focusKey;
 
     if (isCollapsed(selection) || anchorKey !== focusKey) {
@@ -454,9 +454,9 @@ const NestedRichTextEditorUtil: RichTextUtils = {
    */
   tryToRemoveBlockStyle: (editorState: EditorState): ?ContentState => {
     const selection = editorState.selection;
-    const offset = selection.getAnchorOffset();
+    const offset = selection.anchorOffset;
     if (isCollapsed(selection) && offset === 0) {
-      const key = selection.getanchorKey;
+      const key = selection.anchorKey;
       const content = editorState.currentContent;
       const block = content.getBlockForKey(key);
 

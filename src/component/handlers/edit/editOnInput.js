@@ -66,7 +66,7 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent<>): void {
   }
   // at this point editor is not null for sure (after input)
   const castedEditorElement: HTMLElement = (editor.editor: any);
-  const domSelection: SelectionObject = castedEditorElement.ownerDocument.defaultView.selection;
+  const domSelection = castedEditorElement.ownerDocument.defaultView.getSelection() as SelectionObject;
 
   const {anchorNode, isCollapsed} = domSelection;
   const isNotTextOrElementNode =
@@ -193,8 +193,8 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent<>): void {
     // and adjust it based on the number of characters changed during the
     // mutation.
     const charDelta = domText.length - modelText.length;
-    startOffset = selection.getStartOffset();
-    endOffset = selection.getEndOffset();
+    startOffset = getStartOffset(selection);
+    endOffset = getEndOffset(selection);
 
     anchorOffset = isCollapsed ? endOffset + charDelta : startOffset;
     focusOffset = endOffset + charDelta;

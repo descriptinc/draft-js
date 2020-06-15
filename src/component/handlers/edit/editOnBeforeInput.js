@@ -115,8 +115,8 @@ function editOnBeforeInput(
   // reduces re-renders and preserves spellcheck highlighting. If the selection
   // is not collapsed, we will re-render.
   const selection = editorState.selection;
-  const selectionStart = selection.getStartOffset();
-  const anchorKey = selection.getanchorKey;
+  const selectionStart = getStartOffset(selection);
+  const anchorKey = selection.anchorKey;
 
   if (!selection.isCollapsed()) {
     e.preventDefault();

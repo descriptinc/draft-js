@@ -8,13 +8,9 @@
  * @flow strict
  * @emails oncall+draft_js
  */
-import isElement from './isElement';
 
-export default function isHTMLBRElement(
-  node?: Node | null,
-): node is HTMLBRElement {
-  if (!node || !node.ownerDocument) {
-    return false;
-  }
-  return isElement(node) && node.nodeName === 'BR';
-}
+export type DraftOffsetKeyPath = {
+  blockKey: string;
+  decoratorKey: number;
+  leafKey: number;
+};

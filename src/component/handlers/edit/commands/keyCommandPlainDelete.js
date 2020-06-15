@@ -28,8 +28,8 @@ function keyCommandPlainDelete(editorState: EditorState): EditorState {
     strategyState => {
       const selection = strategyState.selection;
       const content = strategyState.currentContent;
-      const key = selection.getanchorKey;
-      const offset = selection.getAnchorOffset();
+      const key = selection.anchorKey;
+      const offset = selection.anchorOffset;
       const charAhead = content.getBlockForKey(key).text[offset];
       return moveSelectionForward(
         strategyState,

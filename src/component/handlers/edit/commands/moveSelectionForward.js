@@ -35,7 +35,7 @@ function moveSelectionForward(
     'moveSelectionForward should only be called with a collapsed SelectionState',
   );
   const key = selection.getStartKey();
-  const offset = selection.getStartOffset();
+  const offset = getStartOffset(selection);
   const content = editorState.currentContent;
 
   let focusKey = key;

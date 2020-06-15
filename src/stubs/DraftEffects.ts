@@ -6,7 +6,7 @@
  *
  */
 
-const effects = {
+const DraftEffects = {
   initODS: function() {
     //
   },
@@ -14,4 +14,4 @@ const effects = {
     //
   },
 };
-export default effects;
+export default DraftEffects;

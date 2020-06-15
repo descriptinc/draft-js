@@ -6,7 +6,7 @@
  *
  *
  */
-export function nullthrows(x: any): void {
+export function nullthrows<T>(x: T | null | undefined): T {
   if (x != null) {
     return x;
   }

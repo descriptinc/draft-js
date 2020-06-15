@@ -26,7 +26,7 @@ function keyCommandBackspaceWord(editorState: EditorState): EditorState {
     editorState,
     strategyState => {
       const selection = strategyState.selection;
-      const offset = selection.getStartOffset();
+      const offset = getStartOffset(selection);
       // If there are no words before the cursor, remove the preceding newline.
       if (offset === 0) {
         return moveSelectionBackward(strategyState, 1);

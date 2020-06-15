@@ -4,14 +4,11 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @format
- * @flow strict
  * @emails oncall+draft_js
  */
+import {SelectionState} from '../../model/immutable/SelectionState';
 
-export default function isElement(node: Node | undefined | null): boolean {
-  if (!node || !node.ownerDocument) {
-    return false;
-  }
-  return node.nodeType === Node.ELEMENT_NODE;
-}
+export type DOMDerivedSelection = {
+  selectionState: SelectionState;
+  needsRecovery: boolean;
+};

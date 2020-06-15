@@ -31,7 +31,7 @@ import {flatMap, map} from '../descript/Iterables';
 import {BlockMap, mergeMapUpdates} from './BlockMap';
 import {getInlineStyleAt} from './ContentBlockNode';
 import EditorBidiService from './EditorBidiService';
-import BlockTree from './BlockTree';
+import BlockTree, {DecoratorRange} from './BlockTree';
 import {BlockNodeRecord} from './BlockNodeRecord';
 import {EMPTY_SET} from './CharacterMetadata';
 
@@ -47,7 +47,7 @@ export type EditorState = Readonly<{
   lastChangeType: EditorChangeType | null;
   nativelyRenderedContent: ContentState | null;
   selection: SelectionState;
-  treeMap: ReadonlyMap<string, readonly any[]>;
+  treeMap: ReadonlyMap<string, readonly DecoratorRange[]>;
 
   // FIXME [mvp]: skipping undo/redo logic in refactor because we don't use it
   allowUndo: boolean;
@@ -202,7 +202,7 @@ export function getCurrentInlineStyle(
 export function getBlockTree(
   {treeMap}: EditorState,
   blockKey: string,
-): readonly any[] {
+): readonly DecoratorRange[] {
   const res = treeMap.get(blockKey);
   if (!res) {
     throw new Error('Invalid block key');
@@ -424,7 +424,7 @@ function regenerateTreeForNewBlocks(
   editorState: EditorState,
   newBlockMap: BlockMap,
   decorator?: DraftDecoratorType | null,
-): ReadonlyMap<string, readonly any[]> {
+): ReadonlyMap<string, readonly DecoratorRange[]> {
   // TODO [mvp]: using global entity map
   // const contentState = editorState
   //   .currentContent
@@ -466,7 +466,7 @@ function regenerateTreeForNewDecorator(
   previousTreeMap: ReadonlyMap<string, readonly any[]>,
   decorator: DraftDecoratorType,
   existingDecorator: DraftDecoratorType,
-): ReadonlyMap<string, readonly any[]> {
+): ReadonlyMap<string, readonly DecoratorRange[]> {
   const iter = flatMap(previousTreeMap, (entry):
     | [string, readonly any[]]
     | undefined => {

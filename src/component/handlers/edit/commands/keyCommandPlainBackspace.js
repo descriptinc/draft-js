@@ -28,8 +28,8 @@ function keyCommandPlainBackspace(editorState: EditorState): EditorState {
     strategyState => {
       const selection = strategyState.selection;
       const content = strategyState.currentContent;
-      const key = selection.getanchorKey;
-      const offset = selection.getAnchorOffset();
+      const key = selection.anchorKey;
+      const offset = selection.anchorOffset;
       const charBehind = content.getBlockForKey(key).text[offset - 1];
       return moveSelectionBackward(
         strategyState,

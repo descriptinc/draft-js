@@ -36,7 +36,7 @@ function moveSelectionBackward(
   );
   const content = editorState.currentContent;
   const key = selection.getStartKey();
-  const offset = selection.getStartOffset();
+  const offset = getStartOffset(selection);
 
   let focusKey = key;
   let focusOffset = 0;

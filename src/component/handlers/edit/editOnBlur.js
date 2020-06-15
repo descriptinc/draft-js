@@ -35,7 +35,7 @@ function editOnBlur(editor: DraftEditor, e: SyntheticEvent<HTMLElement>): void {
     !Boolean(editor.props.preserveSelectionOnBlur) &&
     getActiveElement(ownerDocument) === ownerDocument.body
   ) {
-    const selection: SelectionObject = ownerDocument.defaultView.selection;
+    const selection = ownerDocument.defaultView.getSelection() as SelectionObject;
     const editorNode = editor.editor;
     if (
       selection.rangeCount === 1 &&
