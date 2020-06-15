@@ -32,6 +32,7 @@ export function mergeMapUpdates<T>(
         const newBlock = updates[key];
         if (newBlock === null) {
           // remove this block from the map
+          didChange = true;
           return undefined;
         }
         if (!newBlock || newBlock === existingBlock) {
