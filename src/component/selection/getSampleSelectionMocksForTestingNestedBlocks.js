@@ -28,22 +28,22 @@ const getSampleSelectionMocksForTestingNestedBlocks = (): Object => {
   const offsetKeys = ['a-0-0', 'b-0-0', 'c-0-0', 'd-0-0'];
 
   const contentBlocks = [
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'a',
       nextSibling: 'c',
       children: Immutable.List.of('b'),
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'b',
       parent: 'a',
       text: text[1],
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'c',
       prevSibling: 'a',
       children: Immutable.List.of('d'),
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'd',
       parent: 'c',
       text: text[3],

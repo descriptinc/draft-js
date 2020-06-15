@@ -39,36 +39,36 @@ const contentBlocks = [
 ];
 
 const contentBlockNodes = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     text: 'Alpha',
     nextSibling: 'B',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     text: '',
     children: List(['C']),
     nextSibling: 'D',
     prevSibling: 'A',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: 'B',
     text: 'Charlie',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'D',
     text: '',
     prevSibling: 'B',
     children: List(['E', 'F']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'E',
     parent: 'D',
     nextSibling: 'F',
     text: 'Elephant',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'F',
     parent: 'D',
     prevSibling: 'E',

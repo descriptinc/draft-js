@@ -26,62 +26,62 @@ const {editorState, contentState, selectionState} = getSampleStateForTesting();
 const {onBackspace, onDelete, onTab} = NestedRichTextEditorUtil;
 
 const contentBlockNodes = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     nextSibling: 'B',
     text: 'Alpha',
     type: 'blockquote',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     prevSibling: 'A',
     nextSibling: 'G',
     type: 'ordered-list-item',
     children: List(['C', 'F']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'B',
     key: 'C',
     nextSibling: 'F',
     type: 'blockquote',
     children: List(['D', 'E']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'C',
     key: 'D',
     nextSibling: 'E',
     type: 'header-two',
     text: 'Delta',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'C',
     key: 'E',
     prevSibling: 'D',
     type: 'unstyled',
     text: 'Elephant',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'B',
     key: 'F',
     prevSibling: 'C',
     type: 'code-block',
     text: 'Fire',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'G',
     prevSibling: 'B',
     nextSibling: 'H',
     type: 'ordered-list-item',
     text: 'Gorila',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'H',
     prevSibling: 'G',
     nextSibling: 'I',
     text: ' ',
     type: 'atomic',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'I',
     prevSibling: 'H',
     text: 'last',
@@ -331,14 +331,14 @@ test('onDelete is a no-op the end of a leaf', () => {
  * Tests for onTab
  */
 const contentBlockNodes2 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     nextSibling: 'B',
     text: 'Item 1',
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     prevSibling: 'A',
     nextSibling: 'C',
@@ -346,7 +346,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     prevSibling: 'B',
     nextSibling: 'J',
@@ -354,7 +354,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List(['D', 'E', 'F', 'I']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'D',
     parent: 'C',
     prevSibling: null,
@@ -363,7 +363,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'E',
     parent: 'C',
     prevSibling: 'D',
@@ -372,7 +372,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'F',
     parent: 'C',
     prevSibling: 'E',
@@ -381,7 +381,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List(['G', 'H']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'G',
     parent: 'F',
     prevSibling: null,
@@ -390,7 +390,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'H',
     parent: 'F',
     prevSibling: 'G',
@@ -399,7 +399,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'I',
     parent: 'C',
     prevSibling: 'F',
@@ -408,7 +408,7 @@ const contentBlockNodes2 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'J',
     prevSibling: 'C',
     nextSibling: null,
@@ -463,7 +463,7 @@ test('onTab when siblings are at the same depth creates a new parent', () => {
 });
 
 const contentBlockNodes3 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -472,7 +472,7 @@ const contentBlockNodes3 = [
     nextSibling: 'X',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -481,7 +481,7 @@ const contentBlockNodes3 = [
     nextSibling: 'C',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -490,7 +490,7 @@ const contentBlockNodes3 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: null,
     text: 'charlie',
@@ -499,7 +499,7 @@ const contentBlockNodes3 = [
     nextSibling: 'Y',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'Y',
     parent: null,
     text: '',
@@ -508,7 +508,7 @@ const contentBlockNodes3 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'D',
     parent: 'Y',
     text: 'delta',
@@ -517,7 +517,7 @@ const contentBlockNodes3 = [
     nextSibling: 'E',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'E',
     parent: 'Y',
     text: 'epsilon',
@@ -540,7 +540,7 @@ test('onTab when both siblings are non-leaf merges blocks 1', () => {
 });
 
 const contentBlockNodes4 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -549,7 +549,7 @@ const contentBlockNodes4 = [
     nextSibling: 'X',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -558,7 +558,7 @@ const contentBlockNodes4 = [
     nextSibling: 'D',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -567,7 +567,7 @@ const contentBlockNodes4 = [
     nextSibling: 'Y',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'Y',
     parent: 'X',
     text: '',
@@ -576,7 +576,7 @@ const contentBlockNodes4 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: 'Y',
     text: 'charlie',
@@ -585,7 +585,7 @@ const contentBlockNodes4 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'D',
     parent: null,
     text: 'delta',
@@ -594,7 +594,7 @@ const contentBlockNodes4 = [
     nextSibling: 'Z',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'Z',
     parent: null,
     text: '',
@@ -603,7 +603,7 @@ const contentBlockNodes4 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'E',
     parent: 'Z',
     text: 'epsilon',
@@ -662,14 +662,14 @@ test('onTab (untab) on a last child moves block as next sibling of parent', () =
 });
 
 const contentBlockNodes5 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     nextSibling: 'X',
     text: 'alpha',
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'X',
     prevSibling: 'A',
     nextSibling: 'G',
@@ -677,7 +677,7 @@ const contentBlockNodes5 = [
     type: 'ordered-list-item',
     children: List(['B', 'C', 'D', 'E', 'F']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     parent: 'X',
     prevSibling: null,
@@ -686,7 +686,7 @@ const contentBlockNodes5 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: 'X',
     prevSibling: 'B',
@@ -695,7 +695,7 @@ const contentBlockNodes5 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'D',
     parent: 'X',
     prevSibling: 'C',
@@ -704,7 +704,7 @@ const contentBlockNodes5 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'E',
     parent: 'X',
     prevSibling: 'D',
@@ -713,7 +713,7 @@ const contentBlockNodes5 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'F',
     parent: 'X',
     prevSibling: 'E',
@@ -722,7 +722,7 @@ const contentBlockNodes5 = [
     type: 'ordered-list-item',
     children: List([]),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'G',
     prevSibling: 'X',
     nextSibling: null,
@@ -745,7 +745,7 @@ test('onTab (untab) on a middle child splits the block at that child', () => {
 });
 
 const contentBlockNodes6 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -754,7 +754,7 @@ const contentBlockNodes6 = [
     nextSibling: 'X',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -763,7 +763,7 @@ const contentBlockNodes6 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -772,7 +772,7 @@ const contentBlockNodes6 = [
     nextSibling: 'Y',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'Y',
     parent: 'X',
     text: '',
@@ -781,7 +781,7 @@ const contentBlockNodes6 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: 'Y',
     text: 'charlie',
@@ -805,7 +805,7 @@ test('onTab (untab) unnests non-leaf next sibling', () => {
 });
 
 const contentBlockNodes7 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -814,7 +814,7 @@ const contentBlockNodes7 = [
     nextSibling: 'X',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -823,7 +823,7 @@ const contentBlockNodes7 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -832,7 +832,7 @@ const contentBlockNodes7 = [
     nextSibling: 'Y',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'Y',
     parent: 'X',
     text: '',
@@ -841,7 +841,7 @@ const contentBlockNodes7 = [
     nextSibling: 'E',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: 'Y',
     text: 'charlie',
@@ -850,7 +850,7 @@ const contentBlockNodes7 = [
     nextSibling: 'D',
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'D',
     parent: 'Y',
     text: 'delta',
@@ -859,7 +859,7 @@ const contentBlockNodes7 = [
     nextSibling: null,
     type: 'ordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'E',
     parent: 'X',
     text: 'epsilon',
@@ -884,7 +884,7 @@ test('onTab (untab) merges adjacent non-leaf blocks', () => {
 
 // Some backspace operations have similar behavior to untab
 const contentBlockNodes8 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -894,7 +894,7 @@ const contentBlockNodes8 = [
     depth: 0,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -904,7 +904,7 @@ const contentBlockNodes8 = [
     depth: 0,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -914,7 +914,7 @@ const contentBlockNodes8 = [
     depth: 1,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: 'X',
     text: '',
@@ -940,7 +940,7 @@ test('onBackspace at start of nested block unnests it 1', () => {
 });
 
 const contentBlockNodes9 = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -950,7 +950,7 @@ const contentBlockNodes9 = [
     depth: 0,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -960,7 +960,7 @@ const contentBlockNodes9 = [
     depth: 0,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -970,7 +970,7 @@ const contentBlockNodes9 = [
     depth: 1,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'Y',
     parent: 'X',
     text: '',
@@ -980,7 +980,7 @@ const contentBlockNodes9 = [
     depth: 1,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'C',
     parent: 'Y',
     text: 'charlie',
@@ -990,7 +990,7 @@ const contentBlockNodes9 = [
     depth: 2,
     type: 'unordered-list-item',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'D',
     parent: 'Y',
     text: '',

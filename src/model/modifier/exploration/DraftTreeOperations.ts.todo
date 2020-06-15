@@ -169,7 +169,7 @@ const createNewParent = (blockMap: BlockMap, key: string): BlockMap => {
   verifyTree(blockMap);
   const block = blockMap.get(key);
   invariant(block != null, 'block must exist in block map');
-  const newParent = new ContentBlockNode({
+  const newParent = makeContentBlockNode({
     key: generateRandomKey(),
     text: '',
     depth: block.depth,

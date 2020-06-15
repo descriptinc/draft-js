@@ -567,7 +567,7 @@ test("mustn't move atomic next to itself", () => {
 //         contentState.set(
 //           'blockMap',
 //           BlockMapBuilder.createFromArray([
-//             new ContentBlockNode({
+//             makeContentBlockNode({
 //               text: 'first block',
 //               key: 'A',
 //             }),

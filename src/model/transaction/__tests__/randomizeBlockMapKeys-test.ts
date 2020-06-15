@@ -57,24 +57,24 @@ test('must be able to randomize keys for ContentBlocks BlockMap', () => {
 
 test('must be able to randomize keys for ContentBlockNodes BlockMap and update reference links to the new keys', () => {
   assertRandomizeBlockMapKeys([
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'A',
       text: '',
       children: List(['B', 'D']),
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'B',
       parent: 'A',
       children: List(['C']),
       nextSibling: 'D',
       text: '',
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'C',
       parent: 'B',
       text: 'X',
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'D',
       parent: 'A',
       prevSibling: 'B',
@@ -104,24 +104,24 @@ test('must be able to randomize keys for ContentBlockNodes BlockMap and update r
  */
 test('must be able to randomize keys for ContentBlockNodes BlockMap and make orphan blocks become root blocks', () => {
   assertRandomizeBlockMapKeys([
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'D',
       parent: 'C',
       text: 'Delta',
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'E',
       parent: 'A',
       prevSibling: 'B',
       nextSibling: 'G',
       children: List(['F']),
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'F',
       parent: 'E',
       text: 'Fire',
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'G',
       parent: 'A',
       prevSibling: 'E',

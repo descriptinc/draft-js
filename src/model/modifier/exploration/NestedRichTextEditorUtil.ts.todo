@@ -508,7 +508,7 @@ const onUntab = (blockMap: BlockMap, block: ContentBlockNode): BlockMap => {
     const prevChildren = existingChildren.slice(0, blockIndex + 1);
     const nextChildren = existingChildren.slice(blockIndex + 1);
     blockMap = blockMap.set(parentKey, parent.merge({children: prevChildren}));
-    const newBlock = new ContentBlockNode({
+    const newBlock = makeContentBlockNode({
       key: generateRandomKey(),
       text: '',
       depth: parent.getDepth(),

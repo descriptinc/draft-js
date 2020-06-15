@@ -24,42 +24,42 @@ const {List} = Immutable;
 const {contentState, selectionState} = getSampleStateForTesting();
 
 const contentBlockNodes = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     nextSibling: 'B',
     text: 'Alpha',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     prevSibling: 'A',
     nextSibling: 'G',
     children: List(['C', 'F']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'B',
     key: 'C',
     nextSibling: 'F',
     children: List(['D', 'E']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'C',
     key: 'D',
     nextSibling: 'E',
     text: 'Delta',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'C',
     key: 'E',
     prevSibling: 'D',
     text: 'Elephant',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'B',
     key: 'F',
     prevSibling: 'C',
     text: 'Fire',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'G',
     prevSibling: 'B',
     text: 'Gorila',

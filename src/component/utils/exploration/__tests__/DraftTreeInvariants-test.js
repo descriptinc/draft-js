@@ -22,7 +22,7 @@ test('single block', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'Charlie',
@@ -39,7 +39,7 @@ test('simple valid tree', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'alpha',
@@ -47,7 +47,7 @@ test('simple valid tree', () =>
           prevSibling: null,
           nextSibling: 'B',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: null,
           text: '',
@@ -55,7 +55,7 @@ test('simple valid tree', () =>
           prevSibling: 'A',
           nextSibling: 'E',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: 'B',
           text: 'charlie',
@@ -63,7 +63,7 @@ test('simple valid tree', () =>
           prevSibling: null,
           nextSibling: 'D',
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: 'B',
           text: 'delta',
@@ -71,7 +71,7 @@ test('simple valid tree', () =>
           prevSibling: 'C',
           nextSibling: null,
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: null,
           text: 'epsilon',
@@ -87,7 +87,7 @@ test('complex valid tree', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: '',
@@ -95,7 +95,7 @@ test('complex valid tree', () =>
           prevSibling: 'X',
           nextSibling: 'C',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: 'A',
           text: 'beta',
@@ -103,7 +103,7 @@ test('complex valid tree', () =>
           prevSibling: null,
           nextSibling: 'D',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: null,
           text: 'charlie',
@@ -111,7 +111,7 @@ test('complex valid tree', () =>
           prevSibling: 'A',
           nextSibling: null,
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: 'A',
           text: '',
@@ -119,7 +119,7 @@ test('complex valid tree', () =>
           prevSibling: 'B',
           nextSibling: 'Z',
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: 'D',
           text: 'epsilon',
@@ -127,7 +127,7 @@ test('complex valid tree', () =>
           prevSibling: null,
           nextSibling: 'F',
         }),
-        F: new ContentBlockNode({
+        F: makeContentBlockNode({
           key: 'F',
           parent: 'D',
           text: 'fish',
@@ -135,7 +135,7 @@ test('complex valid tree', () =>
           prevSibling: 'E',
           nextSibling: 'G',
         }),
-        G: new ContentBlockNode({
+        G: makeContentBlockNode({
           key: 'G',
           parent: 'D',
           text: 'gamma',
@@ -143,7 +143,7 @@ test('complex valid tree', () =>
           prevSibling: 'F',
           nextSibling: null,
         }),
-        X: new ContentBlockNode({
+        X: makeContentBlockNode({
           key: 'X',
           parent: null,
           text: '',
@@ -151,7 +151,7 @@ test('complex valid tree', () =>
           prevSibling: null,
           nextSibling: 'A',
         }),
-        Y: new ContentBlockNode({
+        Y: makeContentBlockNode({
           key: 'Y',
           parent: 'X',
           text: 'yeti',
@@ -159,7 +159,7 @@ test('complex valid tree', () =>
           prevSibling: null,
           nextSibling: null,
         }),
-        Z: new ContentBlockNode({
+        Z: makeContentBlockNode({
           key: 'Z',
           parent: 'A',
           text: 'zeta',
@@ -175,7 +175,7 @@ test('missing child -> parent pointer', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'alpha',
@@ -183,7 +183,7 @@ test('missing child -> parent pointer', () =>
           prevSibling: null,
           nextSibling: 'B',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: null,
           text: '',
@@ -191,7 +191,7 @@ test('missing child -> parent pointer', () =>
           prevSibling: 'A',
           nextSibling: 'E',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: 'B',
           text: 'charlie',
@@ -199,7 +199,7 @@ test('missing child -> parent pointer', () =>
           prevSibling: null,
           nextSibling: 'D',
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: null, // should be B
           text: 'delta',
@@ -207,7 +207,7 @@ test('missing child -> parent pointer', () =>
           prevSibling: 'C',
           nextSibling: null,
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: null,
           text: 'epsilon',
@@ -223,7 +223,7 @@ test('missing parent -> child pointer', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'alpha',
@@ -231,7 +231,7 @@ test('missing parent -> child pointer', () =>
           prevSibling: null,
           nextSibling: 'B',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: null,
           text: '',
@@ -239,7 +239,7 @@ test('missing parent -> child pointer', () =>
           prevSibling: 'A',
           nextSibling: 'E',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: 'B',
           text: 'charlie',
@@ -247,7 +247,7 @@ test('missing parent -> child pointer', () =>
           prevSibling: null,
           nextSibling: 'D',
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: 'B',
           text: 'delta',
@@ -255,7 +255,7 @@ test('missing parent -> child pointer', () =>
           prevSibling: 'C',
           nextSibling: null,
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: null,
           text: 'epsilon',
@@ -272,7 +272,7 @@ test('missing prev pointer', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'alpha',
@@ -280,7 +280,7 @@ test('missing prev pointer', () =>
           prevSibling: null,
           nextSibling: 'B',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: null,
           text: '',
@@ -288,7 +288,7 @@ test('missing prev pointer', () =>
           prevSibling: 'A',
           nextSibling: 'E',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: 'B',
           text: 'charlie',
@@ -296,7 +296,7 @@ test('missing prev pointer', () =>
           prevSibling: null,
           nextSibling: 'D',
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: 'B',
           text: 'delta',
@@ -304,7 +304,7 @@ test('missing prev pointer', () =>
           prevSibling: null, // should be D
           nextSibling: null,
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: null,
           text: 'epsilon',
@@ -321,7 +321,7 @@ test('missing nextSibling pointer', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'alpha',
@@ -329,7 +329,7 @@ test('missing nextSibling pointer', () =>
           prevSibling: null,
           nextSibling: 'B',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: null,
           text: '',
@@ -337,7 +337,7 @@ test('missing nextSibling pointer', () =>
           prevSibling: 'A',
           nextSibling: null, // should be E
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: 'B',
           text: 'charlie',
@@ -345,7 +345,7 @@ test('missing nextSibling pointer', () =>
           prevSibling: null,
           nextSibling: 'D',
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: 'B',
           text: 'delta',
@@ -353,7 +353,7 @@ test('missing nextSibling pointer', () =>
           prevSibling: 'C',
           nextSibling: null,
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: null,
           text: 'epsilon',
@@ -370,7 +370,7 @@ test('missing child -> parent connection', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'alpha',
@@ -378,7 +378,7 @@ test('missing child -> parent connection', () =>
           prevSibling: null,
           nextSibling: 'B',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: null,
           text: '',
@@ -386,7 +386,7 @@ test('missing child -> parent connection', () =>
           prevSibling: 'A',
           nextSibling: 'E',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: 'B',
           text: 'charlie',
@@ -394,7 +394,7 @@ test('missing child -> parent connection', () =>
           prevSibling: 'D', // should be null
           nextSibling: 'D',
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: 'B',
           text: 'delta',
@@ -402,7 +402,7 @@ test('missing child -> parent connection', () =>
           prevSibling: 'C',
           nextSibling: 'C', // should be null
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: null,
           text: 'epsilon',
@@ -419,7 +419,7 @@ test('missing child -> parent connection', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: 'alpha',
@@ -427,7 +427,7 @@ test('missing child -> parent connection', () =>
           prevSibling: null,
           nextSibling: 'B',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: null,
           text: '',
@@ -435,7 +435,7 @@ test('missing child -> parent connection', () =>
           prevSibling: 'A',
           nextSibling: 'E',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: 'B',
           text: 'charlie', // should be ''
@@ -443,7 +443,7 @@ test('missing child -> parent connection', () =>
           prevSibling: null,
           nextSibling: 'D',
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: 'B',
           text: 'delta',
@@ -451,7 +451,7 @@ test('missing child -> parent connection', () =>
           prevSibling: 'C',
           nextSibling: null,
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: null,
           text: 'epsilon',
@@ -459,7 +459,7 @@ test('missing child -> parent connection', () =>
           prevSibling: 'B',
           nextSibling: null,
         }),
-        F: new ContentBlockNode({
+        F: makeContentBlockNode({
           key: 'F',
           parent: 'C',
           text: 'fish',
@@ -476,7 +476,7 @@ test('unconnected tree', () =>
   expect(
     DraftTreeInvariants.isValidTree(
       Immutable.OrderedMap({
-        A: new ContentBlockNode({
+        A: makeContentBlockNode({
           key: 'A',
           parent: null,
           text: '',
@@ -484,7 +484,7 @@ test('unconnected tree', () =>
           prevSibling: 'X',
           nextSibling: 'C',
         }),
-        B: new ContentBlockNode({
+        B: makeContentBlockNode({
           key: 'B',
           parent: 'A',
           text: 'beta',
@@ -492,7 +492,7 @@ test('unconnected tree', () =>
           prevSibling: null,
           nextSibling: 'Z',
         }),
-        C: new ContentBlockNode({
+        C: makeContentBlockNode({
           key: 'C',
           parent: null,
           text: 'charlie',
@@ -500,7 +500,7 @@ test('unconnected tree', () =>
           prevSibling: 'A',
           nextSibling: null,
         }),
-        D: new ContentBlockNode({
+        D: makeContentBlockNode({
           key: 'D',
           parent: null,
           text: '',
@@ -508,7 +508,7 @@ test('unconnected tree', () =>
           prevSibling: null,
           nextSibling: null,
         }),
-        E: new ContentBlockNode({
+        E: makeContentBlockNode({
           key: 'E',
           parent: 'D',
           text: 'epsilon',
@@ -516,7 +516,7 @@ test('unconnected tree', () =>
           prevSibling: null,
           nextSibling: 'F',
         }),
-        F: new ContentBlockNode({
+        F: makeContentBlockNode({
           key: 'F',
           parent: 'D',
           text: 'fish',
@@ -524,7 +524,7 @@ test('unconnected tree', () =>
           prevSibling: 'E',
           nextSibling: 'G',
         }),
-        G: new ContentBlockNode({
+        G: makeContentBlockNode({
           key: 'G',
           parent: 'D',
           text: 'gamma',
@@ -532,7 +532,7 @@ test('unconnected tree', () =>
           prevSibling: 'F',
           nextSibling: null,
         }),
-        X: new ContentBlockNode({
+        X: makeContentBlockNode({
           key: 'X',
           parent: null,
           text: '',
@@ -540,7 +540,7 @@ test('unconnected tree', () =>
           prevSibling: null,
           nextSibling: 'A',
         }),
-        Y: new ContentBlockNode({
+        Y: makeContentBlockNode({
           key: 'Y',
           parent: 'X',
           text: 'yeti',
@@ -548,7 +548,7 @@ test('unconnected tree', () =>
           prevSibling: null,
           nextSibling: null,
         }),
-        Z: new ContentBlockNode({
+        Z: makeContentBlockNode({
           key: 'Z',
           parent: 'A',
           text: 'zeta',

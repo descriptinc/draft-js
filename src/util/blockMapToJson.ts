@@ -20,7 +20,7 @@ export function blockNodeToJson(block: BlockNodeRecord): Record<string, any> {
   };
 }
 
-export function blockMapToJsonArray(blockMap: BlockMap): {} {
+export function blockMapToJsonArray(blockMap: BlockMap): any[] {
   return Array.from(blockMap.values()).map(blockNodeToJson);
 }
 

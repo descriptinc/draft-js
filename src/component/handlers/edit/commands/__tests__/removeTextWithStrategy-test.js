@@ -38,62 +38,62 @@ const {List} = Immutable;
 const {contentState} = getSampleStateForTesting();
 
 const contentBlockNodes = [
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     nextSibling: 'B',
     text: 'Alpha',
     type: 'blockquote',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'B',
     prevSibling: 'A',
     nextSibling: 'G',
     type: 'ordered-list-item',
     children: List(['C', 'F']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'B',
     key: 'C',
     nextSibling: 'F',
     type: 'blockquote',
     children: List(['D', 'E']),
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'C',
     key: 'D',
     nextSibling: 'E',
     type: 'header-two',
     text: 'Delta',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'C',
     key: 'E',
     prevSibling: 'D',
     type: 'unstyled',
     text: 'Elephant',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     parent: 'B',
     key: 'F',
     prevSibling: 'C',
     type: 'code-block',
     text: 'Fire',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'G',
     prevSibling: 'B',
     nextSibling: 'H',
     type: 'ordered-list-item',
     text: 'Gorila',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'H',
     prevSibling: 'G',
     nextSibling: 'I',
     text: ' ',
     type: 'atomic',
   }),
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'I',
     prevSibling: 'H',
     text: 'last',

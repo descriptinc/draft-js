@@ -34,7 +34,7 @@ const selectionState = new SelectionState({
 });
 
 const contentState = ContentState.createFromBlockArray([
-  new ContentBlockNode({
+  makeContentBlockNode({
     key: 'A',
     text: 'Alpha',
     type: 'blockquote',
@@ -74,27 +74,27 @@ test('renders ContentBlockNode', () => {
 
 test('renders ContentBlockNodes', () => {
   const contentState = ContentState.createFromBlockArray([
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'A',
       text: '',
       type: 'blockquote',
       children: List(['B']),
       nextSibling: 'D',
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       parent: 'A',
       key: 'B',
       text: 'fist list item',
       type: 'ordered-list-item',
       children: List(['C']),
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       parent: 'B',
       key: 'C',
       text: 'header inside list',
       type: 'header-one',
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'D',
       prevSibling: 'A',
       text: 'header two',
@@ -110,13 +110,13 @@ test('renders ContentBlockNodes', () => {
 
 test('renders ContentBlockNodes with root blocks that have wrapperTemplate', () => {
   const contentState = ContentState.createFromBlockArray([
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'A',
       text: 'list one',
       type: 'ordered-list-item',
       nextSibling: 'B',
     }),
-    new ContentBlockNode({
+    makeContentBlockNode({
       key: 'B',
       text: 'list two',
       type: 'ordered-list-item',

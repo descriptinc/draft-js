@@ -18,7 +18,7 @@ const DraftTreeOperations = require('DraftTreeOperations');
 
 const Immutable = require('immutable');
 const blockMap1 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -26,7 +26,7 @@ const blockMap1 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -34,7 +34,7 @@ const blockMap1 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'D',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -42,7 +42,7 @@ const blockMap1 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'C',
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: 'X',
     text: 'charlie',
@@ -50,7 +50,7 @@ const blockMap1 = Immutable.OrderedMap({
     prevSibling: 'B',
     nextSibling: null,
   }),
-  D: new ContentBlockNode({
+  D: makeContentBlockNode({
     key: 'D',
     parent: null,
     text: 'delta',
@@ -134,7 +134,7 @@ test("test replacing a parent's child", () => {
 });
 
 const blockMap2 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -142,7 +142,7 @@ const blockMap2 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -150,7 +150,7 @@ const blockMap2 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'B',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: null,
     text: 'beta',
@@ -158,7 +158,7 @@ const blockMap2 = Immutable.OrderedMap({
     prevSibling: 'X',
     nextSibling: 'C',
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: null,
     text: 'charlie',
@@ -184,7 +184,7 @@ test('test adding an only child to parent', () => {
 });
 
 const blockMap3 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -192,7 +192,7 @@ const blockMap3 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'B',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: null,
     text: 'beta',
@@ -200,7 +200,7 @@ const blockMap3 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'C',
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: null,
     text: 'charlie',
@@ -225,7 +225,7 @@ test("test creating a updating node to become next sibling's child 1", () => {
 });
 
 const blockMap4 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -233,7 +233,7 @@ const blockMap4 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'B',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: null,
     text: 'beta',
@@ -241,7 +241,7 @@ const blockMap4 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -249,7 +249,7 @@ const blockMap4 = Immutable.OrderedMap({
     prevSibling: 'B',
     nextSibling: 'D',
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: 'X',
     text: 'charlie',
@@ -257,7 +257,7 @@ const blockMap4 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: null,
   }),
-  D: new ContentBlockNode({
+  D: makeContentBlockNode({
     key: 'D',
     parent: null,
     text: 'delta',
@@ -274,7 +274,7 @@ test("test creating a updating node to become next sibling's child 2", () => {
 });
 
 const blockMap5 = Immutable.OrderedMap({
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -282,7 +282,7 @@ const blockMap5 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: null,
   }),
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: 'X',
     text: 'alpha',
@@ -290,7 +290,7 @@ const blockMap5 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'B',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -298,7 +298,7 @@ const blockMap5 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'Y',
   }),
-  Y: new ContentBlockNode({
+  Y: makeContentBlockNode({
     key: 'Y',
     parent: 'X',
     text: '',
@@ -306,7 +306,7 @@ const blockMap5 = Immutable.OrderedMap({
     prevSibling: 'B',
     nextSibling: null,
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: 'Y',
     text: 'charlie',
@@ -329,7 +329,7 @@ test("test creating a updating node to become previous sibling's child 1", () =>
 });
 
 const blockMap6 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -337,7 +337,7 @@ const blockMap6 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -345,7 +345,7 @@ const blockMap6 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'C',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -353,7 +353,7 @@ const blockMap6 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: null,
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: null,
     text: 'charlie',
@@ -361,7 +361,7 @@ const blockMap6 = Immutable.OrderedMap({
     prevSibling: 'X',
     nextSibling: 'D',
   }),
-  D: new ContentBlockNode({
+  D: makeContentBlockNode({
     key: 'D',
     parent: null,
     text: 'delta',
@@ -386,7 +386,7 @@ test('test moving first child up 1', () => {
 });
 
 const blockMap7 = Immutable.OrderedMap({
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -394,7 +394,7 @@ const blockMap7 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: null,
   }),
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: 'X',
     text: 'alpha',
@@ -402,7 +402,7 @@ const blockMap7 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'Y',
   }),
-  Y: new ContentBlockNode({
+  Y: makeContentBlockNode({
     key: 'Y',
     parent: 'X',
     text: '',
@@ -410,7 +410,7 @@ const blockMap7 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: null,
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'Y',
     text: 'beta',
@@ -418,7 +418,7 @@ const blockMap7 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'C',
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: 'Y',
     text: 'charlie',
@@ -441,7 +441,7 @@ test('test moving last child up 2', () => {
 });
 
 const blockMap8 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -449,7 +449,7 @@ const blockMap8 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -457,7 +457,7 @@ const blockMap8 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'C',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -465,7 +465,7 @@ const blockMap8 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: null,
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: null,
     text: 'charlie',
@@ -480,7 +480,7 @@ test('test moving only child up deletes parent 1', () => {
 });
 
 const blockMap9 = Immutable.OrderedMap({
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -488,7 +488,7 @@ const blockMap9 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'C',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -496,7 +496,7 @@ const blockMap9 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: null,
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: null,
     text: 'charlie',
@@ -511,7 +511,7 @@ test('test moving only child up deletes parent 2', () => {
 });
 
 const blockMap10 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -519,7 +519,7 @@ const blockMap10 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -527,7 +527,7 @@ const blockMap10 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: null,
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -542,7 +542,7 @@ test('test moving only child up deletes parent 3', () => {
 });
 
 const blockMap11 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -550,7 +550,7 @@ const blockMap11 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -558,7 +558,7 @@ const blockMap11 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: null,
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -566,7 +566,7 @@ const blockMap11 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'Y',
   }),
-  Y: new ContentBlockNode({
+  Y: makeContentBlockNode({
     key: 'Y',
     parent: 'X',
     text: '',
@@ -574,7 +574,7 @@ const blockMap11 = Immutable.OrderedMap({
     prevSibling: 'B',
     nextSibling: null,
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: 'Y',
     text: 'charlie',
@@ -589,7 +589,7 @@ test('test moving only child up deletes parent 4', () => {
 });
 
 const blockMap12 = Immutable.OrderedMap({
-  A: new ContentBlockNode({
+  A: makeContentBlockNode({
     key: 'A',
     parent: null,
     text: 'alpha',
@@ -597,7 +597,7 @@ const blockMap12 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'X',
   }),
-  X: new ContentBlockNode({
+  X: makeContentBlockNode({
     key: 'X',
     parent: null,
     text: '',
@@ -605,7 +605,7 @@ const blockMap12 = Immutable.OrderedMap({
     prevSibling: 'A',
     nextSibling: 'Y',
   }),
-  B: new ContentBlockNode({
+  B: makeContentBlockNode({
     key: 'B',
     parent: 'X',
     text: 'beta',
@@ -613,7 +613,7 @@ const blockMap12 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'C',
   }),
-  C: new ContentBlockNode({
+  C: makeContentBlockNode({
     key: 'C',
     parent: 'X',
     text: 'charlie',
@@ -621,7 +621,7 @@ const blockMap12 = Immutable.OrderedMap({
     prevSibling: 'B',
     nextSibling: null,
   }),
-  Y: new ContentBlockNode({
+  Y: makeContentBlockNode({
     key: 'Y',
     parent: null,
     text: '',
@@ -629,7 +629,7 @@ const blockMap12 = Immutable.OrderedMap({
     prevSibling: 'X',
     nextSibling: null,
   }),
-  D: new ContentBlockNode({
+  D: makeContentBlockNode({
     key: 'D',
     parent: 'Y',
     text: 'delta',
@@ -637,7 +637,7 @@ const blockMap12 = Immutable.OrderedMap({
     prevSibling: null,
     nextSibling: 'E',
   }),
-  E: new ContentBlockNode({
+  E: makeContentBlockNode({
     key: 'E',
     parent: 'Y',
     text: 'epsilon',

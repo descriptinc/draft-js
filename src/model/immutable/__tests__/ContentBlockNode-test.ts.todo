@@ -34,7 +34,7 @@
 //
 // test('must have appropriate default values', () => {
 //   const text = 'Alpha';
-//   const block = new ContentBlockNode({
+//   const block = makeContentBlockNode({
 //     key: 'a',
 //     type: 'unstyled',
 //     text,
@@ -53,7 +53,7 @@
 // });
 //
 // test('must provide default values', () => {
-//   const block = new ContentBlockNode();
+//   const block = makeContentBlockNode();
 //   expect(block.type).toBe('unstyled');
 //   expect(block.text).toBe('');
 //   expect(Immutable.is(block.characterList, Immutable.List())).toBe(true);
