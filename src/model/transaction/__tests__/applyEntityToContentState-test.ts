@@ -10,6 +10,7 @@ import getSampleStateForTesting from '../getSampleStateForTesting';
 import {makeSelectionState} from '../../immutable/SelectionState';
 import {getBlockAfter, getFirstBlock} from '../../immutable/ContentState';
 import applyEntityToContentState from '../applyEntityToContentState';
+import {blockMapToJsonObject} from '../../../util/blockMapToJson';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
@@ -36,7 +37,9 @@ const assertApplyEntityToContentState = (
   content = contentState,
 ) => {
   expect(
-    applyEntityToContentState(content, selection, entityKey).blockMap,
+    blockMapToJsonObject(
+      applyEntityToContentState(content, selection, entityKey).blockMap,
+    ),
   ).toMatchSnapshot();
 };
 

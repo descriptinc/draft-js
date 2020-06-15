@@ -13,6 +13,7 @@
 
 import {makeContentBlock} from '../../immutable/ContentBlock';
 import applyEntityToContentBlock from '../applyEntityToContentBlock';
+import {blockNodeToJson} from '../../../util/blockMapToJson';
 
 const sampleBlock = makeContentBlock({
   key: 'a',
@@ -26,7 +27,9 @@ const assertApplyEntityToContentBlock = (
   contentBlock = sampleBlock,
 ) => {
   expect(
-    applyEntityToContentBlock(contentBlock, start, end, entityKey),
+    blockNodeToJson(
+      applyEntityToContentBlock(contentBlock, start, end, entityKey),
+    ),
   ).toMatchSnapshot();
 };
 

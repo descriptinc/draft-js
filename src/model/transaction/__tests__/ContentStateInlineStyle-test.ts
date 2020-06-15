@@ -5,25 +5,23 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
- * @format
  */
-
-'use strict';
-
-const ContentStateInlineStyle = require('ContentStateInlineStyle');
-
-const getSampleStateForTesting = require('getSampleStateForTesting');
+import getSampleStateForTesting from '../getSampleStateForTesting';
+import {getStartKey} from '../../immutable/SelectionState';
+import {getBlockAfter, getBlockForKey} from '../../immutable/ContentState';
+import ContentStateInlineStyle from '../ContentStateInlineStyle';
+import {blockMapToJsonObject} from '../../../util/blockMapToJson';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
-const initialSelection = selectionState.set(
-  'focusOffset',
-  contentState.getBlockForKey(getStartKey(selectionState)).text.length,
-);
+const initialSelection = {
+  ...selectionState,
+  focusOffset: getBlockForKey(contentState, getStartKey(selectionState)).text
+    .length,
+};
 
 const assertAddContentStateInlineStyle = (
-  inlineStyle,
+  inlineStyle: string,
   selection = selectionState,
   content = contentState,
 ) => {
@@ -33,13 +31,13 @@ const assertAddContentStateInlineStyle = (
     inlineStyle,
   );
 
-  expect(newContentState.getBlockMap().toJS()).toMatchSnapshot();
+  expect(blockMapToJsonObject(newContentState.blockMap)).toMatchSnapshot();
 
   return newContentState;
 };
 
 const assertRemoveContentStateInlineStyle = (
-  inlineStyle,
+  inlineStyle: string,
   selection = selectionState,
   content = contentState,
 ) => {
@@ -49,7 +47,7 @@ const assertRemoveContentStateInlineStyle = (
     inlineStyle,
   );
 
-  expect(newContentState.getBlockMap().toJS()).toMatchSnapshot();
+  expect(blockMapToJsonObject(newContentState.blockMap)).toMatchSnapshot();
 
   return newContentState;
 };
@@ -59,7 +57,7 @@ test('must add styles', () => {
 
   assertAddContentStateInlineStyle(
     'ITALIC',
-    selectionState.set('focusOffset', 2),
+    {...selectionState, focusOffset: 2},
     modified,
   );
 });
@@ -81,17 +79,18 @@ test('must remove styles', () => {
   );
   assertRemoveContentStateInlineStyle(
     'ITALIC',
-    initialSelection.set('focusOffset', 2),
+    {...initialSelection, focusOffset: 2},
     modified,
   );
 });
 
 test('must add and remove styles accross multiple blocks', () => {
-  const nextBlock = contentState.getBlockAfter(getStartKey(selectionState));
-  const selection = selectionState.merge({
-    focusKey: nextBlock?.key,
-    focusOffset: nextBlock?.text.length,
-  });
+  const nextBlock = getBlockAfter(contentState, getStartKey(selectionState))!;
+  const selection = {
+    ...selectionState,
+    focusKey: nextBlock.key,
+    focusOffset: nextBlock.text.length,
+  };
 
   const modified = assertAddContentStateInlineStyle('BOLD', selection);
   assertRemoveContentStateInlineStyle('BOLD', selection, modified);
