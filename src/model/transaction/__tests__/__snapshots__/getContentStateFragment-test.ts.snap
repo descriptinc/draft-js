@@ -313,7 +313,7 @@ Object {
 
 exports[`must be able to return contentBlocks selected within 1`] = `
 Object {
-  "key4": Object {
+  "key0": Object {
     "characterList": Array [
       Object {
         "entity": null,
@@ -334,11 +334,11 @@ Object {
     ],
     "data": Object {},
     "depth": 0,
-    "key": "key4",
+    "key": "key0",
     "text": "Beta",
     "type": "unstyled",
   },
-  "key5": Object {
+  "key1": Object {
     "characterList": Array [
       Object {
         "entity": null,
@@ -371,7 +371,7 @@ Object {
     ],
     "data": Object {},
     "depth": 0,
-    "key": "key5",
+    "key": "key1",
     "text": "Charlie",
     "type": "unstyled",
   },
@@ -380,7 +380,7 @@ Object {
 
 exports[`must be able to return first ContentBlock selected 1`] = `
 Object {
-  "key6": Object {
+  "key0": Object {
     "characterList": Array [
       Object {
         "entity": null,
@@ -405,7 +405,7 @@ Object {
     ],
     "data": Object {},
     "depth": 0,
-    "key": "key6",
+    "key": "key0",
     "text": "Alpha",
     "type": "unstyled",
   },
@@ -452,7 +452,7 @@ Object {
 
 exports[`must be able to return last ContentBlock selected 1`] = `
 Object {
-  "key7": Object {
+  "key0": Object {
     "characterList": Array [
       Object {
         "entity": null,
@@ -477,7 +477,7 @@ Object {
     ],
     "data": Object {},
     "depth": 0,
-    "key": "key7",
+    "key": "key0",
     "text": "Delta",
     "type": "unstyled",
   },
