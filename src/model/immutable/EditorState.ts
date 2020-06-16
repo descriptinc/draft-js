@@ -432,24 +432,17 @@ function regenerateTreeForNewBlocks(
   const contentState = editorState.currentContent;
   const prevBlockMap = contentState.blockMap;
   const prevTreeMap = editorState.treeMap;
-  const iter = flatMap(prevTreeMap, (entry):
-    | [string, readonly any[]]
-    | undefined => {
-    const [key] = entry;
-    const newBlock = newBlockMap.get(key)!;
-    if (!newBlock || prevBlockMap.get(key) === newBlock) {
-      // block did not change
-      return undefined;
-    }
-    return [key, BlockTree.generate(contentState, newBlock, decorator || null)];
-  });
 
-  // FIXME [polish]: refactor this common pattern into a single helper
-  const res: Record<string, readonly any[]> = {};
-  for (const [key, value] of iter) {
-    res[key] = value;
-  }
-  return mergeMapUpdates(prevTreeMap, res);
+  return new Map(
+    map(newBlockMap, (entry): [string, readonly DecoratorRange[]] => {
+      const [key, block] = entry;
+      const prevTree = prevTreeMap.get(key);
+      if (prevTree && prevBlockMap.get(key) === block) {
+        return [key, prevTree];
+      }
+      return [key, BlockTree.generate(contentState, block, decorator || null)];
+    }),
+  );
 }
 
 /**
