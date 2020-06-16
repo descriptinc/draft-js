@@ -19,29 +19,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <link rel="stylesheet" href="../../../dist/Draft.css" />
     <link rel="stylesheet" href="RichEditor.css" />
     <style>
-      #target { width: 600px; }
+      #target {
+        width: 600px;
+      }
     </style>
   </head>
   <body>
     <div id="target"></div>
     <script src="../../../node_modules/react/umd/react.development.js"></script>
     <script src="../../../node_modules/react-dom/umd/react-dom.development.js"></script>
-    <script src="../../../node_modules/immutable/dist/immutable.js"></script>
     <script src="../../../node_modules/es6-shim/es6-shim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
     <script src="../../../dist/Draft.js"></script>
     <script type="text/babel">
       'use strict';
 
-      const {Editor, EditorState, RichUtils, getDefaultKeyBinding} = Draft;
+      const {
+        Editor,
+        createEmpty,
+        RichUtils,
+        getDefaultKeyBinding,
+        hasText,
+        getBlockForKey,
+        getCurrentInlineStyle,
+        getStartKey,
+      } = Draft;
 
       class RichEditorExample extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {editorState: EditorState.createEmpty()};
+          this.state = {editorState: createEmpty()};
 
           this.focus = () => this.refs.editor.focus();
-          this.onChange = (editorState) => this.setState({editorState});
+          this.onChange = editorState => this.setState({editorState});
 
           this.handleKeyCommand = this._handleKeyCommand.bind(this);
           this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
@@ -63,7 +73,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             const newEditorState = RichUtils.onTab(
               e,
               this.state.editorState,
-              4, /* maxDepth */
+              4 /* maxDepth */,
             );
             if (newEditorState !== this.state.editorState) {
               this.onChange(newEditorState);
@@ -75,19 +85,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         _toggleBlockType(blockType) {
           this.onChange(
-            RichUtils.toggleBlockType(
-              this.state.editorState,
-              blockType
-            )
+            RichUtils.toggleBlockType(this.state.editorState, blockType),
           );
         }
 
         _toggleInlineStyle(inlineStyle) {
           this.onChange(
-            RichUtils.toggleInlineStyle(
-              this.state.editorState,
-              inlineStyle
-            )
+            RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle),
           );
         }
 
@@ -97,9 +101,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           // If the user changes block type before entering any text, we can
           // either style the placeholder or hide it. Let's just hide it now.
           let className = 'RichEditor-editor';
-          var contentState = editorState.getCurrentContent();
-          if (!contentState.hasText()) {
-            if (contentState.getBlockMap().first().getType() !== 'unstyled') {
+          var contentState = editorState.currentContent;
+          if (!hasText(contentState)) {
+            if ([...contentState.blockMap.values()][0].type !== 'unstyled') {
               className += ' RichEditor-hidePlaceholder';
             }
           }
@@ -143,16 +147,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       };
 
       function getBlockStyle(block) {
-        switch (block.getType()) {
-          case 'blockquote': return 'RichEditor-blockquote';
-          default: return null;
+        switch (block.type) {
+          case 'blockquote':
+            return 'RichEditor-blockquote';
+          default:
+            return null;
         }
       }
 
       class StyleButton extends React.Component {
         constructor() {
           super();
-          this.onToggle = (e) => {
+          this.onToggle = e => {
             e.preventDefault();
             this.props.onToggle(this.props.style);
           };
@@ -185,17 +191,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         {label: 'Code Block', style: 'code-block'},
       ];
 
-      const BlockStyleControls = (props) => {
+      const BlockStyleControls = props => {
         const {editorState} = props;
-        const selection = editorState.getSelection();
-        const blockType = editorState
-          .getCurrentContent()
-          .getBlockForKey(selection.getStartKey())
-          .getType();
-
+        const selection = editorState.selection;
+        const blockType = getBlockForKey(
+          editorState.currentContent,
+          getStartKey(selection),
+        ).type;
         return (
           <div className="RichEditor-controls">
-            {BLOCK_TYPES.map((type) =>
+            {BLOCK_TYPES.map(type => (
               <StyleButton
                 key={type.label}
                 active={type.style === blockType}
@@ -203,7 +208,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 onToggle={props.onToggle}
                 style={type.style}
               />
-            )}
+            ))}
           </div>
         );
       };
@@ -215,12 +220,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         {label: 'Monospace', style: 'CODE'},
       ];
 
-      const InlineStyleControls = (props) => {
-        const currentStyle = props.editorState.getCurrentInlineStyle();
-        
+      const InlineStyleControls = props => {
+        const currentStyle = getCurrentInlineStyle(props.editorState);
+
         return (
           <div className="RichEditor-controls">
-            {INLINE_STYLES.map((type) =>
+            {INLINE_STYLES.map(type => (
               <StyleButton
                 key={type.label}
                 active={currentStyle.has(type.style)}
@@ -228,15 +233,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 onToggle={props.onToggle}
                 style={type.style}
               />
-            )}
+            ))}
           </div>
         );
       };
 
-      ReactDOM.render(
-        <RichEditorExample />,
-        document.getElementById('target')
-      );
+      ReactDOM.render(<RichEditorExample />, document.getElementById('target'));
     </script>
   </body>
 </html>

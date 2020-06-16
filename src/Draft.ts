@@ -15,38 +15,28 @@ import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
 import CompositeDraftDecorator from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';
+export {AtomicBlockUtils};
 import KeyBindingUtil from './component/utils/KeyBindingUtil';
-import DraftModifier from './model/modifier/DraftModifier';
-import RichTextEditorUtil from './model/modifier/RichTextEditorUtil';
-import {DefaultDraftBlockRenderMap} from './model/immutable/DefaultDraftBlockRenderMap';
-import {DefaultDraftInlineStyle} from './model/immutable/DefaultDraftInlineStyle';
-import generateRandomKey from './model/keys/generateRandomKey';
-import convertFromHTMLToContentBlocks from './model/encoding/convertFromHTMLToContentBlocks';
+export {KeyBindingUtil};
+import Modifier from './model/modifier/DraftModifier';
+export {Modifier};
+import RichUtils from './model/modifier/RichTextEditorUtil';
+export {RichUtils};
+export {DefaultDraftBlockRenderMap} from './model/immutable/DefaultDraftBlockRenderMap';
+export {DefaultDraftInlineStyle} from './model/immutable/DefaultDraftInlineStyle';
+import genKey from './model/keys/generateRandomKey';
+export {genKey};
+import convertFromHTML from './model/encoding/convertFromHTMLToContentBlocks';
+export {convertFromHTML};
 import getDefaultKeyBinding from './component/utils/getDefaultKeyBinding';
+export {getDefaultKeyBinding};
 import getVisibleSelectionRect from './component/selection/getVisibleSelectionRect';
+export {getVisibleSelectionRect};
 
-const DraftPublic = {
-  Editor: DraftEditor,
-  EditorBlock: DraftEditorBlock,
-
-  CompositeDecorator: CompositeDraftDecorator,
-  Entity: DraftEntity,
-
-  AtomicBlockUtils,
-  KeyBindingUtil,
-  Modifier: DraftModifier,
-  RichUtils: RichTextEditorUtil,
-
-  DefaultDraftBlockRenderMap,
-  DefaultDraftInlineStyle,
-
-  convertFromHTML: convertFromHTMLToContentBlocks,
-  // convertFromRaw: convertFromRawToDraftState,
-  // convertToRaw: convertFromDraftStateToRaw,
-  genKey: generateRandomKey,
-  getDefaultKeyBinding,
-  getVisibleSelectionRect,
-};
+export const Editor = DraftEditor;
+export const EditorBlock = DraftEditorBlock;
+export const CompositeDecorator = CompositeDraftDecorator;
+export const Entity = DraftEntity;
 
 export * from './model/immutable/BlockMapBuilder';
 export * from './model/immutable/EditorState';
@@ -60,5 +50,3 @@ export * from './model/immutable/findRangesImmutable';
 export * from './model/immutable/ContentBlockNode';
 export * from './model/immutable/BlockNode';
 export * from './model/immutable/BlockTree';
-
-export default DraftPublic;

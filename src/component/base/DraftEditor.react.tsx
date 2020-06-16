@@ -378,8 +378,6 @@ export default class DraftEditor extends React.Component<
       textDirectionality,
     };
 
-    // @ts-ignore
-    // @ts-ignore
     return (
       <div className={rootClass}>
         {this._renderPlaceholder()}

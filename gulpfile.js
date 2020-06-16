@@ -257,6 +257,7 @@ gulp.task(
     'check-dependencies',
     'clean',
     gulp.parallel('modules'),
-    gulp.parallel('dist', 'dist:min'),
+    gulp.parallel('dist'),
+    // gulp.parallel('dist', 'dist:min'),
   ),
 );
