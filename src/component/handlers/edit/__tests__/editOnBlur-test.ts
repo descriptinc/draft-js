@@ -11,16 +11,17 @@
 
 'use strict';
 
-const ContentBlock = require('ContentBlock');
-const ContentState = require('ContentState');
-const EditorState = require('EditorState');
+import editOnBlur from '../editOnBlur';
+import {createWithContent} from '../../../../model/immutable/EditorState';
+import {createFromBlockArray} from '../../../../model/immutable/ContentState';
+import {makeContentBlock} from '../../../../model/immutable/ContentBlock';
 
-const onBlur = require('editOnBlur');
+const onBlur = editOnBlur;
 
 const getEditorState = (text: string = 'Arsenal') => {
-  return EditorState.createWithContent(
-    ContentState.createFromBlockArray([
-      new ContentBlock({
+  return createWithContent(
+    createFromBlockArray([
+      makeContentBlock({
         key: 'a',
         text,
       }),
@@ -28,7 +29,7 @@ const getEditorState = (text: string = 'Arsenal') => {
   );
 };
 
-const getBlurEvent = currentTarget => ({
+const getBlurEvent = (currentTarget: any) => ({
   currentTarget,
 });
 
