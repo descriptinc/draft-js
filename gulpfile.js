@@ -25,6 +25,7 @@ var StatsPlugin = require('stats-webpack-plugin');
 var through = require('through2');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var webpackStream = require('webpack-stream');
+var merge = require('merge2');
 
 var tsProject = ts.createProject('./tsconfig.dist.json');
 var tsProjectMin = ts.createProject('./tsconfig.dist.json');
@@ -118,13 +119,11 @@ gulp.task(
 gulp.task(
   'modules',
   gulp.series(function() {
-    return (
-      tsProject
-        .src()
-        .pipe(tsProject())
-        // .pipe(flatten())
-        .js.pipe(gulp.dest(paths.lib))
-    );
+    const tsResult = tsProject.src().pipe(tsProject());
+    return merge([
+      tsResult.dts.pipe(gulp.dest(paths.lib)),
+      tsResult.js.pipe(gulp.dest(paths.lib)),
+    ]);
   }),
 );
 gulp.task(

@@ -6,8 +6,9 @@
  *
  * @emails oncall+draft_js
  */
+import {CSSProperties} from 'react';
 
-export const DefaultDraftInlineStyle = {
+export const DefaultDraftInlineStyle: Record<string, CSSProperties> = {
   BOLD: {
     fontWeight: 'bold',
   },

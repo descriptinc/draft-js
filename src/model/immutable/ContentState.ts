@@ -13,7 +13,15 @@ import {
   makeEmptySelection,
   makeNullSelection,
 } from './SelectionState';
-import {first, last, rest, skipUntil, takeUntil} from '../descript/Iterables';
+import {
+  first,
+  join,
+  last,
+  map,
+  rest,
+  skipUntil,
+  takeUntil,
+} from '../descript/Iterables';
 import {BlockNodeRecord} from './BlockNodeRecord';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
@@ -85,6 +93,13 @@ export function hasText(content: ContentState): boolean {
     blockMap.size > 1 ||
     (blockMap.size > 0 &&
       escape(getFirstBlock(content).text).replace(/%u200B/g, '').length > 0)
+  );
+}
+
+export function getPlainText(content: ContentState, separator = '\n'): string {
+  return join(
+    map(content.blockMap.values(), b => b.text),
+    separator,
   );
 }
 

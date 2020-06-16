@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2015", "DOM"],
 
     "rootDir": "src",
-    "outDir": "dist",
+    "outDir": "lib",
 
     "strict": true,
     "alwaysStrict": true,

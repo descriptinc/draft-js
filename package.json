@@ -1,5 +1,5 @@
 {
-  "name": "draft-js",
+  "name": "@descript/draft-js",
   "description": "A React framework for building text editors.",
   "version": "0.11.6",
   "keywords": [
@@ -80,6 +80,7 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-util": "^3.0.6",
     "jest": "^26.0.1",
+    "merge2": "^1.4.1",
     "prettier": "1.19.1",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",

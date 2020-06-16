@@ -10,7 +10,8 @@
 
 'use strict';
 
-import DraftEditor from './component/base/DraftEditor.react';
+import Editor from './component/base/DraftEditor.react';
+export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
 import CompositeDraftDecorator from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
@@ -33,7 +34,9 @@ export {getDefaultKeyBinding};
 import getVisibleSelectionRect from './component/selection/getVisibleSelectionRect';
 export {getVisibleSelectionRect};
 
-export const Editor = DraftEditor;
+export {DraftEditorCommand} from './model/constants/DraftEditorCommand';
+export {DraftHandleValue} from './model/constants/DraftHandleValue';
+
 export const EditorBlock = DraftEditorBlock;
 export const CompositeDecorator = CompositeDraftDecorator;
 export const Entity = DraftEntity;
