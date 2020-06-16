@@ -51,8 +51,8 @@ export default function getDraftEditorSelectionWithNodes(
     };
   }
 
-  let anchorPoint = null;
-  let focusPoint = null;
+  let anchorPoint: SelectionPoint | null = null;
+  let focusPoint: SelectionPoint | null = null;
   let needsRecovery = true;
 
   // An element is selected. Convert this selection range into leaf offset

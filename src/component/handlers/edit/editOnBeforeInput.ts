@@ -98,7 +98,7 @@ export default function editOnBeforeInput(
 
   const editorState = editor._latestEditorState;
 
-  const chars = e.data;
+  const chars: string | null | undefined = (e as any).data;
 
   // In some cases (ex: IE ideographic space insertion) no character data
   // is provided. There's nothing to do when this happens.

@@ -98,7 +98,7 @@ const DraftEditorDragHandler = {
       return;
     }
 
-    const files: Array<Blob> = data.getFiles() as any;
+    const files: Array<File> = data.getFiles();
     if (files.length > 0) {
       if (
         editor.props.handleDroppedFiles &&

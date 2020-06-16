@@ -8,7 +8,11 @@
 
 const GKX = {
   gkx: (name: string): boolean => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (typeof window !== 'undefined' && window.__DRAFT_GKX) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return !!window.__DRAFT_GKX[name];
     }
     return false;

@@ -10,10 +10,7 @@
  */
 
 const BLACK_LIST_PROPS = ['data-reactroot'];
-const transformSnapshotProps = (
-  node: any,
-  blackList: Array<string> = BLACK_LIST_PROPS,
-): any => {
+const transformSnapshotProps = (node: any): any => {
   const stack = [node];
   while (stack.length) {
     const node = stack.pop();

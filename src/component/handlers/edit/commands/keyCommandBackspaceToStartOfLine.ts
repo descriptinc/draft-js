@@ -11,7 +11,16 @@
 
 'use strict';
 
-import {EditorState} from "../../../../model/immutable/EditorState";
+import {
+  EditorState,
+  pushContent,
+} from '../../../../model/immutable/EditorState';
+import removeTextWithStrategy from './removeTextWithStrategy';
+import moveSelectionBackward from './moveSelectionBackward';
+import {isCollapsed} from '../../../../model/immutable/SelectionState';
+import {SelectionObject} from '../../../utils/DraftDOMTypes';
+import expandRangeToStartOfLine from '../../../selection/expandRangeToStartOfLine';
+import getDraftEditorSelectionWithNodes from '../../../selection/getDraftEditorSelectionWithNodes';
 
 export function keyCommandBackspaceToStartOfLine(
   editorState: EditorState,
@@ -21,11 +30,11 @@ export function keyCommandBackspaceToStartOfLine(
     editorState,
     strategyState => {
       const selection = strategyState.selection;
-      if (selection.isCollapsed() && selection.anchorOffset === 0) {
+      if (isCollapsed(selection) && selection.anchorOffset === 0) {
         return moveSelectionBackward(strategyState, 1);
       }
       const {ownerDocument} = e.currentTarget;
-      const domSelection = ownerDocument.defaultView.getSelection() as SelectionObject;
+      const domSelection = ownerDocument.defaultView!.getSelection() as SelectionObject;
       // getRangeAt can technically throw if there's no selection, but we know
       // there is one here because text editor has focus (the cursor is a
       // selection of length 0). Therefore, we don't need to wrap this in a
@@ -49,5 +58,5 @@ export function keyCommandBackspaceToStartOfLine(
     return editorState;
   }
 
-  return EditorState.push(editorState, afterRemoval, 'remove-range');
+  return pushContent(editorState, afterRemoval, 'remove-range');
 }

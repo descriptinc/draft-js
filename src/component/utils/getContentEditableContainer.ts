@@ -17,8 +17,8 @@ export default function getContentEditableContainer(
   const editorNode = editor.editorContainer;
   invariant(editorNode, 'Missing editorNode');
   invariant(
-    isHTMLElement(editorNode.firstChild),
+    isHTMLElement(editorNode!.firstChild!),
     'editorNode.firstChild is not an HTMLElement',
   );
-  return editorNode.firstChild;
+  return editorNode!.firstChild as HTMLElement;
 }

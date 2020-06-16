@@ -9,9 +9,11 @@
  * @emails oncall+draft_js
  */
 
-import ReactDOMComet from 'fbjs/lib/ReactDOMComet';
+import ReactDOMComet from 'react-dom';
 
-const flushControlled: void | ((fn: () => void) => void) =
-  ReactDOMComet.unstable_flushControlled;
+const flushControlled:
+  | void
+  | ((fn: () => void) => void) = (ReactDOMComet as any)
+  .unstable_flushControlled;
 
 export default flushControlled;

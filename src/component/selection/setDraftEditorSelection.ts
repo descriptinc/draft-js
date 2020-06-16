@@ -270,7 +270,7 @@ export function addFocusToSelection(
     } catch (e) {
       DraftJsDebugLogging.logSelectionStateFailure({
         anonymizedDom: getAnonymizedEditorDOM(node, function(n) {
-          const labels = [];
+          const labels: string[] = [];
           if (n === activeElement) {
             labels.push('active element');
           }

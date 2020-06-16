@@ -11,10 +11,12 @@
 
 'use strict';
 
+import React from 'react';
+import Keys from 'fbjs/lib/Keys';
 import UserAgent from 'fbjs/lib/UserAgent';
 import KeyBindingUtil from '../../utils/KeyBindingUtil';
 import {DraftEditorCommand} from '../../../model/constants/DraftEditorCommand';
-import {EditorState} from '../../../model/immutable/EditorState';
+import {EditorState, pushContent} from '../../../model/immutable/EditorState';
 import isEventHandled from '../../utils/isEventHandled';
 import keyCommandPlainDelete from './commands/keyCommandPlainDelete';
 import keyCommandDeleteWord from './commands/keyCommandDeleteWord';
@@ -26,6 +28,9 @@ import keyCommandTransposeCharacters from './commands/keyCommandTransposeCharact
 import keyCommandMoveSelectionToStartOfBlock from './commands/keyCommandMoveSelectionToStartOfBlock';
 import keyCommandMoveSelectionToEndOfBlock from './commands/keyCommandMoveSelectionToEndOfBlock';
 import SecondaryClipboard from './commands/SecondaryClipboard';
+import DraftEditor from '../../base/DraftEditor.react';
+import DraftModifier from '../../../model/modifier/DraftModifier';
+import keyCommandUndo from './commands/keyCommandUndo';
 
 const {isOptionKeyCommand} = KeyBindingUtil;
 const isChrome = UserAgent.isBrowser('Chrome');
@@ -40,7 +45,7 @@ function onKeyCommand(
 ): EditorState {
   switch (command) {
     case 'redo':
-      return EditorState.redo(editorState);
+      throw new Error('redo not implemented');
     case 'delete':
       return keyCommandPlainDelete(editorState);
     case 'delete-word':
@@ -164,7 +169,7 @@ export function editOnKeyDown(
         '\u00a0',
       );
       editor.update(
-        EditorState.push(editorState, contentState, 'insert-characters'),
+        pushContent(editorState, contentState, 'insert-characters'),
       );
     }
     return;

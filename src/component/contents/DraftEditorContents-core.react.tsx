@@ -14,7 +14,7 @@ import {DraftBlockRenderMap} from '../../model/immutable/DraftBlockRenderMap';
 import {BlockNodeRecord} from '../../model/immutable/BlockNodeRecord';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {EditorState, getBlockTree} from '../../model/immutable/EditorState';
-import React from 'react';
+import React, {ReactNode} from 'react';
 import cx from 'fbjs/lib/cx';
 import joinClasses from 'fbjs/lib/joinClasses';
 import {nullthrows} from '../../fbjs/nullthrows';
@@ -139,10 +139,18 @@ export default class DraftEditorContents extends React.Component<Props> {
     const decorator = editorState.decorator;
     const directionMap = nullthrows(editorState.directionMap);
 
-    const processedBlocks = [];
+    const processedBlocks: {
+      block: ReactNode;
+      wrapperTemplate: (() => ReactNode) | ReactNode | undefined;
+      key: string;
+      offsetKey: string;
+    }[] = [];
 
-    let currentDepth = null;
-    let lastWrapperTemplate = null;
+    let currentDepth: number | null = null;
+    let lastWrapperTemplate:
+      | (() => ReactNode)
+      | ReactNode
+      | undefined = undefined;
 
     for (const block of content.blockMap.values()) {
       const key = block.key;
@@ -178,7 +186,8 @@ export default class DraftEditorContents extends React.Component<Props> {
 
       const configForType =
         blockRenderMap[blockType] || blockRenderMap['unstyled'];
-      const wrapperTemplate = configForType.wrapper;
+      const wrapperTemplate: (() => ReactNode) | ReactNode | undefined =
+        configForType.wrapper;
 
       const Element =
         configForType.element || blockRenderMap['unstyled'].element;
@@ -243,11 +252,11 @@ export default class DraftEditorContents extends React.Component<Props> {
     }
 
     // Group contiguous runs of blocks that have the same wrapperTemplate
-    const outputBlocks = [];
+    const outputBlocks: ReactNode[] = [];
     for (let ii = 0; ii < processedBlocks.length; ) {
       const info: any = processedBlocks[ii];
       if (info.wrapperTemplate) {
-        const blocks = [];
+        const blocks: ReactNode[] = [];
         do {
           blocks.push(processedBlocks[ii].block);
           ii++;

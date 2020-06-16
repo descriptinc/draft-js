@@ -37,12 +37,14 @@ export default function editOnPaste(
   e: SyntheticClipboardEvent,
 ): void {
   e.preventDefault();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const data = new DataTransfer(e.clipboardData);
 
   // Get files, unless this is likely to be a string the user wants inline.
-  if (!data.isRichText()) {
-    const files: Array<Blob> = data.getFiles() as any;
-    const defaultFileText = data.text;
+  if (!(data as any).isRichText()) {
+    const files: Array<File> = (data as any).getFiles();
+    const defaultFileText = (data as any).text;
     if (files.length > 0) {
       // Allow customized paste handling for images, etc. Otherwise, fall
       // through to insert text contents into the editor.
@@ -98,8 +100,8 @@ export default function editOnPaste(
   }
 
   let textBlocks: Array<string> = [];
-  const text: string = data.text as any;
-  const html: string = data.getHTML() as any;
+  const text: string = (data as any).text;
+  const html: string = (data as any).getHTML();
   const editorState = editor._latestEditorState;
 
   if (
@@ -122,7 +124,7 @@ export default function editOnPaste(
     // editor in Firefox and IE will not include empty lines. The resulting
     // paste will preserve the newlines correctly.
     const internalClipboard = editor.getClipboard();
-    if (data.isRichText() && internalClipboard) {
+    if ((data as any).isRichText() && internalClipboard) {
       if (
         // If the editorKey is present in the pasted HTML, it should be safe to
         // assume this is an internal paste.

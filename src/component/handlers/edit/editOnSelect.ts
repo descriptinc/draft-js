@@ -28,7 +28,7 @@ export default function editOnSelect(editor: DraftEditor): void {
         // For now I don't think we need any other info
         anonymizedDom: 'N/A',
         extraParams: JSON.stringify({stacktrace: new Error().stack}),
-        selectionState: JSON.stringify(selectionState.toJS()),
+        selectionState: JSON.stringify(selectionState),
       });
     }
     return;

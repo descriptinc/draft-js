@@ -27,6 +27,7 @@ var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var webpackStream = require('webpack-stream');
 
 var tsProject = ts.createProject('./tsconfig.dist.json');
+var tsProjectMin = ts.createProject('./tsconfig.dist.json');
 
 var paths = {
   dist: 'dist',
@@ -117,11 +118,25 @@ gulp.task(
 gulp.task(
   'modules',
   gulp.series(function() {
-    return tsProject
-      .src()
-      .pipe(tsProject())
-      // .pipe(flatten())
-      .js.pipe(gulp.dest(paths.lib));
+    return (
+      tsProject
+        .src()
+        .pipe(tsProject())
+        // .pipe(flatten())
+        .js.pipe(gulp.dest(paths.lib))
+    );
+  }),
+);
+gulp.task(
+  'modules:min',
+  gulp.series(function() {
+    return (
+      tsProject
+        .src()
+        .pipe(tsProjectMin())
+        // .pipe(flatten())
+        .js.pipe(gulp.dest(paths.lib))
+    );
   }),
 );
 
@@ -197,7 +212,7 @@ gulp.task(
 
 gulp.task(
   'dist:min',
-  gulp.series('modules', function() {
+  gulp.series('modules:min', function() {
     var opts = {
       debug: false,
       output: 'Draft.min.js',

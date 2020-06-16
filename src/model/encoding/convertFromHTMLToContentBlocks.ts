@@ -27,10 +27,10 @@ import generateRandomKey from '../keys/generateRandomKey';
 import {flatten, map, repeat} from '../descript/Iterables';
 import {makeContentBlockNode} from '../immutable/ContentBlockNode';
 import {makeContentBlock} from '../immutable/ContentBlock';
-import getSafeBodyFromHTML from '../paste/__mocks__/getSafeBodyFromHTML';
 import {DefaultDraftBlockRenderMap} from '../immutable/DefaultDraftBlockRenderMap';
 import isHTMLBRElement from '../../component/utils/isHTMLBRElement';
 import GKX from '../../stubs/gkx';
+import getSafeBodyFromHTML from '../paste/getSafeBodyFromHTML';
 
 function getExperimentalTreeDataSupport(): boolean {
   return GKX.gkx('draft_tree_data_support');
@@ -407,7 +407,7 @@ class ContentBlocksBuilder {
     nodes: Array<Node>,
     style: DraftInlineStyle,
   ): Array<ContentBlockConfig> {
-    const blockConfigs = [];
+    const blockConfigs: ContentBlockConfig[] = [];
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
       const nodeName = node.nodeName.toLowerCase();

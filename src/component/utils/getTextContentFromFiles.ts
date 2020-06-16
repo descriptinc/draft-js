@@ -23,7 +23,7 @@ const TEXT_SIZE_UPPER_BOUND = 5000;
  * Extract the text content from a file list.
  */
 export function getTextContentFromFiles(
-  files: Array<File>,
+  files: File[],
   callback: (contents: string) => void,
 ): void {
   let readCount = 0;
@@ -43,7 +43,7 @@ export function getTextContentFromFiles(
  * todo isaac: Do work to turn html/rtf into a content fragment.
  */
 function readFile(file: File, callback: (contents: string) => void): void {
-  if (!global.FileReader || (file.type && !(file.type in TEXT_TYPES))) {
+  if (!FileReader || (file.type && !(file.type in TEXT_TYPES))) {
     callback('');
     return;
   }

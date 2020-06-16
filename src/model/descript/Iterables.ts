@@ -214,7 +214,7 @@ export function zip<T, U, V, W>(
 export function* zip<T>(...iters: Iterable<T>[]): IterableIterator<T[]> {
   const iterators = iters.map(toIterator);
   while (true) {
-    const res = [];
+    const res: T[] = [];
     for (const iterator of iterators) {
       const next = iterator.next();
       if (next.done) {

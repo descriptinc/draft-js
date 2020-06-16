@@ -12,7 +12,7 @@
 
 'use strict';
 
-import React, {CSSProperties} from 'react';
+import React, {Component, CSSProperties} from 'react';
 import Scroll from 'fbjs/lib/Scroll';
 import Style from 'fbjs/lib/Style';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
@@ -62,7 +62,11 @@ type State = {
 
 let didInitODS = false;
 
-class UpdateDraftEditorFlags extends React.Component<{
+function orUndefined<T>(x: T | undefined | null): T | undefined {
+  return x === null ? undefined : x;
+}
+
+class UpdateDraftEditorFlags extends Component<{
   editor: DraftEditor;
   editorState: EditorState;
 }> {
@@ -160,7 +164,7 @@ export default class DraftEditor extends React.Component<
   _placeholderAccessibilityID: string;
   _latestEditorState: EditorState;
   _latestCommittedEditorState: EditorState;
-  _pendingStateFromBeforeInput: EditorState | null = null;
+  _pendingStateFromBeforeInput: EditorState | undefined;
 
   /**
    * Define proxies that can route events to the current handler.
@@ -300,9 +304,8 @@ export default class DraftEditor extends React.Component<
         accessibilityID: this._placeholderAccessibilityID,
       };
 
-      /* $FlowFixMe(>=0.112.0 site=www,mobile) This comment suppresses an error
-       * found when Flow v0.112 was deployed. To see the error delete this
-       * comment and run Flow. */
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return <DraftEditorPlaceholder {...placeHolderProps} />;
     }
     return null;
@@ -356,10 +359,7 @@ export default class DraftEditor extends React.Component<
 
     // The aria-expanded and aria-haspopup properties should only be rendered
     // for a combobox.
-    /* $FlowFixMe(>=0.68.0 site=www,mobile) This comment suppresses an error
-     * found when Flow v0.68 was deployed. To see the error delete this comment
-     * and run Flow. */
-    const ariaRole = this.props.role || 'textbox';
+    const ariaRole = (this.props as any).role || 'textbox';
     const ariaExpanded =
       ariaRole === 'combobox' ? !!this.props.ariaExpanded : null;
 
@@ -378,6 +378,8 @@ export default class DraftEditor extends React.Component<
       textDirectionality,
     };
 
+    // @ts-ignore
+    // @ts-ignore
     return (
       <div className={rootClass}>
         {this._renderPlaceholder()}
@@ -387,17 +389,32 @@ export default class DraftEditor extends React.Component<
           {/* Note: _handleEditorContainerRef assumes this div won't move: */}
           <div
             aria-activedescendant={
-              readOnly ? null : this.props.ariaActiveDescendantID
+              readOnly
+                ? undefined
+                : orUndefined(this.props.ariaActiveDescendantID)
             }
-            aria-autocomplete={readOnly ? null : this.props.ariaAutoComplete}
-            aria-controls={readOnly ? null : this.props.ariaControls}
+            aria-autocomplete={
+              readOnly
+                ? undefined
+                : (this.props.ariaAutoComplete as
+                    | 'both'
+                    | 'none'
+                    | 'inline'
+                    | 'list'
+                    | undefined)
+            }
+            aria-controls={
+              readOnly ? undefined : orUndefined(this.props.ariaControls)
+            }
             aria-describedby={this._renderARIADescribedBy()}
-            aria-expanded={readOnly ? null : ariaExpanded}
+            aria-expanded={readOnly ? undefined : orUndefined(ariaExpanded)}
             aria-label={this.props.ariaLabel}
             aria-labelledby={this.props.ariaLabelledBy}
             aria-multiline={this.props.ariaMultiline}
-            aria-owns={readOnly ? null : this.props.ariaOwneeID}
+            aria-owns={readOnly ? undefined : this.props.ariaOwneeID}
             autoCapitalize={this.props.autoCapitalize}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             autoComplete={this.props.autoComplete}
             autoCorrect={this.props.autoCorrect}
             className={cx({
@@ -472,6 +489,8 @@ export default class DraftEditor extends React.Component<
       if (!this.editor) {
         global.execCommand('AutoUrlDetect', false, false);
       } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         this.editor.ownerDocument.execCommand('AutoUrlDetect', false, false);
       }
     }

@@ -22,6 +22,7 @@ import {
 } from '../../../../model/immutable/SelectionState';
 import DraftRemovableWord from '../../../../model/modifier/DraftRemovableWord';
 import moveSelectionForward from './moveSelectionForward';
+import {getBlockForKey} from '../../../../model/immutable/ContentState';
 
 /**
  * Delete the word that is right of the cursor, as well as any spaces or
@@ -37,7 +38,7 @@ export default function keyCommandDeleteWord(
       const offset = getStartOffset(selection);
       const key = getStartKey(selection);
       const content = strategyState.currentContent;
-      const text = content.getBlockForKey(key).text.slice(offset);
+      const text = getBlockForKey(content, key).text.slice(offset);
       const toRemove = DraftRemovableWord.getForward(text);
 
       // If there are no words in front of the cursor, remove the newline.
@@ -52,4 +53,3 @@ export default function keyCommandDeleteWord(
 
   return pushContent(editorState, afterRemoval, 'remove-range');
 }
-

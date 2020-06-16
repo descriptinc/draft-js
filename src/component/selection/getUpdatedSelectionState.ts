@@ -26,7 +26,7 @@ export default function getUpdatedSelectionState(
     // If we cannot make sense of the updated selection state, stick to the current one.
     if (global.__DEV__) {
       /* eslint-disable-next-line */
-      console.warn('Invalid selection state.', arguments, editorState.toJS());
+      console.warn('Invalid selection state.', arguments, editorState);
     }
     return selection;
   }

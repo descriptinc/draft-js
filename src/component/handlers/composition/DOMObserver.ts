@@ -41,9 +41,7 @@ export default class DOMObserver {
   observer: MutationObserver | null = null;
   container: HTMLElement;
   mutations: Map<string, string>;
-  onCharData:
-    | ((arg0: {target: EventTarget; type: string}) => void)
-    | null = null;
+  onCharData: ((arg0: Event) => void) | undefined;
 
   constructor(container: HTMLElement) {
     this.container = container;
@@ -61,7 +59,7 @@ export default class DOMObserver {
         );
         this.registerMutation({
           type: 'characterData',
-          target: e.target,
+          target: e.target as Node,
         });
       };
     }
@@ -75,7 +73,7 @@ export default class DOMObserver {
        * by Flow's standard library */
       this.container.addEventListener(
         'DOMCharacterDataModified',
-        this.onCharData,
+        this.onCharData!,
       );
     }
   }
@@ -90,7 +88,7 @@ export default class DOMObserver {
        * by Flow's standard library */
       this.container.removeEventListener(
         'DOMCharacterDataModified',
-        this.onCharData,
+        this.onCharData!,
       );
     }
     const mutations = this.mutations;

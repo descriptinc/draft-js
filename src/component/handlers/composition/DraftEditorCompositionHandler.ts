@@ -50,7 +50,7 @@ const RESOLVE_DELAY = 20;
  */
 let resolved = false;
 let stillComposing = false;
-let domObserver: DOMObserver = null;
+let domObserver: DOMObserver | null = null;
 
 function startDOMObserver(editor: DraftEditor) {
   if (!domObserver) {

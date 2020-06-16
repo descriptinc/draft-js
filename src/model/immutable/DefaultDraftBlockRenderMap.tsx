@@ -70,4 +70,8 @@ export const DefaultDraftBlockRenderMap: DefaultCoreDraftBlockRenderMap = {
     element: 'div',
     aliasedElements: ['p'],
   },
+  // FIXME [correctness]: added?
+  paragraph: {
+    element: 'p',
+  },
 };

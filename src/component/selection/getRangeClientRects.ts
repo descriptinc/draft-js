@@ -20,7 +20,7 @@ const isChrome = UserAgent.isBrowser('Chrome');
 /* eslint-disable consistent-return */
 function getRangeClientRectsChrome(range: Range): Array<ClientRect> {
   const tempRange = range.cloneRange();
-  const clientRects = [];
+  const clientRects: DOMRect[][] = [];
 
   for (
     let ancestor: Node | null = range.endContainer;
@@ -35,7 +35,7 @@ function getRangeClientRectsChrome(range: Range): Array<ClientRect> {
     } else {
       tempRange.setStart(tempRange.endContainer, 0);
     }
-    const rects = Array.from(tempRange.getClientRects());
+    const rects: DOMRect[] = Array.from(tempRange.getClientRects());
     clientRects.push(rects);
     if (atCommonAncestor) {
       clientRects.reverse();

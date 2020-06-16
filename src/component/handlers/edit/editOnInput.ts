@@ -225,10 +225,11 @@ export default function editOnInput(
   // Segmented entities are completely or partially removed when their
   // text content changes. For this case we do not want any text to be selected
   // after the change, so we are not merging the selection.
-  const contentWithAdjustedDOMSelection = newContent.merge({
+  const contentWithAdjustedDOMSelection = {
+    ...newContent,
     selectionBefore: content.selectionAfter,
     selectionAfter: {...selection, anchorOffset, focusOffset},
-  });
+  };
 
   editor.update(
     pushContent(editorState, contentWithAdjustedDOMSelection, changeType),
