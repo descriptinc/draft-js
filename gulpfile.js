@@ -9,11 +9,10 @@
 
 var packageData = require('./package.json');
 var moduleMap = require('./scripts/module-map');
-var fbjsConfigurePreset = require('babel-preset-fbjs/configure');
 var del = require('del');
 var gulpCheckDependencies = require('fbjs-scripts/gulp/check-dependencies');
 var gulp = require('gulp');
-var babel = require('gulp-babel');
+var ts = require('gulp-typescript');
 var cleanCSS = require('gulp-clean-css');
 var concatCSS = require('gulp-concat-css');
 var derequire = require('gulp-derequire');
@@ -27,42 +26,21 @@ var through = require('through2');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var webpackStream = require('webpack-stream');
 
+var tsProject = ts.createProject('./tsconfig.dist.json');
+
 var paths = {
   dist: 'dist',
   lib: 'lib',
   src: [
-    'src/**/*.js',
-    '!src/**/__tests__/**/*.js',
-    '!src/**/__mocks__/**/*.js',
+    'src/**/*.ts',
+    'src/**/*.tsx',
+    '!src/**/__tests__/**/*',
+    '!src/**/__mocks__/**/*',
   ],
   css: ['src/**/*.css'],
 };
 
-var babelOptsJS = {
-  presets: [
-    fbjsConfigurePreset({
-      stripDEV: true,
-      rewriteModules: {map: moduleMap},
-    }),
-  ],
-  plugins: [
-    require('@babel/plugin-proposal-nullish-coalescing-operator'),
-    require('@babel/plugin-proposal-optional-chaining'),
-  ],
-};
-
-var babelOptsFlow = {
-  presets: [
-    fbjsConfigurePreset({
-      target: 'flow',
-      rewriteModules: {map: moduleMap},
-    }),
-  ],
-  plugins: [
-    require('@babel/plugin-proposal-nullish-coalescing-operator'),
-    require('@babel/plugin-proposal-optional-chaining'),
-  ],
-};
+// FIXME: strip __DEV__
 
 var COPYRIGHT_HEADER = `/**
  * Draft v<%= version %>
@@ -139,23 +117,11 @@ gulp.task(
 gulp.task(
   'modules',
   gulp.series(function() {
-    return gulp
-      .src(paths.src)
-      .pipe(babel(babelOptsJS))
-      .pipe(flatten())
-      .pipe(gulp.dest(paths.lib));
-  }),
-);
-
-gulp.task(
-  'flow',
-  gulp.series(function() {
-    return gulp
-      .src(paths.src)
-      .pipe(babel(babelOptsFlow))
-      .pipe(flatten())
-      .pipe(rename({extname: '.js.flow'}))
-      .pipe(gulp.dest(paths.lib));
+    return tsProject
+      .src()
+      .pipe(tsProject())
+      // .pipe(flatten())
+      .js.pipe(gulp.dest(paths.lib));
   }),
 );
 
@@ -275,7 +241,7 @@ gulp.task(
   gulp.series(
     'check-dependencies',
     'clean',
-    gulp.parallel('modules', 'flow'),
+    gulp.parallel('modules'),
     gulp.parallel('dist', 'dist:min'),
   ),
 );

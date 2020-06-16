@@ -38,6 +38,7 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import DraftEditorPlaceholder from './DraftEditorPlaceholder.react';
 import {DefaultDraftInlineStyle} from '../../model/immutable/DefaultDraftInlineStyle';
 import DraftEditorContents from '../contents/DraftEditorContents-core.react';
+import flushControlled from './DraftEditorFlushControlled';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -68,10 +69,10 @@ class UpdateDraftEditorFlags extends React.Component<{
   render(): React.ReactNode {
     return null;
   }
-  componentDidMount(): unknown {
+  componentDidMount(): void {
     this._update();
   }
-  componentDidUpdate(): unknown {
+  componentDidUpdate(): void {
     this._update();
   }
   _update() {
@@ -152,38 +153,38 @@ export default class DraftEditor extends React.Component<
 
   _blockSelectEvents: boolean;
   _clipboard: BlockMap | null;
-  _handler: Object | null;
+  _handler: any | null;
   _dragCount: number;
   _internalDrag: boolean = false;
   _editorKey: string;
   _placeholderAccessibilityID: string;
   _latestEditorState: EditorState;
   _latestCommittedEditorState: EditorState;
-  _pendingStateFromBeforeInput: void | EditorState;
+  _pendingStateFromBeforeInput: EditorState | null = null;
 
   /**
    * Define proxies that can route events to the current handler.
    */
-  _onBeforeInput: Function;
-  _onBlur: Function;
-  _onCharacterData: Function;
-  _onCompositionEnd: Function;
-  _onCompositionStart: Function;
-  _onCopy: Function;
-  _onCut: Function;
-  _onDragEnd: Function;
-  _onDragOver: Function;
-  _onDragStart: Function;
-  _onDrop: Function;
-  _onInput: Function;
-  _onFocus: Function;
-  _onKeyDown: Function;
-  _onKeyPress: Function;
-  _onKeyUp: Function;
-  _onMouseDown: Function;
-  _onMouseUp: Function;
-  _onPaste: Function;
-  _onSelect: Function;
+  _onBeforeInput: any;
+  _onBlur: any;
+  _onCharacterData: any;
+  _onCompositionEnd: any;
+  _onCompositionStart: any;
+  _onCopy: any;
+  _onCut: any;
+  _onDragEnd: any;
+  _onDragOver: any;
+  _onDragStart: any;
+  _onDrop: any;
+  _onInput: any;
+  _onFocus: any;
+  _onKeyDown: any;
+  _onKeyPress: any;
+  _onKeyUp: any;
+  _onMouseDown: any;
+  _onMouseUp: any;
+  _onPaste: any;
+  _onSelect: any;
 
   editor: HTMLElement | null = null;
   editorContainer: HTMLElement | null = null;
@@ -254,7 +255,7 @@ export default class DraftEditor extends React.Component<
    * This allows us to look up the correct handler function for the current
    * editor mode, if any has been specified.
    */
-  _buildHandler(eventName: string): Function {
+  _buildHandler(eventName: string): (e: any) => void {
     // Wrap event handlers in `flushControlled`. In sync mode, this is
     // effectively a no-op. In async mode, this ensures all updates scheduled
     // inside the handler are flushed before React yields to the browser.
