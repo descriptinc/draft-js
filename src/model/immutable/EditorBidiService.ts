@@ -9,8 +9,7 @@
 import {ContentState} from './ContentState';
 import UnicodeBidiService from 'fbjs/lib/UnicodeBidiService';
 import {nullthrows} from '../../fbjs/nullthrows';
-import fastDeepEqual from 'fast-deep-equal/es6';
-import {map} from '../descript/Iterables';
+import {map, some} from '../descript/Iterables';
 
 let bidiService: UnicodeBidiService | undefined;
 
@@ -25,18 +24,31 @@ const EditorBidiService = {
       bidiService.reset();
     }
 
-    const bidiMap = new Map(
+    const blockMap = content.blockMap;
+
+    let needsNewBidiMap = !prevBidiMap;
+    if (!needsNewBidiMap) {
+      needsNewBidiMap = blockMap.size !== prevBidiMap?.size;
+    }
+    if (!needsNewBidiMap) {
+      needsNewBidiMap = some(blockMap, ([key, block]) => {
+        return (
+          !prevBidiMap!.has(key) ||
+          prevBidiMap!.get(key) !==
+            nullthrows(bidiService).getDirection(block.text)
+        );
+      });
+    }
+    if (!needsNewBidiMap && prevBidiMap) {
+      return prevBidiMap;
+    }
+
+    return new Map(
       map(content.blockMap, ([blockKey, block]): [string, string] => [
         blockKey,
         nullthrows(bidiService).getDirection(block.text),
       ]),
     );
-
-    if (prevBidiMap != null && fastDeepEqual(prevBidiMap, bidiMap)) {
-      return prevBidiMap;
-    }
-
-    return bidiMap;
   },
 };
 export default EditorBidiService;

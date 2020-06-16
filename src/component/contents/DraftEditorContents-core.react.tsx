@@ -34,6 +34,10 @@ type Props = {
   editorState: EditorState;
   preventScroll?: boolean;
   textDirectionality?: BidiDirection;
+  scrollUpThreshold?: number;
+  scrollUpHeight?: number;
+  scrollDownThreshold?: number;
+  scrollDownHeight?: number;
 };
 
 /**
@@ -131,6 +135,10 @@ export default class DraftEditorContents extends React.Component<Props> {
       editorKey,
       preventScroll,
       textDirectionality,
+      scrollUpThreshold,
+      scrollUpHeight,
+      scrollDownThreshold,
+      scrollDownHeight,
     } = this.props;
 
     const content = editorState.currentContent;
@@ -182,6 +190,10 @@ export default class DraftEditorContents extends React.Component<Props> {
         preventScroll,
         selection,
         tree: getBlockTree(editorState, key),
+        scrollUpThreshold,
+        scrollUpHeight,
+        scrollDownThreshold,
+        scrollDownHeight,
       };
 
       const configForType =

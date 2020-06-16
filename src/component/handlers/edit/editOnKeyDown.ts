@@ -105,6 +105,14 @@ export function editOnKeyDown(
       return false;
     }
   }
+
+  if (
+    editor.props.handleKeyboardEvent &&
+    isEventHandled(editor.props.handleKeyboardEvent(e))
+  ) {
+    return;
+  }
+
   switch (keyCode) {
     case Keys.RETURN:
       e.preventDefault();

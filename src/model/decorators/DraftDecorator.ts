@@ -50,6 +50,7 @@ export type DraftDecorator = {
  * Note that a component may also accept additional props outside of this list.
  */
 export type DraftDecoratorComponentProps = {
+  key: string;
   blockKey: BlockNodeKey;
   children?: Array<React.ReactNode>;
   contentState: ContentState;

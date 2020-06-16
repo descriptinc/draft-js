@@ -36,7 +36,7 @@ import {
 } from '../../model/immutable/ContentBlockNode';
 import {DraftDecoratorComponentProps} from '../../model/decorators/DraftDecorator';
 
-const SCROLL_BUFFER = 10;
+const DEFAULT_SCROLL_BUFFER = 10;
 
 type Props = {
   block: BlockNodeRecord;
@@ -56,6 +56,10 @@ type Props = {
   selection: SelectionState;
   startIndent?: boolean;
   tree: readonly DecoratorRange[];
+  scrollUpThreshold?: number;
+  scrollUpHeight?: number;
+  scrollDownThreshold?: number;
+  scrollDownHeight?: number;
 };
 
 /**
@@ -66,6 +70,23 @@ const isBlockOnSelectionEdge = (
   key: string,
 ): boolean => {
   return selection.anchorKey === key || selection.focusKey === key;
+};
+
+const getNodeScrollTopAndBottom = (
+  blockNode: HTMLElement,
+  scrollParent: HTMLElement,
+) => {
+  let blockTop = blockNode.offsetTop;
+  let offsetParent: Element | null = blockNode.offsetParent || scrollParent;
+  while (
+    offsetParent &&
+    offsetParent !== scrollParent &&
+    isHTMLElement(offsetParent)
+  ) {
+    blockTop += offsetParent.offsetTop;
+    offsetParent = offsetParent.offsetParent;
+  }
+  return {blockTop, blockBottom: blockTop + blockNode.offsetHeight};
 };
 
 /**
@@ -98,6 +119,9 @@ export default class DraftEditorBlock extends React.Component<Props> {
    * on mount, force the scroll position. Check the scroll state of the scroll
    * parent, and adjust it to align the entire block to the bottom of the
    * scroll parent.
+   *
+   * Note from Descript: We are taking care of the scrolling behavior on our side,
+   * hence disabling this functionality for blocks that are mounted in a scrollable div
    */
   componentDidMount(): void {
     if (this.props.preventScroll) {
@@ -115,32 +139,124 @@ export default class DraftEditorBlock extends React.Component<Props> {
     }
     const scrollParent = Style.getScrollParent(blockNode);
     const scrollPosition = getScrollPosition(scrollParent);
-    let scrollDelta;
 
     if (scrollParent === window) {
       const nodePosition = getElementPosition(blockNode);
       const nodeBottom = nodePosition.y + nodePosition.height;
       const viewportHeight = getViewportDimensions().height;
-      scrollDelta = nodeBottom - viewportHeight;
+      const scrollDelta = nodeBottom - viewportHeight;
       if (scrollDelta > 0) {
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
         window.scrollTo(
           scrollPosition.x,
-          scrollPosition.y + scrollDelta + SCROLL_BUFFER,
+          scrollPosition.y + scrollDelta + downBufferHeight,
         );
       }
     } else {
       invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
-      const blockBottom = blockNode.offsetHeight + blockNode.offsetTop;
+      const {blockBottom} = getNodeScrollTopAndBottom(blockNode, scrollParent);
       const pOffset = scrollParent.offsetTop + scrollParent.offsetHeight;
       const scrollBottom = pOffset + scrollPosition.y;
+      const scrollDelta = blockBottom - scrollBottom;
 
-      scrollDelta = blockBottom - scrollBottom;
-      if (scrollDelta > 0) {
-        Scroll.setTop(
-          scrollParent,
-          Scroll.getTop(scrollParent) + scrollDelta + SCROLL_BUFFER,
+      if (scrollDelta > -(this.props.scrollDownThreshold || 0)) {
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
+        const newTop =
+          Scroll.getTop(scrollParent) + scrollDelta + downBufferHeight;
+        Scroll.setTop(scrollParent, newTop);
+      }
+    }
+  }
+
+  ensureVisibility(): void {
+    if (this.props.preventScroll) {
+      return;
+    }
+    const selection = this.props.selection;
+    const endKey = selection.getEndKey();
+    if (!selection.getHasFocus() || endKey !== this.props.block.getKey()) {
+      return;
+    }
+
+    const blockNode = this._node;
+    if (blockNode == null) {
+      return;
+    }
+    const scrollParent = Style.getScrollParent(blockNode);
+    const scrollPosition = getScrollPosition(scrollParent);
+
+    if (scrollParent === window) {
+      const {blockTop, blockBottom} = getNodeScrollTopAndBottom(
+        blockNode,
+        scrollParent,
+      );
+      const scrollTop = scrollPosition.y;
+      const scrollBottom = getViewportDimensions().height + scrollTop;
+
+      if (blockBottom - (this.props.scrollUpThreshold || 0) < scrollTop) {
+        // scroll up
+        const scrollDelta = blockBottom - scrollTop;
+        const upBufferHeight =
+          this.props.scrollUpHeight || DEFAULT_SCROLL_BUFFER;
+        window.scrollTo(
+          scrollPosition.x,
+          scrollPosition.y + scrollDelta - upBufferHeight,
+        );
+      } else if (
+        blockTop - (this.props.scrollDownThreshold || 0) >
+        scrollBottom
+      ) {
+        // scroll down
+        const scrollDelta = blockTop - scrollBottom;
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
+        window.scrollTo(
+          scrollPosition.x,
+          scrollPosition.y + scrollDelta + downBufferHeight,
         );
       }
+    } else {
+      invariant(isHTMLElement(blockNode), 'blockNode is not an HTMLElement');
+
+      const {blockTop, blockBottom} = getNodeScrollTopAndBottom(
+        blockNode,
+        scrollParent,
+      );
+      const pOffset = scrollParent.offsetTop;
+      const scrollTop = pOffset + scrollPosition.y;
+      const scrollBottom = scrollTop + scrollParent.offsetHeight;
+
+      if (blockBottom - (this.props.scrollUpThreshold || 0) < scrollTop) {
+        // scroll up
+        const scrollDelta = blockBottom - scrollTop;
+        const upBufferHeight =
+          this.props.scrollUpHeight || DEFAULT_SCROLL_BUFFER;
+        const scrollPos =
+          Scroll.getTop(scrollParent) + scrollDelta - upBufferHeight;
+        Scroll.setTop(scrollParent, scrollPos);
+      } else if (
+        blockTop - (this.props.scrollDownThreshold || 0) >
+        scrollBottom
+      ) {
+        // scroll down
+        const scrollDelta = blockTop - scrollBottom;
+        const downBufferHeight =
+          this.props.scrollDownHeight || DEFAULT_SCROLL_BUFFER;
+        const scrollPos =
+          Scroll.getTop(scrollParent) + scrollDelta + downBufferHeight;
+        Scroll.setTop(scrollParent, scrollPos);
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps): void {
+    const blockKey = this.props.block.getKey();
+    const hadSelection = isBlockOnSelectionEdge(prevProps.selection, blockKey);
+    const hasSelection = isBlockOnSelectionEdge(this.props.selection, blockKey);
+    if (hasSelection && !hadSelection) {
+      this.ensureVisibility();
     }
   }
 
@@ -161,9 +277,10 @@ export default class DraftEditorBlock extends React.Component<Props> {
       const leaves = leavesForLeafSet.map((leaf, jj) => {
         const offsetKey = DraftOffsetKey.encode(blockKey, ii, jj);
         const {start, end} = leaf;
+        const key = `${blockKey}-${start}-${end}`;
         return (
           <DraftEditorLeaf
-            key={offsetKey}
+            key={key}
             offsetKey={offsetKey}
             block={block}
             start={start}
@@ -200,6 +317,7 @@ export default class DraftEditorBlock extends React.Component<Props> {
       const end = leavesForLeafSet[leavesForLeafSet.length - 1].end;
       const decoratedText = text.slice(start, end);
       const entityKey = getEntityAt(block, leafSet.start);
+      const key = `${blockKey}-${start}-${end}`;
 
       // Resetting dir to the same value on a child node makes Chrome/Firefox
       // confused on cursor movement. See http://jsfiddle.net/d157kLck/3/
@@ -211,7 +329,8 @@ export default class DraftEditorBlock extends React.Component<Props> {
       const commonProps: DraftDecoratorComponentProps = {
         contentState: this.props.contentState,
         decoratedText,
-        dir: dir,
+        dir,
+        key,
         start,
         end,
         blockKey,
@@ -220,10 +339,7 @@ export default class DraftEditorBlock extends React.Component<Props> {
       };
 
       return (
-        <DecoratorComponent
-          {...decoratorProps}
-          {...commonProps}
-          key={decoratorOffsetKey}>
+        <DecoratorComponent {...decoratorProps} {...commonProps}>
           {leaves}
         </DecoratorComponent>
       );

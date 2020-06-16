@@ -128,6 +128,12 @@ class UpdateDraftEditorFlags extends Component<{
      * conditions do cause it to get bumped into during editOnSelect.
      */
     editor._blockSelectEvents = true;
+    if (
+      editor.props.enableIESupport === undefined ||
+      editor.props.enableIESupport
+    ) {
+      editor._blockSelectEvents = true;
+    }
   }
 }
 
@@ -339,6 +345,10 @@ export default class DraftEditor extends React.Component<
       readOnly,
       textAlignment,
       textDirectionality,
+      scrollUpThreshold,
+      scrollUpHeight,
+      scrollDownHeight,
+      scrollDownThreshold,
     } = this.props;
 
     const rootClass = cx({
@@ -376,6 +386,10 @@ export default class DraftEditor extends React.Component<
       editorState,
       preventScroll,
       textDirectionality,
+      scrollUpThreshold,
+      scrollUpHeight,
+      scrollDownThreshold,
+      scrollDownHeight,
     };
 
     return (
