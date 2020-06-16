@@ -11,19 +11,24 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
-
-const DOMObserver = require('DOMObserver');
-const DraftModifier = require('DraftModifier');
-const DraftOffsetKey = require('DraftOffsetKey');
-const EditorState = require('EditorState');
-const Keys = require('Keys');
-
-const editOnSelect = require('editOnSelect');
-const getContentEditableContainer = require('getContentEditableContainer');
-const getDraftEditorSelection = require('getDraftEditorSelection');
-const getEntityKeyForSelection = require('getEntityKeyForSelection');
-const nullthrows = require('nullthrows');
+import Keys from 'fbjs/lib/Keys';
+import DraftEditor from '../../base/DraftEditor.react';
+import getContentEditableContainer from '../../utils/getContentEditableContainer';
+import editOnSelect from '../edit/editOnSelect';
+import {nullthrows} from '../../../fbjs/nullthrows';
+import {
+  acceptSelection,
+  getBlockTree,
+  pushContent,
+  setEditorState,
+} from '../../../model/immutable/EditorState';
+import DraftOffsetKey from '../../selection/DraftOffsetKey';
+import DraftModifier from '../../../model/modifier/DraftModifier';
+import {getBlockForKey} from '../../../model/immutable/ContentState';
+import {getInlineStyleAt} from '../../../model/immutable/ContentBlockNode';
+import getDraftEditorSelection from '../../selection/getDraftEditorSelection';
+import DOMObserver from './DOMObserver';
+import getEntityKeyForSelection from '../../../model/entity/getEntityKeyForSelection';
 
 /**
  * Millisecond delay to allow `compositionstart` to fire again upon
@@ -45,7 +50,7 @@ const RESOLVE_DELAY = 20;
  */
 let resolved = false;
 let stillComposing = false;
-let domObserver = null;
+let domObserver: DOMObserver = null;
 
 function startDOMObserver(editor: DraftEditor) {
   if (!domObserver) {
@@ -116,7 +121,7 @@ const DraftEditorCompositionHandler = {
    * characters that we do not want. `preventDefault` allows the composition
    * to be committed while preventing the extra characters.
    */
-  onKeyPress: function(editor: DraftEditor, e: React.KeyboardEvent): void {
+  onKeyPress: function(_editor: DraftEditor, e: React.KeyboardEvent): void {
     if (e.which === Keys.RETURN) {
       e.preventDefault();
     }
@@ -146,7 +151,7 @@ const DraftEditorCompositionHandler = {
     domObserver = null;
     resolved = true;
 
-    let editorState = EditorState.set(editor._latestEditorState, {
+    let editorState = setEditorState(editor._latestEditorState, {
       inCompositionMode: false,
     });
 
@@ -180,25 +185,26 @@ const DraftEditorCompositionHandler = {
         offsetKey,
       );
 
-      const {start, end} = editorState
-        .getBlockTree(blockKey)
-        .getIn([decoratorKey, 'leaves', leafKey]);
-
-      const replacementRange = editorState.selection.merge({
+      const {start, end} = getBlockTree(editorState, blockKey)?.[
+        decoratorKey
+      ]?.leaves?.[leafKey];
+      const replacementRange = {
+        ...editorState.selection,
         anchorKey: blockKey,
         focusKey: blockKey,
         anchorOffset: start,
         focusOffset: end,
         isBackward: false,
-      });
+      };
 
       const entityKey = getEntityKeyForSelection(
         contentState,
         replacementRange,
       );
-      const currentStyle = contentState
-        .getBlockForKey(blockKey)
-        .getInlineStyleAt(start);
+      const currentStyle = getInlineStyleAt(
+        getBlockForKey(contentState, blockKey),
+        start,
+      );
 
       contentState = DraftModifier.replaceText(
         contentState,
@@ -209,7 +215,7 @@ const DraftEditorCompositionHandler = {
       );
       // We need to update the editorState so the leaf node ranges are properly
       // updated and multiple mutations are correctly applied.
-      editorState = EditorState.set(editorState, {
+      editorState = setEditorState(editorState, {
         currentContent: contentState,
       });
     });
@@ -225,13 +231,13 @@ const DraftEditorCompositionHandler = {
 
     editor.restoreEditorDOM();
 
-    const editorStateWithUpdatedSelection = EditorState.acceptSelection(
+    const editorStateWithUpdatedSelection = acceptSelection(
       editorState,
       compositionEndSelectionState,
     );
 
     editor.update(
-      EditorState.push(
+      pushContent(
         editorStateWithUpdatedSelection,
         contentState,
         'insert-characters',
@@ -240,4 +246,4 @@ const DraftEditorCompositionHandler = {
   },
 };
 
-module.exports = DraftEditorCompositionHandler;
+export default DraftEditorCompositionHandler;

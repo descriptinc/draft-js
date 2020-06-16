@@ -18,7 +18,11 @@
 'use strict';
 
 import {BlockNode, BlockNodeKey} from './BlockNode';
-import {CharacterMetadata, EMPTY_CHARACTER} from './CharacterMetadata';
+import {
+  CharacterMetadata,
+  EMPTY_CHARACTER,
+  EMPTY_SET,
+} from './CharacterMetadata';
 import fastDeepEqual from 'fast-deep-equal/es6';
 import {findRangesImmutable} from './findRangesImmutable';
 import {DraftInlineStyle} from './DraftInlineStyle';
@@ -90,7 +94,7 @@ export function getInlineStyleAt(
   block: BlockNode,
   index: number,
 ): DraftInlineStyle {
-  return block.characterList[index].style;
+  return block.characterList[index]?.style || EMPTY_SET;
 }
 
 export function getEntityAt(block: BlockNode, index: number): string | null {

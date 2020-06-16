@@ -11,21 +11,19 @@
 
 'use strict';
 
-const UserAgent = require('UserAgent');
+import UserAgent from 'fbjs/lib/UserAgent';
+import getWindowForNode from '../../utils/getWindowForNode';
+import invariant from '../../../fbjs/invariant';
+import {nullthrows} from '../../../fbjs/nullthrows';
+import findAncestorOffsetKey from '../../selection/findAncestorOffsetKey';
 
-const findAncestorOffsetKey = require('findAncestorOffsetKey');
-const getWindowForNode = require('getWindowForNode');
-const Immutable = require('immutable');
-const invariant = require('invariant');
-const nullthrows = require('nullthrows');
-
-const {Map} = Immutable;
-
-type MutationRecordT = MutationRecord | {
-  type: "characterData",
-  target: Node,
-  removedNodes?: void
-};
+type MutationRecordT =
+  | MutationRecord
+  | {
+      type: 'characterData';
+      target: Node;
+      removedNodes?: void;
+    };
 
 // Heavily based on Prosemirror's DOMObserver https://github.com/ProseMirror/prosemirror-view/blob/master/src/domobserver.js
 
@@ -39,20 +37,17 @@ const DOM_OBSERVER_OPTIONS = {
 // IE11 has very broken mutation observers, so we also listen to DOMCharacterDataModified
 const USE_CHAR_DATA = UserAgent.isBrowser('IE <= 11');
 
-class DOMObserver {
-  observer: MutationObserver | null;
+export default class DOMObserver {
+  observer: MutationObserver | null = null;
   container: HTMLElement;
   mutations: Map<string, string>;
-  onCharData: ((
-    arg0: {
-      target: EventTarget,
-      type: string
-    }
-  ) => void) | null;
+  onCharData:
+    | ((arg0: {target: EventTarget; type: string}) => void)
+    | null = null;
 
   constructor(container: HTMLElement) {
     this.container = container;
-    this.mutations = Map();
+    this.mutations = new Map();
     const containerWindow = getWindowForNode(container);
     if (containerWindow.MutationObserver && !USE_CHAR_DATA) {
       this.observer = new containerWindow.MutationObserver(mutations =>
@@ -72,7 +67,7 @@ class DOMObserver {
     }
   }
 
-  start function(): void {
+  start(): void {
     if (this.observer) {
       this.observer.observe(this.container, DOM_OBSERVER_OPTIONS);
     } else {
@@ -85,7 +80,7 @@ class DOMObserver {
     }
   }
 
-  stopAndFlushMutations function(): Map<string, string> {
+  stopAndFlushMutations(): Map<string, string> {
     const {observer} = this;
     if (observer) {
       this.registerMutations(observer.takeRecords());
@@ -99,17 +94,17 @@ class DOMObserver {
       );
     }
     const mutations = this.mutations;
-    this.mutations = Map();
+    this.mutations = new Map();
     return mutations;
   }
 
-  registerMutations function(mutations: Array<MutationRecord>): void {
+  registerMutations(mutations: Array<MutationRecord>): void {
     for (let i = 0; i < mutations.length; i++) {
       this.registerMutation(mutations[i]);
     }
   }
 
-  getMutationTextContent function(mutation: MutationRecordT): string | null {
+  getMutationTextContent(mutation: MutationRecordT): string | null {
     const {type, target, removedNodes} = mutation;
     if (type === 'characterData') {
       // When `textContent` is '', there is a race condition that makes
@@ -121,7 +116,7 @@ class DOMObserver {
         // as an input char. This strips that newline character so the draft
         // state does not receive spurious newlines.
         if (USE_CHAR_DATA) {
-          return target.textContent.replace('\n', '');
+          return target.textContent!.replace('\n', '');
         }
         return target.textContent;
       }
@@ -144,7 +139,7 @@ class DOMObserver {
     return null;
   }
 
-  registerMutation function(mutation: MutationRecordT): void {
+  registerMutation(mutation: MutationRecordT): void {
     const textContent = this.getMutationTextContent(mutation);
     if (textContent != null) {
       const offsetKey = nullthrows(findAncestorOffsetKey(mutation.target));
@@ -152,5 +147,3 @@ class DOMObserver {
     }
   }
 }
-
-module.exports = DOMObserver;

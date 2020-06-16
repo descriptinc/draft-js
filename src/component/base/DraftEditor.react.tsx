@@ -15,6 +15,7 @@
 import React from 'react';
 import Scroll from 'fbjs/lib/Scroll';
 import Style from 'fbjs/lib/Style';
+import getScrollPosition from 'fbjs/lib/getScrollPosition';
 import UserAgent from 'fbjs/lib/UserAgent';
 import cx from 'fbjs/lib/cx';
 import {EditorState} from "../../model/immutable/EditorState";
@@ -24,6 +25,7 @@ import invariant from "../../fbjs/invariant";
 import isHTMLElement from "../utils/isHTMLElement";
 import DraftEffects from "../../stubs/DraftEffects";
 import GKX from "../../stubs/gkx";
+import DraftEditorEditHandler from "../handlers/edit/DraftEditorEditHandler";
 
 const isIE = UserAgent.isBrowser('IE');
 
