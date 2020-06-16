@@ -14,4 +14,4 @@ import ReactDOMComet from 'fbjs/lib/ReactDOMComet';
 const flushControlled: void | ((fn: () => void) => void) =
   ReactDOMComet.unstable_flushControlled;
 
-module.exports = flushControlled;
+export default flushControlled;

@@ -248,5 +248,3 @@ export default class DraftEditorBlock extends React.Component<Props> {
     );
   }
 }
-
-module.exports = DraftEditorBlock;

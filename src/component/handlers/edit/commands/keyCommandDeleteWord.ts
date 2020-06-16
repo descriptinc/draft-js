@@ -53,4 +53,3 @@ export default function keyCommandDeleteWord(
   return pushContent(editorState, afterRemoval, 'remove-range');
 }
 
-module.exports = keyCommandDeleteWord;

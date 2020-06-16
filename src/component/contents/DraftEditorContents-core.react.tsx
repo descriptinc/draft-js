@@ -72,7 +72,7 @@ const getListItemClasses = (
  * (for instance, ARIA props) must be allowed to update without affecting
  * the contents of the editor.
  */
-class DraftEditorContents extends React.Component<Props> {
+export default class DraftEditorContents extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
@@ -273,5 +273,3 @@ class DraftEditorContents extends React.Component<Props> {
     return <div data-contents="true">{outputBlocks}</div>;
   }
 }
-
-module.exports = DraftEditorContents;

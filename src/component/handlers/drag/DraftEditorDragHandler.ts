@@ -11,25 +11,30 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
-import SelectionState from 'SelectionState';
-
-const DataTransfer = require('DataTransfer');
-const DraftModifier = require('DraftModifier');
-const EditorState = require('EditorState');
-
-const findAncestorOffsetKey = require('findAncestorOffsetKey');
-const getCorrectDocumentFromNode = require('getCorrectDocumentFromNode');
-const getTextContentFromFiles = require('getTextContentFromFiles');
-const getUpdatedSelectionState = require('getUpdatedSelectionState');
-const getWindowForNode = require('getWindowForNode');
-const isEventHandled = require('isEventHandled');
-const nullthrows = require('nullthrows');
+import DataTransfer from 'fbjs/lib/DataTransfer';
+import {
+  EditorState,
+  getCurrentInlineStyle,
+  pushContent,
+} from '../../../model/immutable/EditorState';
+import {SelectionState} from '../../../model/immutable/SelectionState';
+import getCorrectDocumentFromNode from '../../utils/getCorrectDocumentFromNode';
+import {nullthrows} from '../../../fbjs/nullthrows';
+import findAncestorOffsetKey from '../../selection/findAncestorOffsetKey';
+import getUpdatedSelectionState from '../../selection/getUpdatedSelectionState';
+import DraftEditor from '../../base/DraftEditor.react';
+import isEventHandled from '../../utils/isEventHandled';
+import {getTextContentFromFiles} from '../../utils/getTextContentFromFiles';
+import getWindowForNode from '../../utils/getWindowForNode';
+import DraftModifier from '../../../model/modifier/DraftModifier';
 
 /**
  * Get a SelectionState for the supplied mouse event.
  */
-function getSelectionForEvent(event: Object, editorState: EditorState): SelectionState | null {
+function getSelectionForEvent(
+  event: Record<string, any>,
+  editorState: EditorState,
+): SelectionState | null {
   let node: Node | null = null;
   let offset: number | null = null;
 
@@ -76,7 +81,7 @@ const DraftEditorDragHandler = {
   /**
    * Handle data being dropped.
    */
-  onDrop: function(editor: DraftEditor, e: Object): void {
+  onDrop: function(editor: DraftEditor, e: Record<string, any>): void {
     const data = new DataTransfer(e.nativeEvent.dataTransfer);
 
     const editorState: EditorState = editor._latestEditorState;
@@ -115,19 +120,23 @@ const DraftEditorDragHandler = {
     }
 
     const dragType = editor._internalDrag ? 'internal' : 'external';
-    if (editor.props.handleDrop &&
-    isEventHandled(editor.props.handleDrop(dropSelection, data, dragType))) {
+    if (
+      editor.props.handleDrop &&
+      isEventHandled(editor.props.handleDrop(dropSelection, data, dragType))
+    ) {
       // handled
     } else if (editor._internalDrag) {
       editor.update(moveText(editorState, dropSelection));
     } else {
-      editor.update(insertTextAtSelection(editorState, dropSelection, data.text as any));
+      editor.update(
+        insertTextAtSelection(editorState, dropSelection, data.text as any),
+      );
     }
     endDrag(editor);
-  }
+  },
 };
 
-function endDrag(editor) {
+function endDrag(editor: DraftEditor) {
   editor._internalDrag = false;
 
   // Fix issue #1383
@@ -145,26 +154,33 @@ function endDrag(editor) {
   }
 }
 
-function moveText(editorState: EditorState, targetSelection: SelectionState): EditorState {
+function moveText(
+  editorState: EditorState,
+  targetSelection: SelectionState,
+): EditorState {
   const newContentState = DraftModifier.moveText(
     editorState.currentContent,
     editorState.selection,
     targetSelection,
   );
-  return EditorState.push(editorState, newContentState, 'insert-fragment');
+  return pushContent(editorState, newContentState, 'insert-fragment');
 }
 
 /**
  * Insert text at a specified selection.
  */
-function insertTextAtSelection(editorState: EditorState, selection: SelectionState, text: string): EditorState {
+function insertTextAtSelection(
+  editorState: EditorState,
+  selection: SelectionState,
+  text: string,
+): EditorState {
   const newContentState = DraftModifier.insertText(
     editorState.currentContent,
     selection,
     text,
-    editorState.getCurrentInlineStyle(),
+    getCurrentInlineStyle(editorState),
   );
-  return EditorState.push(editorState, newContentState, 'insert-fragment');
+  return pushContent(editorState, newContentState, 'insert-fragment');
 }
 
-module.exports = DraftEditorDragHandler;
+export default DraftEditorDragHandler;

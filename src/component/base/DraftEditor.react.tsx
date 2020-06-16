@@ -12,20 +12,32 @@
 
 'use strict';
 
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import Scroll from 'fbjs/lib/Scroll';
 import Style from 'fbjs/lib/Style';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
 import UserAgent from 'fbjs/lib/UserAgent';
 import cx from 'fbjs/lib/cx';
-import {EditorState} from "../../model/immutable/EditorState";
-import {BlockMap} from "../../model/immutable/BlockMap";
-import {DraftScrollPosition} from "./DraftScrollPosition";
-import invariant from "../../fbjs/invariant";
-import isHTMLElement from "../utils/isHTMLElement";
-import DraftEffects from "../../stubs/DraftEffects";
-import GKX from "../../stubs/gkx";
-import DraftEditorEditHandler from "../handlers/edit/DraftEditorEditHandler";
+import {EditorState, forceSelection} from '../../model/immutable/EditorState';
+import {BlockMap} from '../../model/immutable/BlockMap';
+import {DraftScrollPosition} from './DraftScrollPosition';
+import invariant from '../../fbjs/invariant';
+import isHTMLElement from '../utils/isHTMLElement';
+import DraftEffects from '../../stubs/DraftEffects';
+import GKX from '../../stubs/gkx';
+import DraftEditorEditHandler from '../handlers/edit/DraftEditorEditHandler';
+import DraftEditorCompositionHandler from '../handlers/composition/DraftEditorCompositionHandler';
+import DraftEditorDragHandler from '../handlers/drag/DraftEditorDragHandler';
+import {DraftEditorDefaultProps, DraftEditorProps} from './DraftEditorProps';
+import {DefaultDraftBlockRenderMap} from '../../model/immutable/DefaultDraftBlockRenderMap';
+import getDefaultKeyBinding from '../utils/getDefaultKeyBinding';
+import {DraftEditorModes} from '../handlers/DraftEditorModes';
+import generateRandomKey from '../../model/keys/generateRandomKey';
+import {hasText} from '../../model/immutable/ContentState';
+import {nullthrows} from '../../fbjs/nullthrows';
+import DraftEditorPlaceholder from './DraftEditorPlaceholder.react';
+import {DefaultDraftInlineStyle} from '../../model/immutable/DefaultDraftInlineStyle';
+import DraftEditorContents from '../contents/DraftEditorContents-core.react';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -44,22 +56,22 @@ const handlerMap = {
 };
 
 type State = {
-  contentsKey: number
+  contentsKey: number;
 };
 
 let didInitODS = false;
 
 class UpdateDraftEditorFlags extends React.Component<{
-  editor: DraftEditor,
-  editorState: EditorState
+  editor: DraftEditor;
+  editorState: EditorState;
 }> {
-  render function(): React.ReactNode {
+  render(): React.ReactNode {
     return null;
   }
-  componentDidMount function(): unknown {
+  componentDidMount(): unknown {
     this._update();
   }
-  componentDidUpdate function(): unknown {
+  componentDidUpdate(): unknown {
     this._update();
   }
   _update() {
@@ -119,7 +131,10 @@ class UpdateDraftEditorFlags extends React.Component<{
  * div, and provides a wide variety of useful function props for managing the
  * state of the editor. See `DraftEditorProps` for details.
  */
-export default class DraftEditor extends React.Component<DraftEditorProps, State> {
+export default class DraftEditor extends React.Component<
+  DraftEditorProps,
+  State
+> {
   static defaultProps: DraftEditorDefaultProps = {
     ariaDescribedBy: '{{editor_id_placeholder}}',
     blockRenderMap: DefaultDraftBlockRenderMap,
@@ -139,7 +154,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
   _clipboard: BlockMap | null;
   _handler: Object | null;
   _dragCount: number;
-  _internalDrag: boolean;
+  _internalDrag: boolean = false;
   _editorKey: string;
   _placeholderAccessibilityID: string;
   _latestEditorState: EditorState;
@@ -170,19 +185,9 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
   _onPaste: Function;
   _onSelect: Function;
 
-  editor: HTMLElement | null;
-  editorContainer: HTMLElement | null;
-  focus: (() => void);
-  blur: (() => void);
-  setMode: ((mode: DraftEditorModes) => void);
-  exitCurrentMode: (() => void);
-  restoreEditorDOM: ((scrollPosition?: DraftScrollPosition) => void);
-  setClipboard: ((clipboard: BlockMap | null) => void);
-  getClipboard: (() => BlockMap | null);
-  getEditorKey: (() => string);
-  update: ((editorState: EditorState) => void);
-  onDragEnter: (() => void);
-  onDragLeave: (() => void);
+  editor: HTMLElement | null = null;
+  editorContainer: HTMLElement | null = null;
+  getEditorKey: () => string;
 
   constructor(props: DraftEditorProps) {
     super(props);
@@ -219,7 +224,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
 
     this.getEditorKey = () => this._editorKey;
 
-    if (__DEV__) {
+    if (global.__DEV__) {
       [
         'onDownArrow',
         'onEscape',
@@ -249,7 +254,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    * This allows us to look up the correct handler function for the current
    * editor mode, if any has been specified.
    */
-  _buildHandler function(eventName: string): Function {
+  _buildHandler(eventName: string): Function {
     // Wrap event handlers in `flushControlled`. In sync mode, this is
     // effectively a no-op. In async mode, this ensures all updates scheduled
     // inside the handler are flushed before React yields to the browser.
@@ -267,23 +272,25 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
     };
   }
 
-  _handleEditorContainerRef: ((arg0: HTMLElement | null) => void) = (node: HTMLElement | null): void => {
+  _handleEditorContainerRef: (arg0: HTMLElement | null) => void = (
+    node: HTMLElement | null,
+  ): void => {
     this.editorContainer = node;
     // Instead of having a direct ref on the child, we'll grab it here.
     // This is safe as long as the rendered structure is static (which it is).
     // This lets the child support ref={props.editorRef} without merging refs.
-    this.editor = node !== null ? node as any.firstChild : null;
+    this.editor = node !== null ? (node.firstChild as HTMLElement) : null;
   };
 
-  _showPlaceholder function(): boolean {
+  _showPlaceholder(): boolean {
     return (
       !!this.props.placeholder &&
-      !this.props.editorState.isInCompositionMode() &&
-      !this.props.editorState.currentContent.hasText()
+      !this.props.editorState.inCompositionMode &&
+      !hasText(this.props.editorState.currentContent)
     );
   }
 
-  _renderPlaceholder function(): React.ReactNode {
+  _renderPlaceholder(): React.ReactNode {
     if (this._showPlaceholder()) {
       const placeHolderProps = {
         text: nullthrows(this.props.placeholder),
@@ -305,7 +312,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    * the DOM id of the placeholder (if it exists)
    * @returns aria-describedby attribute value
    */
-  _renderARIADescribedBy function(): string | null {
+  _renderARIADescribedBy(): string | undefined {
     const describedBy = this.props.ariaDescribedBy || '';
     const placeholderID = this._showPlaceholder()
       ? this._placeholderAccessibilityID
@@ -316,7 +323,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
     );
   }
 
-  render function(): React.ReactNode {
+  render(): React.ReactNode {
     const {
       blockRenderMap,
       blockRendererFn,
@@ -337,7 +344,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
       'DraftEditor/alignCenter': textAlignment === 'center',
     });
 
-    const contentStyle = {
+    const contentStyle: CSSProperties = {
       outline: 'none',
       // fix parent-draggable Safari bug. #1326
       userSelect: 'text',
@@ -484,9 +491,11 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    * a specified scroll position (for cases like `cut` behavior where it should
    * be restored to a known position).
    */
-  focus: ((scrollPosition?: DraftScrollPosition) => void) = (scrollPosition?: DraftScrollPosition): void => {
+  focus: (scrollPosition?: DraftScrollPosition) => void = (
+    scrollPosition?: DraftScrollPosition,
+  ): void => {
     const {editorState} = this.props;
-    const alreadyHasFocus = editorState.selection.getHasFocus();
+    const alreadyHasFocus = editorState.selection.hasFocus;
     const editorNode = this.editor;
 
     if (!editorNode) {
@@ -514,13 +523,11 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
     // you're clicking on an input element but not directly on a character.
     // Put the cursor back where it was before the blur.
     if (!alreadyHasFocus) {
-      this.update(
-        EditorState.forceSelection(editorState, editorState.selection),
-      );
+      this.update(forceSelection(editorState, editorState.selection));
     }
   };
 
-  blur: (() => void) = (): void => {
+  blur: () => void = (): void => {
     const editorNode = this.editor;
     if (!editorNode) {
       return;
@@ -536,7 +543,9 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    * handler module to ensure that DOM events are managed appropriately for
    * the active mode.
    */
-  setMode: ((draftEditorModes: DraftEditorModes) => void) = (mode: DraftEditorModes): void => {
+  setMode: (draftEditorModes: DraftEditorModes) => void = (
+    mode: DraftEditorModes,
+  ): void => {
     const {onPaste, onCut, onCopy} = this.props;
     const editHandler = {...handlerMap.edit};
 
@@ -562,7 +571,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
     this._handler = handler[mode];
   };
 
-  exitCurrentMode: (() => void) = (): void => {
+  exitCurrentMode: () => void = (): void => {
     this.setMode('edit');
   };
 
@@ -575,7 +584,9 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    * reconciliation occurs on a version of the DOM that is synchronized with
    * our EditorState.
    */
-  restoreEditorDOM: ((scrollPosition?: DraftScrollPosition) => void) = (scrollPosition?: DraftScrollPosition): void => {
+  restoreEditorDOM: (scrollPosition?: DraftScrollPosition) => void = (
+    scrollPosition?: DraftScrollPosition,
+  ): void => {
     this.setState({contentsKey: this.state.contentsKey + 1}, () => {
       this.focus(scrollPosition);
     });
@@ -586,7 +597,9 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    *
    * Set the clipboard state for a cut/copy event.
    */
-  setClipboard: ((arg0: BlockMap | null) => void) = (clipboard: BlockMap | null): void => {
+  setClipboard: (arg0: BlockMap | null) => void = (
+    clipboard: BlockMap | null,
+  ): void => {
     this._clipboard = clipboard;
   };
 
@@ -595,7 +608,7 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    *
    * Retrieve the clipboard state for a cut/copy event.
    */
-  getClipboard: (() => BlockMap | null) = (): BlockMap | null => {
+  getClipboard: () => BlockMap | null = (): BlockMap | null => {
     return this._clipboard;
   };
 
@@ -608,7 +621,9 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    * an `onChange` prop to receive state updates passed along from this
    * function.
    */
-  update: ((editorState: EditorState) => void) = (editorState: EditorState): void => {
+  update: (editorState: EditorState) => void = (
+    editorState: EditorState,
+  ): void => {
     this._latestEditorState = editorState;
     this.props.onChange(editorState);
   };
@@ -618,14 +633,14 @@ export default class DraftEditor extends React.Component<DraftEditorProps, State
    * a dragged element enters and leaves the editor (or any of its children),
    * to determine when the dragged element absolutely leaves the editor.
    */
-  onDragEnter: (() => void) = (): void => {
+  onDragEnter: () => void = (): void => {
     this._dragCount++;
   };
 
   /**
    * See `onDragEnter()`.
    */
-  onDragLeave: (() => void) = (): void => {
+  onDragLeave: () => void = (): void => {
     this._dragCount--;
     if (this._dragCount === 0) {
       this.exitCurrentMode();

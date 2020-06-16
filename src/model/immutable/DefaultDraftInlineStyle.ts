@@ -7,7 +7,7 @@
  * @emails oncall+draft_js
  */
 
-export const defaultInlineStyleMap = {
+export const DefaultDraftInlineStyle = {
   BOLD: {
     fontWeight: 'bold',
   },

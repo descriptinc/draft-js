@@ -136,5 +136,3 @@ export default function getSampleSelectionMocksForTestingNestedBlocks(): Record<
     textNodes,
   };
 }
-
-module.exports = getSampleSelectionMocksForTestingNestedBlocks;

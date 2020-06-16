@@ -75,5 +75,3 @@ function readFile(file: File, callback: (contents: string) => void): void {
   };
   reader.readAsText(file);
 }
-
-module.exports = getTextContentFromFiles;

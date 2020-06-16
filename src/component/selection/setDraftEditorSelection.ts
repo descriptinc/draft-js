@@ -17,7 +17,6 @@ import isElement from '../utils/isElement';
 import getCorrectDocumentFromNode from '../utils/getCorrectDocumentFromNode';
 import {SelectionState} from '../../model/immutable/SelectionState';
 import {SelectionObject} from '../utils/DraftDOMTypes';
-import {nullthrows} from '../../fbjs/nullthrows';
 import DraftJsDebugLogging from '../../stubs/DraftJsDebugLogging';
 import DraftEffects from '../../stubs/DraftEffects';
 
@@ -356,8 +355,3 @@ function addPointToSelection(
     selection.addRange(range);
   }
 }
-
-module.exports = {
-  setDraftEditorSelection,
-  addFocusToSelection,
-};

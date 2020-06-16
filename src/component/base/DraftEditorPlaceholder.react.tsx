@@ -29,7 +29,7 @@ type Props = {
  *
  * Override placeholder style via CSS.
  */
-class DraftEditorPlaceholder extends React.Component<Props> {
+export default class DraftEditorPlaceholder extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props): boolean {
     return (
       this.props.text !== nextProps.text ||
@@ -62,5 +62,3 @@ class DraftEditorPlaceholder extends React.Component<Props> {
     );
   }
 }
-
-module.exports = DraftEditorPlaceholder;

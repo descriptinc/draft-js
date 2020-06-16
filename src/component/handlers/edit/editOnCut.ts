@@ -16,10 +16,10 @@ import {SyntheticClipboardEvent} from '../../utils/eventTypes';
 import {isCollapsed} from '../../../model/immutable/SelectionState';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
 import Style from 'fbjs/lib/Style';
-import isInstanceOfNode from 'fbjs/lib/isInstanceOfNode';
 import getFragmentFromSelection from './getFragmentFromSelection';
 import {EditorState, pushContent} from '../../../model/immutable/EditorState';
 import DraftModifier from '../../../model/modifier/DraftModifier';
+import isInstanceOfNode from '../../utils/isInstanceOfNode';
 
 /**
  * On `cut` events, native behavior is allowed to occur so that the system

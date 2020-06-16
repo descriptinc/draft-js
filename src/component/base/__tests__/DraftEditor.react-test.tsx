@@ -11,21 +11,17 @@
 
 'use strict';
 
-jest.mock('generateRandomKey');
+import React from 'react';
+import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
+import DraftEditor from '../DraftEditor.react';
+import ReactShallowRenderer from 'react-test-renderer/shallow';
 
-const DraftEditor = require('DraftEditor.react');
-const EditorState = require('EditorState');
-const React = require('React');
-
-// $FlowFixMe
-const ReactShallowRenderer = require('react-test-renderer/shallow');
-
-let shallow;
-let editorState;
+let shallow: ReactShallowRenderer;
+let editorState: EditorState;
 
 beforeEach(() => {
   shallow = new ReactShallowRenderer();
-  editorState = EditorState.createEmpty();
+  editorState = createEmpty();
 });
 
 test('must has generated editorKey', () => {

@@ -16,7 +16,7 @@ const isOldIE = UserAgent.isBrowser('IE <= 9');
 // https://developer.mozilla.org/en-US/docs/Web/API/DOMImplementation.createHTMLDocument
 // https://developer.mozilla.org/en-US/Add-ons/Code_snippets/HTML_to_DOM
 
-function getSafeBodyFromHTML(html: string): Element | null {
+export default function getSafeBodyFromHTML(html: string): Element | null {
   let doc;
   let root = null;
   // Provides a safe context
@@ -32,5 +32,3 @@ function getSafeBodyFromHTML(html: string): Element | null {
   }
   return root;
 }
-
-module.exports = getSafeBodyFromHTML;

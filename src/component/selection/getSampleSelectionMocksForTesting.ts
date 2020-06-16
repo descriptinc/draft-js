@@ -139,4 +139,3 @@ export default function getSampleSelectionMocksForTesting(): Record<
   };
 }
 
-module.exports = getSampleSelectionMocksForTesting;

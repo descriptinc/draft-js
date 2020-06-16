@@ -202,7 +202,7 @@ const getElementPropsConfig = (
   return elementProps;
 };
 
-class DraftEditorBlockNode extends React.Component<Props> {
+export default class DraftEditorBlockNode extends React.Component<Props> {
   wrapperRef: {|current: null | Element|} = React.createRef<Element>();
 
   shouldComponentUpdate(nextProps: Props): boolean {
@@ -392,5 +392,3 @@ class DraftEditorBlockNode extends React.Component<Props> {
     return React.createElement(Element, elementProps, blockNode);
   }
 }
-
-module.exports = DraftEditorBlockNode;

@@ -9,12 +9,9 @@
  * @flow strict-local
  */
 
-import DraftEditorTextNode from '../DraftEditorTextNode.react';
-
-jest.mock('fbjs/lib/UserAgent');
-
-import React, {ReactInstance, ReactNode} from 'react';
+import React, {ReactInstance} from 'react';
 import UserAgent from 'fbjs/lib/UserAgent';
+import DraftEditorTextNode from '../DraftEditorTextNode.react';
 import ReactDOM from 'react-dom';
 
 const BLOCK_DELIMITER_CHAR = '\n';
@@ -32,18 +29,24 @@ const renderIntoContainer = (element: any): HTMLElement => {
   return ReactDOM.render(element, container) as HTMLElement;
 };
 
+const isBrowserImpl = UserAgent.isBrowser;
+afterEach(() => {
+  UserAgent.isBrowser = isBrowserImpl;
+});
+
+// FIXME [correctness]: this mock isn't properly setting the var in the text block component
 const initializeAsIE = () => {
   /* $FlowFixMe(>=0.99.0 site=www) This comment suppresses an error found when
    * Flow v0.47 was deployed. To see the error delete this comment and run
    * Flow. */
-  UserAgent.isBrowser.mockImplementation(() => true);
+  UserAgent.isBrowser = jest.fn().mockImplementation(() => true);
 };
 
 const initializeAsNonIE = () => {
   /* $FlowFixMe(>=0.99.0 site=www) This comment suppresses an error found when
    * Flow v0.47 was deployed. To see the error delete this comment and run
    * Flow. */
-  UserAgent.isBrowser.mockImplementation(() => false);
+  UserAgent.isBrowser = jest.fn().mockImplementation(() => false);
 };
 
 const expectPopulatedSpan = (stub: ReactInstance, testString: string) => {

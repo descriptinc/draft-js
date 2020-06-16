@@ -58,7 +58,7 @@ function getBackspaceCommand(
 /**
  * Retrieve a bound key command for the given event.
  */
-function getDefaultKeyBinding(
+export default function getDefaultKeyBinding(
   e: SyntheticKeyboardEvent,
 ): DraftEditorCommand | null {
   switch (e.keyCode) {
@@ -110,5 +110,3 @@ function getDefaultKeyBinding(
       return null;
   }
 }
-
-module.exports = getDefaultKeyBinding;

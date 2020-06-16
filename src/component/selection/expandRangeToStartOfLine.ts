@@ -107,7 +107,7 @@ function getNodeLength(node: Node): number {
  * Given a collapsed range, move the start position backwards as far as
  * possible while the range still spans only a single line.
  */
-function expandRangeToStartOfLine(range: Range): Range {
+export default function expandRangeToStartOfLine(range: Range): Range {
   invariant(
     range.collapsed,
     'expandRangeToStartOfLine: Provided range is not collapsed.',
@@ -206,5 +206,3 @@ function expandRangeToStartOfLine(range: Range): Range {
   range.setStart(bestContainer, bestOffset);
   return range;
 }
-
-module.exports = expandRangeToStartOfLine;

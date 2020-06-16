@@ -91,5 +91,3 @@ export default function keyCommandTransposeCharacters(
 
   return acceptSelection(newEditorState, finalSelection);
 }
-
-module.exports = keyCommandTransposeCharacters;

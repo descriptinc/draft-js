@@ -20,7 +20,9 @@ import getRangeBoundingClientRect, {
  *
  * When using from an iframe, you should pass the iframe window object
  */
-function getVisibleSelectionRect(global: any): FakeClientRect | null {
+export default function getVisibleSelectionRect(
+  global: any,
+): FakeClientRect | null {
   const selection = global.selection;
   if (!selection.rangeCount) {
     return null;
@@ -39,5 +41,3 @@ function getVisibleSelectionRect(global: any): FakeClientRect | null {
 
   return boundingRect;
 }
-
-module.exports = getVisibleSelectionRect;
