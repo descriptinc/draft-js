@@ -11,7 +11,6 @@ import {makeContentBlock} from '../immutable/ContentBlock';
 import {DraftBlockRenderMap} from '../immutable/DraftBlockRenderMap';
 import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {EntityMap} from '../immutable/EntityMap';
-import getSafeBodyFromHTML from './__mocks__/getSafeBodyFromHTML';
 import convertFromHTMLToContentBlocks from '../encoding/convertFromHTMLToContentBlocks';
 import {CharacterMetadata} from '../immutable/CharacterMetadata';
 import {DraftBlockType} from '../constants/DraftBlockType';
@@ -19,6 +18,7 @@ import sanitizeDraftText from '../encoding/sanitizeDraftText';
 import generateRandomKey from '../keys/generateRandomKey';
 import {repeat} from '../descript/Iterables';
 import GKX from '../../stubs/gkx';
+import getSafeBodyFromHTML from './getSafeBodyFromHTML';
 
 const experimentalTreeDataSupport = GKX.gkx('draft_tree_data_support');
 const makeBlock = experimentalTreeDataSupport
