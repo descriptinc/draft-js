@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 export type SelectionState = Readonly<{
   anchorKey: string;

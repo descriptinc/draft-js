@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 
@@ -21,13 +20,9 @@ import isHTMLBRElement from '../utils/isHTMLBRElement';
 import {setDraftEditorSelection} from '../selection/setDraftEditorSelection';
 import DraftEditorTextNode from './DraftEditorTextNode.react';
 
-type CSSStyleObject = {
-  [K in string]: string | number;
-};
+type CSSStyleObject = {[K in string]: string | number};
 
-type CustomStyleMap = {
-  [K in string]: CSSStyleObject;
-};
+type CustomStyleMap = {[K in string]: CSSStyleObject};
 
 type CustomStyleFn = (
   style: DraftInlineStyle,

@@ -5,10 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
-
-'use strict';
 
 import Editor from './component/base/DraftEditor.react';
 export {Editor};

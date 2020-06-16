@@ -2,7 +2,6 @@
  * Copyright 2004-present Facebook. All Rights Reserved.
  *
  * @emails oncall+ads_integration_management
- * @flow strict-local
  * @format
  */
 

@@ -8,8 +8,6 @@
  * @format
  */
 
-'use strict';
-
 import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
 
 jest.mock('generateRandomKey');

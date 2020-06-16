@@ -7,8 +7,6 @@
  * @emails oncall+draft_js
  */
 
-'use strict';
-
 import {ContentState} from '../immutable/ContentState';
 import {
   getEndKey,

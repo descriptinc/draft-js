@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict
  * @emails oncall+draft_js
  */
 import isElement from './isElement';

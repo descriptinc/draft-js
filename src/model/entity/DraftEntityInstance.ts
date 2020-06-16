@@ -6,11 +6,8 @@
  *
  * @legacyServerCallableInstance
  * @format
- * @flow
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 import {DraftEntityType} from './DraftEntityType';
 import {DraftEntityMutability} from './DraftEntityMutability';

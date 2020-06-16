@@ -6,7 +6,6 @@
  *
  * @emails oncall+draft_js
  * @format
- * @flow strict-local
  */
 
 import DraftOffsetKey from '../DraftOffsetKey';

@@ -8,8 +8,6 @@
  * @format
  */
 
-'use strict';
-
 import {repeat, flatten} from '../../descript/Iterables';
 import {EMPTY_CHARACTER, makeCharacterMetadata} from '../CharacterMetadata';
 import {ContentBlock, makeContentBlock} from '../ContentBlock';

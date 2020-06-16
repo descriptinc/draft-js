@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 import {ContentState} from '../immutable/ContentState';
 import DraftEntity from '../entity/DraftEntity';
@@ -17,9 +14,7 @@ import DraftEntity from '../entity/DraftEntity';
 export default function updateEntityDataInContentState(
   contentState: ContentState,
   key: string,
-  data: {
-    [K in string]: unknown;
-  },
+  data: {[K in string]: unknown},
   merge: boolean,
 ): ContentState {
   const instance = DraftEntity.__get(key);

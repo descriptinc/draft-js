@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 import DataTransfer from 'fbjs/lib/DataTransfer';
 import {

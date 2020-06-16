@@ -8,8 +8,6 @@
  * @format
  */
 
-'use strict';
-
 import getSampleSelectionMocksForTesting from '../getSampleSelectionMocksForTesting';
 import getSampleSelectionMocksForTestingNestedBlocks from '../getSampleSelectionMocksForTestingNestedBlocks';
 import getDraftEditorSelection from '../getDraftEditorSelection';

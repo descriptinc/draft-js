@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 /**
  * A type that defines if an fragment shall be inserted before or after

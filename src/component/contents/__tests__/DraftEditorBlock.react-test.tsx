@@ -8,8 +8,6 @@
  * @format
  */
 
-'use strict';
-
 jest
   .mock('Style')
   .mock('getElementPosition')

@@ -5,12 +5,10 @@
 //  * LICENSE file in the root directory of this source tree.
 //  *
 //  * @format
-//  * @flow
 //  * @emails oncall+draft_js
 //  */
 //
-// 'use strict';
-//
+// //
 // import {ContentState} from '../immutable/ContentState';
 // import {DraftEntityType} from '../entity/DraftEntityType';
 // import {DraftEntityMutability} from '../entity/DraftEntityMutability';

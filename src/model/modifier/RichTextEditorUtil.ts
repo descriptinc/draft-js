@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 import {DataObjectForLink, RichTextUtils} from './RichTextUtils';
 import {

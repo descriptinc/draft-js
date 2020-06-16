@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 import DraftEditor from '../../base/DraftEditor.react';
 import {setEditorState} from '../../../model/immutable/EditorState';

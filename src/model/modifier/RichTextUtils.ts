@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict-local
  * @emails oncall+draft_js
  */
 import {EditorState} from '../immutable/EditorState';

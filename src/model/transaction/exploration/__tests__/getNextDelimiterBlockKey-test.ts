@@ -6,10 +6,7 @@
  *
  * @emails oncall+draft_js
  * @format
- * @flow strict-local
  */
-
-'use strict';
 
 import {makeContentBlock} from '../../../immutable/ContentBlock';
 import {makeContentBlockNode} from '../../../immutable/ContentBlockNode';

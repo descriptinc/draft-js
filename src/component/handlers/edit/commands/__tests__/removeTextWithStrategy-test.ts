@@ -6,10 +6,7 @@
  *
  * @emails oncall+draft_js
  * @format
- * @flow strict-local
  */
-
-'use strict';
 
 import GKX from '../../../../../stubs/gkx';
 import getSampleStateForTesting from '../../../../../model/transaction/getSampleStateForTesting';

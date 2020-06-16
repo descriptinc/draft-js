@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
  * @format
  */
-
-'use strict';
 
 import editOnBlur from '../editOnBlur';
 import {createWithContent} from '../../../../model/immutable/EditorState';

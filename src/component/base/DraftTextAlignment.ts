@@ -5,10 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 export type DraftTextAlignment = 'left' | 'center' | 'right';

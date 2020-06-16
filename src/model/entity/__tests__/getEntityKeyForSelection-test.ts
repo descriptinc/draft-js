@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow strict-local
  * @format
  */
 import getSampleStateForTesting from '../../transaction/getSampleStateForTesting';

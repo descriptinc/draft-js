@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  * @emails oncall+draft_js
  *
  * This file is a fork of ContentBlock adding support for nesting references by
@@ -14,8 +13,6 @@
  * This is unstable and not part of the public API and should not be used by
  * production systems. This file may be update/removed without notice.
  */
-
-'use strict';
 
 import {BlockNode, BlockNodeKey} from './BlockNode';
 import {

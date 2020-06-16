@@ -7,8 +7,6 @@
  * @emails oncall+draft_js
  */
 
-'use strict';
-
 import React from 'react';
 import cx from 'fbjs/lib/cx';
 import {CoreDraftBlockType} from '../constants/DraftBlockType';

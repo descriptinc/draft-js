@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @emails oncall+draft_js
- * @flow
  * @format
  */
-
-'use strict';
 
 import React from 'react';
 import {createEmpty, EditorState} from '../../../model/immutable/EditorState';

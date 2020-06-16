@@ -5,11 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow strict
  * @emails oncall+draft_js
  */
-
-'use strict';
 
 /**
  * A set of editor commands that may be invoked by keyboard commands or UI
