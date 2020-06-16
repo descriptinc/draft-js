@@ -16,12 +16,15 @@ import {flatMap, flatten} from '../descript/Iterables';
 
 export type BlockMap = ReadonlyMap<string, BlockNodeRecord>;
 
-// FIXME [mvp]: dealing with order of `updates`
+// FIXME [mvp]: dealing with order of `updates` object
 
 export function mergeMapUpdates<T>(
   originalMap: ReadonlyMap<string, T>,
   updates: Record<string, T | null>,
 ): ReadonlyMap<string, T> {
+  if (Object.keys(updates).length === 0) {
+    return originalMap;
+  }
   let didChange = false;
   const seenKeys = new Set<string>();
   const result: ReadonlyMap<string, T> = new Map(
