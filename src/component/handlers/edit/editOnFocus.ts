@@ -11,19 +11,22 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
+import UserAgent from 'fbjs/lib/UserAgent';
+import {
+  acceptSelection,
+  forceSelection,
+} from '../../../model/immutable/EditorState';
+import DraftEditor from '../../base/DraftEditor.react';
+import {SyntheticEvent} from 'react';
 
-const EditorState = require('EditorState');
-const UserAgent = require('UserAgent');
-
-function editOnFocus(editor: DraftEditor, e: SyntheticFocusEvent): void {
+export function editOnFocus(editor: DraftEditor, e: SyntheticEvent): void {
   const editorState = editor._latestEditorState;
   const currentSelection = editorState.selection;
-  if (currentSelection.getHasFocus()) {
+  if (currentSelection.hasFocus) {
     return;
   }
 
-  const selection = currentSelection.set('hasFocus', true);
+  const selection = {...currentSelection, hasFocus: true};
   editor.props.onFocus && editor.props.onFocus(e);
 
   // When the tab containing this text editor is hidden and the user does a
@@ -37,10 +40,8 @@ function editOnFocus(editor: DraftEditor, e: SyntheticFocusEvent): void {
   // when possible, to ensure that unfocusing and refocusing a Draft editor
   // doesn't preserve the selection, matching how textareas work.
   if (UserAgent.isBrowser('Chrome < 60.0.3081.0')) {
-    editor.update(EditorState.forceSelection(editorState, selection));
+    editor.update(forceSelection(editorState, selection));
   } else {
-    editor.update(EditorState.acceptSelection(editorState, selection));
+    editor.update(acceptSelection(editorState, selection));
   }
 }
-
-module.exports = editOnFocus;

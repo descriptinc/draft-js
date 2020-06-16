@@ -97,7 +97,7 @@ export function contains<T>(iter: Iterable<T>, item: T): boolean {
 
 export function find<T>(
   iter: Iterable<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, i: number) => boolean,
 ): T | undefined {
   return first(filter(iter, predicate));
 }
@@ -135,15 +135,15 @@ export function* slice<T>(
 
 export function some<T>(
   iter: Iterable<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number) => boolean,
 ): boolean {
   return find(iter, predicate) !== undefined;
 }
 export function every<T>(
   iter: Iterable<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number) => boolean,
 ): boolean {
-  return !some(iter, item => !predicate(item));
+  return !some(iter, (item, index) => !predicate(item, index));
 }
 
 export function isEmpty<T>(iter: Iterable<T>): boolean {

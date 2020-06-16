@@ -11,4 +11,4 @@
 
 'use strict';
 
-export type DraftTextAlignment = "left" | "center" | "right";
+export type DraftTextAlignment = 'left' | 'center' | 'right';

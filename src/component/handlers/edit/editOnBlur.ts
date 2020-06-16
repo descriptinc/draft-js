@@ -11,15 +11,16 @@
 
 'use strict';
 
-import { SelectionObject } from 'DraftDOMTypes';
-import DraftEditor from 'DraftEditor.react';
+import containsNode from 'fbjs/lib/containsNode';
+import getActiveElement from 'fbjs/lib/getActiveElement';
+import DraftEditor from '../../base/DraftEditor.react';
+import {SelectionObject} from '../../utils/DraftDOMTypes';
+import {acceptSelection} from '../../../model/immutable/EditorState';
 
-const EditorState = require('EditorState');
-
-const containsNode = require('containsNode');
-const getActiveElement = require('getActiveElement');
-
-function editOnBlur(editor: DraftEditor, e: React.SyntheticEvent): void {
+export default function editOnBlur(
+  editor: DraftEditor,
+  e: React.SyntheticEvent,
+): void {
   // In a contentEditable element, when you select a range and then click
   // another active element, this does trigger a `blur` event but will not
   // remove the DOM selection from the contenteditable.
@@ -35,7 +36,7 @@ function editOnBlur(editor: DraftEditor, e: React.SyntheticEvent): void {
     !Boolean(editor.props.preserveSelectionOnBlur) &&
     getActiveElement(ownerDocument) === ownerDocument.body
   ) {
-    const selection = ownerDocument.defaultView.getSelection() as SelectionObject;
+    const selection = ownerDocument.defaultView!.getSelection() as SelectionObject;
     const editorNode = editor.editor;
     if (
       selection.rangeCount === 1 &&
@@ -48,13 +49,11 @@ function editOnBlur(editor: DraftEditor, e: React.SyntheticEvent): void {
 
   const editorState = editor._latestEditorState;
   const currentSelection = editorState.selection;
-  if (!currentSelection.getHasFocus()) {
+  if (!currentSelection.hasFocus) {
     return;
   }
 
-  const selection = currentSelection.set('hasFocus', false);
+  const selection = {...currentSelection, hasFocus: false};
   editor.props.onBlur && editor.props.onBlur(e);
-  editor.update(EditorState.acceptSelection(editorState, selection));
+  editor.update(acceptSelection(editorState, selection));
 }
-
-module.exports = editOnBlur;

@@ -11,26 +11,32 @@
 
 'use strict';
 
-const EditorState = require('EditorState');
+import {
+  EditorState,
+  setEditorState,
+} from '../../../../model/immutable/EditorState';
+import {getEndKey} from '../../../../model/immutable/SelectionState';
+import {getBlockForKey} from '../../../../model/immutable/ContentState';
 
 /**
  * See comment for `moveSelectionToStartOfBlock`.
  */
-function keyCommandMoveSelectionToEndOfBlock(editorState: EditorState): EditorState {
+export default function keyCommandMoveSelectionToEndOfBlock(
+  editorState: EditorState,
+): EditorState {
   const selection = editorState.selection;
-  const endKey = selection.getEndKey();
+  const endKey = getEndKey(selection);
   const content = editorState.currentContent;
-  const textLength = content.getBlockForKey(endKey).getLength();
-  return EditorState.set(editorState, {
-    selection: selection.merge({
+  const textLength = getBlockForKey(content, endKey).text.length;
+  return setEditorState(editorState, {
+    selection: {
+      ...selection,
       anchorKey: endKey,
       anchorOffset: textLength,
       focusKey: endKey,
       focusOffset: textLength,
       isBackward: false,
-    }),
+    },
     forceSelection: true,
   });
 }
-
-module.exports = keyCommandMoveSelectionToEndOfBlock;

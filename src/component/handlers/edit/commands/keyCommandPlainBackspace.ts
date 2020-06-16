@@ -11,18 +11,24 @@
 
 'use strict';
 
-const EditorState = require('EditorState');
-const UnicodeUtils = require('UnicodeUtils');
-
-const moveSelectionBackward = require('moveSelectionBackward');
-const removeTextWithStrategy = require('removeTextWithStrategy');
+import {
+  EditorState,
+  pushContent,
+} from '../../../../model/immutable/EditorState';
+import UnicodeUtils from 'fbjs/lib/UnicodeUtils';
+import removeTextWithStrategy from './removeTextWithStrategy';
+import moveSelectionBackward from './moveSelectionBackward';
+import {getBlockForKey} from '../../../../model/immutable/ContentState';
+import {isCollapsed} from '../../../../model/immutable/SelectionState';
 
 /**
  * Remove the selected range. If the cursor is collapsed, remove the preceding
  * character. This operation is Unicode-aware, so removing a single character
  * will remove a surrogate pair properly as well.
  */
-function keyCommandPlainBackspace(editorState: EditorState): EditorState {
+export default function keyCommandPlainBackspace(
+  editorState: EditorState,
+): EditorState {
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {
@@ -30,7 +36,7 @@ function keyCommandPlainBackspace(editorState: EditorState): EditorState {
       const content = strategyState.currentContent;
       const key = selection.anchorKey;
       const offset = selection.anchorOffset;
-      const charBehind = content.getBlockForKey(key).text[offset - 1];
+      const charBehind = getBlockForKey(content, key).text[offset - 1];
       return moveSelectionBackward(
         strategyState,
         charBehind ? UnicodeUtils.getUTF16Length(charBehind, 0) : 1,
@@ -44,11 +50,9 @@ function keyCommandPlainBackspace(editorState: EditorState): EditorState {
   }
 
   const selection = editorState.selection;
-  return EditorState.push(
+  return pushContent(
     editorState,
-    afterRemoval.set('selectionBefore', selection),
-    selection.isCollapsed() ? 'backspace-character' : 'remove-range',
+    {...afterRemoval, selectionBefore: selection},
+    isCollapsed(selection) ? 'backspace-character' : 'remove-range',
   );
 }
-
-module.exports = keyCommandPlainBackspace;

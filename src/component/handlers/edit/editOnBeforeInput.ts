@@ -11,18 +11,28 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
-import { DraftInlineStyle } from 'DraftInlineStyle';
-
-const DraftModifier = require('DraftModifier');
-const EditorState = require('EditorState');
-const UserAgent = require('UserAgent');
-
-const getEntityKeyForSelection = require('getEntityKeyForSelection');
-const isEventHandled = require('isEventHandled');
-const isSelectionAtLeafStart = require('isSelectionAtLeafStart');
-const nullthrows = require('nullthrows');
-const setImmediate = require('setImmediate');
+import UserAgent from 'fbjs/lib/UserAgent';
+import setImmediate from 'fbjs/lib/setImmediate';
+import {
+  EditorState,
+  getBlockTree,
+  getCurrentInlineStyle,
+  pushContent,
+  setEditorState,
+} from '../../../model/immutable/EditorState';
+import {DraftInlineStyle} from '../../../model/immutable/DraftInlineStyle';
+import DraftModifier from '../../../model/modifier/DraftModifier';
+import DraftEditor from '../../base/DraftEditor.react';
+import isEventHandled from '../../utils/isEventHandled';
+import {
+  getStartOffset,
+  isCollapsed,
+} from '../../../model/immutable/SelectionState';
+import getEntityKeyForSelection from '../../../model/entity/getEntityKeyForSelection';
+import isSelectionAtLeafStart from '../../selection/isSelectionAtLeafStart';
+import {some, zip} from '../../../model/descript/Iterables';
+import {nullthrows} from '../../../fbjs/nullthrows';
+import {SyntheticInputEvent} from '../../utils/eventTypes';
 
 // When nothing is focused, Firefox regards two characters, `'` and `/`, as
 // commands that should open and focus the "quickfind" search bar. This should
@@ -51,7 +61,7 @@ function replaceText(
   text: string,
   inlineStyle: DraftInlineStyle,
   entityKey: string | null,
-  forceSelection: boolean
+  forceSelection: boolean,
 ): EditorState {
   const contentState = DraftModifier.replaceText(
     editorState.currentContent,
@@ -60,7 +70,7 @@ function replaceText(
     inlineStyle,
     entityKey,
   );
-  return EditorState.push(
+  return pushContent(
     editorState,
     contentState,
     'insert-characters',
@@ -77,7 +87,10 @@ function replaceText(
  * preserve spellcheck highlighting, which disappears or flashes if re-render
  * occurs on the relevant text nodes.
  */
-function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLElement>): void {
+export default function editOnBeforeInput(
+  editor: DraftEditor,
+  e: SyntheticInputEvent,
+): void {
   if (editor._pendingStateFromBeforeInput !== undefined) {
     editor.update(editor._pendingStateFromBeforeInput);
     editor._pendingStateFromBeforeInput = undefined;
@@ -115,13 +128,13 @@ function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLEleme
   const selectionStart = getStartOffset(selection);
   const anchorKey = selection.anchorKey;
 
-  if (!selection.isCollapsed()) {
+  if (!isCollapsed(selection)) {
     e.preventDefault();
     editor.update(
       replaceText(
         editorState,
         chars,
-        editorState.getCurrentInlineStyle(),
+        getCurrentInlineStyle(editorState),
         getEntityKeyForSelection(
           editorState.currentContent,
           editorState.selection,
@@ -135,11 +148,8 @@ function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLEleme
   let newEditorState = replaceText(
     editorState,
     chars,
-    editorState.getCurrentInlineStyle(),
-    getEntityKeyForSelection(
-      editorState.currentContent,
-      editorState.selection,
-    ),
+    getCurrentInlineStyle(editorState),
+    getEntityKeyForSelection(editorState.currentContent, editorState.selection),
     false,
   );
 
@@ -187,26 +197,26 @@ function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLEleme
     // the range lengths have not changed. We don't need to compare the content
     // because the only possible mutation to consider here is inserting plain
     // text and decorators can't affect text content.
-    const oldBlockTree = editorState.getBlockTree(anchorKey);
-    const newBlockTree = newEditorState.getBlockTree(anchorKey);
+    const oldBlockTree = getBlockTree(editorState, anchorKey);
+    const newBlockTree = getBlockTree(newEditorState, anchorKey);
     mustPreventNative =
-      oldBlockTree.size !== newBlockTree.size ||
-      oldBlockTree.zip(newBlockTree).some(([oldLeafSet, newLeafSet]) => {
+      oldBlockTree.length !== newBlockTree.length ||
+      some(zip(oldBlockTree, newBlockTree), ([oldLeafSet, newLeafSet]) => {
         // selectionStart is guaranteed to be selectionEnd here
-        const oldStart = oldLeafSet.get('start');
+        const oldStart = oldLeafSet.start;
         const adjustedStart =
           oldStart + (oldStart >= selectionStart ? chars.length : 0);
-        const oldEnd = oldLeafSet.get('end');
+        const oldEnd = oldLeafSet.end;
         const adjustedEnd =
           oldEnd + (oldEnd >= selectionStart ? chars.length : 0);
-        const newStart = newLeafSet.get('start');
-        const newEnd = newLeafSet.get('end');
-        const newDecoratorKey = newLeafSet.get('decoratorKey');
+        const newStart = newLeafSet.start;
+        const newEnd = newLeafSet.end;
+        const newDecoratorKey = newLeafSet.decoratorKey;
         return (
           // Different decorators
-          oldLeafSet.get('decoratorKey') !== newDecoratorKey ||
+          oldLeafSet.decoratorKey !== newDecoratorKey ||
           // Different number of inline styles
-          oldLeafSet.get('leaves').size !== newLeafSet.get('leaves').size ||
+          oldLeafSet.leaves.length !== newLeafSet.leaves.length ||
           // Different effective decorator position
           adjustedStart !== newStart ||
           adjustedEnd !== newEnd ||
@@ -220,13 +230,13 @@ function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLEleme
   }
   if (!mustPreventNative) {
     mustPreventNative =
-      nullthrows(newEditorState.getDirectionMap()).get(anchorKey) !==
-      nullthrows(editorState.getDirectionMap()).get(anchorKey);
+      nullthrows(newEditorState.directionMap).get(anchorKey) !==
+      nullthrows(editorState.directionMap).get(anchorKey);
   }
 
   if (mustPreventNative) {
     e.preventDefault();
-    newEditorState = EditorState.set(newEditorState, {
+    newEditorState = setEditorState(newEditorState, {
       forceSelection: true,
     });
     editor.update(newEditorState);
@@ -234,7 +244,7 @@ function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLEleme
   }
 
   // We made it all the way! Let the browser do its thing and insert the char.
-  newEditorState = EditorState.set(newEditorState, {
+  newEditorState = setEditorState(newEditorState, {
     nativelyRenderedContent: newEditorState.currentContent,
   });
   // The native event is allowed to occur. To allow user onChange handlers to
@@ -249,5 +259,3 @@ function editOnBeforeInput(editor: DraftEditor, e: SyntheticInputEvent<HTMLEleme
     }
   });
 }
-
-module.exports = editOnBeforeInput;

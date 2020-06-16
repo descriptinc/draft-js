@@ -11,32 +11,41 @@
 
 'use strict';
 
-import ContentState from 'ContentState';
-import { DraftRemovalDirection } from 'DraftRemovalDirection';
-import EditorState from 'EditorState';
-import SelectionState from 'SelectionState';
+import GKX from '../../../../stubs/gkx';
+import {
+  EditorState,
+  isSelectionAtEndOfContent,
+  isSelectionAtStartOfContent,
+} from '../../../../model/immutable/EditorState';
+import {
+  isCollapsed,
+  SelectionState,
+} from '../../../../model/immutable/SelectionState';
+import {DraftRemovalDirection} from '../../../../model/constants/DraftRemovalDirection';
+import {
+  ContentState,
+  getBlockForKey,
+} from '../../../../model/immutable/ContentState';
+import {ContentBlockNode} from '../../../../model/immutable/ContentBlockNode';
+import DraftModifier from '../../../../model/modifier/DraftModifier';
 
-const DraftModifier = require('DraftModifier');
-
-const gkx = require('gkx');
-
-const experimentalTreeDataSupport = gkx('draft_tree_data_support');
+const experimentalTreeDataSupport = GKX.gkx('draft_tree_data_support');
 
 /**
  * For a collapsed selection state, remove text based on the specified strategy.
  * If the selection state is not collapsed, remove the entire selected range.
  */
-function removeTextWithStrategy(
+export default function removeTextWithStrategy(
   editorState: EditorState,
-  strategy: ((editorState: EditorState) => SelectionState),
-  direction: DraftRemovalDirection
+  strategy: (editorState: EditorState) => SelectionState,
+  direction: DraftRemovalDirection,
 ): ContentState {
   const selection = editorState.selection;
   const content = editorState.currentContent;
   let target = selection;
   const anchorKey = selection.anchorKey;
   const focusKey = selection.focusKey;
-  const anchorBlock = content.getBlockForKey(anchorKey);
+  const anchorBlock = getBlockForKey(content, anchorKey);
   if (experimentalTreeDataSupport) {
     if (direction === 'forward') {
       if (anchorKey !== focusKey) {
@@ -46,27 +55,28 @@ function removeTextWithStrategy(
       }
     }
   }
-  if (selection.isCollapsed()) {
+  if (isCollapsed(selection)) {
     if (direction === 'forward') {
-      if (editorState.isSelectionAtEndOfContent()) {
+      if (isSelectionAtEndOfContent(editorState)) {
         return content;
       }
       if (experimentalTreeDataSupport) {
         const isAtEndOfBlock =
           selection.anchorOffset ===
-          content.getBlockForKey(anchorKey).getLength();
+          getBlockForKey(content, anchorKey).text.length;
         if (isAtEndOfBlock) {
-          const anchorBlockSibling = content.getBlockForKey(
-            anchorBlock.nextSibling,
+          const anchorBlockSibling = getBlockForKey(
+            content,
+            (anchorBlock as ContentBlockNode).nextSibling!,
           );
-          if (!anchorBlockSibling || anchorBlockSibling.getLength() === 0) {
+          if (!anchorBlockSibling || anchorBlockSibling.text.length === 0) {
             // For now we ignore forward delete at the end of a block,
             // if there is demand for this we will implement it.
             return content;
           }
         }
       }
-    } else if (editorState.isSelectionAtStartOfContent()) {
+    } else if (isSelectionAtStartOfContent(editorState)) {
       return content;
     }
 
@@ -77,5 +87,3 @@ function removeTextWithStrategy(
   }
   return DraftModifier.removeRange(content, target, direction);
 }
-
-module.exports = removeTextWithStrategy;

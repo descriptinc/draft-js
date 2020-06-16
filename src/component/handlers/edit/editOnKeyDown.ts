@@ -11,27 +11,21 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
-import { DraftEditorCommand } from 'DraftEditorCommand';
-
-const DraftModifier = require('DraftModifier');
-const EditorState = require('EditorState');
-const KeyBindingUtil = require('KeyBindingUtil');
-const Keys = require('Keys');
-const SecondaryClipboard = require('SecondaryClipboard');
-const UserAgent = require('UserAgent');
-
-const isEventHandled = require('isEventHandled');
-const keyCommandBackspaceToStartOfLine = require('keyCommandBackspaceToStartOfLine');
-const keyCommandBackspaceWord = require('keyCommandBackspaceWord');
-const keyCommandDeleteWord = require('keyCommandDeleteWord');
-const keyCommandInsertNewline = require('keyCommandInsertNewline');
-const keyCommandMoveSelectionToEndOfBlock = require('keyCommandMoveSelectionToEndOfBlock');
-const keyCommandMoveSelectionToStartOfBlock = require('keyCommandMoveSelectionToStartOfBlock');
-const keyCommandPlainBackspace = require('keyCommandPlainBackspace');
-const keyCommandPlainDelete = require('keyCommandPlainDelete');
-const keyCommandTransposeCharacters = require('keyCommandTransposeCharacters');
-const keyCommandUndo = require('keyCommandUndo');
+import UserAgent from 'fbjs/lib/UserAgent';
+import KeyBindingUtil from '../../utils/KeyBindingUtil';
+import {DraftEditorCommand} from '../../../model/constants/DraftEditorCommand';
+import {EditorState} from '../../../model/immutable/EditorState';
+import isEventHandled from '../../utils/isEventHandled';
+import keyCommandPlainDelete from './commands/keyCommandPlainDelete';
+import keyCommandDeleteWord from './commands/keyCommandDeleteWord';
+import keyCommandPlainBackspace from './commands/keyCommandPlainBackspace';
+import keyCommandBackspaceWord from './commands/keyCommandBackspaceWord';
+import {keyCommandBackspaceToStartOfLine} from './commands/keyCommandBackspaceToStartOfLine';
+import keyCommandInsertNewline from './commands/keyCommandInsertNewline';
+import keyCommandTransposeCharacters from './commands/keyCommandTransposeCharacters';
+import keyCommandMoveSelectionToStartOfBlock from './commands/keyCommandMoveSelectionToStartOfBlock';
+import keyCommandMoveSelectionToEndOfBlock from './commands/keyCommandMoveSelectionToEndOfBlock';
+import SecondaryClipboard from './commands/SecondaryClipboard';
 
 const {isOptionKeyCommand} = KeyBindingUtil;
 const isChrome = UserAgent.isBrowser('Chrome');
@@ -42,7 +36,7 @@ const isChrome = UserAgent.isBrowser('Chrome');
 function onKeyCommand(
   command: DraftEditorCommand | string,
   editorState: EditorState,
-  e: React.KeyboardEvent
+  e: React.KeyboardEvent,
 ): EditorState {
   switch (command) {
     case 'redo':
@@ -83,11 +77,20 @@ function onKeyCommand(
  * See `getDefaultKeyBinding` for defaults. Alternatively, the top-level
  * component may provide a custom mapping via the `keyBindingFn` prop.
  */
-function editOnKeyDown(editor: DraftEditor, e: React.KeyboardEvent): void {
+export function editOnKeyDown(
+  editor: DraftEditor,
+  e: React.KeyboardEvent,
+): void {
   const keyCode = e.which;
   const editorState = editor._latestEditorState;
   function callDeprecatedHandler(
-    handlerName: "onDownArrow" | "onEscape" | "onLeftArrow" | "onRightArrow" | "onTab" | "onUpArrow"
+    handlerName:
+      | 'onDownArrow'
+      | 'onEscape'
+      | 'onLeftArrow'
+      | 'onRightArrow'
+      | 'onTab'
+      | 'onUpArrow',
   ): boolean {
     const deprecatedHandler = editor.props[handlerName];
     if (deprecatedHandler) {
@@ -193,5 +196,3 @@ function editOnKeyDown(editor: DraftEditor, e: React.KeyboardEvent): void {
     editor.update(newState);
   }
 }
-
-module.exports = editOnKeyDown;

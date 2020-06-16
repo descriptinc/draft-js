@@ -7,12 +7,13 @@
  * @emails oncall+draft_js
  */
 
-import type DraftEditor from 'DraftEditor.react';
-import invariant from "../../fbjs/invariant";
-import isHTMLElement from "./isHTMLElement";
+import invariant from '../../fbjs/invariant';
+import isHTMLElement from './isHTMLElement';
+import DraftEditor from '../base/DraftEditor.react';
 
-
-function getContentEditableContainer(editor: DraftEditor): HTMLElement {
+export default function getContentEditableContainer(
+  editor: DraftEditor,
+): HTMLElement {
   const editorNode = editor.editorContainer;
   invariant(editorNode, 'Missing editorNode');
   invariant(
@@ -21,5 +22,3 @@ function getContentEditableContainer(editor: DraftEditor): HTMLElement {
   );
   return editorNode.firstChild;
 }
-
-module.exports = getContentEditableContainer;

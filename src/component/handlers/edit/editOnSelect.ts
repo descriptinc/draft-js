@@ -7,15 +7,16 @@
  * @emails oncall+draft_js
  */
 
-import DraftEditor from 'DraftEditor.react';
 import DraftJsDebugLogging from '../../../stubs/DraftJsDebugLogging';
 import getDraftEditorSelection from '../../selection/getDraftEditorSelection';
 import {
   acceptSelection,
   forceSelection,
 } from '../../../model/immutable/EditorState';
+import DraftEditor from '../../base/DraftEditor.react';
+import getContentEditableContainer from '../../utils/getContentEditableContainer';
 
-function editOnSelect(editor: DraftEditor): void {
+export default function editOnSelect(editor: DraftEditor): void {
   if (
     editor._blockSelectEvents ||
     editor._latestEditorState !== editor.props.editorState
@@ -49,5 +50,3 @@ function editOnSelect(editor: DraftEditor): void {
     editor.update(editorState);
   }
 }
-
-module.exports = editOnSelect;

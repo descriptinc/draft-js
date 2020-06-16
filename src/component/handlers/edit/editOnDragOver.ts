@@ -11,14 +11,16 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
+import DraftEditor from '../../base/DraftEditor.react';
+import {SyntheticEvent} from 'react';
 
 /**
  * Drag behavior has begun from outside the editor element.
  */
-function editOnDragOver(editor: DraftEditor, e: SyntheticDragEvent): void {
+export default function editOnDragOver(
+  editor: DraftEditor,
+  e: SyntheticEvent,
+): void {
   editor.setMode('drag');
   e.preventDefault();
 }
-
-module.exports = editOnDragOver;

@@ -11,18 +11,24 @@
 
 'use strict';
 
-const EditorState = require('EditorState');
-const UnicodeUtils = require('UnicodeUtils');
-
-const moveSelectionForward = require('moveSelectionForward');
-const removeTextWithStrategy = require('removeTextWithStrategy');
+import UnicodeUtils from 'fbjs/lib/UnicodeUtils';
+import {
+  EditorState,
+  pushContent,
+} from '../../../../model/immutable/EditorState';
+import removeTextWithStrategy from './removeTextWithStrategy';
+import moveSelectionForward from './moveSelectionForward';
+import {getBlockForKey} from '../../../../model/immutable/ContentState';
+import {isCollapsed} from '../../../../model/immutable/SelectionState';
 
 /**
  * Remove the selected range. If the cursor is collapsed, remove the following
  * character. This operation is Unicode-aware, so removing a single character
  * will remove a surrogate pair properly as well.
  */
-function keyCommandPlainDelete(editorState: EditorState): EditorState {
+export default function keyCommandPlainDelete(
+  editorState: EditorState,
+): EditorState {
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {
@@ -30,7 +36,7 @@ function keyCommandPlainDelete(editorState: EditorState): EditorState {
       const content = strategyState.currentContent;
       const key = selection.anchorKey;
       const offset = selection.anchorOffset;
-      const charAhead = content.getBlockForKey(key).text[offset];
+      const charAhead = getBlockForKey(content, key).text[offset];
       return moveSelectionForward(
         strategyState,
         charAhead ? UnicodeUtils.getUTF16Length(charAhead, 0) : 1,
@@ -45,11 +51,9 @@ function keyCommandPlainDelete(editorState: EditorState): EditorState {
 
   const selection = editorState.selection;
 
-  return EditorState.push(
+  return pushContent(
     editorState,
-    afterRemoval.set('selectionBefore', selection),
-    selection.isCollapsed() ? 'delete-character' : 'remove-range',
+    {...afterRemoval, selectionBefore: selection},
+    isCollapsed(selection) ? 'delete-character' : 'remove-range',
   );
 }
-
-module.exports = keyCommandPlainDelete;

@@ -11,26 +11,31 @@
 
 'use strict';
 
-const EditorState = require('EditorState');
+import {
+  EditorState,
+  setEditorState,
+} from '../../../../model/immutable/EditorState';
+import {getStartKey} from '../../../../model/immutable/SelectionState';
 
 /**
  * Collapse selection at the start of the first selected block. This is used
  * for Firefox versions that attempt to navigate forward/backward instead of
  * moving the cursor. Other browsers are able to move the cursor natively.
  */
-function keyCommandMoveSelectionToStartOfBlock(editorState: EditorState): EditorState {
+export default function keyCommandMoveSelectionToStartOfBlock(
+  editorState: EditorState,
+): EditorState {
   const selection = editorState.selection;
-  const startKey = selection.getStartKey();
-  return EditorState.set(editorState, {
-    selection: selection.merge({
+  const startKey = getStartKey(selection);
+  return setEditorState(editorState, {
+    selection: {
+      ...selection,
       anchorKey: startKey,
       anchorOffset: 0,
       focusKey: startKey,
       focusOffset: 0,
       isBackward: false,
-    }),
+    },
     forceSelection: true,
   });
 }
-
-module.exports = keyCommandMoveSelectionToStartOfBlock;

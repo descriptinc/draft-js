@@ -11,14 +11,22 @@
 
 'use strict';
 
-import { BlockMap } from 'BlockMap';
-import SelectionState from 'SelectionState';
-
-const DraftModifier = require('DraftModifier');
-const EditorState = require('EditorState');
-
-const getContentStateFragment = require('getContentStateFragment');
-const nullthrows = require('nullthrows');
+import {BlockMap} from '../../../../model/immutable/BlockMap';
+import {
+  EditorState,
+  pushContent,
+} from '../../../../model/immutable/EditorState';
+import {
+  isCollapsed,
+  SelectionState,
+} from '../../../../model/immutable/SelectionState';
+import {
+  getBlockAfter,
+  getBlockForKey,
+} from '../../../../model/immutable/ContentState';
+import {nullthrows} from '../../../../fbjs/nullthrows';
+import getContentStateFragment from '../../../../model/transaction/getContentStateFragment';
+import DraftModifier from '../../../../model/modifier/DraftModifier';
 
 let clipboard: BlockMap | null = null;
 
@@ -32,18 +40,22 @@ const SecondaryClipboard = {
     const selection = editorState.selection;
     let targetRange: SelectionState | null = null;
 
-    if (selection.isCollapsed()) {
+    if (isCollapsed(selection)) {
       const anchorKey = selection.anchorKey;
-      const blockEnd = content.getBlockForKey(anchorKey).getLength();
+      const blockEnd = getBlockForKey(content, anchorKey).text.length;
 
       if (blockEnd === selection.anchorOffset) {
-        const keyAfter = content.getKeyAfter(anchorKey);
-        if (keyAfter == null) {
+        const keyAfter = getBlockAfter(content, anchorKey)?.key;
+        if (keyAfter) {
           return editorState;
         }
-        targetRange = selection.set('focusKey', keyAfter).set('focusOffset', 0);
+        targetRange = {
+          ...selection,
+          focusKey: keyAfter as string,
+          focusOffset: 0,
+        };
       } else {
-        targetRange = selection.set('focusOffset', blockEnd);
+        targetRange = {...selection, focusOffset: blockEnd};
       }
     } else {
       targetRange = selection;
@@ -64,7 +76,7 @@ const SecondaryClipboard = {
       return editorState;
     }
 
-    return EditorState.push(editorState, afterRemoval, 'remove-range');
+    return pushContent(editorState, afterRemoval, 'remove-range');
   },
 
   paste: function(editorState: EditorState): EditorState {
@@ -78,8 +90,8 @@ const SecondaryClipboard = {
       clipboard,
     );
 
-    return EditorState.push(editorState, newContent, 'insert-fragment');
+    return pushContent(editorState, newContent, 'insert-fragment');
   },
 };
 
-module.exports = SecondaryClipboard;
+export default SecondaryClipboard;

@@ -11,10 +11,18 @@
 
 'use strict';
 
-import EditorState from 'EditorState';
-import SelectionState from 'SelectionState';
-
-const warning = require('warning');
+import {EditorState} from '../../../../model/immutable/EditorState';
+import {
+  getStartKey,
+  getStartOffset,
+  isCollapsed,
+  SelectionState,
+} from '../../../../model/immutable/SelectionState';
+import warning from 'fbjs/lib/warning';
+import {
+  getBlockAfter,
+  getBlockForKey,
+} from '../../../../model/immutable/ContentState';
 
 /**
  * Given a collapsed selection, move the focus `maxDistance` forward within
@@ -24,30 +32,35 @@ const warning = require('warning');
  * This function is not Unicode-aware, so surrogate pairs will be treated
  * as having length 2.
  */
-function moveSelectionForward(editorState: EditorState, maxDistance: number): SelectionState {
+export default function moveSelectionForward(
+  editorState: EditorState,
+  maxDistance: number,
+): SelectionState {
   const selection = editorState.selection;
   // Should eventually make this an invariant
   warning(
-    selection.isCollapsed(),
+    isCollapsed(selection),
     'moveSelectionForward should only be called with a collapsed SelectionState',
   );
-  const key = selection.getStartKey();
+  const key = getStartKey(selection);
   const offset = getStartOffset(selection);
   const content = editorState.currentContent;
 
-  let focusKey = key;
+  let focusKey: string | null = key;
   let focusOffset;
 
-  const block = content.getBlockForKey(key);
+  const block = getBlockForKey(content, key);
 
   if (maxDistance > block.text.length - offset) {
-    focusKey = content.getKeyAfter(key);
+    focusKey = getBlockAfter(content, key)!.key;
     focusOffset = 0;
   } else {
     focusOffset = offset + maxDistance;
   }
 
-  return selection.merge({focusKey, focusOffset});
+  return {
+    ...selection,
+    focusKey,
+    focusOffset,
+  };
 }
-
-module.exports = moveSelectionForward;

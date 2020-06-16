@@ -9,9 +9,9 @@
  * @emails oncall+draft_js
  */
 
-const ReactDOMComet = require('ReactDOMComet');
+import ReactDOMComet from 'fbjs/lib/ReactDOMComet';
 
-const flushControlled: void | ((fn: (() => void)) => void) =
+const flushControlled: void | ((fn: () => void) => void) =
   ReactDOMComet.unstable_flushControlled;
 
 module.exports = flushControlled;

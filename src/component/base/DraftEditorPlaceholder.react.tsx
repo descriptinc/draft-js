@@ -11,18 +11,16 @@
 
 'use strict';
 
-import { DraftTextAlignment } from 'DraftTextAlignment';
-import EditorState from 'EditorState';
-
-const React = require('React');
-
-const cx = require('cx');
+import React from 'react';
+import cx from 'fbjs/lib/cx';
+import {EditorState} from '../../model/immutable/EditorState';
+import {DraftTextAlignment} from './DraftTextAlignment';
 
 type Props = {
-  accessibilityID: string,
-  editorState: EditorState,
-  text: string,
-  textAlignment: DraftTextAlignment
+  accessibilityID: string;
+  editorState: EditorState;
+  text: string;
+  textAlignment: DraftTextAlignment;
 };
 
 /**
@@ -32,23 +30,23 @@ type Props = {
  * Override placeholder style via CSS.
  */
 class DraftEditorPlaceholder extends React.Component<Props> {
-  shouldComponentUpdate function(nextProps: Props): boolean {
+  shouldComponentUpdate(nextProps: Props): boolean {
     return (
       this.props.text !== nextProps.text ||
-      this.props.editorState.selection.getHasFocus() !==
-        nextProps.editorState.selection.getHasFocus()
+      this.props.editorState.selection.hasFocus !==
+        nextProps.editorState.selection.hasFocus
     );
   }
 
-  render function(): React.ReactNode {
-    const hasFocus = this.props.editorState.selection.getHasFocus();
+  render(): React.ReactNode {
+    const hasFocus = this.props.editorState.selection.hasFocus;
 
     const className = cx({
       'public/DraftEditorPlaceholder/root': true,
       'public/DraftEditorPlaceholder/hasFocus': hasFocus,
     });
 
-    const contentStyle = {
+    const contentStyle: React.CSSProperties = {
       whiteSpace: 'pre-wrap',
     };
 

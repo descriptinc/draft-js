@@ -12,6 +12,6 @@
 'use strict';
 
 export type DraftScrollPosition = {
- readonly x: number,
- readonly y: number
+  readonly x: number;
+  readonly y: number;
 };

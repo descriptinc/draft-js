@@ -11,15 +11,18 @@
 
 'use strict';
 
-const DraftModifier = require('DraftModifier');
-const EditorState = require('EditorState');
+import {
+  EditorState,
+  pushContent,
+} from '../../../../model/immutable/EditorState';
+import DraftModifier from '../../../../model/modifier/DraftModifier';
 
-function keyCommandInsertNewline(editorState: EditorState): EditorState {
+export default function keyCommandInsertNewline(
+  editorState: EditorState,
+): EditorState {
   const contentState = DraftModifier.splitBlock(
     editorState.currentContent,
     editorState.selection,
   );
-  return EditorState.push(editorState, contentState, 'split-block');
+  return pushContent(editorState, contentState, 'split-block');
 }
-
-module.exports = keyCommandInsertNewline;

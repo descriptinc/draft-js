@@ -11,16 +11,12 @@
 
 'use strict';
 
-import { SelectionObject } from 'DraftDOMTypes';
+import {EditorState} from "../../../../model/immutable/EditorState";
 
-const EditorState = require('EditorState');
-
-const expandRangeToStartOfLine = require('expandRangeToStartOfLine');
-const getDraftEditorSelectionWithNodes = require('getDraftEditorSelectionWithNodes');
-const moveSelectionBackward = require('moveSelectionBackward');
-const removeTextWithStrategy = require('removeTextWithStrategy');
-
-function keyCommandBackspaceToStartOfLine(editorState: EditorState, e: React.KeyboardEvent): EditorState {
+export function keyCommandBackspaceToStartOfLine(
+  editorState: EditorState,
+  e: React.KeyboardEvent,
+): EditorState {
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {
@@ -55,5 +51,3 @@ function keyCommandBackspaceToStartOfLine(editorState: EditorState, e: React.Key
 
   return EditorState.push(editorState, afterRemoval, 'remove-range');
 }
-
-module.exports = keyCommandBackspaceToStartOfLine;

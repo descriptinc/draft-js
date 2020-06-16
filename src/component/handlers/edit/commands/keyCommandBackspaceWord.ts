@@ -11,17 +11,26 @@
 
 'use strict';
 
-const DraftRemovableWord = require('DraftRemovableWord');
-const EditorState = require('EditorState');
-
-const moveSelectionBackward = require('moveSelectionBackward');
-const removeTextWithStrategy = require('removeTextWithStrategy');
+import {
+  EditorState,
+  pushContent,
+} from '../../../../model/immutable/EditorState';
+import removeTextWithStrategy from './removeTextWithStrategy';
+import {
+  getStartKey,
+  getStartOffset,
+} from '../../../../model/immutable/SelectionState';
+import moveSelectionBackward from './moveSelectionBackward';
+import DraftRemovableWord from '../../../../model/modifier/DraftRemovableWord';
+import {getBlockForKey} from '../../../../model/immutable/ContentState';
 
 /**
  * Delete the word that is left of the cursor, as well as any spaces or
  * punctuation after the word.
  */
-function keyCommandBackspaceWord(editorState: EditorState): EditorState {
+export default function keyCommandBackspaceWord(
+  editorState: EditorState,
+): EditorState {
   const afterRemoval = removeTextWithStrategy(
     editorState,
     strategyState => {
@@ -31,12 +40,9 @@ function keyCommandBackspaceWord(editorState: EditorState): EditorState {
       if (offset === 0) {
         return moveSelectionBackward(strategyState, 1);
       }
-      const key = selection.getStartKey();
+      const key = getStartKey(selection);
       const content = strategyState.currentContent;
-      const text = content
-        .getBlockForKey(key)
-        .text
-        .slice(0, offset);
+      const text = getBlockForKey(content, key).text.slice(0, offset);
       const toRemove = DraftRemovableWord.getBackward(text);
       return moveSelectionBackward(strategyState, toRemove.length || 1);
     },
@@ -47,7 +53,5 @@ function keyCommandBackspaceWord(editorState: EditorState): EditorState {
     return editorState;
   }
 
-  return EditorState.push(editorState, afterRemoval, 'remove-range');
+  return pushContent(editorState, afterRemoval, 'remove-range');
 }
-
-module.exports = keyCommandBackspaceWord;

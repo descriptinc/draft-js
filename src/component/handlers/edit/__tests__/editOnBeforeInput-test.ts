@@ -11,15 +11,24 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
-
-const CompositeDraftDecorator = require('CompositeDraftDecorator');
-const ContentBlock = require('ContentBlock');
-const ContentState = require('ContentState');
-const EditorState = require('EditorState');
-const SelectionState = require('SelectionState');
-
-const onBeforeInput = require('editOnBeforeInput');
+import {makeSelectionState} from '../../../../model/immutable/SelectionState';
+import {
+  acceptSelection,
+  createWithContent,
+  setEditorState,
+} from '../../../../model/immutable/EditorState';
+import {
+  ContentState,
+  createFromBlockArray,
+} from '../../../../model/immutable/ContentState';
+import {
+  ContentBlock,
+  makeContentBlock,
+} from '../../../../model/immutable/ContentBlock';
+import DraftEditor from '../../../base/DraftEditor.react';
+import {SyntheticInputEvent} from '../../../utils/eventTypes';
+import editOnBeforeInput from '../editOnBeforeInput';
+import CompositeDraftDecorator from '../../../../model/decorators/CompositeDraftDecorator';
 
 const DEFAULT_SELECTION = {
   anchorKey: 'a',
@@ -29,21 +38,21 @@ const DEFAULT_SELECTION = {
   isBackward: false,
 };
 
-const rangedSelection = new SelectionState({
+const rangedSelection = makeSelectionState({
   ...DEFAULT_SELECTION,
   focusOffset: 1,
 });
 
-const rangedSelectionBackwards = new SelectionState({
+const rangedSelectionBackwards = makeSelectionState({
   ...DEFAULT_SELECTION,
   anchorOffset: 1,
   isBackward: true,
 });
 
 const getEditorState = (text: string = 'Arsenal') => {
-  return EditorState.createWithContent(
-    ContentState.createFromBlockArray([
-      new ContentBlock({
+  return createWithContent(
+    createFromBlockArray([
+      makeContentBlock({
         key: 'a',
         text,
       }),
@@ -53,16 +62,14 @@ const getEditorState = (text: string = 'Arsenal') => {
 
 const getDraftEditor = (obj): DraftEditor => obj as any;
 
-const getInputEvent = (data): SyntheticInputEvent<HTMLElement> => {
-  data,
-  preventDefault: jest.fn(),
-} as any;
+const getInputEvent = (data?: any): SyntheticInputEvent =>
+  ({
+    data,
+    preventDefault: jest.fn(),
+  } as any);
 
 test('editor is not updated if no character data is provided', () => {
-  const editorState = EditorState.acceptSelection(
-    getEditorState(),
-    rangedSelection,
-  );
+  const editorState = acceptSelection(getEditorState(), rangedSelection);
 
   const editor = getDraftEditor({
     _latestEditorState: editorState,
@@ -70,16 +77,13 @@ test('editor is not updated if no character data is provided', () => {
     update: jest.fn(),
   });
 
-  onBeforeInput(editor, getInputEvent());
+  editOnBeforeInput(editor, getInputEvent());
 
   expect(editor.update).toHaveBeenCalledTimes(0);
 });
 
 test('editor is not updated if handled by handleBeforeInput', () => {
-  const editorState = EditorState.acceptSelection(
-    getEditorState(),
-    rangedSelection,
-  );
+  const editorState = acceptSelection(getEditorState(), rangedSelection);
 
   const editor = getDraftEditor({
     _latestEditorState: editorState,
@@ -89,16 +93,13 @@ test('editor is not updated if handled by handleBeforeInput', () => {
     update: jest.fn(),
   });
 
-  onBeforeInput(editor, getInputEvent('O'));
+  editOnBeforeInput(editor, getInputEvent('O'));
 
   expect(editor.update).toHaveBeenCalledTimes(0);
 });
 
 test('editor is updated with new text if it does not match current selection', () => {
-  const editorState = EditorState.acceptSelection(
-    getEditorState(),
-    rangedSelection,
-  );
+  const editorState = acceptSelection(getEditorState(), rangedSelection);
 
   const update = jest.fn();
   const editor = getDraftEditor({
@@ -107,7 +108,7 @@ test('editor is updated with new text if it does not match current selection', (
     update,
   });
 
-  onBeforeInput(editor, getInputEvent('O'));
+  editOnBeforeInput(editor, getInputEvent('O'));
 
   expect(update).toHaveBeenCalledTimes(1);
 
@@ -116,10 +117,7 @@ test('editor is updated with new text if it does not match current selection', (
 });
 
 test('editor selectionstate is updated if new text matches current selection', () => {
-  const editorState = EditorState.acceptSelection(
-    getEditorState(),
-    rangedSelection,
-  );
+  const editorState = acceptSelection(getEditorState(), rangedSelection);
 
   const update = jest.fn();
   const editor = getDraftEditor({
@@ -128,7 +126,7 @@ test('editor selectionstate is updated if new text matches current selection', (
     update,
   });
 
-  onBeforeInput(editor, getInputEvent('A'));
+  editOnBeforeInput(editor, getInputEvent('A'));
 
   expect(update).toHaveBeenCalledTimes(1);
 
@@ -137,7 +135,7 @@ test('editor selectionstate is updated if new text matches current selection', (
 });
 
 test('editor selectionstate is updated if new text matches current selection and user selected backwards', () => {
-  const editorState = EditorState.acceptSelection(
+  const editorState = acceptSelection(
     getEditorState(),
     rangedSelectionBackwards,
   );
@@ -149,7 +147,7 @@ test('editor selectionstate is updated if new text matches current selection and
     update,
   });
 
-  onBeforeInput(editor, getInputEvent('A'));
+  editOnBeforeInput(editor, getInputEvent('A'));
 
   expect(update).toHaveBeenCalledTimes(1);
 
@@ -158,11 +156,15 @@ test('editor selectionstate is updated if new text matches current selection and
 });
 
 const HASHTAG_REGEX = /#[a-z]+/g;
-function hashtagStrategy(contentBlock, callback, contentState) {
+function hashtagStrategy(
+  contentBlock: ContentBlock,
+  callback,
+  _contentState: ContentState,
+) {
   findWithRegex(HASHTAG_REGEX, contentBlock, callback);
 }
 
-function findWithRegex(regex, contentBlock, callback) {
+function findWithRegex(regex: RegExp, contentBlock: ContentBlock, callback) {
   const text = contentBlock.text;
   let matchArr = regex.exec(text);
   while (matchArr !== null) {
@@ -172,21 +174,21 @@ function findWithRegex(regex, contentBlock, callback) {
 }
 
 function testDecoratorFingerprint(
-  text,
-  selection,
-  charToInsert,
+  text: string,
+  selection: number,
+  charToInsert: string,
   shouldPrevent,
 ) {
-  const editorState = EditorState.acceptSelection(
-    EditorState.set(getEditorState(text), {
+  const editorState = acceptSelection(
+    setEditorState(getEditorState(text), {
       decorator: new CompositeDraftDecorator([
         {
           strategy: hashtagStrategy,
-          component: null,
+          component: () => null,
         },
       ]),
     }),
-    new SelectionState({
+    makeSelectionState({
       ...DEFAULT_SELECTION,
       anchorOffset: selection,
       focusOffset: selection,
@@ -201,7 +203,7 @@ function testDecoratorFingerprint(
   });
 
   const ev = getInputEvent(charToInsert);
-  onBeforeInput(editor, ev);
+  editOnBeforeInput(editor, ev);
 
   expect(ev.preventDefault.mock.calls.length).toBe(shouldPrevent ? 1 : 0);
 }

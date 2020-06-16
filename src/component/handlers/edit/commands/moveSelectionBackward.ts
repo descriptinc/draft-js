@@ -11,10 +11,18 @@
 
 'use strict';
 
-import EditorState from 'EditorState';
-import SelectionState from 'SelectionState';
-
-const warning = require('warning');
+import warning from 'fbjs/lib/warning';
+import {EditorState} from '../../../../model/immutable/EditorState';
+import {
+  getStartKey,
+  getStartOffset,
+  isCollapsed,
+  SelectionState,
+} from '../../../../model/immutable/SelectionState';
+import {
+  getBlockBefore,
+  getBlockForKey,
+} from '../../../../model/immutable/ContentState';
 
 /**
  * Given a collapsed selection, move the focus `maxDistance` backward within
@@ -24,38 +32,35 @@ const warning = require('warning');
  * This function is not Unicode-aware, so surrogate pairs will be treated
  * as having length 2.
  */
-function moveSelectionBackward(editorState: EditorState, maxDistance: number): SelectionState {
+export default function moveSelectionBackward(
+  editorState: EditorState,
+  maxDistance: number,
+): SelectionState {
   const selection = editorState.selection;
   // Should eventually make this an invariant
   warning(
-    selection.isCollapsed(),
+    isCollapsed(selection),
     'moveSelectionBackward should only be called with a collapsed SelectionState',
   );
   const content = editorState.currentContent;
-  const key = selection.getStartKey();
+  const key = getStartKey(selection);
   const offset = getStartOffset(selection);
 
   let focusKey = key;
   let focusOffset = 0;
 
   if (maxDistance > offset) {
-    const keyBefore = content.getKeyBefore(key);
-    if (keyBefore == null) {
+    const keyBefore = getBlockBefore(content, key)?.key;
+    if (!keyBefore) {
       focusKey = key;
     } else {
       focusKey = keyBefore;
-      const blockBefore = content.getBlockForKey(keyBefore);
+      const blockBefore = getBlockForKey(content, keyBefore);
       focusOffset = blockBefore.text.length;
     }
   } else {
     focusOffset = offset - maxDistance;
   }
 
-  return selection.merge({
-    focusKey,
-    focusOffset,
-    isBackward: true,
-  });
+  return {...selection, focusKey, focusOffset, isBackward: true};
 }
-
-module.exports = moveSelectionBackward;

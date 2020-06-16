@@ -11,42 +11,44 @@
 
 'use strict';
 
-import DraftEditor from 'DraftEditor.react';
-
-const UserAgent = require('UserAgent');
-
-const onBeforeInput = require('editOnBeforeInput');
-const onBlur = require('editOnBlur');
-const onCompositionStart = require('editOnCompositionStart');
-const onCopy = require('editOnCopy');
-const onCut = require('editOnCut');
-const onDragOver = require('editOnDragOver');
-const onDragStart = require('editOnDragStart');
-const onFocus = require('editOnFocus');
-const onInput = require('editOnInput');
-const onKeyDown = require('editOnKeyDown');
-const onPaste = require('editOnPaste');
-const onSelect = require('editOnSelect');
+import UserAgent from 'fbjs/lib/UserAgent';
+import DraftEditor from '../../base/DraftEditor.react';
+import editOnBeforeInput from './editOnBeforeInput';
+import editOnBlur from './editOnBlur';
+import editOnCompositionStart from './editOnCompositionStart';
+import editOnCopy from './editOnCopy';
+import editOnCut from './editOnCut';
+import editOnDragOver from './editOnDragOver';
+import editOnDragStart from './editOnDragStart';
+import {editOnFocus} from './editOnFocus';
+import editOnInput from './editOnInput';
+import {editOnKeyDown} from './editOnKeyDown';
+import editOnPaste from './editOnPaste';
+import editOnSelect from './editOnSelect';
 
 const isChrome = UserAgent.isBrowser('Chrome');
 const isFirefox = UserAgent.isBrowser('Firefox');
 
-const selectionHandler: ((e: DraftEditor) => void) =
-  isChrome || isFirefox ? onSelect : e => {};
+const selectionHandler: (e: DraftEditor) => void =
+  isChrome || isFirefox
+    ? editOnSelect
+    : _ => {
+        //
+      };
 
 const DraftEditorEditHandler = {
-  onBeforeInput,
-  onBlur,
-  onCompositionStart,
-  onCopy,
-  onCut,
-  onDragOver,
-  onDragStart,
-  onFocus,
-  onInput,
-  onKeyDown,
-  onPaste,
-  onSelect,
+  onBeforeInput: editOnBeforeInput,
+  onBlur: editOnBlur,
+  onCompositionStart: editOnCompositionStart,
+  onCopy: editOnCopy,
+  onCut: editOnCut,
+  onDragOver: editOnDragOver,
+  onDragStart: editOnDragStart,
+  onFocus: editOnFocus,
+  onInput: editOnInput,
+  onKeyDown: editOnKeyDown,
+  onPaste: editOnPaste,
+  onSelect: editOnSelect,
   // In certain cases, contenteditable on chrome does not fire the onSelect
   // event, causing problems with cursor positioning. Therefore, the selection
   // state update handler is added to more events to ensure that the selection
@@ -55,4 +57,4 @@ const DraftEditorEditHandler = {
   onKeyUp: selectionHandler,
 };
 
-module.exports = DraftEditorEditHandler;
+export default DraftEditorEditHandler;

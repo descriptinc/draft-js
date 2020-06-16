@@ -22,7 +22,7 @@ const TEXT_SIZE_UPPER_BOUND = 5000;
 /**
  * Extract the text content from a file list.
  */
-function getTextContentFromFiles(
+export function getTextContentFromFiles(
   files: Array<File>,
   callback: (contents: string) => void,
 ): void {

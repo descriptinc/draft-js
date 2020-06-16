@@ -10,14 +10,12 @@
 
 'use strict';
 
+import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
+
 jest.mock('generateRandomKey');
 
-const Editor = require('DraftEditor.react');
-const EditorState = require('EditorState');
-const RichUtils = require('RichTextEditorUtil');
-
-const React = require('react');
-const ReactTestRenderer = require('react-test-renderer');
+import React from 'react';
+import RichTextEditorUtil from '../../../model/modifier/RichTextEditorUtil';
 
 test('defaults to "unstyled" block type for unknown block types', () => {
   const CUSTOM_BLOCK_TYPE = 'CUSTOM_BLOCK_TYPE';
@@ -31,17 +29,17 @@ test('defaults to "unstyled" block type for unknown block types', () => {
     );
   }
 
-  class Container extends React.Component {
+  class Container extends React.Component<{}, {editorState: EditorState}> {
     constructor(props) {
       super(props);
       this.state = {
-        editorState: EditorState.createEmpty(),
+        editorState: createEmpty(),
       };
     }
     toggleCustomBlock = () => {
       this.setState(
         {
-          editorState: RichUtils.toggleBlockType(
+          editorState: RichTextEditorUtil.toggleBlockType(
             this.state.editorState,
             CUSTOM_BLOCK_TYPE,
           ),

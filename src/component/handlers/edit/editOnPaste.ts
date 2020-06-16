@@ -9,29 +9,33 @@
  * @emails oncall+draft_js
  */
 
-'use strict';
-
-import { BlockMap } from 'BlockMap';
-import DraftEditor from 'DraftEditor.react';
-import { EntityMap } from 'EntityMap';
-
-const BlockMapBuilder = require('BlockMapBuilder');
-const CharacterMetadata = require('CharacterMetadata');
-const DataTransfer = require('DataTransfer');
-const DraftModifier = require('DraftModifier');
-const DraftPasteProcessor = require('DraftPasteProcessor');
-const EditorState = require('EditorState');
-const RichTextEditorUtil = require('RichTextEditorUtil');
-
-const getEntityKeyForSelection = require('getEntityKeyForSelection');
-const getTextContentFromFiles = require('getTextContentFromFiles');
-const isEventHandled = require('isEventHandled');
-const splitTextIntoTextBlocks = require('splitTextIntoTextBlocks');
+import DraftEditor from '../../base/DraftEditor.react';
+import {SyntheticClipboardEvent} from '../../utils/eventTypes';
+import isEventHandled from '../../utils/isEventHandled';
+import splitTextIntoTextBlocks from '../../utils/splitTextIntoTextBlocks';
+import {makeCharacterMetadata} from '../../../model/immutable/CharacterMetadata';
+import getEntityKeyForSelection from '../../../model/entity/getEntityKeyForSelection';
+import {
+  EditorState,
+  getCurrentInlineStyle,
+  pushContent,
+} from '../../../model/immutable/EditorState';
+import RichTextEditorUtil from '../../../model/modifier/RichTextEditorUtil';
+import DraftPasteProcessor from '../../../model/paste/DraftPasteProcessor';
+import {createFromArray} from '../../../model/immutable/BlockMapBuilder';
+import DraftModifier from '../../../model/modifier/DraftModifier';
+import {getTextContentFromFiles} from '../../utils/getTextContentFromFiles';
+import {BlockMap} from '../../../model/immutable/BlockMap';
+import {EntityMap} from '../../../model/immutable/EntityMap';
+import {every, first} from '../../../model/descript/Iterables';
 
 /**
  * Paste content.
  */
-function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
+export default function editOnPaste(
+  editor: DraftEditor,
+  e: SyntheticClipboardEvent,
+): void {
   e.preventDefault();
   const data = new DataTransfer(e.clipboardData);
 
@@ -60,8 +64,8 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
 
         const editorState = editor._latestEditorState;
         const blocks = splitTextIntoTextBlocks(fileText);
-        const character = CharacterMetadata.create({
-          style: editorState.getCurrentInlineStyle(),
+        const character = makeCharacterMetadata({
+          style: getCurrentInlineStyle(editorState),
           entity: getEntityKeyForSelection(
             editorState.currentContent,
             editorState.selection,
@@ -76,7 +80,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
           character,
           currentBlockType,
         );
-        const fragment = BlockMapBuilder.createFromArray(text);
+        const fragment = createFromArray(text);
 
         const withInsertedText = DraftModifier.replaceWithFragment(
           editorState.currentContent,
@@ -85,7 +89,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
         );
 
         editor.update(
-          EditorState.push(editorState, withInsertedText, 'insert-fragment'),
+          pushContent(editorState, withInsertedText, 'insert-fragment'),
         );
       });
 
@@ -128,7 +132,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
         // whether the pasted text matches the internal clipboard.
         (textBlocks.length === 1 &&
           internalClipboard.size === 1 &&
-          internalClipboard.first().text === text)
+          first(internalClipboard.values())!.text === text)
       ) {
         editor.update(
           insertFragment(editor._latestEditorState, internalClipboard),
@@ -159,7 +163,7 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
       if (htmlFragment) {
         const {contentBlocks, entityMap} = htmlFragment;
         if (contentBlocks) {
-          const htmlMap = BlockMapBuilder.createFromArray(contentBlocks);
+          const htmlMap = createFromArray(contentBlocks);
           editor.update(
             insertFragment(editor._latestEditorState, htmlMap, entityMap),
           );
@@ -174,8 +178,8 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
   }
 
   if (textBlocks.length) {
-    const character = CharacterMetadata.create({
-      style: editorState.getCurrentInlineStyle(),
+    const character = makeCharacterMetadata({
+      style: getCurrentInlineStyle(editorState),
       entity: getEntityKeyForSelection(
         editorState.currentContent,
         editorState.selection,
@@ -192,12 +196,16 @@ function editOnPaste(editor: DraftEditor, e: SyntheticClipboardEvent): void {
       currentBlockType,
     );
 
-    const textMap = BlockMapBuilder.createFromArray(textFragment);
+    const textMap = createFromArray(textFragment);
     editor.update(insertFragment(editor._latestEditorState, textMap));
   }
 }
 
-function insertFragment(editorState: EditorState, fragment: BlockMap, entityMap: EntityMap | null): EditorState {
+function insertFragment(
+  editorState: EditorState,
+  fragment: BlockMap,
+  _?: EntityMap | null,
+): EditorState {
   const newContent = DraftModifier.replaceWithFragment(
     editorState.currentContent,
     editorState.selection,
@@ -207,18 +215,21 @@ function insertFragment(editorState: EditorState, fragment: BlockMap, entityMap:
   // like this:
   // const mergedEntityMap = newContent.getEntityMap().merge(entityMap);
 
-  return EditorState.push(
+  return pushContent(
     editorState,
-    newContent.set('entityMap', entityMap),
+    newContent,
+    // FIXME [mvp]: entity map
+    // newContent.set('entityMap', entityMap),
     'insert-fragment',
   );
 }
 
-function areTextBlocksAndClipboardEqual(textBlocks: Array<string>, blockMap: BlockMap): boolean {
+function areTextBlocksAndClipboardEqual(
+  textBlocks: Array<string>,
+  blockMap: BlockMap,
+): boolean {
   return (
     textBlocks.length === blockMap.size &&
-    blockMap.valueSeq().every((block, ii) => block.text === textBlocks[ii])
+    every(blockMap.values(), (block, ii) => block.text === textBlocks[ii])
   );
 }
-
-module.exports = editOnPaste;

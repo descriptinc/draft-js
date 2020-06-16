@@ -11,18 +11,30 @@
 
 'use strict';
 
-import { SelectionObject } from 'DraftDOMTypes';
-import DraftEditor from 'DraftEditor.react';
-
-const DraftModifier = require('DraftModifier');
-const DraftOffsetKey = require('DraftOffsetKey');
-const EditorState = require('EditorState');
-const UserAgent = require('UserAgent');
-
-const {notEmptyKey} = require('draftKeyUtils');
-const findAncestorOffsetKey = require('findAncestorOffsetKey');
-const keyCommandPlainBackspace = require('keyCommandPlainBackspace');
-const nullthrows = require('nullthrows');
+import UserAgent from 'fbjs/lib/UserAgent';
+import {
+  EditorState,
+  getBlockTree,
+  pushContent,
+} from '../../../model/immutable/EditorState';
+import keyCommandPlainBackspace from './commands/keyCommandPlainBackspace';
+import DraftEditor from '../../base/DraftEditor.react';
+import {SyntheticInputEvent} from '../../utils/eventTypes';
+import {SelectionObject} from '../../utils/DraftDOMTypes';
+import {nullthrows} from '../../../fbjs/nullthrows';
+import findAncestorOffsetKey from '../../selection/findAncestorOffsetKey';
+import DraftOffsetKey from '../../selection/DraftOffsetKey';
+import {getBlockForKey, getEntity} from '../../../model/immutable/ContentState';
+import {notEmptyKey} from '../../utils/draftKeyUtils';
+import {
+  getEntityAt,
+  getInlineStyleAt,
+} from '../../../model/immutable/ContentBlockNode';
+import DraftModifier from '../../../model/modifier/DraftModifier';
+import {
+  getEndOffset,
+  getStartOffset,
+} from '../../../model/immutable/SelectionState';
 
 const isGecko = UserAgent.isEngine('Gecko');
 
@@ -59,21 +71,28 @@ function onInputType(inputType: string, editorState: EditorState): EditorState {
  * when an `input` change leads to a DOM/model mismatch, the change should be
  * due to a spellcheck change, and we can incorporate it into our model.
  */
-function editOnInput(editor: DraftEditor, e: SyntheticInputEvent): void {
+export default function editOnInput(
+  editor: DraftEditor,
+  e: SyntheticInputEvent,
+): void {
   if (editor._pendingStateFromBeforeInput !== undefined) {
     editor.update(editor._pendingStateFromBeforeInput);
     editor._pendingStateFromBeforeInput = undefined;
   }
   // at this point editor is not null for sure (after input)
   const castedEditorElement: HTMLElement = editor.editor as any;
-  const domSelection = castedEditorElement.ownerDocument.defaultView.getSelection()asSelectionObject;
+  const domSelection = castedEditorElement.ownerDocument.defaultView!.getSelection() as SelectionObject;
 
   const {anchorNode, isCollapsed} = domSelection;
   const isNotTextOrElementNode =
     // Auto generated from flowToTs. Please clean me!
-    (anchorNode === null || anchorNode === undefined ? undefined : anchorNode.nodeType) !== Node.TEXT_NODE &&
+    (anchorNode === null || anchorNode === undefined
+      ? undefined
+      : anchorNode.nodeType) !== Node.TEXT_NODE &&
     // Auto generated from flowToTs. Please clean me!
-    (anchorNode === null || anchorNode === undefined ? undefined : anchorNode.nodeType) !== Node.ELEMENT_NODE;
+    (anchorNode === null || anchorNode === undefined
+      ? undefined
+      : anchorNode.nodeType) !== Node.ELEMENT_NODE;
 
   if (anchorNode == null || isNotTextOrElementNode) {
     // TODO: (t16149272) figure out context for this change
@@ -105,17 +124,17 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent): void {
     }
   }
 
-  let domText = anchorNode.textContent;
+  let domText = anchorNode.textContent || '';
   const editorState = editor._latestEditorState;
   const offsetKey = nullthrows(findAncestorOffsetKey(anchorNode));
   const {blockKey, decoratorKey, leafKey} = DraftOffsetKey.decode(offsetKey);
 
-  const {start, end} = editorState
-    .getBlockTree(blockKey)
-    .getIn([decoratorKey, 'leaves', leafKey]);
+  const {start, end} = getBlockTree(editorState, blockKey)?.[
+    decoratorKey
+  ]?.leaves?.[leafKey];
 
   const content = editorState.currentContent;
-  const block = content.getBlockForKey(blockKey);
+  const block = getBlockForKey(content, blockKey);
   const modelText = block.text.slice(start, end);
 
   // Special-case soft newlines here. If the DOM text ends in a soft newline,
@@ -137,7 +156,7 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent): void {
 
     /* $FlowFixMe inputType is only defined on a draft of a standard.
      * https://w3c.github.io/input-events/#dom-inputevent-inputtype */
-    const {inputType} = e.nativeEvent;
+    const inputType = (e.nativeEvent as any).inputType;
     if (inputType) {
       const newEditorState = onInputType(inputType, editorState);
       if (newEditorState !== editorState) {
@@ -152,15 +171,16 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent): void {
   const selection = editorState.selection;
 
   // We'll replace the entire leaf with the text content of the target.
-  const targetRange = selection.merge({
+  const targetRange = {
+    ...selection,
     anchorOffset: start,
     focusOffset: end,
     isBackward: false,
-  });
+  };
 
-  const entityKey = block.getEntityAt(start);
-  const entity = notEmptyKey(entityKey) ? content.getEntity(entityKey) : null;
-  const entityType = entity != null ? entity.getMutability() : null;
+  const entityKey = getEntityAt(block, start);
+  const entity = notEmptyKey(entityKey) ? getEntity(entityKey) : null;
+  const entityType = entity != null ? entity.mutability : null;
   const preserveEntity = entityType === 'MUTABLE';
 
   // Immutable or segmented entities cannot properly be handled by the
@@ -173,8 +193,8 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent): void {
     content,
     targetRange,
     domText,
-    block.getInlineStyleAt(start),
-    preserveEntity ? block.getEntityAt(start) : null,
+    getInlineStyleAt(block, start),
+    preserveEntity ? getEntityAt(block, start) : null,
   );
 
   let anchorOffset, focusOffset, startOffset, endOffset;
@@ -206,13 +226,11 @@ function editOnInput(editor: DraftEditor, e: SyntheticInputEvent): void {
   // text content changes. For this case we do not want any text to be selected
   // after the change, so we are not merging the selection.
   const contentWithAdjustedDOMSelection = newContent.merge({
-    selectionBefore: content.getSelectionAfter(),
-    selectionAfter: selection.merge({anchorOffset, focusOffset}),
+    selectionBefore: content.selectionAfter,
+    selectionAfter: {...selection, anchorOffset, focusOffset},
   });
 
   editor.update(
-    EditorState.push(editorState, contentWithAdjustedDOMSelection, changeType),
+    pushContent(editorState, contentWithAdjustedDOMSelection, changeType),
   );
 }
-
-module.exports = editOnInput;
