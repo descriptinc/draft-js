@@ -23,9 +23,9 @@ var rename = require('gulp-rename');
 var gulpUtil = require('gulp-util');
 var StatsPlugin = require('stats-webpack-plugin');
 var through = require('through2');
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var webpackStream = require('webpack-stream');
 var merge = require('merge2');
+var TerserPlugin = require('terser-webpack-plugin');
 
 var tsProject = ts.createProject('./tsconfig.dist.json');
 var tsProjectMin = ts.createProject('./tsconfig.dist.json');
@@ -54,6 +54,41 @@ var COPYRIGHT_HEADER = `/**
  */
 `;
 
+const terserPlugin = outputEcmaVersion =>
+  new TerserPlugin({
+    terserOptions: {
+      parse: {
+        ecma: 8,
+      },
+      compress: {
+        ecma: outputEcmaVersion,
+        warnings: false,
+        // Disabled because of an issue with Uglify breaking seemingly valid code:
+        // https://github.com/facebook/create-react-app/issues/2376
+        // Pending further investigation:
+        // https://github.com/mishoo/UglifyJS2/issues/2011
+        comparisons: false,
+      },
+      mangle: {
+        safari10: true,
+      },
+      output: {
+        ecma: outputEcmaVersion,
+        comments: false,
+        // Turned on because emoji and regex is not minified properly using default
+        // https://github.com/facebook/create-react-app/issues/2488
+        ascii_only: true,
+      },
+    },
+    // Use multi-process parallel running to improve the build speed
+    // Default number of concurrent runs: os.cpus().length - 1
+    // srubin(5/15/2020): turning off to try to fix CI build
+    parallel: false,
+    // Enable file caching
+    cache: true,
+    sourceMap: true,
+  });
+
 var buildDist = function(opts) {
   var webpackOpts = {
     externals: {
@@ -81,6 +116,11 @@ var buildDist = function(opts) {
       libraryTarget: 'umd',
       library: 'Draft',
     },
+    optimization: opts.debug
+      ? {minimize: false}
+      : {
+          minimizer: [terserPlugin(6)],
+        },
     plugins: [
       new webpackStream.webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(
@@ -95,9 +135,7 @@ var buildDist = function(opts) {
       }),
     ],
   };
-  if (!opts.debug) {
-    webpackOpts.plugins.push(new UglifyJsPlugin());
-  }
+
   const wpStream = webpackStream(webpackOpts, null, function(err, stats) {
     if (err) {
       throw new gulpUtil.PluginError('webpack', err);
@@ -129,13 +167,11 @@ gulp.task(
 gulp.task(
   'modules:min',
   gulp.series(function() {
-    return (
-      tsProject
-        .src()
-        .pipe(tsProjectMin())
-        // .pipe(flatten())
-        .js.pipe(gulp.dest(paths.lib))
-    );
+    const tsResult = tsProjectMin.src().pipe(tsProjectMin());
+    return merge([
+      tsResult.dts.pipe(gulp.dest(paths.lib)),
+      tsResult.js.pipe(gulp.dest(paths.lib)),
+    ]);
   }),
 );
 
@@ -256,7 +292,6 @@ gulp.task(
     'check-dependencies',
     'clean',
     gulp.parallel('modules'),
-    gulp.parallel('dist'),
-    // gulp.parallel('dist', 'dist:min'),
+    gulp.parallel('dist', 'dist:min'),
   ),
 );
