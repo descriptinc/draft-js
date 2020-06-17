@@ -25,7 +25,7 @@ import {findRangesImmutable} from './findRangesImmutable';
 import {DraftInlineStyle} from './DraftInlineStyle';
 
 const EMPTY_ARRAY: readonly BlockNodeKey[] = [];
-const EMPTY_MAP = new Map();
+const EMPTY_DATA = {};
 
 export type ContentBlockNode = BlockNode &
   Readonly<{
@@ -47,7 +47,7 @@ const haveEqualEntity = (
 
 export function makeContentBlockNode({
   parent = null,
-  data = EMPTY_MAP,
+  data = EMPTY_DATA,
   key = '',
   text = '',
   depth = 0,

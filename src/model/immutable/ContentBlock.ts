@@ -11,12 +11,12 @@ import {EMPTY_CHARACTER} from './CharacterMetadata';
 import {BlockNode} from './BlockNode';
 import {repeat} from '../descript/Iterables';
 
-const EMPTY_MAP = new Map();
+const EMPTY_DATA = {};
 
 export type ContentBlock = BlockNode;
 
 export function makeContentBlock({
-  data = EMPTY_MAP,
+  data = EMPTY_DATA,
   key = '',
   text = '',
   depth = 0,

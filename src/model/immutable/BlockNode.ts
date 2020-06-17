@@ -14,7 +14,7 @@ export type BlockNodeKey = string;
 
 export type BlockNode = Readonly<{
   characterList: readonly CharacterMetadata[];
-  data: Map<any, any>;
+  data: Readonly<Record<string, any>> | undefined;
   depth: number;
   key: BlockNodeKey;
   text: string;

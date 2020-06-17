@@ -30,7 +30,7 @@ const getContentState = (blocks: BlockNodeRecord[]) => {
   return makeContentState({blockMap: createFromArray(blocks)});
 };
 
-function toObject(map: Map<string, any>): Record<string, any> {
+function toObject(map: ReadonlyMap<string, any>): Record<string, any> {
   const res: Record<string, any> = {};
   for (const [k, v] of map) {
     res[k] = v;

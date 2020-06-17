@@ -33,8 +33,8 @@ Array [
         "style": Array [],
       },
     ],
-    "data": Object {
-      "a": 1,
+    "data": Map {
+      "a" => 1,
     },
     "depth": 0,
     "key": "a",
@@ -208,8 +208,8 @@ Array [
         "style": Array [],
       },
     ],
-    "data": Object {
-      "a": 1,
+    "data": Map {
+      "a" => 1,
     },
     "depth": 0,
     "key": "a",
@@ -383,8 +383,8 @@ Array [
         "style": Array [],
       },
     ],
-    "data": Object {
-      "a": 1,
+    "data": Map {
+      "a" => 1,
     },
     "depth": 0,
     "key": "a",
@@ -538,8 +538,8 @@ Array [
         "style": Array [],
       },
     ],
-    "data": Object {
-      "a": 1,
+    "data": Map {
+      "a" => 1,
     },
     "depth": 0,
     "key": "a",
@@ -577,8 +577,8 @@ Array [
         "style": Array [],
       },
     ],
-    "data": Object {
-      "b": 2,
+    "data": Map {
+      "b" => 2,
     },
     "depth": 0,
     "key": "key1",
