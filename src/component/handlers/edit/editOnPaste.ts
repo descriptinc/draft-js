@@ -27,6 +27,7 @@ import {getTextContentFromFiles} from '../../utils/getTextContentFromFiles';
 import {BlockMap} from '../../../model/immutable/BlockMap';
 import {EntityMap} from '../../../model/immutable/EntityMap';
 import {every, first} from '../../../model/descript/Iterables';
+import DataTransfer from 'fbjs/lib/DataTransfer';
 
 /**
  * Paste content.
@@ -41,7 +42,7 @@ export default function editOnPaste(
   const data = new DataTransfer(e.clipboardData);
 
   // Get files, unless this is likely to be a string the user wants inline.
-  if (!(data as any).isRichText()) {
+  if (!data.isRichText()) {
     const files: Array<File> = (data as any).getFiles();
     const defaultFileText = (data as any).text;
     if (files.length > 0) {
