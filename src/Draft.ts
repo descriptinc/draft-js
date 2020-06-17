@@ -30,6 +30,10 @@ import getDefaultKeyBinding from './component/utils/getDefaultKeyBinding';
 export {getDefaultKeyBinding};
 import getVisibleSelectionRect from './component/selection/getVisibleSelectionRect';
 export {getVisibleSelectionRect};
+import convertFromDraftStateToRaw, {
+  RawDraftContentState,
+} from './model/encoding/convertFromDraftStateToRaw';
+export {convertFromDraftStateToRaw, RawDraftContentState};
 
 export {DraftEditorCommand} from './model/constants/DraftEditorCommand';
 export {DraftHandleValue} from './model/constants/DraftHandleValue';

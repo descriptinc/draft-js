@@ -42,7 +42,7 @@ const updateExistingBlock = (
   const finalKey = targetKey;
   const finalOffset = targetOffset + fragmentBlock.text.length;
 
-  let data: Map<any, any> | null = null;
+  let data: Readonly<Record<string, any>> | null = null;
 
   switch (mergeBlockData) {
     case 'MERGE_OLD_DATA_TO_NEW_DATA':

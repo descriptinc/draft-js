@@ -3,7 +3,6 @@ import {ContentBlock} from '../immutable/ContentBlock';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
 import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
-import {EntityMap} from '../immutable/EntityMap';
 import {blockIsExperimentalTreeBlock} from '../transaction/exploration/getNextDelimiterBlockKey';
 import {findEntityRanges, getEntityAt} from '../immutable/ContentBlockNode';
 import DraftStringKey from './DraftStringKey';
@@ -35,7 +34,7 @@ export type RawDraftContentState = {
 
 const createRawBlock = (
   block: BlockNodeRecord,
-  entityStorageMap: any,
+  entityStorageMap: Record<string, string | number>,
 ): RawDraftContentBlock => {
   return {
     key: block.key,
@@ -50,7 +49,7 @@ const createRawBlock = (
 
 const insertRawBlock = (
   block: BlockNodeRecord,
-  entityMap: EntityMap,
+  entityMap: Record<string, string | number>,
   rawBlocks: Array<RawDraftContentBlock>,
   blockCacheRef: any,
 ) => {
@@ -77,7 +76,10 @@ const encodeRawBlocks = (
   contentState: ContentState,
   rawState: RawDraftContentState,
 ): RawDraftContentState => {
-  const {entityMap} = rawState;
+  const entityMap = (rawState.entityMap as unknown) as Record<
+    string,
+    string | number
+  >;
 
   const rawBlocks = [];
 
@@ -113,7 +115,7 @@ const encodeRawBlocks = (
 
   return {
     blocks: rawBlocks,
-    entityMap,
+    entityMap: (entityMap as unknown) as Record<string, RawDraftEntity>,
   };
 };
 
