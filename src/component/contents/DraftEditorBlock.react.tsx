@@ -174,8 +174,8 @@ export default class DraftEditorBlock extends React.Component<Props> {
       return;
     }
     const selection = this.props.selection;
-    const endKey = selection.getEndKey();
-    if (!selection.getHasFocus() || endKey !== this.props.block.getKey()) {
+    const endKey = getEndKey(selection);
+    if (!selection.hasFocus || endKey !== this.props.block.key) {
       return;
     }
 
@@ -251,7 +251,7 @@ export default class DraftEditorBlock extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps): void {
-    const blockKey = this.props.block.getKey();
+    const blockKey = this.props.block.key;
     const hadSelection = isBlockOnSelectionEdge(prevProps.selection, blockKey);
     const hasSelection = isBlockOnSelectionEdge(this.props.selection, blockKey);
     if (hasSelection && !hadSelection) {

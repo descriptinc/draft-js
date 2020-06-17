@@ -7,6 +7,7 @@
  * @emails oncall+draft_js
  */
 
+import fastDeepEqual from 'fast-deep-equal/es6';
 import {ContentState} from './ContentState';
 import {BlockNodeRecord} from './BlockNodeRecord';
 import {DraftDecoratorType} from '../decorators/DraftDecoratorType';
@@ -91,7 +92,8 @@ function generateLeaves(
   const leaves: LeafRange[] = [];
   findRangesImmutable(
     map(characters, ({style}) => style),
-    areEqual,
+    // FIXME [perf]: use reference sharing for inline styles
+    fastDeepEqual,
     returnTrue,
     (start, end) => {
       leaves.push(getRange(start + offset, end + offset));

@@ -10,10 +10,10 @@
 
 import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
 
-jest.mock('generateRandomKey');
-
 import React from 'react';
 import RichTextEditorUtil from '../../../model/modifier/RichTextEditorUtil';
+import ReactTestRenderer from 'react-test-renderer';
+import DraftEditor from '../../base/DraftEditor.react';
 
 test('defaults to "unstyled" block type for unknown block types', () => {
   const CUSTOM_BLOCK_TYPE = 'CUSTOM_BLOCK_TYPE';
@@ -27,13 +27,19 @@ test('defaults to "unstyled" block type for unknown block types', () => {
     );
   }
 
-  class Container extends React.Component<{}, {editorState: EditorState}> {
+  class Container extends React.Component<
+    Record<string, any>,
+    {editorState: EditorState}
+  > {
     constructor(props) {
       super(props);
       this.state = {
         editorState: createEmpty(),
       };
     }
+    focus = () => {
+      //
+    };
     toggleCustomBlock = () => {
       this.setState(
         {
@@ -62,7 +68,7 @@ test('defaults to "unstyled" block type for unknown block types', () => {
           <div>
             <button onClick={this.toggleCustomBlock}>CenterAlign</button>
           </div>
-          <Editor
+          <DraftEditor
             placeholder="Type away :)"
             editorState={this.state.editorState}
             blockRendererFn={this.blockRenderFn}

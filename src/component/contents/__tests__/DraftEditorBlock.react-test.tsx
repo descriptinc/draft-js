@@ -8,31 +8,50 @@
  * @format
  */
 
+import {
+  ContentBlock,
+  makeContentBlock,
+} from '../../../model/immutable/ContentBlock';
+
+import React from 'react';
+
 jest
-  .mock('Style')
-  .mock('getElementPosition')
-  .mock('getScrollPosition')
-  .mock('getViewportDimensions');
+  .mock('fbjs/lib/Style')
+  .mock('fbjs/lib/getElementPosition')
+  .mock('fbjs/lib/getScrollPosition')
+  .mock('fbjs/lib/getViewportDimensions');
+const mockLeafRender = jest.fn(() => <span />);
+class MockEditorLeaf extends React.Component {
+  render() {
+    return mockLeafRender();
+  }
+}
+jest.setMock('../DraftEditorLeaf.react', MockEditorLeaf);
 
-const BlockTree = require('BlockTree');
-const CharacterMetadata = require('CharacterMetadata');
-const ContentBlock = require('ContentBlock');
-const ContentState = require('ContentState');
-const DraftEditorBlock = require('DraftEditorBlock.react');
-const React = require('React');
-const ReactDOM = require('ReactDOM');
-const SampleDraftInlineStyle = require('SampleDraftInlineStyle');
-const SelectionState = require('SelectionState');
-const Style = require('Style');
-const UnicodeBidiDirection = require('UnicodeBidiDirection');
+import fastDeepEqual from 'fast-deep-equal/es6';
+import Style from 'fbjs/lib/Style';
+import UnicodeBidiDirection from 'fbjs/lib/UnicodeBidiDirection';
+import getElementPosition from 'fbjs/lib/getElementPosition';
+import getScrollPosition from 'fbjs/lib/getScrollPosition';
+import getViewportDimensions from 'fbjs/lib/getViewportDimensions';
+import {
+  applyStyle,
+  EMPTY_CHARACTER,
+} from '../../../model/immutable/CharacterMetadata';
+import {makeSelectionState} from '../../../model/immutable/SelectionState';
+import BlockTree from '../../../model/immutable/BlockTree';
+import {createFromText} from '../../../model/immutable/ContentState';
+import {
+  BOLD,
+  ITALIC,
+  NONE,
+} from '../../../model/immutable/SampleDraftInlineStyle';
+import DraftEditorLeaf from '../DraftEditorLeaf.react';
+import DraftEditorBlock from '../DraftEditorBlock.react';
+import {DraftDecoratorType} from '../../../model/decorators/DraftDecoratorType';
+import ReactDOM from 'react-dom';
 
-const getElementPosition = require('getElementPosition');
-const getScrollPosition = require('getScrollPosition');
-const getViewportDimensions = require('getViewportDimensions');
-const Immutable = require('immutable');
-const ReactTestRenderer = require('react-test-renderer');
-
-const {BOLD, NONE, ITALIC} = SampleDraftInlineStyle;
+import ReactTestRenderer from 'react-test-renderer';
 
 const mockGetDecorations = jest.fn();
 
@@ -55,13 +74,6 @@ class Decorator {
   }
 }
 
-const mockLeafRender = jest.fn(() => <span />);
-class MockEditorLeaf extends React.Component {
-  render() {
-    return mockLeafRender();
-  }
-}
-jest.setMock('DraftEditorLeaf.react', MockEditorLeaf);
 Style.getScrollParent.mockReturnValue(window);
 window.scrollTo = jest.fn();
 getElementPosition.mockReturnValue({
@@ -73,23 +85,21 @@ getElementPosition.mockReturnValue({
 getScrollPosition.mockReturnValue({x: 0, y: 0});
 getViewportDimensions.mockReturnValue({width: 1200, height: 800});
 
-const DraftEditorLeaf = require('DraftEditorLeaf.react');
-
 const returnEmptyString = () => {
   return '';
 };
 
 const getHelloBlock = () => {
-  return new ContentBlock({
+  return makeContentBlock({
     key: 'a',
     type: 'unstyled',
     text: 'hello',
-    characterList: Immutable.List(Immutable.Repeat(CharacterMetadata.EMPTY, 5)),
+    characterList: new Array(5).fill(EMPTY_CHARACTER),
   });
 };
 
 const getSelection = () => {
-  return new SelectionState({
+  return makeSelectionState({
     anchorKey: 'a',
     anchorOffset: 0,
     focusKey: 'a',
@@ -99,10 +109,10 @@ const getSelection = () => {
   });
 };
 
-const getProps = (block, decorator) => {
+const getProps = (block: ContentBlock, decorator?: DraftDecoratorType) => {
   return {
     block,
-    tree: BlockTree.generate(ContentState.createFromText(''), block, decorator),
+    tree: BlockTree.generate(createFromText(''), block, decorator || null),
     selection: getSelection(),
     decorator: decorator || null,
     forceSelection: false,
@@ -115,7 +125,7 @@ const getProps = (block, decorator) => {
 const arePropsEqual = (renderedChild, leafPropSet) => {
   Object.keys(leafPropSet).forEach(key => {
     expect(
-      Immutable.is(leafPropSet[key], renderedChild.props[key]),
+      fastDeepEqual(leafPropSet[key], renderedChild.props[key]),
     ).toMatchSnapshot();
   });
 };
@@ -155,13 +165,13 @@ test('must render a leaf node', () => {
 test('must render multiple leaf nodes', () => {
   const boldLength = 2;
   let helloBlock = getHelloBlock();
-  let characters = helloBlock.getCharacterList();
+  let characters = helloBlock.characterList;
   characters = characters
     .slice(0, boldLength)
-    .map(c => CharacterMetadata.applyStyle(c, 'BOLD'))
+    .map(c => applyStyle(c, 'BOLD'))
     .concat(characters.slice(boldLength));
 
-  helloBlock = helloBlock.set('characterList', characters.toList());
+  helloBlock = {...helloBlock, characterList: characters};
 
   const props = getProps(helloBlock);
   const block = ReactTestRenderer.create(<DraftEditorBlock {...props} />);
@@ -196,7 +206,7 @@ test('must allow update when `block` has changed', () => {
 
   expect(mockLeafRender.mock.calls.length).toMatchSnapshot();
 
-  const updatedHelloBlock = helloBlock.set('text', 'hxllo');
+  const updatedHelloBlock = {...helloBlock, text: 'hxllo'};
   const nextProps = getProps(updatedHelloBlock);
 
   expect(updatedHelloBlock !== helloBlock).toMatchSnapshot();
@@ -216,13 +226,11 @@ test('must allow update when `tree` has changed', () => {
 
   expect(mockLeafRender.mock.calls.length).toMatchSnapshot();
 
-  mockGetDecorations.mockReturnValue(
-    Immutable.List.of('x', 'x', null, null, null),
-  );
+  mockGetDecorations.mockReturnValue(['x', 'x', null, null, null]);
   const decorator = new Decorator();
 
   const newTree = BlockTree.generate(
-    ContentState.createFromText(helloBlock.text),
+    createFromText(helloBlock.text),
     helloBlock,
     decorator,
   );
@@ -298,10 +306,7 @@ test('must reject update if selection is not on an edge', () => {
   expect(mockLeafRender.mock.calls.length).toMatchSnapshot();
 
   // Move selection state to some other block.
-  const nonEdgeSelection = props.selection.merge({
-    anchorKey: 'z',
-    focusKey: 'z',
-  });
+  const nonEdgeSelection = {...props.selection, anchorKey: 'z', focusKey: 'z'};
 
   const newProps = {...props, selection: nonEdgeSelection};
 
@@ -316,9 +321,7 @@ test('must reject update if selection is not on an edge', () => {
 test('must split apart two decorated and undecorated', () => {
   const helloBlock = getHelloBlock();
 
-  mockGetDecorations.mockReturnValue(
-    Immutable.List.of('x', 'x', null, null, null),
-  );
+  mockGetDecorations.mockReturnValue(['x', 'x', null, null, null]);
   const decorator = new Decorator();
   const props = getProps(helloBlock, decorator);
 
@@ -346,9 +349,7 @@ test('must split apart two decorated and undecorated', () => {
 test('must split apart two decorators', () => {
   const helloBlock = getHelloBlock();
 
-  mockGetDecorations.mockReturnValue(
-    Immutable.List.of('x', 'x', 'y', 'y', 'y'),
-  );
+  mockGetDecorations.mockReturnValue(['x', 'x', 'y', 'y', 'y']);
 
   const decorator = new Decorator();
   const props = getProps(helloBlock, decorator);
@@ -376,15 +377,15 @@ test('must split apart two decorators', () => {
 
 test('must split apart styled spans', () => {
   let helloBlock = getHelloBlock();
-  const characters = helloBlock.getCharacterList();
+  const characters = helloBlock.characterList;
   const newChars = characters
     .slice(0, 2)
     .map(ch => {
-      return CharacterMetadata.applyStyle(ch, 'BOLD');
+      return applyStyle(ch, 'BOLD');
     })
     .concat(characters.slice(2));
 
-  helloBlock = helloBlock.set('characterList', Immutable.List(newChars));
+  helloBlock = {...helloBlock, characterList: newChars};
   const props = getProps(helloBlock);
 
   const container = document.createElement('div');
@@ -408,17 +409,15 @@ test('must split apart styled spans', () => {
 
 test('must split styled spans apart within decorator', () => {
   let helloBlock = getHelloBlock();
-  const characters = helloBlock.getCharacterList();
-  const newChars = Immutable.List([
-    CharacterMetadata.applyStyle(characters.get(0), 'BOLD'),
-    CharacterMetadata.applyStyle(characters.get(1), 'ITALIC'),
-  ]).concat(characters.slice(2));
+  const characters = helloBlock.characterList;
+  const newChars = [
+    applyStyle(characters[0], 'BOLD'),
+    applyStyle(characters[1], 'ITALIC'),
+  ].concat(characters.slice(2));
 
-  helloBlock = helloBlock.set('characterList', Immutable.List(newChars));
+  helloBlock = {...helloBlock, characterList: newChars};
 
-  mockGetDecorations.mockReturnValue(
-    Immutable.List.of('x', 'x', null, null, null),
-  );
+  mockGetDecorations.mockReturnValue(['x', 'x', null, null, null]);
   const decorator = new Decorator();
   const props = getProps(helloBlock, decorator);
 
