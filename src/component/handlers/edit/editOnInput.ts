@@ -82,14 +82,8 @@ export default function editOnInput(
 
   const {anchorNode, isCollapsed} = domSelection;
   const isNotTextOrElementNode =
-    // Auto generated from flowToTs. Please clean me!
-    (anchorNode === null || anchorNode === undefined
-      ? undefined
-      : anchorNode.nodeType) !== Node.TEXT_NODE &&
-    // Auto generated from flowToTs. Please clean me!
-    (anchorNode === null || anchorNode === undefined
-      ? undefined
-      : anchorNode.nodeType) !== Node.ELEMENT_NODE;
+    anchorNode?.nodeType !== Node.TEXT_NODE &&
+    anchorNode?.nodeType !== Node.ELEMENT_NODE;
 
   if (anchorNode == null || isNotTextOrElementNode) {
     // TODO: (t16149272) figure out context for this change
