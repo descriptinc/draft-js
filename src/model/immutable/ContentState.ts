@@ -22,16 +22,14 @@ import {
   skipUntil,
   takeUntil,
 } from '../descript/Iterables';
-import {BlockNodeRecord} from './BlockNodeRecord';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
 import {createFromArray} from './BlockMapBuilder';
-import {makeContentBlockNode} from './ContentBlockNode';
 import {makeContentBlock} from './ContentBlock';
 import DraftEntity, {DraftEntityMapObject} from '../entity/DraftEntity';
 import {DraftEntityInstance} from '../entity/DraftEntityInstance';
 import sanitizeDraftText from '../encoding/sanitizeDraftText';
-import GKX from '../../stubs/gkx';
+import {BlockNode} from './BlockNode';
 
 export type ContentState = Readonly<{
   blockMap: BlockMap;
@@ -60,7 +58,7 @@ export function getLastCreatedEntityKey(): string {
 export function getBlockForKey(
   {blockMap}: ContentState,
   key: string,
-): BlockNodeRecord {
+): BlockNode {
   const block = blockMap.get(key);
   if (!block) {
     throw new Error('No block found for key');
@@ -68,7 +66,7 @@ export function getBlockForKey(
   return block;
 }
 
-export function getFirstBlock({blockMap}: ContentState): BlockNodeRecord {
+export function getFirstBlock({blockMap}: ContentState): BlockNode {
   const block = first(blockMap.values());
   if (!block) {
     throw new Error('Block map is empty');
@@ -76,7 +74,7 @@ export function getFirstBlock({blockMap}: ContentState): BlockNodeRecord {
   return block;
 }
 
-export function getLastBlock({blockMap}: ContentState): BlockNodeRecord {
+export function getLastBlock({blockMap}: ContentState): BlockNode {
   const block = last(blockMap.values()); // FIXME [perf]: O(n)
   if (!block) {
     throw new Error('Block map is empty');
@@ -106,7 +104,7 @@ export function getPlainText(content: ContentState, separator = '\n'): string {
 export function createEntity(
   type: DraftEntityType,
   mutability: DraftEntityMutability,
-  data?: Object | null,
+  data?: Record<string, unknown> | null,
 ): string {
   // TODO: update this when we fully remove DraftEntity
   return DraftEntity.__create(type, mutability, data);
@@ -139,7 +137,7 @@ export function getEntity(key: string): DraftEntityInstance {
 }
 
 export function createFromBlockArray(
-  blocks: BlockNodeRecord[] | {contentBlocks: BlockNodeRecord[]},
+  blocks: BlockNode[] | {contentBlocks: BlockNode[]},
 ): ContentState {
   // TODO: remove this when we completely deprecate the old entity API
   const theBlocks = Array.isArray(blocks) ? blocks : blocks.contentBlocks;
@@ -164,15 +162,10 @@ export function createFromText(
   const strings = text.split(delimiter);
   const blocks = strings.map(block => {
     block = sanitizeDraftText(block);
-    if (GKX.gkx('draft_tree_data_support')) {
-      return makeContentBlockNode({
-        text: block,
-      });
-    } else {
-      return makeContentBlock({
-        text: block,
-      });
-    }
+
+    return makeContentBlock({
+      text: block,
+    });
   });
   return createFromBlockArray(blocks);
 }
@@ -180,7 +173,7 @@ export function createFromText(
 export function getBlockBefore(
   {blockMap}: ContentState,
   blockKey: string,
-): BlockNodeRecord | undefined {
+): BlockNode | undefined {
   // FIXME [perf]: cache
   const before = last(takeUntil(blockMap, ([k]) => k === blockKey));
   return before?.[1];
@@ -189,7 +182,7 @@ export function getBlockBefore(
 export function getBlockAfter(
   {blockMap}: ContentState,
   blockKey: string,
-): BlockNodeRecord | undefined {
+): BlockNode | undefined {
   // FIXME [perf]: cache
   const after = first(rest(skipUntil(blockMap, ([k]) => k === blockKey)));
   return after?.[1];

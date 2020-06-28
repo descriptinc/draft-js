@@ -6,10 +6,8 @@
  *
  * @emails oncall+draft_js
  */
-import {makeContentBlockNode} from '../immutable/ContentBlockNode';
 import {makeContentBlock} from '../immutable/ContentBlock';
 import {DraftBlockRenderMap} from '../immutable/DraftBlockRenderMap';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {EntityMap} from '../immutable/EntityMap';
 import convertFromHTMLToContentBlocks from '../encoding/convertFromHTMLToContentBlocks';
 import {CharacterMetadata} from '../immutable/CharacterMetadata';
@@ -17,13 +15,8 @@ import {DraftBlockType} from '../constants/DraftBlockType';
 import sanitizeDraftText from '../encoding/sanitizeDraftText';
 import generateRandomKey from '../keys/generateRandomKey';
 import {repeat} from '../descript/Iterables';
-import GKX from '../../stubs/gkx';
 import getSafeBodyFromHTML from './getSafeBodyFromHTML';
-
-const experimentalTreeDataSupport = GKX.gkx('draft_tree_data_support');
-const makeBlock = experimentalTreeDataSupport
-  ? makeContentBlockNode
-  : makeContentBlock;
+import {BlockNode} from '../immutable/BlockNode';
 
 const DraftPasteProcessor = {
   processHTML(
@@ -31,7 +24,7 @@ const DraftPasteProcessor = {
     blockRenderMap?: DraftBlockRenderMap,
   ):
     | {
-        contentBlocks: Array<BlockNodeRecord> | undefined;
+        contentBlocks: Array<BlockNode> | undefined;
         entityMap: EntityMap;
       }
     | undefined
@@ -47,33 +40,19 @@ const DraftPasteProcessor = {
     textBlocks: Array<string>,
     character: CharacterMetadata,
     type: DraftBlockType,
-  ): Array<BlockNodeRecord> {
-    return textBlocks.reduce((acc: BlockNodeRecord[], textLine, index) => {
+  ): BlockNode[] {
+    return textBlocks.reduce((acc: BlockNode[], textLine) => {
       textLine = sanitizeDraftText(textLine);
       const key = generateRandomKey();
 
-      let blockNodeConfig = {
+      const blockNodeConfig = {
         key,
         type,
         text: textLine,
         characterList: Array.from(repeat(textLine.length, character)),
-      } as Partial<BlockNodeRecord>;
+      } as Partial<BlockNode>;
 
-      // next block updates previous block
-      if (experimentalTreeDataSupport && index !== 0) {
-        const prevSiblingIndex = index - 1;
-        // update previous block
-        const previousBlock = (acc[prevSiblingIndex] = {
-          ...acc[prevSiblingIndex],
-          nextSibling: key,
-        });
-        blockNodeConfig = {
-          ...blockNodeConfig,
-          prevSibling: previousBlock.key,
-        };
-      }
-
-      acc.push(makeBlock(blockNodeConfig));
+      acc.push(makeContentBlock(blockNodeConfig));
 
       return acc;
     }, []);

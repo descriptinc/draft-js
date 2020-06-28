@@ -23,7 +23,7 @@ import {content} from '../data/content';
 import {insertTeXBlock} from '../modifiers/insertTeXBlock';
 import {removeTeXBlock} from '../modifiers/removeTeXBlock';
 
-var {Editor, EditorState, RichUtils} = Draft;
+const {Editor, EditorState, RichUtils} = Draft;
 
 export default class TeXEditorExample extends React.Component {
   constructor(props) {
@@ -40,11 +40,11 @@ export default class TeXEditorExample extends React.Component {
           editable: false,
           props: {
             onStartEdit: (blockKey) => {
-              var {liveTeXEdits} = this.state;
+              const {liveTeXEdits} = this.state;
               this.setState({liveTeXEdits: liveTeXEdits.set(blockKey, true)});
             },
             onFinishEdit: (blockKey, newContentState) => {
-              var {liveTeXEdits} = this.state;
+              const {liveTeXEdits} = this.state;
               this.setState({
                 liveTeXEdits: liveTeXEdits.remove(blockKey),
                 editorState:EditorState.createWithContent(newContentState),
@@ -61,7 +61,7 @@ export default class TeXEditorExample extends React.Component {
     this._onChange = (editorState) => this.setState({editorState});
 
     this._handleKeyCommand = (command, editorState) => {
-      var newState = RichUtils.handleKeyCommand(editorState, command);
+      const newState = RichUtils.handleKeyCommand(editorState, command);
       if (newState) {
         this._onChange(newState);
         return true;
@@ -70,7 +70,7 @@ export default class TeXEditorExample extends React.Component {
     };
 
     this._removeTeX = (blockKey) => {
-      var {editorState, liveTeXEdits} = this.state;
+      const {editorState, liveTeXEdits} = this.state;
       this.setState({
         liveTeXEdits: liveTeXEdits.remove(blockKey),
         editorState: removeTeXBlock(editorState, blockKey),

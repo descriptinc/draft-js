@@ -8,14 +8,13 @@
  * @emails oncall+draft_js
  */
 
-import React from 'react';
-import {BlockNodeKey} from '../immutable/BlockNode';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import React, {ComponentType} from 'react';
+import {BlockNode, BlockNodeKey} from '../immutable/BlockNode';
 import {ContentState} from '../immutable/ContentState';
 import {HTMLDir} from '../types';
 
 export type DraftDecoratorStrategy = (
-  block: BlockNodeRecord,
+  block: BlockNode,
   callback: (start: number, end: number) => void,
   contentState: ContentState,
 ) => void;
@@ -37,8 +36,8 @@ export type DraftDecoratorStrategy = (
  */
 export type DraftDecorator = {
   strategy: DraftDecoratorStrategy;
-  component: Function;
-  props?: Object;
+  component: ComponentType;
+  props?: Record<string, unknown>;
 };
 
 /**

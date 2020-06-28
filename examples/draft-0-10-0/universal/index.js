@@ -14,14 +14,14 @@
 
 'use strict';
 
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
 
-var SimpleEditor = require('./editor.js').SimpleEditor;
+const SimpleEditor = require('./editor.js').SimpleEditor;
 
-var express = require('express');
+const express = require('express');
 
-var app = express();
+const app = express();
 
 app.use('/static', express.static('static'));
 

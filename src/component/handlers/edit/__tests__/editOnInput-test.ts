@@ -35,7 +35,7 @@ const getEditorState = (text: string = '') => {
 function withGlobalGetSelectionAs(getSelectionValue = {}, callback) {
   const oldGetSelection = global.getSelection;
   try {
-    global.getSelection = () => getSelectionValue;
+    global.getSelection = () => getSelectionValue as Selection;
     callback();
   } finally {
     global.getSelection = oldGetSelection;
@@ -63,10 +63,12 @@ test('restoreEditorDOM and keyCommandPlainBackspace are NOT called when the `inp
       currentTarget: editorNode,
     };
 
-    // $FlowExpectedError
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     onInput(editor, inputEvent);
 
     expect(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       require('../commands/keyCommandPlainBackspace'),
     ).toHaveBeenCalledTimes(0);
     expect(editor.restoreEditorDOM).toHaveBeenCalledTimes(0);
@@ -97,13 +99,15 @@ test('restoreEditorDOM and keyCommandPlainBackspace are called when backspace is
       currentTarget: editorNode,
     };
 
-    // $FlowExpectedError
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     onInput(editor, inputEvent);
 
-    // $FlowExpectedError
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const newEditorState = require('../commands/keyCommandPlainBackspace').mock
       .results[0].value;
     expect(
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       require('../commands/keyCommandPlainBackspace'),
     ).toHaveBeenCalledWith(editorState);
     expect(editor.restoreEditorDOM).toHaveBeenCalledTimes(1);

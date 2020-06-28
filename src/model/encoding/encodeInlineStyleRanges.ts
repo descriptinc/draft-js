@@ -8,10 +8,10 @@
  */
 
 import UnicodeUtils from 'fbjs/lib/UnicodeUtils';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {DraftInlineStyle} from '../immutable/DraftInlineStyle';
 import {findRangesImmutable} from '../immutable/findRangesImmutable';
 import {flatten, map} from '../descript/Iterables';
+import {BlockNode} from '../immutable/BlockNode';
 
 const areEqual = (a, b) => a === b;
 const isTruthy = a => !!a;
@@ -28,7 +28,7 @@ export type InlineStyleRange = {
  * to UTF-8 character counts for storage.
  */
 function getEncodedInlinesForType(
-  block: BlockNodeRecord,
+  block: BlockNode,
   styleList: DraftInlineStyle[],
   styleToEncode: string,
 ): InlineStyleRange[] {
@@ -60,7 +60,7 @@ function getEncodedInlinesForType(
  * treated separately.
  */
 export default function encodeInlineStyleRanges(
-  block: BlockNodeRecord,
+  block: BlockNode,
 ): InlineStyleRange[] {
   const styleList = block.characterList.map(c => c.style);
   const ranges = Array.from(

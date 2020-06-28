@@ -7,15 +7,15 @@
  * @emails oncall+draft_js
  */
 
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
-import {getEntityAt} from '../immutable/ContentBlockNode';
+import {BlockNode} from '../immutable/BlockNode';
+import {getEntityAt} from '../immutable/ContentBlock';
 
 /**
  * Find the string of text between the previous entity and the specified
  * offset. This allows us to narrow down search areas for regex matching.
  */
 export default function getTextAfterNearestEntity(
-  block: BlockNodeRecord,
+  block: BlockNode,
   offset: number,
 ): string {
   let start = offset;

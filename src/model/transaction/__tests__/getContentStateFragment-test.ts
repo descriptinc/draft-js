@@ -9,13 +9,12 @@
  */
 
 import {makeContentBlock} from '../../immutable/ContentBlock';
-import {makeContentBlockNode} from '../../immutable/ContentBlockNode';
 import {acceptSelection, createWithContent} from '../../immutable/EditorState';
-import {BlockNodeRecord} from '../../immutable/BlockNodeRecord';
 import {createFromBlockArray} from '../../immutable/ContentState';
 import {makeSelectionState} from '../../immutable/SelectionState';
 import getContentStateFragment from '../getContentStateFragment';
 import {blockMapToJsonObject} from '../../../util/blockMapToJson';
+import {BlockNode} from '../../immutable/BlockNode';
 
 jest.mock('../../keys/generateRandomKey');
 
@@ -38,31 +37,6 @@ const contentBlocks = [
   }),
 ];
 
-const contentBlockNodes = [
-  makeContentBlockNode({
-    key: 'A',
-    text: 'Alpha',
-    nextSibling: 'B',
-  }),
-  makeContentBlockNode({
-    key: 'B',
-    text: '',
-    children: ['C'],
-    nextSibling: 'D',
-    prevSibling: 'A',
-  }),
-  makeContentBlockNode({
-    key: 'C',
-    parent: 'B',
-    text: 'Charlie',
-  }),
-  makeContentBlockNode({
-    key: 'D',
-    text: 'Delta',
-    prevSibling: 'B',
-  }),
-];
-
 const DEFAULT_SELECTION = {
   anchorKey: 'A',
   anchorOffset: 0,
@@ -72,7 +46,7 @@ const DEFAULT_SELECTION = {
 };
 
 const assertGetContentStateFragment = (
-  blocksArray: BlockNodeRecord[],
+  blocksArray: BlockNode[],
   selection = {},
 ) => {
   const editor = acceptSelection(
@@ -96,28 +70,6 @@ test('must be able to return all selected contentBlocks', () => {
   });
 });
 
-test.skip('must be able to return all selected contentBlockNodes', () => {
-  assertGetContentStateFragment(contentBlockNodes, {
-    focusOffset: contentBlockNodes[3].text.length,
-  });
-});
-
-test('must be able to return contentBlocks selected within', () => {
-  assertGetContentStateFragment(contentBlocks, {
-    anchorKey: 'B',
-    focusKey: 'C',
-    focusOffset: contentBlockNodes[2].text.length,
-  });
-});
-
-test.skip('must be able to return contentBlockNodes selected within', () => {
-  assertGetContentStateFragment(contentBlockNodes, {
-    anchorKey: 'B',
-    focusKey: 'C',
-    focusOffset: contentBlockNodes[2].text.length,
-  });
-});
-
 test('must be able to return first ContentBlock selected', () => {
   assertGetContentStateFragment(contentBlocks, {
     anchorKey: 'A',
@@ -126,26 +78,10 @@ test('must be able to return first ContentBlock selected', () => {
   });
 });
 
-test.skip('must be able to return first ContentBlockNode selected', () => {
-  assertGetContentStateFragment(contentBlockNodes, {
-    anchorKey: 'A',
-    focusKey: 'A',
-    focusOffset: contentBlockNodes[0].text.length,
-  });
-});
-
 test('must be able to return last ContentBlock selected', () => {
   assertGetContentStateFragment(contentBlocks, {
     anchorKey: 'D',
     focusKey: 'D',
     focusOffset: contentBlocks[3].text.length,
-  });
-});
-
-test.skip('must be able to return last ContentBlockNode selected', () => {
-  assertGetContentStateFragment(contentBlockNodes, {
-    anchorKey: 'D',
-    focusKey: 'D',
-    focusOffset: contentBlockNodes[3].text.length,
   });
 });

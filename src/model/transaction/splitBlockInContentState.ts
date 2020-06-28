@@ -10,74 +10,10 @@ import {ContentState} from '../immutable/ContentState';
 import {isCollapsed, SelectionState} from '../immutable/SelectionState';
 import invariant from '../../fbjs/invariant';
 import generateRandomKey from '../keys/generateRandomKey';
-import {blockIsExperimentalTreeBlock} from './exploration/getNextDelimiterBlockKey';
 import modifyBlockForContentState from './modifyBlockForContentState';
 import {flatten, rest, skipUntil, takeUntil} from '../descript/Iterables';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {ContentBlock} from '../immutable/ContentBlock';
 
-// const transformBlock = (
-//   key: string | null,
-//   blockMap: BlockMap,
-//   func: (block: ContentBlockNode) => ContentBlockNode,
-// ): void => {
-//   if (!key) {
-//     return;
-//   }
-//
-//   const block = blockMap.get(key);
-//
-//   if (!block) {
-//     return;
-//   }
-//
-//   blockMap.set(key, func(block));
-// };
-//
-// const updateBlockMapLinks = (
-//   blockMap: BlockMap,
-//   originalBlock: ContentBlockNode,
-//   belowBlock: ContentBlockNode,
-// ): BlockMap => {
-//   return blockMap.withMutations(blocks => {
-//     const originalBlockKey = originalBlock.key;
-//     const belowBlockKey = belowBlock.key;
-//
-//     // update block parent
-//     transformBlock(originalBlock.getParentKey(), blocks, block => {
-//       const parentChildrenList = block.getChildKeys();
-//       const insertionIndex = parentChildrenList.indexOf(originalBlockKey) + 1;
-//       const newChildrenArray = parentChildrenList.toArray();
-//
-//       newChildrenArray.splice(insertionIndex, 0, belowBlockKey);
-//
-//       return block.merge({
-//         children: List(newChildrenArray),
-//       });
-//     });
-//
-//     // update original next block
-//     transformBlock(originalBlock.getNextSiblingKey(), blocks, block =>
-//       block.merge({
-//         prevSibling: belowBlockKey,
-//       }),
-//     );
-//
-//     // update original block
-//     transformBlock(originalBlockKey, blocks, block =>
-//       block.merge({
-//         nextSibling: belowBlockKey,
-//       }),
-//     );
-//
-//     // update below block
-//     transformBlock(belowBlockKey, blocks, block =>
-//       block.merge({
-//         prevSibling: originalBlockKey,
-//       }),
-//     );
-//   });
-// };
-//
 const splitBlockInContentState = (
   contentState: ContentState,
   selectionState: SelectionState,
@@ -111,10 +47,6 @@ const splitBlockInContentState = (
   const offset = selectionState.anchorOffset;
   const chars = blockToSplit.characterList;
   const keyBelow = generateRandomKey();
-  const isExperimentalTreeBlock = blockIsExperimentalTreeBlock(blockToSplit);
-  if (isExperimentalTreeBlock) {
-    throw new Error('isExperimentalTreeBlock unimplemented');
-  }
 
   const blockAbove = {
     ...blockToSplit,
@@ -137,7 +69,7 @@ const splitBlockInContentState = (
   );
 
   const newBlockMap = new Map(
-    flatten<[string, BlockNodeRecord]>([
+    flatten<[string, ContentBlock]>([
       blocksBefore,
       [
         [key, blockAbove],
@@ -146,15 +78,6 @@ const splitBlockInContentState = (
       blocksAfter,
     ]),
   );
-
-  // if (isExperimentalTreeBlock) {
-  //   invariant(
-  //     blockToSplit.getChildKeys().isEmpty(),
-  //     'ContentBlockNode must not have children',
-  //   );
-  //
-  //   newBlocks = updateBlockMapLinks(newBlocks, blockAbove, blockBelow);
-  // }
 
   return {
     ...contentState,

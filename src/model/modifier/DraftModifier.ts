@@ -28,7 +28,7 @@ import insertFragmentIntoContentState, {
   BlockDataMergeBehavior,
 } from '../transaction/insertFragmentIntoContentState';
 import {DraftRemovalDirection} from '../constants/DraftRemovalDirection';
-import {getEntityAt} from '../immutable/ContentBlockNode';
+import {getEntityAt} from '../immutable/ContentBlock';
 import getCharacterRemovalRange from './getCharacterRemovalRange';
 import DraftEntity from '../entity/DraftEntity';
 import splitBlockInContentState from '../transaction/splitBlockInContentState';

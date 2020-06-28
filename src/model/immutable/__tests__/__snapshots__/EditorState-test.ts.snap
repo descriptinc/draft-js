@@ -32,28 +32,6 @@ Set {
 }
 `;
 
-exports[`must call decorator with correct argument types and order 1`] = `2`;
-
-exports[`must correctly remove a decorator 1`] = `true`;
-
-exports[`must correctly remove a decorator 2`] = `2`;
-
-exports[`must correctly remove a decorator 3`] = `null`;
-
-exports[`must set a new decorator 1`] = `2`;
-
-exports[`must set a new decorator 2`] = `true`;
-
-exports[`must set a new decorator 3`] = `4`;
-
-exports[`must set a new decorator 4`] = `3`;
-
-exports[`must set a new decorator 5`] = `true`;
-
-exports[`must set a new decorator 6`] = `true`;
-
-exports[`must set a new decorator 7`] = `true`;
-
 exports[`uses left of the caret, at position \`1+\` 1`] = `Set {}`;
 
 exports[`uses left of the start if starting at end of block 1`] = `

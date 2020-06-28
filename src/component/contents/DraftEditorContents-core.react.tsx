@@ -10,7 +10,6 @@
 
 import {BidiDirection} from 'fbjs/lib/UnicodeBidiDirection';
 import {DraftBlockRenderMap} from '../../model/immutable/DraftBlockRenderMap';
-import {BlockNodeRecord} from '../../model/immutable/BlockNodeRecord';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {EditorState, getBlockTree} from '../../model/immutable/EditorState';
 import React, {ReactNode} from 'react';
@@ -19,14 +18,15 @@ import joinClasses from 'fbjs/lib/joinClasses';
 import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from '../selection/DraftOffsetKey';
 import DraftEditorBlock from './DraftEditorBlock.react';
+import {BlockNode} from '../../model/immutable/BlockNode';
 
 type Props = {
   blockRenderMap: DraftBlockRenderMap;
-  blockRendererFn: (block: BlockNodeRecord) => Record<string, any> | null;
-  blockStyleFn?: (block: BlockNodeRecord) => string;
+  blockRendererFn: (block: BlockNode) => Record<string, any> | null;
+  blockStyleFn?: (block: BlockNode) => string;
   customStyleFn?: (
     style: DraftInlineStyle,
-    block: BlockNodeRecord,
+    block: BlockNode,
   ) => Record<string, any> | null;
   customStyleMap?: Record<string, any>;
   editorKey?: string;

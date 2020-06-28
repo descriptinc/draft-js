@@ -10,7 +10,6 @@
 
 import React from 'react';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
-import {BlockNodeRecord} from '../../model/immutable/BlockNodeRecord';
 import {
   hasEdgeWithin,
   SelectionState,
@@ -19,6 +18,7 @@ import invariant from '../../fbjs/invariant';
 import isHTMLBRElement from '../utils/isHTMLBRElement';
 import {setDraftEditorSelection} from '../selection/setDraftEditorSelection';
 import DraftEditorTextNode from './DraftEditorTextNode.react';
+import {BlockNode} from '../../model/immutable/BlockNode';
 
 type CSSStyleObject = {[K in string]: string | number};
 
@@ -26,12 +26,12 @@ type CustomStyleMap = {[K in string]: CSSStyleObject};
 
 type CustomStyleFn = (
   style: DraftInlineStyle,
-  block: BlockNodeRecord,
+  block: BlockNode,
 ) => CSSStyleObject | null;
 
 type Props = {
   // The block that contains this leaf.
-  block: BlockNodeRecord;
+  block: BlockNode;
   // Mapping of style names to CSS declarations.
   customStyleMap: CustomStyleMap;
   // Function that maps style names to CSS style objects.

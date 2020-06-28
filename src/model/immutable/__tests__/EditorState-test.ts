@@ -39,8 +39,6 @@ class Decorator implements DraftDecoratorType {
   }
 }
 
-Decorator.prototype.getDecorations = jest.fn();
-
 const DEFAULT_SELECTION = {
   anchorKey: 'a',
   anchorOffset: 0,
@@ -173,7 +171,17 @@ test('does not discard style override when adjusting depth', () => {
   let editor = createEmpty();
 
   editor = RichTextEditorUtil.toggleInlineStyle(editor, 'BOLD');
-  editor = RichTextEditorUtil.onTab({preventDefault: () => {}}, editor, 1);
+  editor = RichTextEditorUtil.onTab(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    {
+      preventDefault: () => {
+        //
+      },
+    },
+    editor,
+    1,
+  );
 
   expect(getCurrentInlineStyle(editor)).toMatchSnapshot();
 });
@@ -234,12 +242,14 @@ test('falls back to no style if in empty block at document start', () => {
 
 test('must set a new decorator', () => {
   const decorator = new Decorator();
+  const getDecorationsMock = jest.fn().mockReturnValue([]);
+  decorator.getDecorations = getDecorationsMock;
   const editorState = getSampleEditorState('DECORATED', decorator);
   const boldB = Array.from(repeat(boldBlock.text.length, 'y'));
 
-  expect(decorator.getDecorations.mock.calls.length).toMatchSnapshot();
+  expect(getDecorationsMock).toHaveBeenCalledTimes(2);
 
-  Decorator.prototype.getDecorations.mockImplementation((v, c) => {
+  getDecorationsMock.mockImplementation(v => {
     return v === boldBlock
       ? boldB
       : Array.from(repeat(v.text.length, undefined));
@@ -256,11 +266,11 @@ test('must set a new decorator', () => {
       return null;
     }
   }
-  NextDecorator.prototype.getDecorations = jest.fn();
 
   const newDecorator = new NextDecorator();
 
-  NextDecorator.prototype.getDecorations.mockImplementation((v, c) => {
+  const newGetDecorationsMock = jest.fn();
+  newDecorator.getDecorations = newGetDecorationsMock.mockImplementation(v => {
     return v === boldBlock ? boldB : Array.from(repeat(v.text.length, 'a'));
   });
 
@@ -268,41 +278,43 @@ test('must set a new decorator', () => {
     decorator: newDecorator,
   });
 
-  expect(withNewDecorator !== editorState).toMatchSnapshot();
+  expect(withNewDecorator).not.toBe(editorState);
 
   // Twice for the initial tree map generation, then twice more for
   // filter comparison.
-  expect(decorator.getDecorations.mock.calls.length).toMatchSnapshot();
+  expect(getDecorationsMock).toHaveBeenCalledTimes(4);
 
   // Twice for filter comparison
-  expect(newDecorator.getDecorations.mock.calls.length).toMatchSnapshot();
+  expect(newGetDecorationsMock).toHaveBeenCalledTimes(3);
 
-  expect(withNewDecorator.decorator === newDecorator).toMatchSnapshot();
+  expect(withNewDecorator.decorator).toBe(newDecorator);
 
   // Preserve block trees that had the same decorator list.
-  expect(
-    getBlockTree(editorState, boldBlock.key) ===
-      getBlockTree(withNewDecorator, boldBlock.key),
-  ).toMatchSnapshot();
+  expect(getBlockTree(editorState, boldBlock.key)).toBe(
+    getBlockTree(withNewDecorator, boldBlock.key),
+  );
 
-  expect(
-    getBlockTree(editorState, italicBlock.key) !==
-      getBlockTree(withNewDecorator, italicBlock.key),
-  ).toMatchSnapshot();
+  expect(getBlockTree(editorState, italicBlock.key)).not.toBe(
+    getBlockTree(withNewDecorator, italicBlock.key),
+  );
 });
 
 test('must call decorator with correct argument types and order', () => {
   const decorator = new Decorator();
+  const getDecorationsMock = jest.fn().mockReturnValue([]);
+  decorator.getDecorations = getDecorationsMock;
   getSampleEditorState('DECORATED', decorator);
-  expect(decorator.getDecorations.mock.calls.length).toMatchSnapshot();
+  expect(getDecorationsMock).toHaveBeenCalledTimes(2);
 });
 
 test('must correctly remove a decorator', () => {
   const decorator = new Decorator();
+  const getDecorationsMock = jest.fn().mockReturnValue([]);
+  decorator.getDecorations = getDecorationsMock;
   const editorState = getSampleEditorState('DECORATED', decorator);
   const withNewDecorator = setEditorState(editorState, {decorator: null});
 
-  expect(withNewDecorator !== editorState).toMatchSnapshot();
-  expect(decorator.getDecorations.mock.calls.length).toMatchSnapshot();
-  expect(withNewDecorator.decorator).toMatchSnapshot();
+  expect(withNewDecorator).not.toBe(editorState);
+  expect(getDecorationsMock).toHaveBeenCalledTimes(2);
+  expect(withNewDecorator.decorator).toBeNull();
 });

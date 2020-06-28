@@ -12,7 +12,6 @@ import React, {Ref, RefObject} from 'react';
 import {EditorState} from '../../model/immutable/EditorState';
 import {DraftTextAlignment} from './DraftTextAlignment';
 import {BidiDirection} from 'fbjs/lib/UnicodeBidiDirection';
-import {BlockNodeRecord} from '../../model/immutable/BlockNodeRecord';
 import {DraftHandleValue} from '../../model/constants/DraftHandleValue';
 import {DraftEditorCommand} from '../../model/constants/DraftEditorCommand';
 import {SelectionState} from '../../model/immutable/SelectionState';
@@ -21,10 +20,8 @@ import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {DraftBlockRenderMap} from '../../model/immutable/DraftBlockRenderMap';
 import {CSSProperties} from 'react';
 import DraftEditor from './DraftEditor.react';
-import {
-  SyntheticClipboardEvent,
-  SyntheticKeyboardEvent,
-} from '../utils/eventTypes';
+import {SyntheticClipboardEvent} from '../utils/eventTypes';
+import {BlockNode} from '../../model/immutable/BlockNode';
 
 export type DraftEditorProps = {
   /**
@@ -57,9 +54,9 @@ export type DraftEditorProps = {
   // For a given `ContentBlock` object, return an object that specifies
   // a custom block component and/or props. If no object is returned,
   // the default `DraftEditorBlock` is used.
-  blockRendererFn: (block: BlockNodeRecord) => any | null;
+  blockRendererFn: (block: BlockNode) => any | null;
   // Function that returns a cx map corresponding to block-level styles.
-  blockStyleFn: (block: BlockNodeRecord) => string;
+  blockStyleFn: (block: BlockNode) => string;
   // If supplied, a ref which will be passed to the contenteditable.
   // Currently, only object refs are supported.
   editorRef?: RefObject<HTMLDivElement> | Ref<HTMLDivElement>;
@@ -151,7 +148,7 @@ export type DraftEditorProps = {
     editorState: EditorState,
   ) => DraftHandleValue;
 
-  handleKeyboardEvent?: (e: SyntheticKeyboardEvent) => DraftHandleValue;
+  handleKeyboardEvent?: (e: React.KeyboardEvent) => DraftHandleValue;
   enableIESupport?: boolean;
 
   handlePastedFiles?: (files: Array<Blob>) => DraftHandleValue;
@@ -184,7 +181,7 @@ export type DraftEditorProps = {
   // style names.
   customStyleFn?: (
     style: DraftInlineStyle,
-    block: BlockNodeRecord,
+    block: BlockNode,
   ) => CSSProperties | null;
   // Provide a map of block rendering configurations. Each block type maps to
   // an element tag and an optional react element wrapper. This configuration
@@ -213,8 +210,8 @@ export type DraftEditorProps = {
 export type DraftEditorDefaultProps = {
   ariaDescribedBy: string;
   blockRenderMap: DraftBlockRenderMap;
-  blockRendererFn: (block: BlockNodeRecord) => any | null;
-  blockStyleFn: (block: BlockNodeRecord) => string;
+  blockRendererFn: (block: BlockNode) => any | null;
+  blockStyleFn: (block: BlockNode) => string;
   keyBindingFn: (e: React.KeyboardEvent) => string | null;
   readOnly: boolean;
   spellCheck: boolean;

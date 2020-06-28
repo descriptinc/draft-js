@@ -51,6 +51,5 @@ export * from './model/immutable/BlockMap';
 export * from './model/immutable/CharacterMetadata';
 export * from './model/immutable/DraftInlineStyle';
 export * from './model/immutable/findRangesImmutable';
-export * from './model/immutable/ContentBlockNode';
 export * from './model/immutable/BlockNode';
 export * from './model/immutable/BlockTree';

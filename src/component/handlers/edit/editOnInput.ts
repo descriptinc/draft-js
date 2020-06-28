@@ -26,7 +26,7 @@ import {notEmptyKey} from '../../utils/draftKeyUtils';
 import {
   getEntityAt,
   getInlineStyleAt,
-} from '../../../model/immutable/ContentBlockNode';
+} from '../../../model/immutable/ContentBlock';
 import DraftModifier from '../../../model/modifier/DraftModifier';
 import {
   getEndOffset,

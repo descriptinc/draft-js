@@ -7,9 +7,7 @@
 
 module.exports = {
   extends: [
-    'fbjs',
     'prettier',
-    'prettier/flowtype',
     'prettier/react',
     'prettier/standard',
     'plugin:@typescript-eslint/recommended',

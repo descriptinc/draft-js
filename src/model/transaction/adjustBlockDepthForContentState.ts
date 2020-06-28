@@ -14,8 +14,8 @@ import {
   SelectionState,
 } from '../immutable/SelectionState';
 import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {mergeMapUpdates} from '../immutable/BlockMap';
+import {BlockNode} from '../immutable/BlockNode';
 
 export default function adjustBlockDepthForContentState(
   contentState: ContentState,
@@ -28,14 +28,14 @@ export default function adjustBlockDepthForContentState(
   let blockMap = contentState.blockMap;
 
   const iter = map(
-    flatten<[string, BlockNodeRecord]>([
+    flatten<[string, BlockNode]>([
       takeUntil(
         skipUntil(blockMap, ([k]) => k === startKey),
         ([k]) => k === endKey,
       ),
       [[endKey, blockMap.get(endKey)!]],
     ]),
-    ([blockKey, block]): [string, BlockNodeRecord] => {
+    ([blockKey, block]): [string, BlockNode] => {
       let depth = block.depth + adjustment;
       depth = Math.max(0, Math.min(depth, maxDepth));
       if (depth === block.depth) {
@@ -51,7 +51,7 @@ export default function adjustBlockDepthForContentState(
     },
   );
 
-  const newBlocks: Record<string, BlockNodeRecord> = {};
+  const newBlocks: Record<string, BlockNode> = {};
   for (const [blockKey, block] of iter) {
     newBlocks[blockKey] = block;
   }

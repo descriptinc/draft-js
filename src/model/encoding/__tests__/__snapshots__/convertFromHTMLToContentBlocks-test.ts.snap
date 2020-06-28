@@ -1,235 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should *not* import recognised draft li depths when nesting enabled 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
-    "text": "depth0-0",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key1",
-    "nextSibling": "key2",
-    "parent": null,
-    "prevSibling": "key0",
-    "text": "depth0-1",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key2",
-    "nextSibling": "key3",
-    "parent": null,
-    "prevSibling": "key1",
-    "text": "depth0-2",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key3",
-    "nextSibling": "key4",
-    "parent": null,
-    "prevSibling": "key2",
-    "text": "depth0-3",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key4",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key3",
-    "text": "depth0-4",
-    "type": "unordered-list-item",
-  },
-]
-`;
-
 exports[`Should import line breaks without creating a leading space 1`] = `
 Array [
   Object {
@@ -645,60 +415,6 @@ Array [
 ]
 `;
 
-exports[`Should not create empty container blocks around ol and their list items when nesting enabled 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": null,
-    "text": "something",
-    "type": "ordered-list-item",
-  },
-]
-`;
-
 exports[`Should not create empty container blocks around ul and their list items 1`] = `
 Array [
   Object {
@@ -890,120 +606,6 @@ Array [
     "depth": 0,
     "key": "key0",
     "text": " before after ",
-    "type": "unstyled",
-  },
-]
-`;
-
-exports[`Should preserve spacing around inline tags 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": null,
-    "text": "Some stylised text",
     "type": "unstyled",
   },
 ]
@@ -1443,191 +1045,6 @@ Array [
     "key": "key0",
     "text": "example bold and code",
     "type": "unstyled",
-  },
-]
-`;
-
-exports[`Should recognized and *not* override html structure when having known draft-js classname with nesting enabled 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
-    "text": "depth0-0",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 1,
-    "key": "key1",
-    "nextSibling": "key2",
-    "parent": null,
-    "prevSibling": "key0",
-    "text": "depth1-0",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 1,
-    "key": "key2",
-    "nextSibling": "key3",
-    "parent": null,
-    "prevSibling": "key1",
-    "text": "depth1-1",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key3",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key2",
-    "text": "depth0-1",
-    "type": "unordered-list-item",
   },
 ]
 `;
@@ -2102,729 +1519,7 @@ Array [
 ]
 `;
 
-exports[`Should recognized list deep nesting when nesting enabled 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
-    "text": "depth0-0",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key1",
-    "nextSibling": "key2",
-    "parent": null,
-    "prevSibling": "key0",
-    "text": "depth0-1",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 1,
-    "key": "key2",
-    "nextSibling": "key3",
-    "parent": null,
-    "prevSibling": "key1",
-    "text": "depth1-0",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 1,
-    "key": "key3",
-    "nextSibling": "key4",
-    "parent": null,
-    "prevSibling": "key2",
-    "text": "depth1-1",
-    "type": "ordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 2,
-    "key": "key4",
-    "nextSibling": "key5",
-    "parent": null,
-    "prevSibling": "key3",
-    "text": "depth2-0",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 2,
-    "key": "key5",
-    "nextSibling": "key6",
-    "parent": null,
-    "prevSibling": "key4",
-    "text": "depth2-1",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key6",
-    "nextSibling": "key7",
-    "parent": null,
-    "prevSibling": "key5",
-    "text": "depth0-2",
-    "type": "unordered-list-item",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key7",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key6",
-    "text": "depth0-3",
-    "type": "ordered-list-item",
-  },
-]
-`;
-
-exports[`Should scope attribute styles 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-          "UNDERLINE",
-        ],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": null,
-    "text": "these won't accumulate styles    but this span will",
-    "type": "unstyled",
-  },
-]
-`;
-
-exports[`converts deeply nested html blocks when experimentalTreeDataSupport is enabled 1`] = `
+exports[`does not convert deeply nested html blocks 1`] = `
 Array [
   Object {
     "characterList": Array [
@@ -2868,493 +1563,10 @@ Array [
         "entity": null,
         "style": Array [],
       },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
-    "text": "Some quote",
-    "type": "ordered-list-item",
-  },
-  Object {
-    "characterList": Array [],
-    "children": Array [
-      "key2",
-    ],
-    "data": Object {},
-    "depth": 0,
-    "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
-    "text": "",
-    "type": "ordered-list-item",
-  },
-  Object {
-    "characterList": Array [],
-    "children": Array [
-      "key3",
-      "key4",
-    ],
-    "data": Object {},
-    "depth": 0,
-    "key": "key2",
-    "nextSibling": null,
-    "parent": "key1",
-    "prevSibling": null,
-    "text": "",
-    "type": "blockquote",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key3",
-    "nextSibling": "key4",
-    "parent": "key2",
-    "prevSibling": null,
-    "text": "Hello World!",
-    "type": "header-one",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key4",
-    "nextSibling": null,
-    "parent": "key2",
-    "prevSibling": "key3",
-    "text": "lorem ipsum",
-    "type": "unstyled",
-  },
-]
-`;
-
-exports[`converts nested html blocks when experimentalTreeDataSupport is enabled 1`] = `
-Array [
-  Object {
-    "characterList": Array [],
-    "children": Array [
-      "key1",
-      "key2",
     ],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": null,
-    "text": "",
-    "type": "blockquote",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key1",
-    "nextSibling": "key2",
-    "parent": "key0",
-    "prevSibling": null,
-    "text": "Hello World!",
-    "type": "header-one",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key2",
-    "nextSibling": null,
-    "parent": "key0",
-    "prevSibling": "key1",
-    "text": "lorem ipsum",
-    "type": "unstyled",
-  },
-]
-`;
-
-exports[`converts text nodes to unstyled elements when leading nested blocks when experimentalTreeDataSupport is enabled 1`] = `
-Array [
-  Object {
-    "characterList": Array [],
-    "children": Array [
-      "key1",
-      "key2",
-    ],
-    "data": Object {},
-    "depth": 0,
-    "key": "key0",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": null,
-    "text": "",
-    "type": "blockquote",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key1",
-    "nextSibling": "key2",
-    "parent": "key0",
-    "prevSibling": null,
-    "text": "Hello World!",
-    "type": "unstyled",
-  },
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "children": Array [],
-    "data": Object {},
-    "depth": 0,
-    "key": "key2",
-    "nextSibling": null,
-    "parent": "key0",
-    "prevSibling": "key1",
-    "text": "lorem ipsum",
-    "type": "header-one",
-  },
-]
-`;
-
-exports[`does not convert deeply nested html blocks when experimentalTreeDataSupport is disabled 1`] = `false`;
-
-exports[`does not convert deeply nested html blocks when experimentalTreeDataSupport is disabled 2`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-      Object {
-        "entity": null,
-        "style": Array [],
-      },
-    ],
-    "data": Object {},
-    "depth": 0,
-    "key": "key10",
     "text": "Some quote",
     "type": "ordered-list-item",
   },
@@ -3459,7 +1671,7 @@ Array [
     ],
     "data": Object {},
     "depth": 0,
-    "key": "key11",
+    "key": "key1",
     "text": "Hello World!
 lorem ipsum",
     "type": "ordered-list-item",
@@ -3467,9 +1679,7 @@ lorem ipsum",
 ]
 `;
 
-exports[`eliminates useless blocks when experimentalTreeDataSupport is disabled 1`] = `false`;
-
-exports[`eliminates useless blocks when experimentalTreeDataSupport is disabled 2`] = `
+exports[`eliminates useless blocks 1`] = `
 Array [
   Object {
     "characterList": Array [
@@ -3496,7 +1706,7 @@ Array [
     ],
     "data": Object {},
     "depth": 0,
-    "key": "key10",
+    "key": "key2",
     "text": "Hello",
     "type": "unstyled",
   },
@@ -3525,7 +1735,7 @@ Array [
     ],
     "data": Object {},
     "depth": 0,
-    "key": "key11",
+    "key": "key3",
     "text": "World",
     "type": "unstyled",
   },
@@ -3913,30 +2123,6 @@ Array [
 ]
 `;
 
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <blockquote /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <div /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <figure /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <h1 /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <h2 /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <h3 /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <h4 /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <h5 /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <h6 /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <li /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <p /> 1`] = `true`;
-
-exports[`must convert root ContentBlockNodes to matching ContentBlock nodes for <pre /> 1`] = `true`;
-
 exports[`must not merge tags when converting adjacent <blockquote /> 1`] = `
 Array [
   Object {
@@ -3977,13 +2163,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "blockquote",
   },
@@ -3994,13 +2176,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "blockquote",
   },
@@ -4047,13 +2225,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "unstyled",
   },
@@ -4064,13 +2238,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "unstyled",
   },
@@ -4117,13 +2287,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "atomic",
   },
@@ -4134,13 +2300,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "atomic",
   },
@@ -4187,13 +2349,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "header-one",
   },
@@ -4204,13 +2362,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "header-one",
   },
@@ -4257,13 +2411,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "header-two",
   },
@@ -4274,13 +2424,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "header-two",
   },
@@ -4327,13 +2473,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "header-three",
   },
@@ -4344,13 +2486,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "header-three",
   },
@@ -4397,13 +2535,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "header-four",
   },
@@ -4414,13 +2548,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "header-four",
   },
@@ -4467,13 +2597,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "header-five",
   },
@@ -4484,13 +2610,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "header-five",
   },
@@ -4537,13 +2659,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "header-six",
   },
@@ -4554,13 +2672,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "header-six",
   },
@@ -4607,13 +2721,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "unordered-list-item",
   },
@@ -4624,13 +2734,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "unordered-list-item",
   },
@@ -4677,13 +2783,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "unstyled",
   },
@@ -4694,13 +2796,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "unstyled",
   },
@@ -4747,13 +2845,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key0",
-    "nextSibling": "key1",
-    "parent": null,
-    "prevSibling": null,
     "text": "a",
     "type": "code-block",
   },
@@ -4764,13 +2858,9 @@ Array [
         "style": Array [],
       },
     ],
-    "children": Array [],
     "data": Object {},
     "depth": 0,
     "key": "key1",
-    "nextSibling": null,
-    "parent": null,
-    "prevSibling": "key0",
     "text": "b",
     "type": "code-block",
   },

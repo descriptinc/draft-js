@@ -8,7 +8,6 @@
  * @emails oncall+draft_js
  */
 
-import GKX from '../../../../stubs/gkx';
 import {
   EditorState,
   isSelectionAtEndOfContent,
@@ -19,14 +18,8 @@ import {
   SelectionState,
 } from '../../../../model/immutable/SelectionState';
 import {DraftRemovalDirection} from '../../../../model/constants/DraftRemovalDirection';
-import {
-  ContentState,
-  getBlockForKey,
-} from '../../../../model/immutable/ContentState';
-import {ContentBlockNode} from '../../../../model/immutable/ContentBlockNode';
+import {ContentState} from '../../../../model/immutable/ContentState';
 import DraftModifier from '../../../../model/modifier/DraftModifier';
-
-const experimentalTreeDataSupport = GKX.gkx('draft_tree_data_support');
 
 /**
  * For a collapsed selection state, remove text based on the specified strategy.
@@ -40,38 +33,10 @@ export default function removeTextWithStrategy(
   const selection = editorState.selection;
   const content = editorState.currentContent;
   let target = selection;
-  const anchorKey = selection.anchorKey;
-  const focusKey = selection.focusKey;
-  const anchorBlock = getBlockForKey(content, anchorKey);
-  if (experimentalTreeDataSupport) {
-    if (direction === 'forward') {
-      if (anchorKey !== focusKey) {
-        // For now we ignore forward delete across blocks,
-        // if there is demand for this we will implement it.
-        return content;
-      }
-    }
-  }
   if (isCollapsed(selection)) {
     if (direction === 'forward') {
       if (isSelectionAtEndOfContent(editorState)) {
         return content;
-      }
-      if (experimentalTreeDataSupport) {
-        const isAtEndOfBlock =
-          selection.anchorOffset ===
-          getBlockForKey(content, anchorKey).text.length;
-        if (isAtEndOfBlock) {
-          const anchorBlockSibling = getBlockForKey(
-            content,
-            (anchorBlock as ContentBlockNode).nextSibling!,
-          );
-          if (!anchorBlockSibling || anchorBlockSibling.text.length === 0) {
-            // For now we ignore forward delete at the end of a block,
-            // if there is demand for this we will implement it.
-            return content;
-          }
-        }
       }
     } else if (isSelectionAtStartOfContent(editorState)) {
       return content;

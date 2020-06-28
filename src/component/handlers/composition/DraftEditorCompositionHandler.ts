@@ -22,7 +22,7 @@ import {
 import DraftOffsetKey from '../../selection/DraftOffsetKey';
 import DraftModifier from '../../../model/modifier/DraftModifier';
 import {getBlockForKey} from '../../../model/immutable/ContentState';
-import {getInlineStyleAt} from '../../../model/immutable/ContentBlockNode';
+import {getInlineStyleAt} from '../../../model/immutable/ContentBlock';
 import getDraftEditorSelection from '../../selection/getDraftEditorSelection';
 import DOMObserver from './DOMObserver';
 import getEntityKeyForSelection from '../../../model/entity/getEntityKeyForSelection';

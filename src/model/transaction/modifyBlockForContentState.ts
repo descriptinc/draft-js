@@ -12,33 +12,33 @@ import {
   getStartKey,
   SelectionState,
 } from '../immutable/SelectionState';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
 import {mergeMapUpdates} from '../immutable/BlockMap';
+import {BlockNode} from '../immutable/BlockNode';
 
 export default function modifyBlockForContentState(
   contentState: ContentState,
   selectionState: SelectionState,
-  operation: (block: BlockNodeRecord) => BlockNodeRecord,
+  operation: (block: BlockNode) => BlockNode,
 ): ContentState {
   const startKey = getStartKey(selectionState);
   const endKey = getEndKey(selectionState);
   const blockMap = contentState.blockMap;
 
-  const iter: Iterable<[string, BlockNodeRecord]> = map(
-    flatten<[string, BlockNodeRecord]>([
+  const iter: Iterable<[string, BlockNode]> = map(
+    flatten<[string, BlockNode]>([
       takeUntil(
         skipUntil(blockMap, ([k]) => k === startKey),
         ([k]) => k === endKey,
       ),
       [[endKey, blockMap.get(endKey)!]],
     ]),
-    ([k, block]: [string, BlockNodeRecord]): [string, BlockNodeRecord] => [
+    ([k, block]: [string, BlockNode]): [string, BlockNode] => [
       k,
       operation(block),
     ],
   );
-  const newBlocks: Record<string, BlockNodeRecord> = {};
+  const newBlocks: Record<string, BlockNode> = {};
   for (const [key, block] of iter) {
     newBlocks[key] = block;
   }

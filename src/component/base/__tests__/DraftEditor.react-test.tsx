@@ -22,7 +22,14 @@ beforeEach(() => {
 });
 
 test('must has generated editorKey', () => {
-  shallow.render(<DraftEditor editorState={editorState} onChange={() => {}} />);
+  shallow.render(
+    <DraftEditor
+      editorState={editorState}
+      onChange={() => {
+        //
+      }}
+    />,
+  );
 
   // internally at Facebook we use a newer version of the shallowRenderer
   // which has a different level of wrapping of the '_instance'
@@ -37,7 +44,9 @@ test('must has editorKey same as props', () => {
   shallow.render(
     <DraftEditor
       editorState={editorState}
-      onChange={() => {}}
+      onChange={() => {
+        //
+      }}
       editorKey="hash"
     />,
   );
@@ -61,7 +70,12 @@ describe('ariaDescribedBy', () => {
   describe('without placeholder', () => {
     test('undefined by default', () => {
       const props = getProps(
-        <DraftEditor editorState={editorState} onChange={() => {}} />,
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {
+            //
+          }}
+        />,
       );
       expect(props).toHaveProperty('aria-describedby', undefined);
     });
@@ -70,7 +84,9 @@ describe('ariaDescribedBy', () => {
       const props = getProps(
         <DraftEditor
           editorState={editorState}
-          onChange={() => {}}
+          onChange={() => {
+            //
+          }}
           ariaDescribedBy="abc"
         />,
       );
@@ -81,7 +97,9 @@ describe('ariaDescribedBy', () => {
       const props = getProps(
         <DraftEditor
           editorState={editorState}
-          onChange={() => {}}
+          onChange={() => {
+            //
+          }}
           ariaDescribedBy="abc {{editor_id_placeholder}} xyz"
         />,
       );
@@ -94,7 +112,9 @@ describe('ariaDescribedBy', () => {
       const props = getProps(
         <DraftEditor
           editorState={editorState}
-          onChange={() => {}}
+          onChange={() => {
+            //
+          }}
           editorKey="X"
           placeholder="place"
         />,
@@ -106,7 +126,9 @@ describe('ariaDescribedBy', () => {
       const props = getProps(
         <DraftEditor
           editorState={editorState}
-          onChange={() => {}}
+          onChange={() => {
+            //
+          }}
           editorKey="X"
           placeholder="place"
           ariaDescribedBy="abc"
@@ -119,7 +141,9 @@ describe('ariaDescribedBy', () => {
       const props = getProps(
         <DraftEditor
           editorState={editorState}
-          onChange={() => {}}
+          onChange={() => {
+            //
+          }}
           editorKey="X"
           placeholder="place"
           ariaDescribedBy="abc {{editor_id_placeholder}} xyz"

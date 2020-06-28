@@ -15,7 +15,7 @@ import {
   findStyleRanges,
   getEntityAt,
   getInlineStyleAt,
-} from '../ContentBlockNode';
+} from '../ContentBlock';
 
 const ENTITY_KEY = 'x';
 

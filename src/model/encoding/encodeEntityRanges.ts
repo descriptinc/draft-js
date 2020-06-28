@@ -8,9 +8,9 @@
  */
 
 import UnicodeUtils from 'fbjs/lib/UnicodeUtils';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
-import {findEntityRanges, getEntityAt} from '../immutable/ContentBlockNode';
+import {findEntityRanges, getEntityAt} from '../immutable/ContentBlock';
 import DraftStringKey from './DraftStringKey';
+import {BlockNode} from '../immutable/BlockNode';
 
 const {strlen} = UnicodeUtils;
 
@@ -24,7 +24,7 @@ export type EntityRange = {
  * Convert to UTF-8 character counts for storage.
  */
 export default function encodeEntityRanges(
-  block: BlockNodeRecord,
+  block: BlockNode,
   storageMap: Record<string, number | string>,
 ): EntityRange[] {
   const encoded: EntityRange[] = [];

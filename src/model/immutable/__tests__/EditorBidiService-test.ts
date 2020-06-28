@@ -9,9 +9,9 @@
  */
 import {makeContentBlock} from '../ContentBlock';
 import {makeContentState} from '../ContentState';
-import {BlockNodeRecord} from '../BlockNodeRecord';
 import {createFromArray} from '../BlockMapBuilder';
 import EditorBidiService from '../EditorBidiService';
+import {BlockNode} from '../BlockNode';
 
 const ltr = makeContentBlock({
   key: 'a',
@@ -26,7 +26,7 @@ const empty = makeContentBlock({
   text: '',
 });
 
-const getContentState = (blocks: BlockNodeRecord[]) => {
+const getContentState = (blocks: BlockNode[]) => {
   return makeContentState({blockMap: createFromArray(blocks)});
 };
 

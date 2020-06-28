@@ -8,17 +8,17 @@
  */
 
 import {EntityMap} from '../immutable/EntityMap';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {
   getEndOffset,
   getStartOffset,
   SelectionState,
 } from '../immutable/SelectionState';
 import {DraftRemovalDirection} from '../constants/DraftRemovalDirection';
-import {getEntityAt} from '../immutable/ContentBlockNode';
+import {getEntityAt} from '../immutable/ContentBlock';
 import getRangesForDraftEntity from './getRangesForDraftEntity';
 import invariant from '../../fbjs/invariant';
 import DraftEntitySegments from './DraftEntitySegments';
+import {BlockNode} from '../immutable/BlockNode';
 
 /**
  * Given a SelectionState and a removal direction, determine the entire range
@@ -31,8 +31,8 @@ import DraftEntitySegments from './DraftEntitySegments';
  */
 function getCharacterRemovalRange(
   entityMap: EntityMap,
-  startBlock: BlockNodeRecord,
-  endBlock: BlockNodeRecord,
+  startBlock: BlockNode,
+  endBlock: BlockNode,
   selectionState: SelectionState,
   direction: DraftRemovalDirection,
 ): SelectionState {
@@ -115,7 +115,7 @@ function getCharacterRemovalRange(
 
 function getEntityRemovalRange(
   entityMap: EntityMap,
-  block: BlockNodeRecord,
+  block: BlockNode,
   selectionState: SelectionState,
   direction: DraftRemovalDirection,
   entityKey: string,

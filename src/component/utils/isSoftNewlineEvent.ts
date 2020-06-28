@@ -6,10 +6,10 @@
  *
  * @emails oncall+draft_js
  */
-import {SyntheticKeyboardEvent} from './eventTypes';
 import Keys from 'fbjs/lib/Keys';
+import React from 'react';
 
-export default function isSoftNewlineEvent(e: SyntheticKeyboardEvent): boolean {
+export default function isSoftNewlineEvent(e: React.KeyboardEvent): boolean {
   return (
     e.which === Keys.RETURN &&
     (e.getModifierState('Shift') ||

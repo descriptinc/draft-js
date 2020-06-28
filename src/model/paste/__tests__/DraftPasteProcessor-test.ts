@@ -9,7 +9,6 @@
 
 import DraftPasteProcessor from '../DraftPasteProcessor';
 import {EMPTY_CHARACTER} from '../../immutable/CharacterMetadata';
-import GKX from '../../../stubs/gkx';
 import {blockToJson} from '../../../util/blockMapToJson';
 
 const CUSTOM_BLOCK_MAP = {
@@ -44,24 +43,7 @@ const CUSTOM_BLOCK_MAP = {
 
 const EMPTY_CHAR_METADATA = EMPTY_CHARACTER;
 
-const origGkx = GKX.gkx;
-afterEach(() => {
-  GKX.gkx = origGkx;
-});
-const toggleExperimentalTreeDataSupport = (enabled: boolean) => {
-  GKX.gkx = (name: string) => {
-    if (name === 'draft_tree_data_support') {
-      return enabled;
-    }
-    return false;
-  };
-};
-
-const assertDraftPasteProcessorProcessText = (
-  textBlocks: string[],
-  experimentalTreeDataSupport = false,
-) => {
-  toggleExperimentalTreeDataSupport(experimentalTreeDataSupport);
+const assertDraftPasteProcessorProcessText = (textBlocks: string[]) => {
   const contentBlocks = DraftPasteProcessor.processText(
     textBlocks,
     EMPTY_CHAR_METADATA,
@@ -73,9 +55,7 @@ const assertDraftPasteProcessorProcessText = (
 const assertDraftPasteProcessorProcessHTML = (
   html: string,
   blockMap: Record<string, any> = CUSTOM_BLOCK_MAP,
-  experimentalTreeDataSupport = false,
 ) => {
-  toggleExperimentalTreeDataSupport(experimentalTreeDataSupport);
   const {contentBlocks} = DraftPasteProcessor.processHTML(html, blockMap)!;
   expect(contentBlocks!.map(blockToJson)).toMatchSnapshot();
 };
@@ -320,23 +300,6 @@ test('must preserve list formatting', () => {
   `);
 });
 
-test.skip('must create nested elements when experimentalTreeDataSupport is enabled', () => {
-  assertDraftPasteProcessorProcessHTML(
-    `
-    <blockquote>
-      <h2>Heading inside blockquote</h2>
-      <p><em>some</em> <strong>text</strong></p>
-    </blockquote>
-  `,
-    CUSTOM_BLOCK_MAP,
-    true,
-  );
-});
-
 test('must create ContentBlocks when experimentalTreeDataSupport is disabled while processing text', () => {
   assertDraftPasteProcessorProcessText(['Alpha', 'Beta', 'Charlie']);
-});
-
-test.skip('must create ContentBlockNodes when experimentalTreeDataSupport is enabled while processing text', () => {
-  assertDraftPasteProcessorProcessText(['Alpha', 'Beta', 'Charlie'], true);
 });

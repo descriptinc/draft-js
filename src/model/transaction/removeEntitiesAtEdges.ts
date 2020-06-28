@@ -22,7 +22,7 @@ import {findRangesImmutable} from '../immutable/findRangesImmutable';
 import invariant from '../../fbjs/invariant';
 import {DraftRange} from '../modifier/DraftRange';
 import {EntityMap} from '../immutable/EntityMap';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {BlockNode} from '../immutable/BlockNode';
 
 export default function removeEntitiesAtEdges(
   contentState: ContentState,
@@ -112,9 +112,9 @@ function getRemovalRange(
 
 function removeForBlock(
   entityMap: EntityMap,
-  block: BlockNodeRecord,
+  block: BlockNode,
   offset: number,
-): BlockNodeRecord {
+): BlockNode {
   const chars = block.characterList;
   const charBefore = offset > 0 ? chars[offset - 1] : undefined;
   const charAfter = offset < chars.length ? chars[offset] : undefined;

@@ -9,7 +9,7 @@
 
 import UserAgent from 'fbjs/lib/UserAgent';
 import isSoftNewlineEvent from './isSoftNewlineEvent';
-import {SyntheticKeyboardEvent} from './eventTypes';
+import React from 'react';
 
 const isOSX = UserAgent.isPlatform('Mac OS X');
 
@@ -19,11 +19,11 @@ const KeyBindingUtil = {
    * the altKey modifier. If they are combined, the result is an `altGraph`
    * key modifier, which should not be handled by this set of key bindings.
    */
-  isCtrlKeyCommand: function(e: SyntheticKeyboardEvent): boolean {
+  isCtrlKeyCommand: function(e: React.KeyboardEvent): boolean {
     return !!e.ctrlKey && !e.altKey;
   },
 
-  isOptionKeyCommand: function(e: SyntheticKeyboardEvent): boolean {
+  isOptionKeyCommand: function(e: React.KeyboardEvent): boolean {
     return isOSX && e.altKey;
   },
 
@@ -31,7 +31,7 @@ const KeyBindingUtil = {
     return isOSX;
   },
 
-  hasCommandModifier: function(e: SyntheticKeyboardEvent): boolean {
+  hasCommandModifier: function(e: React.KeyboardEvent): boolean {
     return isOSX
       ? !!e.metaKey && !e.altKey
       : KeyBindingUtil.isCtrlKeyCommand(e);

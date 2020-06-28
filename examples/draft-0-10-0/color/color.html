@@ -19,55 +19,66 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <link rel="stylesheet" href="../../../dist/Draft.css" />
   </head>
   <body>
-    <div style="font-family: Georgia, serif; font-size: 15px; padding: 20px; width: 600px; line-height: 24px;">
+    <div
+      style="font-family: Georgia, serif; font-size: 15px; padding: 20px; width: 600px; line-height: 24px;"
+    >
       This example demonstrates how custom inline styles can be used to create
-      editors with an unlimited range of style combinations. Note also that
-      the state of the editor can be manipulated to enforce that only one
-      color may be active at any time.
+      editors with an unlimited range of style combinations. Note also that the
+      state of the editor can be manipulated to enforce that only one color may
+      be active at any time.
     </div>
     <div id="target"></div>
     <script src="../../../node_modules/react/umd/react.development.js"></script>
     <script src="../../../node_modules/react-dom/umd/react-dom.development.js"></script>
-    <script src="../../../node_modules/immutable/dist/immutable.js"></script>
     <script src="../../../node_modules/es6-shim/es6-shim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
     <script src="../../../dist/Draft.js"></script>
     <script type="text/babel">
       'use strict';
 
-      const {Editor, EditorState, Modifier, RichUtils} = Draft;
+      const {
+        createEmpty,
+        getCurrentInlineStyle,
+        pushContent,
+        isCollapsed,
+        Editor,
+        Modifier,
+        RichUtils,
+      } = Draft;
 
       class ColorfulEditorExample extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {editorState: EditorState.createEmpty()};
+          this.state = {editorState: createEmpty()};
 
           this.focus = () => this.editor.focus();
-          this.onChange = (editorState) => this.setState({editorState});
-          this.toggleColor = (toggledColor) => this._toggleColor(toggledColor);
+          this.onChange = editorState => this.setState({editorState});
+          this.toggleColor = toggledColor => this._toggleColor(toggledColor);
         }
 
         _toggleColor(toggledColor) {
           const {editorState} = this.state;
-          const selection = editorState.getSelection();
+          const selection = editorState.selection;
 
           // Let's just allow one color at a time. Turn off all active colors.
-          const nextContentState = Object.keys(colorStyleMap)
-            .reduce((contentState, color) => {
-              return Modifier.removeInlineStyle(contentState, selection, color)
-            }, editorState.getCurrentContent());
-
-          let nextEditorState = EditorState.push(
-            editorState,
-            nextContentState,
-            'change-inline-style'
+          const nextContentState = Object.keys(colorStyleMap).reduce(
+            (contentState, color) => {
+              return Modifier.removeInlineStyle(contentState, selection, color);
+            },
+            editorState.currentContent,
           );
 
-          const currentStyle = editorState.getCurrentInlineStyle();
+          let nextEditorState = pushContent(
+            editorState,
+            nextContentState,
+            'change-inline-style',
+          );
+
+          const currentStyle = getCurrentInlineStyle(editorState);
 
           // Unset style override for current color.
-          if (selection.isCollapsed()) {
-            nextEditorState = currentStyle.reduce((state, color) => {
+          if (isCollapsed(selection)) {
+            nextEditorState = [...currentStyle].reduce((state, color) => {
               return RichUtils.toggleInlineStyle(state, color);
             }, nextEditorState);
           }
@@ -76,7 +87,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           if (!currentStyle.has(toggledColor)) {
             nextEditorState = RichUtils.toggleInlineStyle(
               nextEditorState,
-              toggledColor
+              toggledColor,
             );
           }
 
@@ -97,7 +108,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   editorState={editorState}
                   onChange={this.onChange}
                   placeholder="Write something colorful..."
-                  ref={(ref) => this.editor = ref}
+                  ref={ref => (this.editor = ref)}
                 />
               </div>
             </div>
@@ -108,7 +119,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       class StyleButton extends React.Component {
         constructor(props) {
           super(props);
-          this.onToggle = (e) => {
+          this.onToggle = e => {
             e.preventDefault();
             this.props.onToggle(this.props.style);
           };
@@ -140,11 +151,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         {label: 'Violet', style: 'violet'},
       ];
 
-      const ColorControls = (props) => {
-        var currentStyle = props.editorState.getCurrentInlineStyle();
+      const ColorControls = props => {
+        var currentStyle = getCurrentInlineStyle(props.editorState);
         return (
           <div style={styles.controls}>
-            {COLORS.map(type =>
+            {COLORS.map(type => (
               <StyleButton
                 key={type.label}
                 active={currentStyle.has(type.style)}
@@ -152,7 +163,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 onToggle={props.onToggle}
                 style={type.style}
               />
-            )}
+            ))}
           </div>
         );
       };
@@ -185,7 +196,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       const styles = {
         root: {
-          fontFamily: '\'Georgia\', serif',
+          fontFamily: "'Georgia', serif",
           fontSize: 14,
           padding: 20,
           width: 600,
@@ -199,7 +210,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           paddingTop: 20,
         },
         controls: {
-          fontFamily: '\'Helvetica\', sans-serif',
+          fontFamily: "'Helvetica', sans-serif",
           fontSize: 14,
           marginBottom: 10,
           userSelect: 'none',
@@ -214,7 +225,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       ReactDOM.render(
         <ColorfulEditorExample />,
-        document.getElementById('target')
+        document.getElementById('target'),
       );
     </script>
   </body>

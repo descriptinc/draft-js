@@ -8,14 +8,14 @@
  */
 
 import {applyEntity} from '../immutable/CharacterMetadata';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
+import {BlockNode} from '../immutable/BlockNode';
 
 export default function applyEntityToContentBlock(
-  contentBlock: BlockNodeRecord,
+  contentBlock: BlockNode,
   startArg: number,
   end: number,
   entityKey: string | null,
-): BlockNodeRecord {
+): BlockNode {
   let start = startArg;
   if (start >= end) {
     return contentBlock;

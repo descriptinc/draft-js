@@ -7,9 +7,10 @@
  * @emails oncall+draft_js
  */
 
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {DraftDecorator} from './DraftDecorator';
 import {ContentState} from '../immutable/ContentState';
+import {BlockNode} from '../immutable/BlockNode';
+import {ComponentType} from 'react';
 
 const DELIMITER = '.';
 
@@ -43,7 +44,7 @@ export default class CompositeDraftDecorator {
   }
 
   getDecorations(
-    block: BlockNodeRecord,
+    block: BlockNode,
     contentState: ContentState,
   ): readonly (string | null)[] {
     const decorations = new Array(block.text.length).fill(null);
@@ -66,12 +67,12 @@ export default class CompositeDraftDecorator {
     return decorations;
   }
 
-  getComponentForKey(key: string): Function {
+  getComponentForKey(key: string): ComponentType {
     const componentKey = parseInt(key.split(DELIMITER)[0], 10);
     return this._decorators[componentKey].component;
   }
 
-  getPropsForKey(key: string): Object | null {
+  getPropsForKey(key: string): Record<string, unknown> | null {
     const componentKey = parseInt(key.split(DELIMITER)[0], 10);
     return this._decorators[componentKey].props || null;
   }

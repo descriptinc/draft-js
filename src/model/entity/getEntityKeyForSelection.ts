@@ -15,7 +15,7 @@ import {
   isCollapsed,
   SelectionState,
 } from '../immutable/SelectionState';
-import {getEntityAt} from '../immutable/ContentBlockNode';
+import {getEntityAt} from '../immutable/ContentBlock';
 import DraftEntity from './DraftEntity';
 import {notEmptyKey} from '../../component/utils/draftKeyUtils';
 

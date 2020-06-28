@@ -20,7 +20,7 @@ import WebpackDevServer from 'webpack-dev-server';
 const APP_PORT = 3000;
 
 // Serve the TeX Editor app
-var compiler = webpack({
+const compiler = webpack({
   entry: path.resolve(__dirname, 'js', 'app.js'),
   module: {
     rules: [
@@ -37,7 +37,7 @@ var compiler = webpack({
   output: {filename: 'app.js', path: '/'},
   mode: 'development',
 });
-var app = new WebpackDevServer(compiler, {
+const app = new WebpackDevServer(compiler, {
   contentBase: '/public/',
   publicPath: '/js/',
   stats: {colors: true},

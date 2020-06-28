@@ -10,14 +10,11 @@
 
 import getSampleStateForTesting from '../getSampleStateForTesting';
 import {getFirstBlock} from '../../immutable/ContentState';
-import invariant from '../../../fbjs/invariant';
 import {createFromArray} from '../../immutable/BlockMapBuilder';
 import {makeContentBlock} from '../../immutable/ContentBlock';
 import insertFragmentIntoContentState from '../insertFragmentIntoContentState';
 import {BlockMap} from '../../immutable/BlockMap';
 import {blockMapToJsonArray} from '../../../util/blockMapToJson';
-import {makeEmptySelection} from '../../immutable/SelectionState';
-import {BlockNodeRecord} from '../../immutable/BlockNodeRecord';
 
 jest.mock('../../keys/generateRandomKey');
 
@@ -32,22 +29,7 @@ const DEFAULT_BLOCK_CONFIG = {
 
 const initialBlock = getFirstBlock(contentState);
 
-const getInvariantViolation = (msg: string) => {
-  try {
-    /* eslint-disable-next-line */
-    invariant(false, msg);
-  } catch (e) {
-    return e;
-  }
-};
-
-const createFragment = (fragment = {}, experimentalTreeDataSupport = false) => {
-  if (experimentalTreeDataSupport) {
-    throw new Error('not implemented');
-  }
-  // const ContentBlockNodeRecord = experimentalTreeDataSupport
-  //   ? ContentBlockNode
-  //   : ContentBlock;
+const createFragment = (fragment = {}) => {
   const newFragment = Array.isArray(fragment) ? fragment : [fragment];
 
   return createFromArray(
@@ -58,12 +40,6 @@ const createFragment = (fragment = {}, experimentalTreeDataSupport = false) => {
       }),
     ),
   );
-};
-
-const createContentBlockNodeFragment = (
-  fragment: Partial<BlockNodeRecord> | Partial<BlockNodeRecord>[],
-) => {
-  return createFragment(fragment, true);
 };
 
 const assertInsertFragmentIntoContentState = (
@@ -117,277 +93,5 @@ test('must apply multiblock fragments', () => {
         data: new Map([['b', 2]]),
       },
     ]),
-  );
-});
-
-test.skip('must be able to insert a fragment with a single ContentBlockNode', () => {
-  const initialSelection = makeEmptySelection('A');
-  const initialContent = {
-    ...contentState,
-    blockMap: createContentBlockNodeFragment([
-      {
-        key: 'A',
-        text: '',
-      },
-    ]),
-  };
-
-  assertInsertFragmentIntoContentState(
-    createContentBlockNodeFragment([
-      {
-        key: 'B',
-        text: 'some text',
-      },
-    ]),
-    initialSelection,
-    initialContent,
-  );
-});
-
-test.skip('must be able to insert fragment of ContentBlockNodes', () => {
-  const initialSelection = makeEmptySelection('first');
-  const initialContent = {
-    ...contentState,
-    blockMap: createContentBlockNodeFragment([
-      {
-        key: 'first',
-        text: '',
-        nextSibling: 'second',
-      },
-      {
-        key: 'second',
-        text: '',
-        prevSibling: 'first',
-      },
-    ]),
-  };
-
-  assertInsertFragmentIntoContentState(
-    createContentBlockNodeFragment([
-      {
-        key: 'B',
-        text: '',
-        children: ['C'],
-        nextSibling: 'E',
-      },
-      {
-        key: 'C',
-        parent: 'B',
-        text: '',
-        children: ['D'],
-      },
-      {
-        key: 'D',
-        parent: 'C',
-        text: 'Delta',
-      },
-      {
-        key: 'E',
-        text: 'Elephant',
-        prevSibling: 'B',
-      },
-    ]),
-    initialSelection,
-    initialContent,
-  );
-});
-
-test.skip('must be able to insert fragment of ContentBlockNodes after nested block', () => {
-  const initialSelection = makeEmptySelection('firstChild');
-  const initialContent = {
-    ...contentState,
-    blockMap: createContentBlockNodeFragment([
-      {
-        key: 'root',
-        text: '',
-        children: ['firstChild', 'lastChild'],
-      },
-      {
-        key: 'firstChild',
-        parent: 'root',
-        text: '',
-        nextSibling: 'lastChild',
-      },
-      {
-        key: 'lastChild',
-        parent: 'root',
-        text: '',
-        prevSibling: 'firstChild',
-      },
-    ]),
-  };
-
-  assertInsertFragmentIntoContentState(
-    createContentBlockNodeFragment([
-      {
-        key: 'B',
-        text: '',
-        children: ['C'],
-        nextSibling: 'E',
-      },
-      {
-        key: 'C',
-        parent: 'B',
-        text: '',
-        children: ['D'],
-      },
-      {
-        key: 'D',
-        parent: 'C',
-        text: 'Delta',
-      },
-      {
-        key: 'E',
-        text: 'Elephant',
-        prevSibling: 'B',
-      },
-    ]),
-    initialSelection,
-    initialContent,
-  );
-});
-
-test.skip('must be able to insert a fragment of ContentBlockNodes while updating the target block with the first fragment block properties', () => {
-  const initialSelection = makeEmptySelection('first');
-  const initialContent = {
-    ...contentState,
-    blockMap: createContentBlockNodeFragment([
-      {
-        key: 'first',
-        text: '',
-        nextSibling: 'second',
-      },
-      {
-        key: 'second',
-        text: '',
-        prevSibling: 'first',
-      },
-    ]),
-  };
-
-  assertInsertFragmentIntoContentState(
-    createContentBlockNodeFragment([
-      {
-        key: 'A',
-        text: 'Alpha',
-        nextSibling: 'B',
-      },
-      {
-        key: 'B',
-        text: '',
-        children: ['C'],
-        prevSibling: 'A',
-      },
-      {
-        key: 'C',
-        parent: 'B',
-        text: '',
-        children: ['D'],
-      },
-      {
-        key: 'D',
-        parent: 'C',
-        text: 'Delta',
-      },
-    ]),
-    initialSelection,
-    initialContent,
-  );
-});
-
-test.skip('must be able to insert a fragment of ContentBlockNodes while updating the target block with the first fragment block properties after nested block', () => {
-  const initialSelection = makeEmptySelection('firstChild');
-  const initialContent = {
-    ...contentState,
-    blockMap: createContentBlockNodeFragment([
-      {
-        key: 'root',
-        text: '',
-        children: ['firstChild', 'lastChild'],
-      },
-      {
-        key: 'firstChild',
-        parent: 'root',
-        text: '',
-        nextSibling: 'lastChild',
-      },
-      {
-        key: 'lastChild',
-        parent: 'root',
-        text: '',
-        prevSibling: 'firstChild',
-      },
-    ]),
-  };
-
-  assertInsertFragmentIntoContentState(
-    createContentBlockNodeFragment([
-      {
-        key: 'A',
-        text: 'Alpha',
-        nextSibling: 'B',
-      },
-      {
-        key: 'B',
-        text: '',
-        children: ['C'],
-        prevSibling: 'A',
-        nextSibling: 'E',
-      },
-      {
-        key: 'C',
-        parent: 'B',
-        text: '',
-        children: ['D'],
-      },
-      {
-        key: 'D',
-        parent: 'C',
-        text: 'Delta',
-      },
-      {
-        key: 'E',
-        text: 'Elephant',
-        prevSibling: 'B',
-      },
-    ]),
-    initialSelection,
-    initialContent,
-  );
-});
-
-test.skip('must throw an error when trying to apply ContentBlockNode fragments when selection is on a block that has children', () => {
-  const initialSelection = makeEmptySelection('A');
-  const initialContent = {
-    ...contentState,
-    blockMap: createContentBlockNodeFragment([
-      {
-        key: 'A',
-        text: '',
-        children: ['B'],
-      },
-      {
-        key: 'B',
-        text: 'child',
-        parent: 'A',
-      },
-    ]),
-  };
-
-  expect(() =>
-    insertFragmentIntoContentState(
-      initialContent,
-      initialSelection,
-      createContentBlockNodeFragment([
-        {
-          key: 'C',
-          text: 'some text',
-        },
-      ]),
-    ),
-  ).toThrow(
-    getInvariantViolation(
-      '`insertFragment` should not be called when a container node is selected.',
-    ),
   );
 });

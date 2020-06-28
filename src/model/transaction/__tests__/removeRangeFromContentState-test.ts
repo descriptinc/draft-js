@@ -7,66 +7,13 @@
  * @emails oncall+draft_js
  */
 import getSampleStateForTesting from '../getSampleStateForTesting';
-import {makeContentBlockNode} from '../../immutable/ContentBlockNode';
-import {
-  makeEmptySelection,
-  SelectionState,
-} from '../../immutable/SelectionState';
-import {createFromArray} from '../../immutable/BlockMapBuilder';
+import {SelectionState} from '../../immutable/SelectionState';
 import removeRangeFromContentState from '../removeRangeFromContentState';
 import {blockMapToJsonObject} from '../../../util/blockMapToJson';
 import {getFirstBlock} from '../../immutable/ContentState';
 import {takeNth} from '../../descript/Iterables';
 
 const {contentState, selectionState} = getSampleStateForTesting();
-
-const contentBlockNodes = [
-  makeContentBlockNode({
-    key: 'A',
-    nextSibling: 'B',
-    text: 'Alpha',
-  }),
-  makeContentBlockNode({
-    key: 'B',
-    prevSibling: 'A',
-    nextSibling: 'G',
-    children: ['C', 'F'],
-  }),
-  makeContentBlockNode({
-    parent: 'B',
-    key: 'C',
-    nextSibling: 'F',
-    children: ['D', 'E'],
-  }),
-  makeContentBlockNode({
-    parent: 'C',
-    key: 'D',
-    nextSibling: 'E',
-    text: 'Delta',
-  }),
-  makeContentBlockNode({
-    parent: 'C',
-    key: 'E',
-    prevSibling: 'D',
-    text: 'Elephant',
-  }),
-  makeContentBlockNode({
-    parent: 'B',
-    key: 'F',
-    prevSibling: 'C',
-    text: 'Fire',
-  }),
-  makeContentBlockNode({
-    key: 'G',
-    prevSibling: 'B',
-    text: 'Gorila',
-  }),
-];
-const treeSelectionState = makeEmptySelection('A');
-const treeContentState = {
-  ...contentState,
-  blockMap: createFromArray(contentBlockNodes),
-};
 
 const assertRemoveRangeFromContentState = (
   selection: SelectionState,
@@ -191,71 +138,4 @@ test('must remove blocks entirely within the selection', () => {
     focusKey: 'c',
     focusOffset: 3,
   });
-});
-
-test.skip('must remove E and F entirely when selection is from end of D to end of F on nested blocks', () => {
-  assertRemoveRangeFromContentState(
-    {
-      ...treeSelectionState,
-      anchorKey: 'D',
-      focusKey: 'F',
-      anchorOffset: contentBlockNodes[3].text.length,
-      focusOffset: contentBlockNodes[5].text.length,
-    },
-    treeContentState,
-  );
-});
-
-test.skip('must preserve B and C since E has not been removed', () => {
-  assertRemoveRangeFromContentState(
-    {
-      ...treeSelectionState,
-      anchorKey: 'A',
-      focusKey: 'D',
-      anchorOffset: contentBlockNodes[0].text.length,
-      focusOffset: contentBlockNodes[3].text.length,
-    },
-    treeContentState,
-  );
-});
-
-test.skip('must remove B and all its children', () => {
-  assertRemoveRangeFromContentState(
-    {
-      ...treeSelectionState,
-      anchorKey: 'A',
-      focusKey: 'F',
-      anchorOffset: contentBlockNodes[0].text.length,
-      focusOffset: contentBlockNodes[5].text.length,
-    },
-    treeContentState,
-  );
-});
-
-test.skip('must retain B since F has not been removed', () => {
-  assertRemoveRangeFromContentState(
-    {
-      ...treeSelectionState,
-      anchorKey: 'A',
-      focusKey: 'E',
-      anchorOffset: contentBlockNodes[0].text.length,
-      focusOffset: contentBlockNodes[4].text.length,
-    },
-    treeContentState,
-  );
-});
-
-// Simulates having collapsed selection at start of Elephant and hitting backspace
-// We expect Elephant will be merged with previous block, Delta
-test.skip('must merge D and E when deleting range from end of D to start of E', () => {
-  assertRemoveRangeFromContentState(
-    {
-      ...treeSelectionState,
-      anchorKey: 'D',
-      focusKey: 'E',
-      anchorOffset: contentBlockNodes[3].text.length, // end of D
-      focusOffset: 0, // start of E
-    },
-    treeContentState,
-  );
 });

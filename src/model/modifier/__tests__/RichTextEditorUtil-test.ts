@@ -187,7 +187,17 @@ describe('onTab on list block', () => {
   const getFirstBlockDepth = (edState: EditorState) =>
     getFirstBlock(edState.currentContent).depth;
   const addTab = (edState: EditorState, maxDepth = 2) =>
-    onTab({preventDefault: () => {}}, edState, maxDepth);
+    onTab(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      {
+        preventDefault: () => {
+          //
+        },
+      },
+      edState,
+      maxDepth,
+    );
 
   test('increases the depth of unordered-list-item', () => {
     const contentState = editorState.currentContent;

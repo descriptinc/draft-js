@@ -2,14 +2,13 @@ import {ContentState, getEntity} from '../immutable/ContentState';
 import {ContentBlock} from '../immutable/ContentBlock';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
-import {blockIsExperimentalTreeBlock} from '../transaction/exploration/getNextDelimiterBlockKey';
-import {findEntityRanges, getEntityAt} from '../immutable/ContentBlockNode';
+import {findEntityRanges, getEntityAt} from '../immutable/ContentBlock';
 import DraftStringKey from './DraftStringKey';
 import encodeInlineStyleRanges, {
   InlineStyleRange,
 } from './encodeInlineStyleRanges';
 import encodeEntityRanges, {EntityRange} from './encodeEntityRanges';
+import {BlockNode} from '../immutable/BlockNode';
 
 type RawDraftEntity = {
   type: DraftEntityType;
@@ -33,7 +32,7 @@ export type RawDraftContentState = {
 };
 
 const createRawBlock = (
-  block: BlockNodeRecord,
+  block: BlockNode,
   entityStorageMap: Record<string, string | number>,
 ): RawDraftContentBlock => {
   return {
@@ -48,28 +47,11 @@ const createRawBlock = (
 };
 
 const insertRawBlock = (
-  block: BlockNodeRecord,
+  block: BlockNode,
   entityMap: Record<string, string | number>,
   rawBlocks: Array<RawDraftContentBlock>,
-  blockCacheRef: any,
 ) => {
-  if (!blockIsExperimentalTreeBlock(block)) {
-    rawBlocks.push(createRawBlock(block, entityMap));
-    return;
-  }
-
-  const parentKey = block.parent;
-  const rawBlock = (blockCacheRef[block.key] = {
-    ...createRawBlock(block, entityMap),
-    children: [],
-  });
-
-  if (parentKey) {
-    blockCacheRef[parentKey].children.push(rawBlock);
-    return;
-  }
-
-  rawBlocks.push(rawBlock);
+  rawBlocks.push(createRawBlock(block, entityMap));
 };
 
 const encodeRawBlocks = (
@@ -83,7 +65,6 @@ const encodeRawBlocks = (
 
   const rawBlocks = [];
 
-  const blockCacheRef = {};
   const entityCacheRef = {};
   let entityStorageKey = 0;
 
@@ -110,7 +91,7 @@ const encodeRawBlocks = (
       },
     );
 
-    insertRawBlock(block, entityMap, rawBlocks, blockCacheRef);
+    insertRawBlock(block, entityMap, rawBlocks);
   }
 
   return {

@@ -9,12 +9,12 @@
 
 import fastDeepEqual from 'fast-deep-equal/es6';
 import {ContentState} from './ContentState';
-import {BlockNodeRecord} from './BlockNodeRecord';
 import {DraftDecoratorType} from '../decorators/DraftDecoratorType';
 import {getRange} from '../descript/RangeCache';
 import {findRangesImmutable} from './findRangesImmutable';
 import {map} from '../descript/Iterables';
 import {CharacterMetadata} from './CharacterMetadata';
+import {BlockNode} from './BlockNode';
 
 const returnTrue = function() {
   return true;
@@ -51,7 +51,7 @@ const BlockTree = {
    */
   generate: function(
     contentState: ContentState,
-    block: BlockNodeRecord,
+    block: BlockNode,
     decorator: DraftDecoratorType | null,
   ): readonly DecoratorRange[] {
     const textLength = block.text.length;

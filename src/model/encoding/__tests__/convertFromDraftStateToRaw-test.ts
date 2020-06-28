@@ -7,8 +7,6 @@
  * @emails oncall+draft_js
  */
 import getSampleStateForTesting from '../../transaction/getSampleStateForTesting';
-import {createFromArray} from '../../immutable/BlockMapBuilder';
-import {makeContentBlockNode} from '../../immutable/ContentBlockNode';
 import {repeat} from '../../descript/Iterables';
 import {
   EMPTY_CHARACTER,
@@ -20,41 +18,6 @@ import {makeContentBlock} from '../../immutable/ContentBlock';
 import convertFromDraftStateToRaw from '../convertFromDraftStateToRaw';
 
 const {contentState} = getSampleStateForTesting();
-
-const treeContentState = {
-  ...contentState,
-  blockMap: createFromArray([
-    makeContentBlockNode({
-      key: 'A',
-      children: ['B', 'E'],
-    }),
-    makeContentBlockNode({
-      parent: 'A',
-      key: 'B',
-      nextSibling: 'C',
-      children: ['C', 'D'],
-    }),
-    makeContentBlockNode({
-      parent: 'B',
-      key: 'C',
-      text: 'left block',
-      nextSibling: 'D',
-    }),
-    makeContentBlockNode({
-      parent: 'B',
-      key: 'D',
-      text: 'right block',
-      prevSibling: 'C',
-    }),
-    makeContentBlockNode({
-      parent: 'A',
-      key: 'E',
-      text: 'This is a tree based document!',
-      type: 'header-one',
-      prevSibling: 'B',
-    }),
-  ]),
-};
 
 const getMetadata = entityKey =>
   Array.from(repeat(5, makeCharacterMetadata({entity: entityKey})));
@@ -106,10 +69,6 @@ const assertConvertFromDraftStateToRaw = content => {
 
 test('must be able to convert from draft state with ContentBlock to raw', () => {
   assertConvertFromDraftStateToRaw(contentState);
-});
-
-test('must be able to convert from draft state with ContentBlockNode to raw', () => {
-  assertConvertFromDraftStateToRaw(treeContentState);
 });
 
 test('must be able to convert from draft state with noncontiguous entities to raw', () => {

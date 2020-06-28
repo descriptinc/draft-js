@@ -1,7 +1,7 @@
 import {BlockMap} from '../model/immutable/BlockMap';
-import {BlockNodeRecord} from '../model/immutable/BlockNodeRecord';
+import {BlockNode} from '../model/immutable/BlockNode';
 
-export function blockToJson(block: BlockNodeRecord): Record<string, any> {
+export function blockToJson(block: BlockNode): Record<string, any> {
   return {
     ...block,
     characterList: block.characterList.map(char => ({

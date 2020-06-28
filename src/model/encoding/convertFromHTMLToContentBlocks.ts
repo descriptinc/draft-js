@@ -19,21 +19,16 @@ import {
   CharacterMetadata,
   makeCharacterMetadata,
 } from '../immutable/CharacterMetadata';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {EntityMap} from '../immutable/EntityMap';
 import DraftEntity from '../entity/DraftEntity';
 import generateRandomKey from '../keys/generateRandomKey';
 import {flatten, map, repeat} from '../descript/Iterables';
-import {makeContentBlockNode} from '../immutable/ContentBlockNode';
 import {makeContentBlock} from '../immutable/ContentBlock';
 import {DefaultDraftBlockRenderMap} from '../immutable/DefaultDraftBlockRenderMap';
 import isHTMLBRElement from '../../component/utils/isHTMLBRElement';
 import GKX from '../../stubs/gkx';
 import getSafeBodyFromHTML from '../paste/getSafeBodyFromHTML';
-
-function getExperimentalTreeDataSupport(): boolean {
-  return GKX.gkx('draft_tree_data_support');
-}
+import {BlockNode} from '../immutable/BlockNode';
 
 const NBSP = '&nbsp;';
 const SPACE = ' ';
@@ -293,7 +288,7 @@ class ContentBlocksBuilder {
   blockConfigs: Array<ContentBlockConfig> = [];
 
   // The content blocks generated from the blockConfigs
-  contentBlocks: Array<BlockNodeRecord> = [];
+  contentBlocks: Array<BlockNode> = [];
 
   // Entity map use to store links and images found in the HTML nodes
   entityMap: EntityMap = DraftEntity;
@@ -351,15 +346,11 @@ class ContentBlocksBuilder {
    * to the previously added HTML nodes.
    */
   getContentBlocks(): {
-    contentBlocks: Array<BlockNodeRecord> | undefined;
+    contentBlocks: Array<BlockNode> | undefined;
     entityMap: EntityMap;
   } {
     if (this.contentBlocks.length === 0) {
-      if (getExperimentalTreeDataSupport()) {
-        this._toContentBlocks(this.blockConfigs);
-      } else {
-        this._toFlatContentBlocks(this.blockConfigs);
-      }
+      this._toFlatContentBlocks(this.blockConfigs);
     }
     return {
       contentBlocks: this.contentBlocks,
@@ -458,7 +449,6 @@ class ContentBlocksBuilder {
         }
 
         if (
-          !getExperimentalTreeDataSupport() &&
           isHTMLElement(node) &&
           (blockType === 'unordered-list-item' ||
             blockType === 'ordered-list-item')
@@ -675,26 +665,6 @@ class ContentBlocksBuilder {
   }
 
   /**
-   * Walk the BlockConfig tree, compute parent/children/siblings,
-   * and generate the corresponding ContentBlockNode
-   */
-  _toContentBlocks(
-    blockConfigs: Array<ContentBlockConfig>,
-    parent: string | null = null,
-  ) {
-    const l = blockConfigs.length - 1;
-    for (let i = 0; i <= l; i++) {
-      const config = blockConfigs[i];
-      config.parent = parent;
-      config.prevSibling = i > 0 ? blockConfigs[i - 1].key : null;
-      config.nextSibling = i < l ? blockConfigs[i + 1].key : null;
-      config.children = config.childConfigs.map(child => child.key);
-      this.contentBlocks.push(makeContentBlockNode({...config}));
-      this._toContentBlocks(config.childConfigs, config.key);
-    }
-  }
-
-  /**
    * Remove 'useless' container nodes from the block config hierarchy, by
    * replacing them with their children.
    */
@@ -702,7 +672,7 @@ class ContentBlocksBuilder {
   _hoistContainersInBlockConfigs(
     blockConfigs: Array<ContentBlockConfig>,
   ): ContentBlockConfig[] {
-    const hoisted = Array.from(
+    return Array.from(
       flatten<ContentBlockConfig>(
         map(blockConfigs, blockConfig => {
           // Don't mess with useful blocks
@@ -714,7 +684,6 @@ class ContentBlocksBuilder {
         }),
       ),
     );
-    return hoisted;
   }
 
   // ***********************************************************************
@@ -780,7 +749,7 @@ export default function convertFromHTMLToContentBlocks(
   blockRenderMap: DraftBlockRenderMap = DefaultDraftBlockRenderMap,
 ):
   | {
-      contentBlocks: Array<BlockNodeRecord> | undefined;
+      contentBlocks: Array<BlockNode> | undefined;
       entityMap: EntityMap;
     }
   | undefined

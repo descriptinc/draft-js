@@ -18,7 +18,6 @@ import UnicodeBidiDirection from 'fbjs/lib/UnicodeBidiDirection';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
 import getElementPosition from 'fbjs/lib/getElementPosition';
 import getViewportDimensions from 'fbjs/lib/getViewportDimensions';
-import {BlockNodeRecord} from '../../model/immutable/BlockNodeRecord';
 import {ContentState} from '../../model/immutable/ContentState';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {DraftDecoratorType} from '../../model/decorators/DraftDecoratorType';
@@ -32,19 +31,20 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import {
   getEntityAt,
   getInlineStyleAt,
-} from '../../model/immutable/ContentBlockNode';
+} from '../../model/immutable/ContentBlock';
 import {DraftDecoratorComponentProps} from '../../model/decorators/DraftDecorator';
+import {BlockNode} from '../../model/immutable/BlockNode';
 
 const DEFAULT_SCROLL_BUFFER = 10;
 
 type Props = {
-  block: BlockNodeRecord;
+  block: BlockNode;
   blockProps?: Record<string, any>;
-  blockStyleFn: (block: BlockNodeRecord) => string;
+  blockStyleFn: (block: BlockNode) => string;
   contentState: ContentState;
   customStyleFn: (
     style: DraftInlineStyle,
-    block: BlockNodeRecord,
+    block: BlockNode,
   ) => Record<string, any> | null;
   customStyleMap: Record<string, any>;
   decorator: DraftDecoratorType | null;

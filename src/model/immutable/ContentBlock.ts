@@ -7,9 +7,16 @@
  * @emails oncall+draft_js
  */
 
-import {EMPTY_CHARACTER} from './CharacterMetadata';
+import {
+  CharacterMetadata,
+  EMPTY_CHARACTER,
+  EMPTY_SET,
+} from './CharacterMetadata';
 import {BlockNode} from './BlockNode';
 import {repeat} from '../descript/Iterables';
+import {findRangesImmutable} from './findRangesImmutable';
+import {DraftInlineStyle} from './DraftInlineStyle';
+import fastDeepEqual from 'fast-deep-equal/es6';
 
 const EMPTY_DATA = {};
 
@@ -31,4 +38,41 @@ export function makeContentBlock({
     depth,
     type,
   };
+}
+
+const haveEqualStyle = (
+  charA: CharacterMetadata,
+  charB: CharacterMetadata,
+): boolean => fastDeepEqual(charA.style, charB.style);
+
+const haveEqualEntity = (
+  charA: CharacterMetadata,
+  charB: CharacterMetadata,
+): boolean => charA.entity === charB.entity;
+
+export function findStyleRanges(
+  block: BlockNode,
+  filterFn: (value: CharacterMetadata) => boolean,
+  callback: (start: number, end: number) => void,
+): void {
+  findRangesImmutable(block.characterList, haveEqualStyle, filterFn, callback);
+}
+
+export function findEntityRanges(
+  block: BlockNode,
+  filterFn: (value: CharacterMetadata) => boolean,
+  callback: (start: number, end: number) => void,
+): void {
+  findRangesImmutable(block.characterList, haveEqualEntity, filterFn, callback);
+}
+
+export function getInlineStyleAt(
+  block: BlockNode,
+  index: number,
+): DraftInlineStyle {
+  return block.characterList[index]?.style || EMPTY_SET;
+}
+
+export function getEntityAt(block: BlockNode, index: number): string | null {
+  return block.characterList[index]?.entity || null;
 }

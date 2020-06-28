@@ -8,10 +8,10 @@
  * @emails oncall+draft_js
  */
 
-import {BlockNodeRecord} from './BlockNodeRecord';
 import {flatMap, flatten} from '../descript/Iterables';
+import {BlockNode} from './BlockNode';
 
-export type BlockMap = ReadonlyMap<string, BlockNodeRecord>;
+export type BlockMap = ReadonlyMap<string, BlockNode>;
 
 // FIXME [mvp]: dealing with order of `updates` object
 

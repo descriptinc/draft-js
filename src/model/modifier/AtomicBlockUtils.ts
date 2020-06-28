@@ -13,7 +13,6 @@ import DraftModifier from './DraftModifier';
 import {makeCharacterMetadata} from '../immutable/CharacterMetadata';
 import {repeat} from '../descript/Iterables';
 import {createFromArray} from '../immutable/BlockMapBuilder';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {
   getEndKey,
   getEndOffset,
@@ -25,9 +24,7 @@ import {DraftInsertionType} from '../constants/DraftInsertionType';
 import {getBlockForKey} from '../immutable/ContentState';
 import moveBlockInContentState from '../transaction/moveBlockInContentState';
 import {makeContentBlock} from '../immutable/ContentBlock';
-import GKX from '../../stubs/gkx';
-
-const experimentalTreeDataSupport = GKX.gkx('draft_tree_data_support');
+import {BlockNode} from '../immutable/BlockNode';
 
 const AtomicBlockUtils = {
   insertAtomicBlock: function(
@@ -68,19 +65,6 @@ const AtomicBlockUtils = {
       type: 'unstyled',
     };
 
-    if (experimentalTreeDataSupport) {
-      throw new Error('not implemented');
-      // atomicBlockConfig = {
-      //   ...atomicBlockConfig,
-      //   nextSibling: atomicDividerBlockConfig.key,
-      // };
-      // atomicDividerBlockConfig = {
-      //   ...atomicDividerBlockConfig,
-      //   prevSibling: atomicBlockConfig.key,
-      // };
-    }
-
-    // FIXME [mvp]: tree impl
     const fragmentArray = [
       makeContentBlock(atomicBlockConfig),
       makeContentBlock(atomicDividerBlockConfig),
@@ -108,7 +92,7 @@ const AtomicBlockUtils = {
 
   moveAtomicBlock: function(
     editorState: EditorState,
-    atomicBlock: BlockNodeRecord,
+    atomicBlock: BlockNode,
     targetRange: SelectionState,
     insertionMode: DraftInsertionType | null = null,
   ): EditorState {

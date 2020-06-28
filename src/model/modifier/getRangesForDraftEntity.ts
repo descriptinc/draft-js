@@ -7,10 +7,10 @@
  * @emails oncall+draft_js
  */
 
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {DraftRange} from './DraftRange';
-import {findEntityRanges} from '../immutable/ContentBlockNode';
+import {findEntityRanges} from '../immutable/ContentBlock';
 import invariant from '../../fbjs/invariant';
+import {BlockNode} from '../immutable/BlockNode';
 
 /**
  * Obtain the start and end positions of the range that has the
@@ -21,7 +21,7 @@ import invariant from '../../fbjs/invariant';
  * the subsequent range.
  */
 export default function getRangesForDraftEntity(
-  block: BlockNodeRecord,
+  block: BlockNode,
   key: string,
 ): Array<DraftRange> {
   const ranges: DraftRange[] = [];

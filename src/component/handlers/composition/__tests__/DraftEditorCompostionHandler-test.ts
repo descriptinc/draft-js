@@ -29,7 +29,9 @@ import {join, map} from '../../../../model/descript/Iterables';
 jest.useFakeTimers();
 
 jest.mock('../DOMObserver', () => {
-  function DOMObserver() {}
+  function DOMObserver() {
+    //
+  }
   DOMObserver.prototype.start = jest.fn();
   DOMObserver.prototype.stopAndFlushMutations = jest
     .fn()
@@ -48,7 +50,9 @@ jest.mock('../../../selection/getDraftEditorSelection', () => {
 // composition can be happening at a given time), so to avoid
 // false-positive failures stemming from test cases putting
 // the module in a bad state we forcibly reload it each test.
-let compositionHandler = null;
+import handler from '../DraftEditorCompositionHandler';
+import {SyntheticEvent} from 'react';
+let compositionHandler: typeof handler;
 // Initialization of mock editor component that will be used for all tests
 let editor: DraftEditor;
 
@@ -93,6 +97,7 @@ function withGlobalGetSelectionAs(getSelectionValue, callback) {
 
 beforeEach(() => {
   jest.resetModules();
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   compositionHandler = require('../DraftEditorCompositionHandler').default;
   editor = ({
     _latestEditorState: createEmpty(),
@@ -109,7 +114,7 @@ test('isInCompositionMode is properly updated on composition events', () => {
   // `inCompositionMode` is updated inside editOnCompositionStart,
   // which is why we can't just call compositionHandler.onCompositionStart.
   // $FlowExpectedError
-  editOnCompositionStart(editor, {});
+  editOnCompositionStart(editor, {} as SyntheticEvent);
   expect(editor.setMode).toHaveBeenLastCalledWith('composite');
   expect(editor._latestEditorState.inCompositionMode).toBe(true);
   // $FlowExpectedError
@@ -123,6 +128,7 @@ test('Can handle a single mutation', () => {
   withGlobalGetSelectionAs({}, () => {
     editor._latestEditorState = getEditorState({blockkey0: ''});
     const mutations = new Map([['blockkey0-0-0', '\u79c1']]);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('../DOMObserver').prototype.stopAndFlushMutations.mockReturnValue(
       mutations,
     );
@@ -146,6 +152,7 @@ test('Can handle mutations in multiple blocks', () => {
       ['blockkey0-0-0', 'reactjs'],
       ['blockkey1-0-0', 'draftjs'],
     ]);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('../DOMObserver').prototype.stopAndFlushMutations.mockReturnValue(
       mutations,
     );
@@ -171,6 +178,7 @@ test('Can handle mutations in the same block in multiple leaf nodes', () => {
       [`${blockKey}-0-1`, 'draftbb'],
       [`${blockKey}-0-2`, ' graphqlccc'],
     ]);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('../DOMObserver').prototype.stopAndFlushMutations.mockReturnValue(
       mutations,
     );

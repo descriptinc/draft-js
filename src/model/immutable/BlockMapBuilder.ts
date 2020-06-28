@@ -8,12 +8,12 @@
  * @emails oncall+draft_js
  */
 
-import {BlockNodeRecord} from './BlockNodeRecord';
 import {BlockMap} from './BlockMap';
 import {map} from '../descript/Iterables';
+import {BlockNode} from './BlockNode';
 
-export function createFromArray(blocks: Iterable<BlockNodeRecord>): BlockMap {
+export function createFromArray(blocks: Iterable<BlockNode>): BlockMap {
   return new Map(
-    map(blocks, (block): [string, BlockNodeRecord] => [block.key, block]),
+    map(blocks, (block): [string, BlockNode] => [block.key, block]),
   );
 }

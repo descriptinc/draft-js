@@ -16,9 +16,9 @@ import {
   SelectionState,
 } from '../immutable/SelectionState';
 import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import applyEntityToContentBlock from './applyEntityToContentBlock';
 import {mergeMapUpdates} from '../immutable/BlockMap';
+import {BlockNode} from '../immutable/BlockNode';
 
 export default function applyEntityToContentState(
   contentState: ContentState,
@@ -32,14 +32,14 @@ export default function applyEntityToContentState(
   const endOffset = getEndOffset(selectionState);
 
   const iter = map(
-    flatten<[string, BlockNodeRecord]>([
+    flatten<[string, BlockNode]>([
       takeUntil(
         skipUntil(blockMap, ([k]) => k === startKey),
         ([k]) => k === endKey,
       ),
       [[endKey, blockMap.get(endKey)!]],
     ]),
-    ([blockKey, block]): [string, BlockNodeRecord] => {
+    ([blockKey, block]): [string, BlockNode] => {
       const sliceStart = blockKey === startKey ? startOffset : 0;
       const sliceEnd = blockKey === endKey ? endOffset : block.text.length;
       return [
@@ -49,7 +49,7 @@ export default function applyEntityToContentState(
     },
   );
 
-  const newBlocks: Record<string, BlockNodeRecord> = {};
+  const newBlocks: Record<string, BlockNode> = {};
   for (const [key, block] of iter) {
     newBlocks[key] = block;
   }

@@ -14,7 +14,7 @@
 
 import {convertFromRaw} from 'draft-js';
 
-var rawContent = {
+const rawContent = {
   blocks: [
     {
       text: 'This is a Draft-based editor that supports TeX rendering.',

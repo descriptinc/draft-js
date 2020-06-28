@@ -9,9 +9,9 @@
 
 import Keys from 'fbjs/lib/Keys';
 import UserAgent from 'fbjs/lib/UserAgent';
-import {SyntheticKeyboardEvent} from './eventTypes';
 import {DraftEditorCommand} from '../../model/constants/DraftEditorCommand';
 import KeyBindingUtil from './KeyBindingUtil';
+import React from 'react';
 
 const isOSX = UserAgent.isPlatform('Mac OS X');
 
@@ -22,23 +22,21 @@ const shouldFixFirefoxMovement = isOSX && UserAgent.isBrowser('Firefox < 29');
 
 const {hasCommandModifier, isCtrlKeyCommand} = KeyBindingUtil;
 
-function shouldRemoveWord(e: SyntheticKeyboardEvent): boolean {
+function shouldRemoveWord(e: React.KeyboardEvent): boolean {
   return (isOSX && e.altKey) || isCtrlKeyCommand(e);
 }
 
 /**
  * Get the appropriate undo/redo command for a Z key command.
  */
-function getZCommand(e: SyntheticKeyboardEvent): DraftEditorCommand | null {
+function getZCommand(e: React.KeyboardEvent): DraftEditorCommand | null {
   if (!hasCommandModifier(e)) {
     return null;
   }
   return e.shiftKey ? 'redo' : 'undo';
 }
 
-function getDeleteCommand(
-  e: SyntheticKeyboardEvent,
-): DraftEditorCommand | null {
+function getDeleteCommand(e: React.KeyboardEvent): DraftEditorCommand | null {
   // Allow default "cut" behavior for PCs on Shift + Delete.
   if (!isOSX && e.shiftKey) {
     return null;
@@ -47,7 +45,7 @@ function getDeleteCommand(
 }
 
 function getBackspaceCommand(
-  e: SyntheticKeyboardEvent,
+  e: React.KeyboardEvent,
 ): DraftEditorCommand | null {
   if (hasCommandModifier(e) && isOSX) {
     return 'backspace-to-start-of-line';
@@ -59,7 +57,7 @@ function getBackspaceCommand(
  * Retrieve a bound key command for the given event.
  */
 export default function getDefaultKeyBinding(
-  e: SyntheticKeyboardEvent,
+  e: React.KeyboardEvent,
 ): DraftEditorCommand | null {
   switch (e.keyCode) {
     case 66: // B

@@ -8,7 +8,6 @@
  */
 
 import {makeContentBlock} from '../../immutable/ContentBlock';
-import {makeContentBlockNode} from '../../immutable/ContentBlockNode';
 import {DraftInsertionType} from '../../constants/DraftInsertionType';
 import {createWithContent} from '../../immutable/EditorState';
 import {
@@ -32,37 +31,6 @@ const contentBlocks = [
   makeContentBlock({
     key: 'C',
     text: 'Charlie',
-  }),
-];
-
-const contentBlockNodes = [
-  makeContentBlockNode({
-    key: 'A',
-    text: 'Alpha',
-    nextSibling: 'B',
-  }),
-  makeContentBlockNode({
-    key: 'B',
-    text: '',
-    children: ['C'],
-    nextSibling: 'D',
-    prevSibling: 'A',
-  }),
-  makeContentBlockNode({
-    key: 'C',
-    parent: 'B',
-    text: 'Charlie',
-  }),
-  makeContentBlockNode({
-    key: 'D',
-    text: '',
-    prevSibling: 'B',
-    children: ['E'],
-  }),
-  makeContentBlockNode({
-    key: 'E',
-    parent: 'D',
-    text: 'Elephant',
   }),
 ];
 
@@ -111,36 +79,4 @@ test('must be able to move block before other block', () => {
 
 test('must be able to move block after other block', () => {
   assertMoveBlockInContentState('A', 'C', 'after');
-});
-
-test.skip('must be able to move nested block before other block', () => {
-  assertMoveBlockInContentState('C', 'A', 'before', contentBlockNodes);
-});
-
-test.skip('must be able to move block before other nested block', () => {
-  assertMoveBlockInContentState('A', 'C', 'before', contentBlockNodes);
-});
-
-test.skip('must be able to move nested block after other block', () => {
-  assertMoveBlockInContentState('C', 'A', 'after', contentBlockNodes);
-});
-
-test.skip('must be able to move block after other nested block', () => {
-  assertMoveBlockInContentState('A', 'C', 'after', contentBlockNodes);
-});
-
-test.skip('must be able to move block and its children before other block', () => {
-  assertMoveBlockInContentState('B', 'A', 'before', contentBlockNodes);
-});
-
-test.skip('must be able to move block and its children after other block', () => {
-  assertMoveBlockInContentState('D', 'A', 'after', contentBlockNodes);
-});
-
-test.skip('must be able to move block and its children before other nested block', () => {
-  assertMoveBlockInContentState('D', 'C', 'before', contentBlockNodes);
-});
-
-test.skip('must be able to move block and its children after other nested block', () => {
-  assertMoveBlockInContentState('B', 'E', 'after', contentBlockNodes);
 });

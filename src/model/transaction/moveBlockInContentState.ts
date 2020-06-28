@@ -11,10 +11,8 @@ import {
   getBlockAfter,
   getBlockBefore,
 } from '../immutable/ContentState';
-import {BlockNodeRecord} from '../immutable/BlockNodeRecord';
 import {DraftInsertionType} from '../constants/DraftInsertionType';
 import invariant from '../../fbjs/invariant';
-import {blockIsExperimentalTreeBlock} from './exploration/getNextDelimiterBlockKey';
 import {
   flatMap,
   flatten,
@@ -23,126 +21,12 @@ import {
   skipUntil,
   takeUntil,
 } from '../descript/Iterables';
-
-// const transformBlock = (
-//   key: string | null,
-//   blockMap: BlockMap,
-//   func: (block: ContentBlockNode) => ContentBlockNode,
-// ): void => {
-//   if (!key) {
-//     return;
-//   }
-//
-//   const block = blockMap.get(key);
-//
-//   if (!block) {
-//     return;
-//   }
-//
-//   blockMap.set(key, func(block));
-// };
-
-// const updateBlockMapLinks = (
-//   blockMap: BlockMap,
-//   originalBlockToBeMoved: BlockNodeRecord,
-//   originalTargetBlock: BlockNodeRecord,
-//   insertionMode: DraftInsertionType,
-//   isExperimentalTreeBlock: boolean,
-// ): BlockMap => {
-//   if (!isExperimentalTreeBlock) {
-//     return blockMap;
-//   }
-//   throw new Error('not implemented');
-//   //
-//   // // possible values of 'insertionMode' are: 'after', 'before'
-//   // const isInsertedAfterTarget = insertionMode === 'after';
-//   //
-//   // const originalBlockKey = originalBlockToBeMoved.key;
-//   // const originalTargetKey = originalTargetBlock.key;
-//   // const originalParentKey = originalBlockToBeMoved.getParentKey();
-//   // const originalNextSiblingKey = originalBlockToBeMoved.getNextSiblingKey();
-//   // const originalPrevSiblingKey = originalBlockToBeMoved.getPrevSiblingKey();
-//   // const newParentKey = originalTargetBlock.getParentKey();
-//   // const newNextSiblingKey = isInsertedAfterTarget
-//   //   ? originalTargetBlock.getNextSiblingKey()
-//   //   : originalTargetKey;
-//   // const newPrevSiblingKey = isInsertedAfterTarget
-//   //   ? originalTargetKey
-//   //   : originalTargetBlock.getPrevSiblingKey();
-//   //
-//   // return blockMap.withMutations(blocks => {
-//   //   // update old parent
-//   //   transformBlock(originalParentKey, blocks, block => {
-//   //     const parentChildrenList = block.getChildKeys();
-//   //     return block.merge({
-//   //       children: parentChildrenList.delete(
-//   //         parentChildrenList.indexOf(originalBlockKey),
-//   //       ),
-//   //     });
-//   //   });
-//   //
-//   //   // update old prev
-//   //   transformBlock(originalPrevSiblingKey, blocks, block =>
-//   //     block.merge({
-//   //       nextSibling: originalNextSiblingKey,
-//   //     }),
-//   //   );
-//   //
-//   //   // update old next
-//   //   transformBlock(originalNextSiblingKey, blocks, block =>
-//   //     block.merge({
-//   //       prevSibling: originalPrevSiblingKey,
-//   //     }),
-//   //   );
-//   //
-//   //   // update new next
-//   //   transformBlock(newNextSiblingKey, blocks, block =>
-//   //     block.merge({
-//   //       prevSibling: originalBlockKey,
-//   //     }),
-//   //   );
-//   //
-//   //   // update new prev
-//   //   transformBlock(newPrevSiblingKey, blocks, block =>
-//   //     block.merge({
-//   //       nextSibling: originalBlockKey,
-//   //     }),
-//   //   );
-//   //
-//   //   // update new parent
-//   //   transformBlock(newParentKey, blocks, block => {
-//   //     const newParentChildrenList = block.getChildKeys();
-//   //     const targetBlockIndex = newParentChildrenList.indexOf(originalTargetKey);
-//   //
-//   //     const insertionIndex = isInsertedAfterTarget
-//   //       ? targetBlockIndex + 1
-//   //       : targetBlockIndex !== 0
-//   //       ? targetBlockIndex - 1
-//   //       : 0;
-//   //
-//   //     const newChildrenArray = newParentChildrenList.toArray();
-//   //     newChildrenArray.splice(insertionIndex, 0, originalBlockKey);
-//   //
-//   //     return block.merge({
-//   //       children: List(newChildrenArray),
-//   //     });
-//   //   });
-//   //
-//   //   // update block
-//   //   transformBlock(originalBlockKey, blocks, block =>
-//   //     block.merge({
-//   //       nextSibling: newNextSiblingKey,
-//   //       prevSibling: newPrevSiblingKey,
-//   //       parent: newParentKey,
-//   //     }),
-//   //   );
-//   // });
-// };
+import {BlockNode} from '../immutable/BlockNode';
 
 const moveBlockInContentState = (
   contentState: ContentState,
-  blockToBeMoved: BlockNodeRecord,
-  targetBlock: BlockNodeRecord,
+  blockToBeMoved: BlockNode,
+  targetBlock: BlockNode,
   insertionMode: DraftInsertionType,
 ): ContentState => {
   invariant(insertionMode !== 'replace', 'Replacing blocks is not supported.');
@@ -153,52 +37,13 @@ const moveBlockInContentState = (
   invariant(blockKey !== targetKey, 'Block cannot be moved next to itself.');
 
   const blockMap = contentState.blockMap;
-  const isExperimentalTreeBlock = blockIsExperimentalTreeBlock(blockToBeMoved);
-  if (isExperimentalTreeBlock) {
-    throw new Error('not implemented');
-  }
 
   const blocksToBeMoved = [blockToBeMoved];
   const blockMapWithoutBlocksToBeMoved = new Map(
-    flatMap(blockMap, ([k, block]): [string, BlockNodeRecord] | undefined =>
+    flatMap(blockMap, ([k, block]): [string, BlockNode] | undefined =>
       k === blockKey ? undefined : [k, block],
     ),
   );
-
-  // if (isExperimentalTreeBlock) {
-  //   blocksToBeMoved = [];
-  //   blockMapWithoutBlocksToBeMoved = blockMap.withMutations(blocks => {
-  //     const nextSiblingKey = blockToBeMoved.getNextSiblingKey();
-  //     const nextDelimiterBlockKey = getNextDelimiterBlockKey(
-  //       blockToBeMoved,
-  //       blocks,
-  //     );
-  //
-  //     blocks
-  //       .toSeq()
-  //       .skipUntil(block => block.key === blockKey)
-  //       .takeWhile(block => {
-  //         const key = block.key;
-  //         const isBlockToBeMoved = key === blockKey;
-  //         const hasNextSiblingAndIsNotNextSibling =
-  //           nextSiblingKey && key !== nextSiblingKey;
-  //         const doesNotHaveNextSiblingAndIsNotDelimiter =
-  //           !nextSiblingKey &&
-  //           block.getParentKey() &&
-  //           (!nextDelimiterBlockKey || key !== nextDelimiterBlockKey);
-  //
-  //         return !!(
-  //           isBlockToBeMoved ||
-  //           hasNextSiblingAndIsNotNextSibling ||
-  //           doesNotHaveNextSiblingAndIsNotDelimiter
-  //         );
-  //       })
-  //       .forEach(block => {
-  //         blocksToBeMoved.push(block);
-  //         blocks.delete(block.key);
-  //       });
-  //   });
-  // }
 
   const blocksBefore = takeUntil(
     blockMapWithoutBlocksToBeMoved,
@@ -209,10 +54,10 @@ const moveBlockInContentState = (
     skipUntil(blockMapWithoutBlocksToBeMoved, ([, v]) => v === targetBlock),
   );
 
-  const slicedBlocks = map(blocksToBeMoved, (block): [
-    string,
-    BlockNodeRecord,
-  ] => [block.key, block]);
+  const slicedBlocks = map(blocksToBeMoved, (block): [string, BlockNode] => [
+    block.key,
+    block,
+  ]);
 
   let newBlockMap = new Map();
 
@@ -225,7 +70,7 @@ const moveBlockInContentState = (
     );
 
     newBlockMap = new Map(
-      flatten<[string, BlockNodeRecord]>([
+      flatten<[string, BlockNode]>([
         blocksBefore,
         slicedBlocks,
         [[targetKey, targetBlock]],
@@ -253,13 +98,6 @@ const moveBlockInContentState = (
   return {
     ...contentState,
     blockMap: newBlockMap,
-    // blockMap: updateBlockMapLinks(
-    //   newBlocks,
-    //   blockToBeMoved,
-    //   targetBlock,
-    //   insertionMode,
-    //   isExperimentalTreeBlock,
-    // ),
     selectionBefore: contentState.selectionAfter,
     selectionAfter: {
       ...contentState.selectionAfter,

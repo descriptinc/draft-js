@@ -29,11 +29,11 @@ import {DraftInlineStyle} from './DraftInlineStyle';
 import {EditorChangeType} from './EditorChangeType';
 import {flatMap, map} from '../descript/Iterables';
 import {BlockMap, mergeMapUpdates} from './BlockMap';
-import {getInlineStyleAt} from './ContentBlockNode';
 import EditorBidiService from './EditorBidiService';
 import BlockTree, {DecoratorRange} from './BlockTree';
-import {BlockNodeRecord} from './BlockNodeRecord';
 import {EMPTY_SET} from './CharacterMetadata';
+import {getInlineStyleAt} from './ContentBlock';
+import {BlockNode} from './BlockNode';
 
 export type Stack<T> = readonly T[];
 
@@ -551,7 +551,7 @@ function lookUpwardForInlineStyle(
   content: ContentState,
   fromKey: string,
 ): DraftInlineStyle {
-  let lastNonEmpty: BlockNodeRecord | undefined;
+  let lastNonEmpty: BlockNode | undefined;
   for (const [key, block] of content.blockMap) {
     if (key === fromKey) {
       break;
