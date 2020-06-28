@@ -72,7 +72,9 @@ export function makeCharacterMetadata(
   const entity = config.entity || null;
   const style = config.style || new Set();
   const styles = [...style];
-  styles.sort(); // FIXME [perf]: is this sort too expensive?
+  // FIXME [perf]: this sort might be too expensive
+  // but from what I can see, we're not calling `makeCharacterMetadata` many times in a row
+  styles.sort();
   const styleStr = styles.join(',');
   const key = getKey2(entity || '', styleStr);
   const existing = pool[key];
