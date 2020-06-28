@@ -118,3 +118,16 @@ export function makeEmptySelection(key: string): SelectionState {
     focusOffset: 0,
   });
 }
+
+export function setHasFocus(
+  selection: SelectionState,
+  hasFocus: boolean,
+): SelectionState {
+  if (selection.hasFocus === hasFocus) {
+    return selection;
+  }
+  return {
+    ...selection,
+    hasFocus,
+  };
+}

@@ -13,8 +13,6 @@ import {BlockNode} from './BlockNode';
 
 export type BlockMap = ReadonlyMap<string, BlockNode>;
 
-// FIXME [mvp]: dealing with order of `updates` object
-
 export function mergeMapUpdates<T>(
   originalMap: ReadonlyMap<string, T>,
   updates: Record<string, T | null>,

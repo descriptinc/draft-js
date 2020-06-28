@@ -206,7 +206,6 @@ test('must move atomic after block with collapsed selection', () => {
   assertMoveAtomicBlock(
     atomicBlock,
     makeSelectionState({
-      // FIXME [correctness]: changed from anchorKey
       anchorKey: lastBlock.key,
     }),
     resultEditor,
@@ -327,7 +326,6 @@ test("mustn't move atomic next to itself with collapsed selection", () => {
       resultEditor,
       atomicBlock,
       makeSelectionState({
-        // FIXME [correctness]: changed from focusKey
         anchorKey: atomicBlock.key,
       }),
       'after',

@@ -23,6 +23,7 @@ import {
   makeEmptySelection,
   makeSelectionState,
   SelectionState,
+  setHasFocus,
 } from './SelectionState';
 import {DraftDecoratorType} from '../decorators/DraftDecoratorType';
 import {DraftInlineStyle} from './DraftInlineStyle';
@@ -256,13 +257,7 @@ export function forceSelection(
   editorState: EditorState,
   selection: SelectionState,
 ): EditorState {
-  if (!selection.hasFocus) {
-    selection = {
-      ...selection,
-      hasFocus: true,
-    };
-  }
-  return updateSelection(editorState, selection, true);
+  return updateSelection(editorState, setHasFocus(selection, true), true);
 }
 
 /**
@@ -423,10 +418,6 @@ function regenerateTreeForNewBlocks(
   newBlockMap: BlockMap,
   decorator?: DraftDecoratorType | null,
 ): ReadonlyMap<string, readonly DecoratorRange[]> {
-  // TODO [mvp]: using global entity map
-  // const contentState = editorState
-  //   .currentContent
-  //   .set('entityMap', newEntityMap);
   const contentState = editorState.currentContent;
   const prevBlockMap = contentState.blockMap;
   const prevTreeMap = editorState.treeMap;

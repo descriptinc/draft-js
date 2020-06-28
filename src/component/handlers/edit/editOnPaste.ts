@@ -217,13 +217,7 @@ function insertFragment(
   // like this:
   // const mergedEntityMap = newContent.getEntityMap().merge(entityMap);
 
-  return pushContent(
-    editorState,
-    newContent,
-    // FIXME [mvp]: entity map
-    // newContent.set('entityMap', entityMap),
-    'insert-fragment',
-  );
+  return pushContent(editorState, newContent, 'insert-fragment');
 }
 
 function areTextBlocksAndClipboardEqual(

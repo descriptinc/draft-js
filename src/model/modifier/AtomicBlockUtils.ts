@@ -19,6 +19,7 @@ import {
   getStartKey,
   getStartOffset,
   SelectionState,
+  setHasFocus,
 } from '../immutable/SelectionState';
 import {DraftInsertionType} from '../constants/DraftInsertionType';
 import {getBlockForKey} from '../immutable/ContentState';
@@ -81,10 +82,7 @@ const AtomicBlockUtils = {
     const newContent = {
       ...withAtomicBlock,
       selectionBefore: selectionState,
-      // FIXME [perf]: helper function to add/remove focus cleanly
-      selectionAfter: withAtomicBlock.selectionAfter.hasFocus
-        ? withAtomicBlock.selectionAfter
-        : {...withAtomicBlock.selectionAfter, hasFocus: true},
+      selectionAfter: setHasFocus(withAtomicBlock.selectionAfter, true),
     };
 
     return pushContent(editorState, newContent, 'insert-fragment');
@@ -168,9 +166,7 @@ const AtomicBlockUtils = {
     const newContent = {
       ...withMovedAtomicBlock,
       selectionBefore: selectionState,
-      selectionAfter: withMovedAtomicBlock.selectionAfter.hasFocus
-        ? withMovedAtomicBlock.selectionAfter
-        : {...withMovedAtomicBlock.selectionAfter, hasFocus: true},
+      selectionAfter: setHasFocus(withMovedAtomicBlock.selectionAfter, true),
     };
 
     return pushContent(editorState, newContent, 'move-block');
