@@ -133,7 +133,6 @@ function removeForBlock(
           newChars[start] = applyEntity(current, null);
           start++;
         }
-        // FIXME [perf]: only update char list if it changes?
         return {
           ...block,
           characterList: newChars,

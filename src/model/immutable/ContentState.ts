@@ -13,15 +13,7 @@ import {
   makeEmptySelection,
   makeNullSelection,
 } from './SelectionState';
-import {
-  first,
-  join,
-  last,
-  map,
-  rest,
-  skipUntil,
-  takeUntil,
-} from '../descript/Iterables';
+import {first, join, makeMemoizedToArray, map} from '../descript/Iterables';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
 import {createFromArray} from './BlockMapBuilder';
@@ -30,6 +22,7 @@ import DraftEntity, {DraftEntityMapObject} from '../entity/DraftEntity';
 import {DraftEntityInstance} from '../entity/DraftEntityInstance';
 import sanitizeDraftText from '../encoding/sanitizeDraftText';
 import {BlockNode} from './BlockNode';
+import memoizeOne from 'memoize-one';
 
 export type ContentState = Readonly<{
   blockMap: BlockMap;
@@ -42,12 +35,38 @@ export function makeContentState({
   selectionAfter = makeEmptySelection(first(blockMap.keys())!),
   selectionBefore = makeEmptySelection(first(blockMap.keys())!),
 }: Partial<ContentState> & Pick<ContentState, 'blockMap'>): ContentState {
-  // FIXME [perf]: force type to be exact and don't create a new object?
   return {
     blockMap,
     selectionBefore,
     selectionAfter,
   };
+}
+
+const keyForIndex = makeMemoizedToArray((blockMap: BlockMap) =>
+  blockMap.keys(),
+);
+const indexForKey = memoizeOne((blockMapKeyForIndex: readonly string[]) => {
+  const _indexForKey: Record<string, number> = {};
+  const len = blockMapKeyForIndex.length;
+  for (let i = 0; i < len; i++) {
+    const key = blockMapKeyForIndex[i];
+    _indexForKey[key] = i;
+  }
+  return _indexForKey;
+});
+function getBlockKeyForIndex(blockMap: BlockMap, index: number): string {
+  const key = keyForIndex(blockMap)[index];
+  if (key === undefined) {
+    throw new Error('No block key for index');
+  }
+  return key;
+}
+function getIndexForBlockKey(blockMap: BlockMap, blockKey: string): number {
+  const index = indexForKey(keyForIndex(blockMap))[blockKey];
+  if (index === undefined) {
+    throw new Error('No index for block key');
+  }
+  return index;
 }
 
 export function getLastCreatedEntityKey(): string {
@@ -75,9 +94,14 @@ export function getFirstBlock({blockMap}: ContentState): BlockNode {
 }
 
 export function getLastBlock({blockMap}: ContentState): BlockNode {
-  const block = last(blockMap.values()); // FIXME [perf]: O(n)
-  if (!block) {
+  const size = blockMap.size;
+  if (size === 0) {
     throw new Error('Block map is empty');
+  }
+  const key = getBlockKeyForIndex(blockMap, size - 1);
+  const block = blockMap.get(key);
+  if (!block) {
+    throw new Error('No block for key');
   }
   return block;
 }
@@ -174,18 +198,32 @@ export function getBlockBefore(
   {blockMap}: ContentState,
   blockKey: string,
 ): BlockNode | undefined {
-  // FIXME [perf]: cache
-  const before = last(takeUntil(blockMap, ([k]) => k === blockKey));
-  return before?.[1];
+  const index = getIndexForBlockKey(blockMap, blockKey);
+  if (index === 0) {
+    return undefined;
+  }
+  const key = getBlockKeyForIndex(blockMap, index - 1);
+  const block = blockMap.get(key);
+  if (!block) {
+    throw new Error('No block for key');
+  }
+  return block;
 }
 
 export function getBlockAfter(
   {blockMap}: ContentState,
   blockKey: string,
 ): BlockNode | undefined {
-  // FIXME [perf]: cache
-  const after = first(rest(skipUntil(blockMap, ([k]) => k === blockKey)));
-  return after?.[1];
+  const index = getIndexForBlockKey(blockMap, blockKey);
+  if (index === blockMap.size - 1) {
+    return undefined;
+  }
+  const key = getBlockKeyForIndex(blockMap, index + 1);
+  const block = blockMap.get(key);
+  if (!block) {
+    throw new Error('No block for key');
+  }
+  return block;
 }
 
 export function getEntityMap(_: ContentState): DraftEntityMapObject {

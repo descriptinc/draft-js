@@ -48,8 +48,6 @@ export type EditorState = Readonly<{
   nativelyRenderedContent: ContentState | null;
   selection: SelectionState;
   treeMap: ReadonlyMap<string, readonly DecoratorRange[]>;
-
-  // FIXME [mvp]: skipping undo/redo logic in refactor because we don't use it
   allowUndo: boolean;
   redoStack: Stack<ContentState>;
   undoStack: Stack<ContentState>;
