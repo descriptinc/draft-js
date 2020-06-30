@@ -53,3 +53,4 @@ export * from './model/immutable/DraftInlineStyle';
 export * from './model/immutable/findRangesImmutable';
 export * from './model/immutable/BlockNode';
 export * from './model/immutable/BlockTree';
+export * from './model/entity/DraftEntityInstance';
