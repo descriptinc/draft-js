@@ -565,6 +565,8 @@ export default class DraftEditor extends React.Component<
     editorNode.blur();
   };
 
+  mode: DraftEditorModes = 'edit';
+
   /**
    * Used via `this.setMode(...)`.
    *
@@ -598,6 +600,7 @@ export default class DraftEditor extends React.Component<
       edit: editHandler,
     };
     this._handler = handler[mode];
+    this.mode = mode;
   };
 
   exitCurrentMode: () => void = (): void => {
