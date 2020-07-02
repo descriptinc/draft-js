@@ -192,6 +192,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
   editorContainer: ?HTMLElement;
   focus: () => void;
   blur: () => void;
+  mode: DraftEditorModes;
   setMode: (mode: DraftEditorModes) => void;
   exitCurrentMode: () => void;
   restoreEditorDOM: (scrollPosition?: DraftScrollPosition) => void;
@@ -576,6 +577,7 @@ class DraftEditor extends React.Component<DraftEditorProps, State> {
       edit: editHandler,
     };
     this._handler = handler[mode];
+    this.mode = mode;
   };
 
   exitCurrentMode: () => void = (): void => {
