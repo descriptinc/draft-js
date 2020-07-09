@@ -50,7 +50,7 @@ const DraftPasteProcessor = {
         type,
         text: textLine,
         characterList: Array.from(repeat(textLine.length, character)),
-      } as Partial<BlockNode>;
+      };
 
       acc.push(makeContentBlock(blockNodeConfig));
 

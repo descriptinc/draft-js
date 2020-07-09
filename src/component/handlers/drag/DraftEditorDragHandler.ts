@@ -95,7 +95,7 @@ const DraftEditorDragHandler = {
       return;
     }
 
-    const files: Array<File> = data.getFiles();
+    const files = data.getFiles();
     if (files.length > 0) {
       if (
         editor.props.handleDroppedFiles &&
@@ -126,7 +126,7 @@ const DraftEditorDragHandler = {
       editor.update(moveText(editorState, dropSelection));
     } else {
       editor.update(
-        insertTextAtSelection(editorState, dropSelection, data.text as any),
+        insertTextAtSelection(editorState, dropSelection, data.getText() || ''),
       );
     }
     endDrag(editor);
