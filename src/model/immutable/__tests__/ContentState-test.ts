@@ -35,7 +35,7 @@ const createLink = () => {
   return createEntity('LINK', 'MUTABLE', {uri: 'zombo.com'});
 };
 
-const getSample = (textBlocks: Partial<ContentBlock>[]) => {
+const getSample = (textBlocks: (Partial<ContentBlock> & {key: string})[]) => {
   const contentBlocks = textBlocks.map(block => makeContentBlock(block));
   const blockMap = createFromArray(contentBlocks);
   return makeContentState({

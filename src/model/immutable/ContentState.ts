@@ -23,6 +23,7 @@ import {DraftEntityInstance} from '../entity/DraftEntityInstance';
 import sanitizeDraftText from '../encoding/sanitizeDraftText';
 import {BlockNode} from './BlockNode';
 import memoizeOne from 'memoize-one';
+import {genKey} from '../../Draft';
 
 export type ContentState = Readonly<{
   blockMap: BlockMap;
@@ -188,6 +189,7 @@ export function createFromText(
     block = sanitizeDraftText(block);
 
     return makeContentBlock({
+      key: genKey(),
       text: block,
     });
   });

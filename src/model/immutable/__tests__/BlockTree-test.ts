@@ -93,7 +93,7 @@ const multiDecoratorFactory = (length: number) => {
 };
 
 const assertBlockTreeGenerate = (
-  config: Partial<ContentBlock>,
+  config: Partial<ContentBlock> & {key: string},
   getDecorator = emptyDecoratorFactory,
 ) => {
   const block = makeContentBlock(config);

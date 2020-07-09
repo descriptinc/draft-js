@@ -11,6 +11,7 @@
 import {createFromText} from '../../immutable/ContentState';
 import CompositeDraftDecorator from '../CompositeDraftDecorator';
 import {ContentBlock, makeContentBlock} from '../../immutable/ContentBlock';
+import {genKey} from '../../../Draft';
 
 jest.mock('../../immutable/ContentState');
 
@@ -45,7 +46,7 @@ const assertCompositeDraftDecorator = (
 ) => {
   expect(
     new CompositeDraftDecorator(decorators).getDecorations(
-      makeContentBlock({text}),
+      makeContentBlock({text, key: genKey()}),
       createFromText(text),
     ),
   ).toMatchSnapshot();

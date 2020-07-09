@@ -24,12 +24,12 @@ export type ContentBlock = BlockNode;
 
 export function makeContentBlock({
   data = EMPTY_DATA,
-  key = '',
+  key,
   text = '',
   depth = 0,
   type = 'unstyled',
   characterList = Array.from(repeat(text.length, EMPTY_CHARACTER)),
-}: Partial<ContentBlock>): ContentBlock {
+}: Partial<ContentBlock> & {key: string}): ContentBlock {
   return {
     characterList,
     data,

@@ -16,6 +16,7 @@ import {
   getEntityAt,
   getInlineStyleAt,
 } from '../ContentBlock';
+import {genKey} from '../../../Draft';
 
 const ENTITY_KEY = 'x';
 
@@ -51,7 +52,7 @@ test('must have appropriate default values', () => {
 });
 
 test('must provide default values', () => {
-  const block = makeContentBlock({});
+  const block = makeContentBlock({key: genKey()});
   expect(block.type).toMatchSnapshot();
   expect(block.text).toMatchSnapshot();
   expect(fastDeepEqual(block.characterList, [])).toMatchSnapshot();
