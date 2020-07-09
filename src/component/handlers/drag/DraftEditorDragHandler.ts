@@ -24,7 +24,6 @@ import isEventHandled from '../../utils/isEventHandled';
 import {getTextContentFromFiles} from '../../utils/getTextContentFromFiles';
 import getWindowForNode from '../../utils/getWindowForNode';
 import DraftModifier from '../../../model/modifier/DraftModifier';
-import {DataTransferType} from '../../../fbjs/DataTransferType';
 
 /**
  * Get a SelectionState for the supplied mouse event.
@@ -80,9 +79,7 @@ const DraftEditorDragHandler = {
    * Handle data being dropped.
    */
   onDrop: function(editor: DraftEditor, e: Record<string, any>): void {
-    const data = new DataTransfer(
-      e.nativeEvent.dataTransfer,
-    ) as DataTransferType;
+    const data = new DataTransfer(e.nativeEvent.dataTransfer);
 
     const editorState: EditorState = editor._latestEditorState;
     const dropSelection: SelectionState | null = getSelectionForEvent(

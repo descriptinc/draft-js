@@ -28,7 +28,6 @@ import {BlockMap} from '../../../model/immutable/BlockMap';
 import {EntityMap} from '../../../model/immutable/EntityMap';
 import {every, first} from '../../../model/descript/Iterables';
 import DataTransfer from 'fbjs/lib/DataTransfer';
-import {DataTransferType} from '../../../fbjs/DataTransferType';
 
 /**
  * Paste content.
@@ -38,7 +37,7 @@ export default function editOnPaste(
   e: SyntheticClipboardEvent,
 ): void {
   e.preventDefault();
-  const data = new DataTransfer(e.clipboardData) as DataTransferType;
+  const data = new DataTransfer(e.clipboardData);
 
   // Get files, unless this is likely to be a string the user wants inline.
   if (!data.isRichText()) {
