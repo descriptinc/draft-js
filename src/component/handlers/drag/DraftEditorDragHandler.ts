@@ -88,7 +88,6 @@ const DraftEditorDragHandler = {
     );
 
     e.preventDefault();
-    editor._dragCount = 0;
     editor.exitCurrentMode();
 
     if (dropSelection == null) {
