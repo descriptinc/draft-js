@@ -9,7 +9,7 @@
  * @emails oncall+draft_js
  */
 
-import React, {Component, CSSProperties} from 'react';
+import React, {Component, CSSProperties, DragEventHandler} from 'react';
 import Scroll from 'fbjs/lib/Scroll';
 import Style from 'fbjs/lib/Style';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
@@ -161,7 +161,7 @@ export default class DraftEditor extends React.Component<
   _blockSelectEvents: boolean;
   _clipboard: BlockMap | null;
   _handler: any | null;
-  _dragCount: number;
+  _dragEventMap = new Map<EventTarget, number>();
   _internalDrag: boolean = false;
   _editorKey: string;
   _placeholderAccessibilityID: string;
@@ -203,7 +203,6 @@ export default class DraftEditor extends React.Component<
     this._blockSelectEvents = false;
     this._clipboard = null;
     this._handler = null;
-    this._dragCount = 0;
     this._editorKey = props.editorKey || generateRandomKey();
     this._placeholderAccessibilityID = 'placeholder-' + this._editorKey;
     this._latestEditorState = props.editorState;
@@ -601,6 +600,11 @@ export default class DraftEditor extends React.Component<
     };
     this._handler = handler[mode];
     this.mode = mode;
+
+    if (mode !== 'drag') {
+      // reset drag event counters
+      this._dragEventMap = new Map();
+    }
   };
 
   exitCurrentMode: () => void = (): void => {
@@ -665,16 +669,38 @@ export default class DraftEditor extends React.Component<
    * a dragged element enters and leaves the editor (or any of its children),
    * to determine when the dragged element absolutely leaves the editor.
    */
-  onDragEnter: () => void = (): void => {
-    this._dragCount++;
+  onDragEnter: DragEventHandler = (e): void => {
+    // Increment count for event target
+    this._dragEventMap.set(
+      e.target,
+      (this._dragEventMap.get(e.target) || 0) + 1,
+    );
   };
 
   /**
    * See `onDragEnter()`.
    */
-  onDragLeave: () => void = (): void => {
-    this._dragCount--;
-    if (this._dragCount === 0) {
+  onDragLeave: DragEventHandler = (e): void => {
+    // Decrement count for event target, removing it if the count is 0
+    const eventTargetCount = this._dragEventMap.get(e.target);
+    if (eventTargetCount !== undefined) {
+      if (eventTargetCount <= 1) {
+        this._dragEventMap.delete(e.target);
+      } else {
+        this._dragEventMap.set(e.target, eventTargetCount - 1);
+      }
+    }
+
+    // Remove event targets that are no longer in the DOM
+    for (const eventTarget of this._dragEventMap.keys()) {
+      if (eventTarget instanceof Element && !eventTarget.isConnected) {
+        this._dragEventMap.delete(eventTarget);
+      }
+    }
+
+    const isDragging = this._dragEventMap.size > 0;
+
+    if (!isDragging) {
       this.exitCurrentMode();
     }
   };
