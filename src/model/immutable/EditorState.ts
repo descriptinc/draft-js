@@ -375,6 +375,87 @@ export function pushContent(
   return setEditorState(editorState, editorStateChanges);
 }
 
+function peek<T>(arr: readonly T[]): T | undefined {
+  if (arr.length === 0) {
+    return undefined;
+  }
+  return arr[arr.length - 1];
+}
+
+function shift<T>(arr: readonly T[]): readonly T[] {
+  return arr.slice(0, arr.length - 1);
+}
+function push<T>(arr: readonly T[], item: T): readonly T[] {
+  return arr.concat([item]);
+}
+
+
+/**
+ * Make the top ContentState in the undo stack the new current content and
+ * push the current content onto the redo stack.
+ */
+export function undo(editorState: EditorState): EditorState {
+  if (!editorState.allowUndo) {
+    return editorState;
+  }
+
+  const {undoStack, redoStack, currentContent} = editorState;
+  const newCurrentContent = peek(undoStack);
+  if (!newCurrentContent) {
+    return editorState;
+  }
+
+  const directionMap = EditorBidiService.getDirectionMap(
+    newCurrentContent,
+    editorState.directionMap,
+  );
+
+  return setEditorState(editorState, {
+    currentContent: newCurrentContent,
+    directionMap,
+    undoStack: shift(undoStack),
+    redoStack: push(redoStack, currentContent),
+    forceSelection: true,
+    inlineStyleOverride: null,
+    lastChangeType: 'undo',
+    nativelyRenderedContent: null,
+    selection: currentContent.selectionBefore,
+  });
+}
+
+/**
+ * Make the top ContentState in the redo stack the new current content and
+ * push the current content onto the undo stack.
+ */
+export function redo(editorState: EditorState): EditorState {
+  if (!editorState.allowUndo) {
+    return editorState;
+  }
+
+  const {redoStack, undoStack, currentContent} = editorState;
+  const newCurrentContent = peek(redoStack);
+  if (!newCurrentContent) {
+    return editorState;
+  }
+
+  const directionMap = EditorBidiService.getDirectionMap(
+    newCurrentContent,
+    editorState.directionMap,
+  );
+
+  return setEditorState(editorState, {
+    currentContent: newCurrentContent,
+    directionMap,
+    undoStack: push(undoStack, currentContent),
+    redoStack: shift(redoStack),
+    forceSelection: true,
+    inlineStyleOverride: null,
+    lastChangeType: 'redo',
+    nativelyRenderedContent: null,
+    selection: newCurrentContent.selectionAfter,
+  })
+}
+
 /**
  * Set the supplied SelectionState as the new current selection, and set
  * the `force` flag to trigger manual selection placement by the view.
