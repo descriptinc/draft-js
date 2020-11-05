@@ -7,7 +7,7 @@
  * @format
  * @emails oncall+draft_js
  */
-import {EditorState, getBlockTree} from '../../model/immutable/EditorState';
+import {EditorState, getBlockTreeMaybe} from '../../model/immutable/EditorState';
 import {SelectionState} from '../../model/immutable/SelectionState';
 import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from './DraftOffsetKey';
@@ -32,7 +32,7 @@ export default function getUpdatedSelectionState(
 
   const anchorPath = DraftOffsetKey.decode(anchorKey);
   const anchorBlockKey = anchorPath.blockKey;
-  const anchorLeafBlockTree = getBlockTree(editorState, anchorBlockKey);
+  const anchorLeafBlockTree = getBlockTreeMaybe(editorState, anchorBlockKey);
   const anchorLeaf =
     anchorLeafBlockTree?.[anchorPath.decoratorKey]?.leaves?.[
       anchorPath.leafKey
@@ -40,7 +40,7 @@ export default function getUpdatedSelectionState(
 
   const focusPath = DraftOffsetKey.decode(focusKey);
   const focusBlockKey = focusPath.blockKey;
-  const focusLeafBlockTree = getBlockTree(editorState, focusBlockKey);
+  const focusLeafBlockTree = getBlockTreeMaybe(editorState, focusBlockKey);
   const focusLeaf =
     focusLeafBlockTree?.[focusPath.decoratorKey]?.leaves?.[focusPath.leafKey];
 

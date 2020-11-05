@@ -209,6 +209,13 @@ export function getBlockTree(
   return res;
 }
 
+export function getBlockTreeMaybe(
+  {treeMap}: EditorState,
+  blockKey: string,
+): readonly DecoratorRange[] | undefined {
+  return treeMap.get(blockKey);
+}
+
 export function isSelectionAtStartOfContent({
   currentContent,
   selection,
@@ -389,7 +396,6 @@ function push<T>(arr: readonly T[], item: T): readonly T[] {
   return arr.concat([item]);
 }
 
-
 /**
  * Make the top ContentState in the undo stack the new current content and
  * push the current content onto the redo stack.
@@ -453,7 +459,7 @@ export function redo(editorState: EditorState): EditorState {
     lastChangeType: 'redo',
     nativelyRenderedContent: null,
     selection: newCurrentContent.selectionAfter,
-  })
+  });
 }
 
 /**
