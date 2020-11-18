@@ -12,7 +12,7 @@ import {BidiDirection} from 'fbjs/lib/UnicodeBidiDirection';
 import {DraftBlockRenderMap} from '../../model/immutable/DraftBlockRenderMap';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {EditorState, getBlockTree} from '../../model/immutable/EditorState';
-import React, {ReactNode} from 'react';
+import React, {CSSProperties, ReactNode} from 'react';
 import cx from 'fbjs/lib/cx';
 import joinClasses from 'fbjs/lib/joinClasses';
 import {nullthrows} from '../../fbjs/nullthrows';
@@ -23,7 +23,7 @@ import {BlockNode} from '../../model/immutable/BlockNode';
 type Props = {
   blockRenderMap: DraftBlockRenderMap;
   blockRendererFn: (block: BlockNode) => Record<string, any> | null;
-  blockStyleFn?: (block: BlockNode) => string;
+  blockStyleFn?: (block: BlockNode) => string | CSSProperties | undefined;
   customStyleFn?: (
     style: DraftInlineStyle,
     block: BlockNode,
@@ -205,8 +205,16 @@ export default class DraftEditorContents extends React.Component<Props> {
 
       const depth = block.depth;
       let className = '';
+      let inlineStyle: CSSProperties | undefined;
       if (blockStyleFn) {
-        className = blockStyleFn(block);
+        const classNameOrStyle = blockStyleFn(block);
+        if (classNameOrStyle !== undefined) {
+          if (typeof classNameOrStyle === 'string') {
+            className = classNameOrStyle;
+          } else {
+            inlineStyle = classNameOrStyle;
+          }
+        }
       }
 
       // List items are special snowflakes, since we handle nesting and
@@ -230,6 +238,7 @@ export default class DraftEditorContents extends React.Component<Props> {
         'data-offset-key': offsetKey,
         id: `block-${key}`,
         key,
+        style: inlineStyle,
       };
       if (customEditable !== undefined) {
         childProps = {
