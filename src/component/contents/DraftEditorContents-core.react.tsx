@@ -208,12 +208,10 @@ export default class DraftEditorContents extends React.Component<Props> {
       let inlineStyle: CSSProperties | undefined;
       if (blockStyleFn) {
         const classNameOrStyle = blockStyleFn(block);
-        if (classNameOrStyle !== undefined) {
-          if (typeof classNameOrStyle === 'string') {
-            className = classNameOrStyle;
-          } else {
-            inlineStyle = classNameOrStyle;
-          }
+        if (typeof classNameOrStyle === 'string') {
+          className = classNameOrStyle;
+        } else {
+          inlineStyle = classNameOrStyle;
         }
       }
 
