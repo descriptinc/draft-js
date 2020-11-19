@@ -149,6 +149,16 @@ export function setDraftEditorSelection(
   // If the selection is entirely bound within this node, set the selection
   // and be done.
   if (hasAnchor && hasFocus) {
+    if (
+      selection.anchorNode === node &&
+      selection.focusNode === node &&
+      selection.anchorOffset === anchorOffset - nodeStart &&
+      selection.focusOffset === focusOffset - nodeStart
+    ) {
+      // the selection is already correct
+      return;
+    }
+
     selection.removeAllRanges();
     addPointToSelection(
       selection,
