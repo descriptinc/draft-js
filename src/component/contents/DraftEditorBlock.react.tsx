@@ -276,6 +276,8 @@ export default class DraftEditorBlock extends React.Component<Props> {
       const leaves = leavesForLeafSet.map((leaf, jj) => {
         const offsetKey = DraftOffsetKey.encode(blockKey, ii, jj);
         const {start, end} = leaf;
+        // use the start position in the block to determine when to update rather than rebuild an element
+        // (switching this from using the leaf index `ii` because we frequently add/remove ephemeral decorators)
         const key = `${blockKey}-${start}`;
         return (
           <DraftEditorLeaf
