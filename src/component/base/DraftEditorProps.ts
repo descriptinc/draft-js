@@ -56,7 +56,7 @@ export type DraftEditorProps = {
   // the default `DraftEditorBlock` is used.
   blockRendererFn: (block: BlockNode) => any | null;
   // Function that returns a cx map corresponding to block-level styles.
-  blockStyleFn: (block: BlockNode) => string;
+  blockStyleFn: (block: BlockNode) => string | CSSProperties | undefined;
   // If supplied, a ref which will be passed to the contenteditable.
   // Currently, only object refs are supported.
   editorRef?: RefObject<HTMLDivElement> | Ref<HTMLDivElement>;
