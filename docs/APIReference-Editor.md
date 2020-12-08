@@ -91,10 +91,10 @@ Provide a map of block rendering configurations. Each block type maps to element
 ### `blockStyleFn`
 
 ```js
-blockStyleFn?: (block: ContentBlock) => string
+blockStyleFn?: (block: ContentBlock) => string | CSSProperties | undefined
 ```
 
-Optionally set a function to define class names to apply to the given block when it is rendered. See [Advanced Topics: Block Styling](/docs/advanced-topics-block-styling) for details on usage.
+Optionally set a function to define class names or inline styles to apply to the given block when it is rendered. See [Advanced Topics: Block Styling](/docs/advanced-topics-block-styling) for details on usage.
 
 ### customStyleMap
 

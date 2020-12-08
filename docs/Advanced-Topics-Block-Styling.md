@@ -8,7 +8,7 @@ of basic configuration required to get engineers up and running with custom
 editors.
 
 By defining a `blockStyleFn` prop function for an `Editor`, it is possible
-to specify classes that should be applied to blocks at render time.
+to specify classes and inline styles that should be applied to blocks at render time.
 
 ## DraftStyleDefault.css
 
@@ -22,15 +22,20 @@ styles.
 
 ## blockStyleFn
 
-The `blockStyleFn` prop on `Editor` allows you to define CSS classes to
-style blocks at render time. For instance, you may wish to style `'blockquote'`
-type blocks with fancy italic text.
+The `blockStyleFn` prop on `Editor` allows you to define CSS classes and inline
+styles to style blocks at render time. For instance, you may wish to style
+`'blockquote'` type blocks with fancy italic text.
 
 ```js
 function myBlockStyleFn(contentBlock) {
   const type = contentBlock.getType();
   if (type === 'blockquote') {
     return 'superFancyBlockquote';
+  } else if (type === 'section') {
+    return {
+      color: 'blue',
+      margin: '5px',
+    };
   }
 }
 

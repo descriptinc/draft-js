@@ -13,7 +13,11 @@ import Keys from 'fbjs/lib/Keys';
 import UserAgent from 'fbjs/lib/UserAgent';
 import KeyBindingUtil from '../../utils/KeyBindingUtil';
 import {DraftEditorCommand} from '../../../model/constants/DraftEditorCommand';
-import {EditorState, pushContent} from '../../../model/immutable/EditorState';
+import {
+  EditorState,
+  pushContent,
+  redo,
+} from '../../../model/immutable/EditorState';
 import isEventHandled from '../../utils/isEventHandled';
 import keyCommandPlainDelete from './commands/keyCommandPlainDelete';
 import keyCommandDeleteWord from './commands/keyCommandDeleteWord';
@@ -42,7 +46,7 @@ function onKeyCommand(
 ): EditorState {
   switch (command) {
     case 'redo':
-      throw new Error('redo not implemented');
+      return redo(editorState);
     case 'delete':
       return keyCommandPlainDelete(editorState);
     case 'delete-word':
