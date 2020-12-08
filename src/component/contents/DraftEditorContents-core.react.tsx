@@ -95,6 +95,10 @@ export default class DraftEditorContents extends React.Component<Props> {
       return true;
     }
 
+    if (this.props.blockStyleFn !== nextProps.blockStyleFn) {
+      return true;
+    }
+
     const nextNativeContent = nextEditorState.nativelyRenderedContent;
 
     const wasComposing = prevEditorState.inCompositionMode;
