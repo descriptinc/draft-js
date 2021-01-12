@@ -1,7 +1,7 @@
 {
   "name": "@descript/draft-js",
   "description": "A React framework for building text editors.",
-  "version": "0.11.6-descript.9",
+  "version": "0.11.6-descript.10",
   "keywords": [
     "draftjs",
     "editor",
@@ -25,7 +25,7 @@
     "build": "gulp",
     "dev": "gulp dev",
     "postbuild": "node node_modules/fbjs-scripts/node/check-lib-requires.js lib",
-    "lint": "eslint .",
+    "lint": "eslint src/.",
     "lint-docs": "alex . && yarn format-docs:diff",
     "format": "eslint . --fix",
     "format-docs": "prettier --config prettier.config.js --write \"docs/**/*.md\"",

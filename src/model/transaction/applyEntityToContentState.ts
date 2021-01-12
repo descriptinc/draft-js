@@ -16,9 +16,56 @@ import {
   SelectionState,
 } from '../immutable/SelectionState';
 import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
-import applyEntityToContentBlock from './applyEntityToContentBlock';
-import {mergeMapUpdates} from '../immutable/BlockMap';
+import applyEntityToContentBlock, {
+  applyEntityToMutableCharacterList,
+} from './applyEntityToContentBlock';
+import {
+  makeNextBlockKeyIndex,
+  BlockMapIndex,
+  mergeMapUpdates,
+  BlockMap,
+} from '../immutable/BlockMap';
 import {BlockNode} from '../immutable/BlockNode';
+import {CharacterMetadata} from '../immutable/CharacterMetadata';
+
+function updateNewBlocksWithEntity(
+  blockMap: BlockMap,
+  blockMapIndex: BlockMapIndex,
+  newBlockCharacterLists: Map<string, CharacterMetadata[]>, // keys are block keys
+  selectionState: SelectionState,
+  entityKey: string | null,
+): void {
+  const startKey = getStartKey(selectionState);
+  const startOffset = getStartOffset(selectionState);
+  const endKey = getEndKey(selectionState);
+  const endOffset = getEndOffset(selectionState);
+
+  let blockKey: string | null = startKey;
+  while (blockKey) {
+    let characterList = newBlockCharacterLists.get(blockKey);
+    if (!characterList) {
+      const existingBlock = blockMap.get(blockKey);
+      if (!existingBlock) {
+        throw new Error('Could not get block for key');
+      }
+      characterList = Array.from(existingBlock.characterList);
+      newBlockCharacterLists.set(blockKey, characterList);
+    }
+
+    const sliceStart = blockKey === startKey ? startOffset : 0;
+    const sliceEnd = blockKey === endKey ? endOffset : characterList.length;
+    applyEntityToMutableCharacterList(
+      characterList,
+      sliceStart,
+      sliceEnd,
+      entityKey,
+    );
+    if (blockKey === endKey) {
+      return;
+    }
+    blockKey = blockMapIndex[blockKey];
+  }
+}
 
 export default function applyEntityToContentState(
   contentState: ContentState,
@@ -59,5 +106,37 @@ export default function applyEntityToContentState(
     blockMap: mergeMapUpdates(blockMap, newBlocks),
     selectionBefore: selectionState,
     selectionAfter: selectionState,
+  };
+}
+
+export function applyEntitiesToContentState(
+  contentState: ContentState,
+  entities: Iterable<[SelectionState, string | null]>,
+): ContentState {
+  const blockMap = contentState.blockMap;
+  const blockMapIndex = makeNextBlockKeyIndex(blockMap);
+  const newBlockCharacterLists = new Map<string, CharacterMetadata[]>();
+  for (const [selectionState, entityKey] of entities) {
+    updateNewBlocksWithEntity(
+      blockMap,
+      blockMapIndex,
+      newBlockCharacterLists,
+      selectionState,
+      entityKey,
+    );
+  }
+
+  const newBlocks: Record<string, BlockNode> = {};
+  for (const [key, list] of newBlockCharacterLists) {
+    const block = blockMap.get(key);
+    if (!block) {
+      throw new Error('Could not get block for key');
+    }
+    newBlocks[key] = {...block, characterList: list};
+  }
+
+  return {
+    ...contentState,
+    blockMap: mergeMapUpdates(blockMap, newBlocks),
   };
 }

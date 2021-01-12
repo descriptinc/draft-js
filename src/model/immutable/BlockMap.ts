@@ -51,3 +51,25 @@ export function mergeMapUpdates<T>(
   );
   return didChange ? result : originalMap;
 }
+
+export type BlockMapIndex = Record<string, string | null>;
+/**
+ * Creates an object where obj[blockKey] is the next block key.
+ * If `blockKey` is the final block of the blockMap, it is instead `null`
+ */
+export function makeNextBlockKeyIndex(
+  blockMap: BlockMap,
+): Record<string, string | null> {
+  const indexes: BlockMapIndex = {};
+  let prevKey: string | undefined;
+  for (const blockKey of blockMap.keys()) {
+    if (prevKey !== undefined) {
+      indexes[prevKey] = blockKey;
+    }
+    prevKey = blockKey;
+  }
+  if (prevKey) {
+    indexes[prevKey] = null;
+  }
+  return indexes;
+}

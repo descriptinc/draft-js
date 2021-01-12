@@ -7,7 +7,10 @@
  * @format
  * @emails oncall+draft_js
  */
-import {EditorState, getBlockTreeMaybe} from '../../model/immutable/EditorState';
+import {
+  EditorState,
+  getBlockTreeMaybe,
+} from '../../model/immutable/EditorState';
 import {SelectionState} from '../../model/immutable/SelectionState';
 import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from './DraftOffsetKey';

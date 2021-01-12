@@ -64,6 +64,56 @@ Object {
 }
 `;
 
+exports[`must apply to mutable character list 1`] = `
+Array [
+  Object {
+    "entity": null,
+    "style": Set {},
+  },
+  Object {
+    "entity": "x",
+    "style": Set {},
+  },
+  Object {
+    "entity": "x",
+    "style": Set {},
+  },
+  Object {
+    "entity": "x",
+    "style": Set {},
+  },
+  Object {
+    "entity": null,
+    "style": Set {},
+  },
+]
+`;
+
+exports[`must apply to mutable character list 2`] = `
+Array [
+  Object {
+    "entity": null,
+    "style": Set {},
+  },
+  Object {
+    "entity": "x",
+    "style": Set {},
+  },
+  Object {
+    "entity": "y",
+    "style": Set {},
+  },
+  Object {
+    "entity": "x",
+    "style": Set {},
+  },
+  Object {
+    "entity": null,
+    "style": Set {},
+  },
+]
+`;
+
 exports[`must apply to the entire text 1`] = `
 Object {
   "characterList": Array [
