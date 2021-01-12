@@ -330,6 +330,214 @@ Object {
 }
 `;
 
+exports[`must apply multiple entities across multiple blocks 1`] = `
+Object {
+  "characterList": Array [
+    Object {
+      "entity": "x",
+      "style": Set {},
+    },
+    Object {
+      "entity": "x",
+      "style": Set {},
+    },
+    Object {
+      "entity": "x",
+      "style": Set {},
+    },
+    Object {
+      "entity": "x",
+      "style": Set {},
+    },
+    Object {
+      "entity": "x",
+      "style": Set {},
+    },
+  ],
+  "data": Object {},
+  "depth": 0,
+  "key": "a",
+  "text": "Alpha",
+  "type": "unstyled",
+}
+`;
+
+exports[`must apply multiple entities across multiple blocks 2`] = `
+Object {
+  "characterList": Array [
+    Object {
+      "entity": "x",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "x",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "x",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "x",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "y",
+      "style": Set {
+        "BOLD",
+      },
+    },
+  ],
+  "data": Object {},
+  "depth": 0,
+  "key": "b",
+  "text": "Bravo",
+  "type": "unordered-list-item",
+}
+`;
+
+exports[`must apply multiple entities across multiple blocks 3`] = `
+Object {
+  "characterList": Array [
+    Object {
+      "entity": "y",
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+  ],
+  "data": Object {},
+  "depth": 0,
+  "key": "c",
+  "text": "Test",
+  "type": "code-block",
+}
+`;
+
+exports[`must apply multiple entities to different blocks 1`] = `
+Object {
+  "characterList": Array [
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+    Object {
+      "entity": "x",
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+  ],
+  "data": Object {},
+  "depth": 0,
+  "key": "a",
+  "text": "Alpha",
+  "type": "unstyled",
+}
+`;
+
+exports[`must apply multiple entities to different blocks 2`] = `
+Object {
+  "characterList": Array [
+    Object {
+      "entity": "2",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "y",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "y",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "2",
+      "style": Set {
+        "BOLD",
+      },
+    },
+    Object {
+      "entity": "2",
+      "style": Set {
+        "BOLD",
+      },
+    },
+  ],
+  "data": Object {},
+  "depth": 0,
+  "key": "b",
+  "text": "Bravo",
+  "type": "unordered-list-item",
+}
+`;
+
+exports[`must apply multiple entities to same block 1`] = `
+Object {
+  "characterList": Array [
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+    Object {
+      "entity": "x",
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+    Object {
+      "entity": "y",
+      "style": Set {},
+    },
+    Object {
+      "entity": null,
+      "style": Set {},
+    },
+  ],
+  "data": Object {},
+  "depth": 0,
+  "key": "a",
+  "text": "Alpha",
+  "type": "unstyled",
+}
+`;
+
 exports[`must apply null entity 1`] = `
 Object {
   "a": Object {
