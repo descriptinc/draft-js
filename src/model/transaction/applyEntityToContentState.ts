@@ -20,7 +20,7 @@ import applyEntityToContentBlock, {
   applyEntityToMutableCharacterList,
 } from './applyEntityToContentBlock';
 import {
-  makeBlockMapIndex,
+  makeNextBlockKeyIndex,
   BlockMapIndex,
   mergeMapUpdates,
   BlockMap,
@@ -31,7 +31,7 @@ import {CharacterMetadata} from '../immutable/CharacterMetadata';
 function updateNewBlocksWithEntity(
   blockMap: BlockMap,
   blockMapIndex: BlockMapIndex,
-  newCharacterLists: Map<string, CharacterMetadata[]>,
+  newBlockCharacterLists: Map<string, CharacterMetadata[]>, // keys are block keys
   selectionState: SelectionState,
   entityKey: string | null,
 ): void {
@@ -42,14 +42,14 @@ function updateNewBlocksWithEntity(
 
   let blockKey: string | null = startKey;
   while (blockKey) {
-    let characterList = newCharacterLists.get(blockKey);
+    let characterList = newBlockCharacterLists.get(blockKey);
     if (!characterList) {
       const existingBlock = blockMap.get(blockKey);
       if (!existingBlock) {
         throw new Error('Could not get block for key');
       }
       characterList = Array.from(existingBlock.characterList);
-      newCharacterLists.set(blockKey, characterList);
+      newBlockCharacterLists.set(blockKey, characterList);
     }
 
     const sliceStart = blockKey === startKey ? startOffset : 0;
@@ -114,20 +114,20 @@ export function applyEntitiesToContentState(
   entities: Iterable<[SelectionState, string | null]>,
 ): ContentState {
   const blockMap = contentState.blockMap;
-  const blockMapIndex = makeBlockMapIndex(blockMap);
-  const newCharacterLists = new Map<string, CharacterMetadata[]>();
+  const blockMapIndex = makeNextBlockKeyIndex(blockMap);
+  const newBlockCharacterLists = new Map<string, CharacterMetadata[]>();
   for (const [selectionState, entityKey] of entities) {
     updateNewBlocksWithEntity(
       blockMap,
       blockMapIndex,
-      newCharacterLists,
+      newBlockCharacterLists,
       selectionState,
       entityKey,
     );
   }
 
   const newBlocks: Record<string, BlockNode> = {};
-  for (const [key, list] of newCharacterLists) {
+  for (const [key, list] of newBlockCharacterLists) {
     const block = blockMap.get(key);
     if (!block) {
       throw new Error('Could not get block for key');

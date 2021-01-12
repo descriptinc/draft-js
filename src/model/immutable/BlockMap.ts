@@ -57,7 +57,7 @@ export type BlockMapIndex = Record<string, string | null>;
  * Creates an object where obj[blockKey] is the next block key.
  * If `blockKey` is the final block of the blockMap, it is instead `null`
  */
-export function makeBlockMapIndex(
+export function makeNextBlockKeyIndex(
   blockMap: BlockMap,
 ): Record<string, string | null> {
   const indexes: BlockMapIndex = {};
