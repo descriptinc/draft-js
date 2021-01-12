@@ -33,7 +33,9 @@ import getCharacterRemovalRange from './getCharacterRemovalRange';
 import DraftEntity from '../entity/DraftEntity';
 import splitBlockInContentState from '../transaction/splitBlockInContentState';
 import ContentStateInlineStyle from '../transaction/ContentStateInlineStyle';
-import applyEntityToContentState from '../transaction/applyEntityToContentState';
+import applyEntityToContentState, {
+  applyEntitiesToContentState,
+} from '../transaction/applyEntityToContentState';
 
 /**
  * `DraftModifier` provides a set of convenience methods that apply
@@ -258,6 +260,13 @@ const DraftModifier = {
       selectionState,
       entityKey,
     );
+  },
+
+  applyEntities: function(
+    contentState: ContentState,
+    entities: Iterable<[SelectionState, string | null]>,
+  ): ContentState {
+    return applyEntitiesToContentState(contentState, entities);
   },
 };
 

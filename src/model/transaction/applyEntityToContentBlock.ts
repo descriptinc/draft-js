@@ -7,7 +7,7 @@
  * @emails oncall+draft_js
  */
 
-import {applyEntity} from '../immutable/CharacterMetadata';
+import {applyEntity, CharacterMetadata} from '../immutable/CharacterMetadata';
 import {BlockNode} from '../immutable/BlockNode';
 
 export default function applyEntityToContentBlock(
@@ -20,17 +20,20 @@ export default function applyEntityToContentBlock(
   if (start >= end) {
     return contentBlock;
   }
-  const characterList = Array.from(contentBlock.characterList);
-  let didChange = false;
+
+  const existingCharacterList = contentBlock.characterList;
+  let characterList: CharacterMetadata[] | undefined;
 
   while (start < end) {
-    if (!didChange && characterList[start].entity !== entityKey) {
-      didChange = true;
+    if (!characterList && existingCharacterList[start].entity !== entityKey) {
+      characterList = Array.from(existingCharacterList);
     }
-    characterList[start] = applyEntity(characterList[start], entityKey);
+    if (characterList) {
+      characterList[start] = applyEntity(characterList[start], entityKey);
+    }
     start++;
   }
-  return didChange
+  return characterList
     ? {
         ...contentBlock,
         characterList,
