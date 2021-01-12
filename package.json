@@ -25,7 +25,7 @@
     "build": "gulp",
     "dev": "gulp dev",
     "postbuild": "node node_modules/fbjs-scripts/node/check-lib-requires.js lib",
-    "lint": "eslint .",
+    "lint": "eslint src/.",
     "lint-docs": "alex . && yarn format-docs:diff",
     "format": "eslint . --fix",
     "format-docs": "prettier --config prettier.config.js --write \"docs/**/*.md\"",
