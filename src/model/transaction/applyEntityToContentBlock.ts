@@ -40,3 +40,16 @@ export default function applyEntityToContentBlock(
       }
     : contentBlock;
 }
+
+export function applyEntityToMutableCharacterList(
+  characterList: CharacterMetadata[],
+  start: number,
+  end: number,
+  entityKey: string | null,
+): void {
+  for (let i = start; i < end; i++) {
+    if (characterList[i].entity !== entityKey) {
+      characterList[i] = applyEntity(characterList[i], entityKey);
+    }
+  }
+}

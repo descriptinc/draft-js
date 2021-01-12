@@ -16,7 +16,9 @@ import {
   SelectionState,
 } from '../immutable/SelectionState';
 import {flatten, map, skipUntil, takeUntil} from '../descript/Iterables';
-import applyEntityToContentBlock from './applyEntityToContentBlock';
+import applyEntityToContentBlock, {
+  applyEntityToMutableCharacterList,
+} from './applyEntityToContentBlock';
 import {
   makeBlockMapIndex,
   BlockMapIndex,
@@ -24,11 +26,12 @@ import {
   BlockMap,
 } from '../immutable/BlockMap';
 import {BlockNode} from '../immutable/BlockNode';
+import {CharacterMetadata} from '../immutable/CharacterMetadata';
 
 function updateNewBlocksWithEntity(
   blockMap: BlockMap,
   blockMapIndex: BlockMapIndex,
-  newBlocks: Record<string, BlockNode>,
+  newCharacterLists: Map<string, CharacterMetadata[]>,
   selectionState: SelectionState,
   entityKey: string | null,
 ): void {
@@ -39,11 +42,20 @@ function updateNewBlocksWithEntity(
 
   let blockKey: string | null = startKey;
   while (blockKey) {
-    const block = newBlocks[blockKey] || blockMap.get(blockKey);
+    let characterList = newCharacterLists.get(blockKey);
+    if (!characterList) {
+      const existingBlock = blockMap.get(blockKey);
+      if (!existingBlock) {
+        throw new Error('Could not get block for key');
+      }
+      characterList = Array.from(existingBlock.characterList);
+      newCharacterLists.set(blockKey, characterList);
+    }
+
     const sliceStart = blockKey === startKey ? startOffset : 0;
-    const sliceEnd = blockKey === endKey ? endOffset : block.text.length;
-    newBlocks[blockKey] = applyEntityToContentBlock(
-      block,
+    const sliceEnd = blockKey === endKey ? endOffset : characterList.length;
+    applyEntityToMutableCharacterList(
+      characterList,
       sliceStart,
       sliceEnd,
       entityKey,
@@ -103,27 +115,28 @@ export function applyEntitiesToContentState(
 ): ContentState {
   const blockMap = contentState.blockMap;
   const blockMapIndex = makeBlockMapIndex(blockMap);
-  const newBlocks: Record<string, BlockNode> = {};
-  let lastSelectionState: SelectionState | undefined;
+  const newCharacterLists = new Map<string, CharacterMetadata[]>();
   for (const [selectionState, entityKey] of entities) {
     updateNewBlocksWithEntity(
       blockMap,
       blockMapIndex,
-      newBlocks,
+      newCharacterLists,
       selectionState,
       entityKey,
     );
-    lastSelectionState = selectionState;
+  }
+
+  const newBlocks: Record<string, BlockNode> = {};
+  for (const [key, list] of newCharacterLists) {
+    const block = blockMap.get(key);
+    if (!block) {
+      throw new Error('Could not get block for key');
+    }
+    newBlocks[key] = {...block, characterList: list};
   }
 
   return {
     ...contentState,
     blockMap: mergeMapUpdates(blockMap, newBlocks),
-    ...(lastSelectionState
-      ? {
-          selectionBefore: lastSelectionState,
-          selectionAfter: lastSelectionState,
-        }
-      : {}),
   };
 }
