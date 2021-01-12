@@ -9,7 +9,9 @@
  */
 
 import {makeContentBlock} from '../../immutable/ContentBlock';
-import applyEntityToContentBlock from '../applyEntityToContentBlock';
+import applyEntityToContentBlock, {
+  applyEntityToMutableCharacterList,
+} from '../applyEntityToContentBlock';
 import {blockToJson} from '../../../util/blockMapToJson';
 
 const sampleBlock = makeContentBlock({
@@ -42,4 +44,13 @@ test('must apply at the end', () => {
 
 test('must apply to the entire text', () => {
   assertApplyEntityToContentBlock(0, 5);
+});
+
+test('must apply to mutable character list', () => {
+  const charList = Array.from(sampleBlock.characterList);
+  applyEntityToMutableCharacterList(charList, 1, 4, 'x');
+  expect(charList).toMatchSnapshot();
+
+  applyEntityToMutableCharacterList(charList, 2, 3, 'y');
+  expect(charList).toMatchSnapshot();
 });
