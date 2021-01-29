@@ -27,7 +27,7 @@ type MutationRecordT =
 const DOM_OBSERVER_OPTIONS = {
   subtree: true,
   characterData: true,
-  childList: true,
+  childList: false,
   characterDataOldValue: false,
   attributes: false,
 };
@@ -54,10 +54,12 @@ export default class DOMObserver {
           e.target instanceof Node,
           'Expected target to be an instance of Node',
         );
-        this.registerMutation({
-          type: 'characterData',
-          target: e.target as Node,
-        });
+        this.registerMutations([
+          {
+            type: 'characterData',
+            target: e.target as Node,
+          },
+        ]);
       };
     }
   }
@@ -93,14 +95,37 @@ export default class DOMObserver {
     return mutations;
   }
 
-  registerMutations(mutations: Array<MutationRecord>): void {
+  registerMutations(mutations: MutationRecordT[]): void {
+    const mutationsToProcess = new Map<Node, MutationRecordT>();
+
     for (let i = 0; i < mutations.length; i++) {
-      this.registerMutation(mutations[i]);
+      const mutation = mutations[i];
+      // Sometimes we get multiple mutations for the same target.
+      // Only process the latest.
+      mutationsToProcess.set(mutation.target, mutation);
+    }
+
+    const newMutations = new Map<string, string>();
+    for (const mutation of mutationsToProcess.values()) {
+      const textContent = this.getMutationTextContent(mutation);
+      if (textContent != null) {
+        const offsetKey = nullthrows(findAncestorOffsetKey(mutation.target));
+        // Join text for multiple mutations in the same block (i.e., same offsetKey)
+        let newContent = newMutations.get(offsetKey) || '';
+        if (newContent.length > 0) {
+          newContent += '\n';
+        }
+        newContent += textContent;
+        newMutations.set(offsetKey, newContent);
+      }
+    }
+    for (const [key, value] of newMutations) {
+      this.mutations.set(key, value);
     }
   }
 
   getMutationTextContent(mutation: MutationRecordT): string | null {
-    const {type, target, removedNodes} = mutation;
+    const {type, target} = mutation;
     if (type === 'characterData') {
       // When `textContent` is '', there is a race condition that makes
       // getting the offsetKey from the target not possible.
@@ -115,30 +140,7 @@ export default class DOMObserver {
         }
         return target.textContent;
       }
-    } else if (type === 'childList') {
-      if (removedNodes && removedNodes.length) {
-        // `characterData` events won't happen or are ignored when
-        // removing the last character of a leaf node, what happens
-        // instead is a `childList` event with a `removedNodes` array.
-        // For this case the textContent should be '' and
-        // `DraftModifier.replaceText` will make sure the content is
-        // updated properly.
-        return '';
-      } else if (target.textContent !== '') {
-        // Typing Chinese in an empty block in MS Edge results in a
-        // `childList` event with non-empty textContent.
-        // See https://github.com/facebook/draft-js/issues/2082
-        return target.textContent;
-      }
     }
     return null;
-  }
-
-  registerMutation(mutation: MutationRecordT): void {
-    const textContent = this.getMutationTextContent(mutation);
-    if (textContent != null) {
-      const offsetKey = nullthrows(findAncestorOffsetKey(mutation.target));
-      this.mutations = this.mutations.set(offsetKey, textContent);
-    }
   }
 }
