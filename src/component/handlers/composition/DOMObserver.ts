@@ -95,11 +95,10 @@ export default class DOMObserver {
     return mutations;
   }
 
-  registerMutations(mutations: MutationRecordT[]): void {
+  registerMutations(mutations: readonly MutationRecordT[]): void {
     const mutationsToProcess = new Map<Node, MutationRecordT>();
 
-    for (let i = 0; i < mutations.length; i++) {
-      const mutation = mutations[i];
+    for (const mutation of mutations) {
       // Sometimes we get multiple mutations for the same target.
       // Only process the latest.
       mutationsToProcess.set(mutation.target, mutation);
