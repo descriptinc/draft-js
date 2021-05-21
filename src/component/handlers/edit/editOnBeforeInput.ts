@@ -65,7 +65,11 @@ function replaceText(
   // https://github.com/facebook/draft-js/issues/2422#issuecomment-683221263
   let selection = editorState.selection;
 
-  if (text === '. ') {
+  if (
+    text === '. ' &&
+    selection.anchorKey === selection.focusKey &&
+    selection.anchorOffset > 0
+  ) {
     selection = makeSelectionState({
       ...selection,
       anchorOffset: selection.anchorOffset - 1,
