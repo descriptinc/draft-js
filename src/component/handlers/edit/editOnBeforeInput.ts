@@ -24,6 +24,7 @@ import isEventHandled from '../../utils/isEventHandled';
 import {
   getStartOffset,
   isCollapsed,
+  makeSelectionState,
 } from '../../../model/immutable/SelectionState';
 import getEntityKeyForSelection from '../../../model/entity/getEntityKeyForSelection';
 import isSelectionAtLeafStart from '../../selection/isSelectionAtLeafStart';
@@ -60,9 +61,20 @@ function replaceText(
   entityKey: string | null,
   forceSelection: boolean,
 ): EditorState {
+  // Special case '. ': Replace ' ' with '. '
+  // https://github.com/facebook/draft-js/issues/2422#issuecomment-683221263
+  let selection = editorState.selection;
+
+  if (text === '. ') {
+    selection = makeSelectionState({
+      ...selection,
+      anchorOffset: selection.anchorOffset - 1,
+    });
+  }
+
   const contentState = DraftModifier.replaceText(
     editorState.currentContent,
-    editorState.selection,
+    selection,
     text,
     inlineStyle,
     entityKey,
