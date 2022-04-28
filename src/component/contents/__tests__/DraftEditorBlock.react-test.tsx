@@ -451,7 +451,17 @@ test('must split styled spans apart within decorator', () => {
 });
 
 test('must scroll the window if needed', () => {
-  const props = getProps(getHelloBlock());
+  const props = {
+    ...getProps(getHelloBlock()),
+    selection: makeSelectionState({
+      anchorKey: 'a',
+      anchorOffset: 0,
+      focusKey: 'a',
+      focusOffset: 2,
+      isBackward: false,
+      hasFocus: true,
+    }),
+  };
 
   getElementPosition.mockReturnValueOnce({
     x: 0,

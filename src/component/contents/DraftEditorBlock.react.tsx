@@ -21,7 +21,11 @@ import getViewportDimensions from 'fbjs/lib/getViewportDimensions';
 import {ContentState} from '../../model/immutable/ContentState';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {DraftDecoratorType} from '../../model/decorators/DraftDecoratorType';
-import {getEndKey, SelectionState} from '../../model/immutable/SelectionState';
+import {
+  getEndKey,
+  isCollapsed,
+  SelectionState,
+} from '../../model/immutable/SelectionState';
 import invariant from '../../fbjs/invariant';
 import isHTMLElement from '../utils/isHTMLElement';
 import {DecoratorRange} from '../../model/immutable/BlockTree';
@@ -129,6 +133,12 @@ export default class DraftEditorBlock extends React.Component<Props> {
     const selection = this.props.selection;
     const endKey = getEndKey(selection);
     if (!selection.hasFocus || endKey !== this.props.block.key) {
+      return;
+    }
+
+    // If user hits return, selection would be at the beginning of the new block, we do not
+    // want to scroll to the bottom of the block.
+    if (isCollapsed(selection)) {
       return;
     }
 
