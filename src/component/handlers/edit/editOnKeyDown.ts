@@ -34,7 +34,8 @@ import DraftModifier from '../../../model/modifier/DraftModifier';
 import keyCommandUndo from './commands/keyCommandUndo';
 
 const {isOptionKeyCommand} = KeyBindingUtil;
-const isChrome = UserAgent.isBrowser('Chrome');
+const isChromium =
+  UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
 
 /**
  * Map a `DraftEditorCommand` command value to a corresponding function.
@@ -159,7 +160,7 @@ export function editOnKeyDown(
       break;
     case Keys.SPACE:
       // Prevent Chrome on OSX behavior where option + space scrolls.
-      if (isChrome && isOptionKeyCommand(e)) {
+      if (isChromium && isOptionKeyCommand(e)) {
         e.preventDefault();
       }
   }
@@ -168,7 +169,7 @@ export function editOnKeyDown(
 
   // If no command is specified, allow keydown event to continue.
   if (command == null || command === '') {
-    if (keyCode === Keys.SPACE && isChrome && isOptionKeyCommand(e)) {
+    if (keyCode === Keys.SPACE && isChromium && isOptionKeyCommand(e)) {
       // The default keydown event has already been prevented in order to stop
       // Chrome from scrolling. Insert a nbsp into the editor as OSX would for
       // other browsers.

@@ -10,7 +10,8 @@
 import UserAgent from 'fbjs/lib/UserAgent';
 import invariant from '../../fbjs/invariant';
 
-const isChrome = UserAgent.isBrowser('Chrome');
+const isChromium =
+  UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
 
 // In Chrome, the client rects will include the entire bounds of all nodes that
 // begin (have a start tag) within the selection, even if the selection does
@@ -56,7 +57,7 @@ function getRangeClientRectsChrome(range: Range): Array<ClientRect> {
 /**
  * Like range.getClientRects() but normalizes for browser bugs.
  */
-const getRangeClientRects = isChrome
+const getRangeClientRects = isChromium
   ? getRangeClientRectsChrome
   : (function(range: Range): Array<ClientRect> {
       return Array.from(range.getClientRects());
