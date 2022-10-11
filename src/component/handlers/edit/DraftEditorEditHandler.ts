@@ -23,11 +23,11 @@ import {editOnKeyDown} from './editOnKeyDown';
 import editOnPaste from './editOnPaste';
 import editOnSelect from './editOnSelect';
 
-const isChrome = UserAgent.isBrowser('Chrome');
+const isChromium = UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
 const isFirefox = UserAgent.isBrowser('Firefox');
 
 const selectionHandler: (e: DraftEditor) => void =
-  isChrome || isFirefox
+  isChromium || isFirefox
     ? editOnSelect
     : _ => {
         //
