@@ -23,7 +23,8 @@ import {editOnKeyDown} from './editOnKeyDown';
 import editOnPaste from './editOnPaste';
 import editOnSelect from './editOnSelect';
 
-const isChromium = UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
+const isChromium =
+  UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
 const isFirefox = UserAgent.isBrowser('Firefox');
 
 const selectionHandler: (e: DraftEditor) => void =

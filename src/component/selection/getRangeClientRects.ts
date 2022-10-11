@@ -10,7 +10,8 @@
 import UserAgent from 'fbjs/lib/UserAgent';
 import invariant from '../../fbjs/invariant';
 
-const isChromium = UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
+const isChromium =
+  UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
 
 // In Chrome, the client rects will include the entire bounds of all nodes that
 // begin (have a start tag) within the selection, even if the selection does

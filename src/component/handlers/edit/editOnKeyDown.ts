@@ -34,7 +34,8 @@ import DraftModifier from '../../../model/modifier/DraftModifier';
 import keyCommandUndo from './commands/keyCommandUndo';
 
 const {isOptionKeyCommand} = KeyBindingUtil;
-const isChromium = UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
+const isChromium =
+  UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
 
 /**
  * Map a `DraftEditorCommand` command value to a corresponding function.
