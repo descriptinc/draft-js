@@ -136,9 +136,9 @@ export default class DraftEditorBlock extends React.Component<Props> {
       return;
     }
 
-    // If user hits return, selection would be at the beginning of the new block, we do not
-    // want to scroll to the bottom of the block.
-    if (isCollapsed(selection)) {
+    // If user hits return in the middle of an existing block (i.e. the new block
+    // has non-empty text), we do not want to scroll to the bottom of the block.
+    if (isCollapsed(selection) && this.props.block.text.length !== 0) {
       return;
     }
 
