@@ -1,4 +1,4 @@
-import {ContentState, getEntity} from '../immutable/ContentState';
+import {ContentState} from '../immutable/ContentState';
 import {ContentBlock} from '../immutable/ContentBlock';
 import {DraftEntityType} from '../entity/DraftEntityType';
 import {DraftEntityMutability} from '../entity/DraftEntityMutability';
@@ -110,7 +110,7 @@ const encodeRawEntityMap = (
   const rawEntityMap = {};
 
   Object.keys(entityMap).forEach((key, index) => {
-    rawEntityMap[index] = getEntity(DraftStringKey.unstringify(key));
+    rawEntityMap[index] = entityMap[DraftStringKey.unstringify(key)];
   });
 
   return {

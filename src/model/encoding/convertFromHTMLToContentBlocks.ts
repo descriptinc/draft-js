@@ -19,8 +19,7 @@ import {
   CharacterMetadata,
   makeCharacterMetadata,
 } from '../immutable/CharacterMetadata';
-import {EntityMap} from '../immutable/EntityMap';
-import DraftEntity from '../entity/DraftEntity';
+import {createEntity, EntityMap} from '../immutable/EntityMap';
 import generateRandomKey from '../keys/generateRandomKey';
 import {flatten, map, repeat} from '../descript/Iterables';
 import {makeContentBlock} from '../immutable/ContentBlock';
@@ -291,7 +290,7 @@ class ContentBlocksBuilder {
   contentBlocks: Array<BlockNode> = [];
 
   // Entity map use to store links and images found in the HTML nodes
-  entityMap: EntityMap = DraftEntity;
+  entityMap: EntityMap = new Map();
 
   // Map HTML tags to draftjs block types and disambiguation function
   blockTypeMap: BlockTypeMap;
@@ -316,7 +315,7 @@ class ContentBlocksBuilder {
     this.currentDepth = 0;
     this.currentEntity = null;
     this.currentText = '';
-    this.entityMap = DraftEntity;
+    this.entityMap = new Map();
     this.wrapper = null;
     this.contentBlocks = [];
   }
@@ -604,12 +603,14 @@ class ContentBlocksBuilder {
       }
     });
 
-    // TODO: T15530363 update this when we remove DraftEntity entirely
-    this.currentEntity = this.entityMap.__create(
+    const createResult = createEntity(
+      this.entityMap,
       'IMAGE',
-      'IMMUTABLE',
+      'MUTABLE',
       entityConfig,
     );
+    this.entityMap = createResult.entityMap;
+    this.currentEntity = createResult.entityKey;
 
     // The child text node cannot just have a space or return as content (since
     // we strip those out), unless the image is for presentation only.
@@ -651,12 +652,15 @@ class ContentBlocksBuilder {
     });
 
     entityConfig.url = new URI(anchor.href).toString();
-    // TODO: T15530363 update this when we remove DraftEntity completely
-    this.currentEntity = this.entityMap.__create(
+
+    const entityResult = createEntity(
+      this.entityMap,
       'LINK',
       'MUTABLE',
       entityConfig || {},
     );
+    this.entityMap = entityResult.entityMap;
+    this.currentEntity = entityResult.entityKey;
 
     blockConfigs.push(
       ...this._toBlockConfigs(Array.from(node.childNodes), style),

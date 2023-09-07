@@ -30,7 +30,6 @@ import insertFragmentIntoContentState, {
 import {DraftRemovalDirection} from '../constants/DraftRemovalDirection';
 import {getEntityAt} from '../immutable/ContentBlock';
 import getCharacterRemovalRange from './getCharacterRemovalRange';
-import DraftEntity from '../entity/DraftEntity';
 import splitBlockInContentState from '../transaction/splitBlockInContentState';
 import ContentStateInlineStyle from '../transaction/ContentStateInlineStyle';
 import applyEntityToContentState, {
@@ -164,7 +163,7 @@ const DraftModifier = {
     if (startKey === endKey) {
       if (startEntityKey && startEntityKey === endEntityKey) {
         const adjustedRemovalRange = getCharacterRemovalRange(
-          DraftEntity,
+          contentState.entityMap,
           startBlock,
           endBlock,
           rangeToRemove,

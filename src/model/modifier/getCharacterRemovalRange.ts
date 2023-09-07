@@ -7,7 +7,7 @@
  * @emails oncall+draft_js
  */
 
-import {EntityMap} from '../immutable/EntityMap';
+import {EntityMap, getEntity} from '../immutable/EntityMap';
 import {
   getEndOffset,
   getStartOffset,
@@ -124,7 +124,7 @@ function getEntityRemovalRange(
 ): SelectionState {
   let start = getStartOffset(selectionState);
   let end = getEndOffset(selectionState);
-  const entity = entityMap.__get(entityKey);
+  const entity = getEntity(entityMap, entityKey);
   const mutability = entity.mutability;
   const sideToConsider = isEntityAtStart ? start : end;
 

@@ -22,7 +22,6 @@ import {
   getBlockAfter,
   getBlockBefore,
   getBlockForKey,
-  getEntityMap,
 } from '../immutable/ContentState';
 import {
   getEndKey,
@@ -41,17 +40,18 @@ import {
   inlineStyleWith,
   inlineStyleWithout,
 } from '../immutable/DraftInlineStyle';
+import {getEntity} from '../immutable/EntityMap';
 
 const RichTextEditorUtil: RichTextUtils = {
   currentBlockContainsLink: function(editorState: EditorState): boolean {
     const selection = editorState.selection;
     const contentState = editorState.currentContent;
-    const entityMap = getEntityMap(contentState);
+    const {entityMap} = contentState;
     return getBlockForKey(contentState, selection.anchorKey)
       .characterList.slice(getStartOffset(selection), getEndOffset(selection))
       .some(v => {
         const entity = v.entity;
-        return !!entity && entityMap.__get(entity).type === 'LINK';
+        return !!entity && getEntity(entityMap, entity).type === 'LINK';
       });
   },
 

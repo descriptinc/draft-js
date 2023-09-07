@@ -21,7 +21,7 @@ import {SelectionObject} from '../../utils/DraftDOMTypes';
 import {nullthrows} from '../../../fbjs/nullthrows';
 import findAncestorOffsetKey from '../../selection/findAncestorOffsetKey';
 import DraftOffsetKey from '../../selection/DraftOffsetKey';
-import {getBlockForKey, getEntity} from '../../../model/immutable/ContentState';
+import {getBlockForKey} from '../../../model/immutable/ContentState';
 import {notEmptyKey} from '../../utils/draftKeyUtils';
 import {
   getEntityAt,
@@ -32,6 +32,7 @@ import {
   getEndOffset,
   getStartOffset,
 } from '../../../model/immutable/SelectionState';
+import {getEntity} from '../../../model/immutable/EntityMap';
 
 const isGecko = UserAgent.isEngine('Gecko');
 
@@ -170,7 +171,9 @@ export default function editOnInput(
   };
 
   const entityKey = getEntityAt(block, start);
-  const entity = notEmptyKey(entityKey) ? getEntity(entityKey) : null;
+  const entity = notEmptyKey(entityKey)
+    ? getEntity(content.entityMap, entityKey)
+    : null;
   const entityType = entity != null ? entity.mutability : null;
   const preserveEntity = entityType === 'MUTABLE';
 

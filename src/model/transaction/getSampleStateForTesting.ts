@@ -18,8 +18,8 @@ import {makeContentBlock} from '../immutable/ContentBlock';
 import {repeat} from '../descript/Iterables';
 import {makeCharacterMetadata} from '../immutable/CharacterMetadata';
 import {createFromArray} from '../immutable/BlockMapBuilder';
-import DraftEntity from '../entity/DraftEntity';
 import {BOLD, ITALIC} from '../immutable/SampleDraftInlineStyle';
+import {createEntity} from '../immutable/EntityMap';
 
 const ENTITY_KEY = '2';
 
@@ -89,9 +89,8 @@ const contentState = makeContentState({
   blockMap,
   selectionBefore: selectionState,
   selectionAfter: selectionState,
+  entityMap: createEntity(new Map(), 'IMAGE', 'IMMUTABLE').entityMap,
 });
-
-DraftEntity.__create('IMAGE', 'IMMUTABLE');
 
 let editorState = createWithContent(contentState);
 editorState = forceSelection(editorState, selectionState);
