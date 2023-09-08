@@ -13,11 +13,12 @@ import {
   makeCharacterMetadata,
 } from '../../immutable/CharacterMetadata';
 import {makeDraftEntityInstance} from '../../entity/DraftEntityInstance';
-import {addEntity, createFromBlockArray} from '../../immutable/ContentState';
+import {createFromBlockArray} from '../../immutable/ContentState';
 import {makeContentBlock} from '../../immutable/ContentBlock';
 import convertFromDraftStateToRaw from '../convertFromDraftStateToRaw';
+import {addEntity} from '../../immutable/EntityMap';
 
-const {contentState} = getSampleStateForTesting();
+let {contentState} = getSampleStateForTesting();
 
 const getMetadata = entityKey =>
   Array.from(repeat(5, makeCharacterMetadata({entity: entityKey})));
@@ -31,7 +32,7 @@ const getLink = entityKey =>
   });
 // We start numbering our entities with '2' because getSampleStateForTesting
 // already created an entity with key '1'.
-const contentStateWithNonContiguousEntities = createFromBlockArray([
+let contentStateWithNonContiguousEntities = createFromBlockArray([
   makeContentBlock({
     key: 'a',
     type: 'unstyled',
@@ -58,10 +59,21 @@ const contentStateWithNonContiguousEntities = createFromBlockArray([
   }),
 ]);
 
-addEntity(getLink('3'));
-addEntity(getLink('4'));
-addEntity(getLink('5'));
-addEntity(getLink('6'));
+let entityMap = contentState.entityMap;
+entityMap = addEntity(entityMap, '3', getLink('3'));
+entityMap = addEntity(entityMap, '4', getLink('4'));
+entityMap = addEntity(entityMap, '5', getLink('5'));
+entityMap = addEntity(entityMap, '6', getLink('6'));
+
+contentState = {
+  ...contentState,
+  entityMap,
+};
+
+contentStateWithNonContiguousEntities = {
+  ...contentStateWithNonContiguousEntities,
+  entityMap,
+};
 
 const assertConvertFromDraftStateToRaw = content => {
   expect(convertFromDraftStateToRaw(content)).toMatchSnapshot();

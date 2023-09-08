@@ -9,6 +9,7 @@ import encodeInlineStyleRanges, {
 } from './encodeInlineStyleRanges';
 import encodeEntityRanges, {EntityRange} from './encodeEntityRanges';
 import {BlockNode} from '../immutable/BlockNode';
+import {EntityMap, getEntity} from '../immutable/EntityMap';
 
 type RawDraftEntity = {
   type: DraftEntityType;
@@ -103,6 +104,7 @@ const encodeRawBlocks = (
 // Flip storage map so that our storage keys map to global
 // DraftEntity keys.
 const encodeRawEntityMap = (
+  originalEntityMap: EntityMap,
   rawState: RawDraftContentState,
 ): RawDraftContentState => {
   const {blocks, entityMap} = rawState;
@@ -110,7 +112,7 @@ const encodeRawEntityMap = (
   const rawEntityMap = {};
 
   Object.keys(entityMap).forEach((key, index) => {
-    rawEntityMap[index] = entityMap[DraftStringKey.unstringify(key)];
+    rawEntityMap[index] = getEntity(originalEntityMap, DraftStringKey.unstringify(key));
   });
 
   return {
@@ -131,7 +133,7 @@ export default function convertFromDraftStateToRaw(
   rawDraftContentState = encodeRawBlocks(contentState, rawDraftContentState);
 
   // add entities
-  rawDraftContentState = encodeRawEntityMap(rawDraftContentState);
+  rawDraftContentState = encodeRawEntityMap(contentState.entityMap, rawDraftContentState);
 
   return rawDraftContentState;
 }

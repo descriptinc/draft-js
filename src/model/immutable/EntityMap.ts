@@ -34,6 +34,16 @@ export function createEntity(
   };
 }
 
+export function addEntity(
+  entityMap: EntityMap,
+  entityKey: string,
+  instance: DraftEntityInstance,
+): EntityMap {
+  const newMap = new Map(entityMap);
+  newMap.set(entityKey, instance);
+  return newMap;
+}
+
 // eslint-disable-next-line prefer-const
 export let getEntity = function getEntity(
   entityMap: EntityMap,
