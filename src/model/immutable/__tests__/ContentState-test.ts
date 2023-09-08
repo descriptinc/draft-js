@@ -8,19 +8,15 @@
  */
 
 import {
-  createEntity,
   getBlockAfter,
   getBlockBefore,
   getBlockForKey,
-  getEntity,
-  getLastCreatedEntityKey,
   hasText,
   makeContentState,
-  mergeEntityData,
-  replaceEntityData,
 } from '../ContentState';
 import {createFromArray} from '../BlockMapBuilder';
 import {ContentBlock, makeContentBlock} from '../ContentBlock';
+import {addEntity, createEntity, EntityMap, getEntity} from '../EntityMap';
 
 jest.mock('../SelectionState');
 
@@ -31,8 +27,8 @@ const MULTI_BLOCK = [
 ];
 const ZERO_WIDTH_CHAR_BLOCK = [{text: unescape('%u200B%u200B'), key: 'a'}];
 
-const createLink = () => {
-  return createEntity('LINK', 'MUTABLE', {uri: 'zombo.com'});
+const createLink = (entityMap: EntityMap) => {
+  return createEntity(entityMap, 'LINK', 'MUTABLE', {uri: 'zombo.com'});
 };
 
 const getSample = (textBlocks: (Partial<ContentBlock> & {key: string})[]) => {
@@ -80,45 +76,28 @@ test('must not include zero width chars for has text', () => {
 });
 
 test('must create entities instances', () => {
-  createLink();
-  expect(typeof getLastCreatedEntityKey()).toMatchSnapshot();
-});
-
-test('must retrieve an entities instance given a key', () => {
-  const retrieved = getEntity(getLastCreatedEntityKey());
-  expect(retrieved).toMatchSnapshot();
+  const {entityMap, entityKey} = createLink(new Map());
+  expect(getEntity(entityMap, entityKey)).toMatchSnapshot();
 });
 
 test('must throw when retrieving entities for an invalid key', () => {
-  createLink();
-  expect(() => getEntity('asdfzxcvqweriuop')).toThrow();
-});
-
-test('must merge entities data', () => {
-  createLink();
-  const key = getLastCreatedEntityKey();
-
-  // Merge new property.
-  mergeEntityData(key, {foo: 'bar'});
-  const updatedEntity = getEntity(key);
-
-  // Replace existing property.
-  mergeEntityData(key, {uri: 'homestarrunner.com'});
-  const entityWithNewURI = getEntity(key);
-
-  expect(updatedEntity.data).toMatchSnapshot();
-  expect(entityWithNewURI.data).toMatchSnapshot();
+  const {entityMap} = createLink(new Map());
+  expect(() => getEntity(entityMap, 'asdfzxcvqweriuop')).toThrow();
 });
 
 test('must replace entities data', () => {
-  createLink();
-  const key = getLastCreatedEntityKey();
+  let {entityMap, entityKey} = createLink(new Map());
 
-  replaceEntityData(key, {
-    uri: 'something.com',
-    newProp: 'baz',
+  entityMap = addEntity(entityMap, entityKey, {
+    type: 'LINK',
+    mutability: 'MUTABLE',
+    data: {
+      uri: 'something.com',
+      newProp: 'baz',
+    }
   });
-  const entityWithReplacedData = getEntity(key);
+
+  const entityWithReplacedData = getEntity(entityMap, entityKey);
 
   expect(entityWithReplacedData.data).toMatchSnapshot();
 });
