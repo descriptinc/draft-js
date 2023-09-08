@@ -1,162 +1,162 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must apply entity key 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -166,162 +166,162 @@ Object {
 `;
 
 exports[`must apply entity key accross multiple blocks 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": "x",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "x",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -331,30 +331,30 @@ Object {
 `;
 
 exports[`must apply multiple entities across multiple blocks 1`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": "x",
       "style": Set {},
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {},
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {},
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {},
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "a",
   "text": "Alpha",
@@ -363,40 +363,40 @@ Object {
 `;
 
 exports[`must apply multiple entities across multiple blocks 2`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": "x",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "y",
       "style": Set {
         "BOLD",
       },
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "b",
   "text": "Bravo",
@@ -405,26 +405,26 @@ Object {
 `;
 
 exports[`must apply multiple entities across multiple blocks 3`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": "y",
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "c",
   "text": "Test",
@@ -433,30 +433,30 @@ Object {
 `;
 
 exports[`must apply multiple entities to different blocks 1`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": null,
       "style": Set {},
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "a",
   "text": "Alpha",
@@ -465,40 +465,40 @@ Object {
 `;
 
 exports[`must apply multiple entities to different blocks 2`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": "2",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "y",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "y",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "2",
       "style": Set {
         "BOLD",
       },
     },
-    Object {
+    {
       "entity": "2",
       "style": Set {
         "BOLD",
       },
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "b",
   "text": "Bravo",
@@ -507,30 +507,30 @@ Object {
 `;
 
 exports[`must apply multiple entities to same block 1`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": null,
       "style": Set {},
     },
-    Object {
+    {
       "entity": "x",
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
-    Object {
+    {
       "entity": "y",
       "style": Set {},
     },
-    Object {
+    {
       "entity": null,
       "style": Set {},
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "a",
   "text": "Alpha",
@@ -539,162 +539,162 @@ Object {
 `;
 
 exports[`must apply null entity 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -704,162 +704,162 @@ Object {
 `;
 
 exports[`must apply null entity key accross multiple blocks 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",

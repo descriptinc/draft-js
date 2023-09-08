@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`begins at text node zero, ends at end of block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -15,9 +15,9 @@ Object {
 `;
 
 exports[`begins within text node, ends at end of block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 5,
     "focusKey": "a",
@@ -29,9 +29,9 @@ Object {
 `;
 
 exports[`contains an entire leaf 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -43,9 +43,9 @@ Object {
 `;
 
 exports[`does the crazy stuff described above 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -57,9 +57,9 @@ Object {
 `;
 
 exports[`extends from head of one node to end of another 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "b",
@@ -71,9 +71,9 @@ Object {
 `;
 
 exports[`from start of one block to end of other block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -85,9 +85,9 @@ Object {
 `;
 
 exports[`from start of one block to start of another 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -99,9 +99,9 @@ Object {
 `;
 
 exports[`goes from end of one to end of other block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 19,
     "focusKey": "c",
@@ -113,9 +113,9 @@ Object {
 `;
 
 exports[`goes from start of one block to end of other block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -127,9 +127,9 @@ Object {
 `;
 
 exports[`goes from start of one block to start of other 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -141,9 +141,9 @@ Object {
 `;
 
 exports[`goes from within one block to within another block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 19,
     "focusKey": "c",
@@ -155,9 +155,9 @@ Object {
 `;
 
 exports[`is a reversed selection across multiple text nodes 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 4,
     "focusKey": "a",
@@ -169,9 +169,9 @@ Object {
 `;
 
 exports[`is a reversed text-to-leaf selection 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -183,9 +183,9 @@ Object {
 `;
 
 exports[`is a reversed text-to-leaf-child selection 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -197,9 +197,9 @@ Object {
 `;
 
 exports[`is collapsed at end at single block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 19,
     "focusKey": "a",
@@ -211,9 +211,9 @@ Object {
 `;
 
 exports[`is collapsed at end of single span 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 10,
     "focusKey": "a",
@@ -225,9 +225,9 @@ Object {
 `;
 
 exports[`is collapsed at end with full selection 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 12,
     "focusKey": "c",
@@ -239,9 +239,9 @@ Object {
 `;
 
 exports[`is collapsed at start at single block 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -253,9 +253,9 @@ Object {
 `;
 
 exports[`is collapsed at start of single span 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -267,9 +267,9 @@ Object {
 `;
 
 exports[`is collapsed at start with full selection 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -281,9 +281,9 @@ Object {
 `;
 
 exports[`is collapsed at the end of a child 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 19,
     "focusKey": "a",
@@ -295,9 +295,9 @@ Object {
 `;
 
 exports[`is collapsed at the start of the contents 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -309,9 +309,9 @@ Object {
 `;
 
 exports[`is completely selected 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -323,9 +323,9 @@ Object {
 `;
 
 exports[`is contains multiple children 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -337,9 +337,9 @@ Object {
 `;
 
 exports[`is entirely selected 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -351,9 +351,9 @@ Object {
 `;
 
 exports[`is reversed from above 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 12,
     "focusKey": "a",
@@ -365,9 +365,9 @@ Object {
 `;
 
 exports[`is reversed from the first case 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 19,
     "focusKey": "a",
@@ -379,9 +379,9 @@ Object {
 `;
 
 exports[`is reversed on entire leaf 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 7,
     "focusKey": "c",
@@ -393,9 +393,9 @@ Object {
 `;
 
 exports[`is the same as above but reversed 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 7,
     "focusKey": "a",
@@ -407,9 +407,9 @@ Object {
 `;
 
 exports[`must find offsets for non-collapsed selection 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 1,
     "focusKey": "a",
@@ -421,9 +421,9 @@ Object {
 `;
 
 exports[`must find offsets for reversed selection 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 6,
     "focusKey": "a",
@@ -435,9 +435,9 @@ Object {
 `;
 
 exports[`must find offsets for selection on entire text node 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -449,9 +449,9 @@ Object {
 `;
 
 exports[`must find offsets when collapsed at end 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 10,
     "focusKey": "a",
@@ -463,9 +463,9 @@ Object {
 `;
 
 exports[`must find offsets when collapsed at start 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -477,9 +477,9 @@ Object {
 `;
 
 exports[`occupies a single child of the contents 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -491,9 +491,9 @@ Object {
 `;
 
 exports[`reversed leaf to leaf 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "c",
     "anchorOffset": 7,
     "focusKey": "a",
@@ -505,9 +505,9 @@ Object {
 `;
 
 exports[`starts at head of one node and ends at head of another 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -519,9 +519,9 @@ Object {
 `;
 
 exports[`starts at head of text node, ends at end of leaf child 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -533,9 +533,9 @@ Object {
 `;
 
 exports[`starts at head of text node, ends at end of leaf span 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -547,9 +547,9 @@ Object {
 `;
 
 exports[`starts at head of text node, ends at head of leaf child 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -561,9 +561,9 @@ Object {
 `;
 
 exports[`starts at head of text node, ends at head of leaf span 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "c",
@@ -575,9 +575,9 @@ Object {
 `;
 
 exports[`starts within one text node and ends within another block 1`] = `
-Object {
+{
   "needsRecovery": false,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 4,
     "focusKey": "c",
@@ -589,9 +589,9 @@ Object {
 `;
 
 exports[`starts within text node, ends at end of leaf child 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 4,
     "focusKey": "c",
@@ -603,9 +603,9 @@ Object {
 `;
 
 exports[`starts within text node, ends at end of leaf span 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 4,
     "focusKey": "c",
@@ -617,9 +617,9 @@ Object {
 `;
 
 exports[`starts within text node, ends at start of leaf child 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 4,
     "focusKey": "c",
@@ -631,9 +631,9 @@ Object {
 `;
 
 exports[`starts within text node, ends at start of leaf span 1`] = `
-Object {
+{
   "needsRecovery": true,
-  "selectionState": Object {
+  "selectionState": {
     "anchorKey": "a",
     "anchorOffset": 4,
     "focusKey": "c",

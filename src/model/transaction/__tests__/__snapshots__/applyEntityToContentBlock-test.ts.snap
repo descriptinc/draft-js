@@ -1,30 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must apply at the end 1`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "a",
   "text": "Hello",
@@ -33,30 +33,30 @@ Object {
 `;
 
 exports[`must apply from the start 1`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "a",
   "text": "Hello",
@@ -65,24 +65,24 @@ Object {
 `;
 
 exports[`must apply to mutable character list 1`] = `
-Array [
-  Object {
+[
+  {
     "entity": null,
     "style": Set {},
   },
-  Object {
+  {
     "entity": "x",
     "style": Set {},
   },
-  Object {
+  {
     "entity": "x",
     "style": Set {},
   },
-  Object {
+  {
     "entity": "x",
     "style": Set {},
   },
-  Object {
+  {
     "entity": null,
     "style": Set {},
   },
@@ -90,24 +90,24 @@ Array [
 `;
 
 exports[`must apply to mutable character list 2`] = `
-Array [
-  Object {
+[
+  {
     "entity": null,
     "style": Set {},
   },
-  Object {
+  {
     "entity": "x",
     "style": Set {},
   },
-  Object {
+  {
     "entity": "y",
     "style": Set {},
   },
-  Object {
+  {
     "entity": "x",
     "style": Set {},
   },
-  Object {
+  {
     "entity": null,
     "style": Set {},
   },
@@ -115,30 +115,30 @@ Array [
 `;
 
 exports[`must apply to the entire text 1`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "a",
   "text": "Hello",
@@ -147,30 +147,30 @@ Object {
 `;
 
 exports[`must apply within 1`] = `
-Object {
-  "characterList": Array [
-    Object {
+{
+  "characterList": [
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": "x",
-      "style": Array [],
+      "style": [],
     },
-    Object {
+    {
       "entity": null,
-      "style": Array [],
+      "style": [],
     },
   ],
-  "data": Object {},
+  "data": {},
   "depth": 0,
   "key": "a",
   "text": "Hello",
