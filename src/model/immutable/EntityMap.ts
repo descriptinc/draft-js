@@ -30,7 +30,7 @@ export function createEntity(
   newMap.set(entityKey, makeDraftEntityInstance({type, mutability, data}));
   return {
     entityKey,
-    entityMap,
+    entityMap: newMap,
   };
 }
 

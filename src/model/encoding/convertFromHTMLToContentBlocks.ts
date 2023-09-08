@@ -606,7 +606,7 @@ class ContentBlocksBuilder {
     const createResult = createEntity(
       this.entityMap,
       'IMAGE',
-      'MUTABLE',
+      'IMMUTABLE',
       entityConfig,
     );
     this.entityMap = createResult.entityMap;
