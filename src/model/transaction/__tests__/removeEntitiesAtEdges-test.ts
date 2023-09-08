@@ -9,7 +9,6 @@
  */
 import getSampleStateForTesting from '../getSampleStateForTesting';
 import {DraftEntityMutability} from '../../entity/DraftEntityMutability';
-import DraftEntity from '../../entity/DraftEntity';
 import {DraftEntityInstance} from '../../entity/DraftEntityInstance';
 import {SelectionState} from '../../immutable/SelectionState';
 import removeEntitiesAtEdges from '../removeEntitiesAtEdges';
@@ -17,6 +16,7 @@ import {blockMapToJsonObject} from '../../../util/blockMapToJson';
 import {getBlockForKey} from '../../immutable/ContentState';
 import applyEntityToContentBlock from '../applyEntityToContentBlock';
 import {mergeMapUpdates} from '../../immutable/BlockMap';
+import * as EntityMap from '../../immutable/EntityMap';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
@@ -28,18 +28,23 @@ const selectionOnEntity = {
   focusOffset: 2,
 };
 
-const origGet = DraftEntity.__get;
+const origGet = EntityMap.getEntity;
 afterEach(() => {
-  DraftEntity.__get = origGet;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  EntityMap.getEntity = origGet;
 });
 const setEntityMutability = (
   mutability: DraftEntityMutability,
   _ = contentState,
 ) => {
-  DraftEntity.__get = () =>
-    ({
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  EntityMap.getEntity = () => {
+    return {
       mutability,
-    } as DraftEntityInstance);
+    } as DraftEntityInstance;
+  };
 };
 
 const assertRemoveEntitiesAtEdges = (

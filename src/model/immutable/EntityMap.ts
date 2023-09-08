@@ -34,11 +34,12 @@ export function createEntity(
   };
 }
 
-export function getEntity(
+// eslint-disable-next-line prefer-const
+export let getEntity = function getEntity(
   entityMap: EntityMap,
   key: string,
 ): DraftEntityInstance {
   const entity = entityMap.get(key);
   invariant(!!entity, 'Unknown DraftEntity key: %s.', key);
   return entity!;
-}
+};

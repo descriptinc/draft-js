@@ -126,9 +126,7 @@ test('img with https protocol should have camera emoji content', () => {
   const entityMap = blocks?.entityMap;
   expect(entityMap).not.toBe(null);
   if (entityMap != null) {
-    expect(
-      entityMap.__get(entityMap.__getLastCreatedEntityKey()).mutability,
-    ).toBe('IMMUTABLE');
+    expect(first(entityMap.values())?.mutability).toBe('IMMUTABLE');
   }
 });
 
