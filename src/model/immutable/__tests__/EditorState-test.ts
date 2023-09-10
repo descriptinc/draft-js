@@ -31,10 +31,10 @@ class Decorator implements DraftDecoratorType {
   getDecorations() {
     return [];
   }
-  getComponentForKey(_: string) {
+  getComponentForKey() {
     return () => null;
   }
-  getPropsForKey(_: string) {
+  getPropsForKey() {
     return null;
   }
 }
@@ -259,10 +259,10 @@ test('must set a new decorator', () => {
     getDecorations() {
       return [];
     }
-    getComponentForKey(_: string) {
+    getComponentForKey() {
       return () => null;
     }
-    getPropsForKey(_: string) {
+    getPropsForKey() {
       return null;
     }
   }

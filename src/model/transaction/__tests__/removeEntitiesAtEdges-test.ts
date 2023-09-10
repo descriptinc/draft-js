@@ -34,10 +34,7 @@ afterEach(() => {
   // @ts-ignore
   EntityMap.getEntity = origGet;
 });
-const setEntityMutability = (
-  mutability: DraftEntityMutability,
-  _ = contentState,
-) => {
+const setEntityMutability = (mutability: DraftEntityMutability) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   EntityMap.getEntity = () => {
@@ -52,7 +49,7 @@ const assertRemoveEntitiesAtEdges = (
   mutability: DraftEntityMutability = 'IMMUTABLE',
   content = contentState,
 ) => {
-  setEntityMutability(mutability, content);
+  setEntityMutability(mutability);
   expect(
     blockMapToJsonObject(removeEntitiesAtEdges(content, selection).blockMap),
   ).toMatchSnapshot();

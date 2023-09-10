@@ -32,6 +32,7 @@ const {editorState, contentState, selectionState} = getSampleStateForTesting();
 
 const initialBlock = first(contentState.blockMap.values())!;
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const getInvariantViolation = (msg: string): Error => {
   try {

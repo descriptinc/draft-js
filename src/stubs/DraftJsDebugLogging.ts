@@ -7,7 +7,9 @@
  */
 
 const DraftJsDebugLogging = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logBlockedSelectionEvent: (..._: any[]) => null,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logSelectionStateFailure: (..._: any[]) => null,
 };
 export default DraftJsDebugLogging;

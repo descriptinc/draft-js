@@ -204,17 +204,23 @@ export default function editOnPaste(
 function insertFragment(
   editorState: EditorState,
   fragment: BlockMap,
-  _?: EntityMap | null,
+  entityMap?: EntityMap | null,
 ): EditorState {
-  const newContent = DraftModifier.replaceWithFragment(
+  let newContent = DraftModifier.replaceWithFragment(
     editorState.currentContent,
     editorState.selection,
     fragment,
   );
-  // TODO: merge the entity map once we stop using DraftEntity
-  // like this:
-  // const mergedEntityMap = newContent.getEntityMap().merge(entityMap);
-
+  const mergedEntityMap = new Map(newContent.entityMap)
+  if (entityMap) {
+    entityMap.forEach((entity, key) => {
+      mergedEntityMap.set(key, entity)
+    })
+  }
+  newContent = {
+    ...newContent,
+    entityMap: mergedEntityMap,
+  }
   return pushContent(editorState, newContent, 'insert-fragment');
 }
 

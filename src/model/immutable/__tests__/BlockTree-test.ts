@@ -38,10 +38,10 @@ class Decorator implements DraftDecoratorType {
   getDecorations() {
     return [];
   }
-  getComponentForKey(_: string) {
+  getComponentForKey() {
     return () => null;
   }
-  getPropsForKey(_: string) {
+  getPropsForKey() {
     return null;
   }
 }
