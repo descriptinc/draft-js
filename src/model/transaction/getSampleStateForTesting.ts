@@ -21,7 +21,10 @@ import {createFromArray} from '../immutable/BlockMapBuilder';
 import {BOLD, ITALIC} from '../immutable/SampleDraftInlineStyle';
 import {createEntity} from '../immutable/EntityMap';
 
-const ENTITY_KEY = '2';
+let BASE_ENTITY_MAP = createEntity(new Map(), 'TOKEN', 'IMMUTABLE').entityMap;
+const entityRes = createEntity(BASE_ENTITY_MAP, 'IMAGE', 'IMMUTABLE');
+BASE_ENTITY_MAP = entityRes.entityMap;
+const ENTITY_KEY = entityRes.entityKey;
 
 const BLOCKS = [
   makeContentBlock({
@@ -89,7 +92,7 @@ const contentState = makeContentState({
   blockMap,
   selectionBefore: selectionState,
   selectionAfter: selectionState,
-  entityMap: createEntity(new Map(), 'IMAGE', 'IMMUTABLE').entityMap,
+  entityMap: BASE_ENTITY_MAP,
 });
 
 let editorState = createWithContent(contentState);

@@ -8,10 +8,10 @@
  * @format
  */
 import getSampleStateForTesting from '../../transaction/getSampleStateForTesting';
-import DraftEntity from '../DraftEntity';
 import getEntityKeyForSelection from '../getEntityKeyForSelection';
 import {getBlockForKey} from '../../immutable/ContentState';
 import {DraftEntityMutability} from '../DraftEntityMutability';
+import * as EntityMap from '../../immutable/EntityMap';
 
 const {contentState, selectionState} = getSampleStateForTesting();
 
@@ -40,17 +40,19 @@ const NON_COLLAPSED_SELECTION = {
   focusOffset: 2,
 };
 
-const origGet = DraftEntity.__get;
+const origGet = EntityMap.getEntity;
 afterEach(() => {
-  DraftEntity.__get = origGet;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  EntityMap.getEntity = origGet;
 });
 
 const setEntityMutability = (mutability: DraftEntityMutability) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  DraftEntity.__get = () => ({
+  EntityMap.getEntity = () => ({
     mutability,
-  });
+  })
 };
 
 test('must return null at start of block with collapsed selection', () => {

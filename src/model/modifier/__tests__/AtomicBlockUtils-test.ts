@@ -11,7 +11,6 @@ import mockUUID from '../../keys/mockUUID';
 import getSampleStateForTesting from '../../transaction/getSampleStateForTesting';
 import {first, rest, takeNth} from '../../descript/Iterables';
 import {
-  createEntity,
   getFirstBlock,
   getLastBlock,
 } from '../../immutable/ContentState';
@@ -24,6 +23,7 @@ import {
 } from '../../immutable/SelectionState';
 import {ContentBlock} from '../../immutable/ContentBlock';
 import {DraftInsertionType} from '../../constants/DraftInsertionType';
+import {createEntity} from '../../immutable/EntityMap';
 
 jest.mock('../../keys/generateRandomKey');
 jest.mock('../../../util/uuid', () => mockUUID);
@@ -31,22 +31,15 @@ jest.mock('../../../util/uuid', () => mockUUID);
 const {editorState, contentState, selectionState} = getSampleStateForTesting();
 
 const initialBlock = first(contentState.blockMap.values())!;
-const ENTITY_KEY = createEntity('TOKEN', 'MUTABLE');
-const CHARACTER = ' ';
 
-const getInvariantViolation = (msg: string) => {
+// @ts-ignore
+const getInvariantViolation = (msg: string): Error => {
   try {
     /* eslint-disable-next-line */
     invariant(false, msg);
   } catch (e) {
-    return e;
+    return e as Error;
   }
-};
-
-const toggleExperimentalTreeDataSupport = (enabled: boolean) => {
-  jest.doMock('../../../stubs/gkx', () => (name: string) => {
-    return name === 'draft_tree_data_support' ? enabled : false;
-  });
 };
 
 const assertAtomic = (state: EditorState) => {
@@ -65,12 +58,16 @@ const assertAtomic = (state: EditorState) => {
 
 const assertInsertAtomicBlock = (
   state = editorState,
-  entity: string = ENTITY_KEY,
-  character = CHARACTER,
-  experimentalTreeDataSupport = false,
 ) => {
-  toggleExperimentalTreeDataSupport(experimentalTreeDataSupport);
-  const newState = AtomicBlockUtils.insertAtomicBlock(state, entity, character);
+  const {entityMap, entityKey} = createEntity(state.currentContent.entityMap, 'TOKEN', 'MUTABLE');
+  state = {
+    ...state,
+    currentContent: {
+      ...state.currentContent,
+      entityMap: entityMap,
+    }
+  }
+  const newState = AtomicBlockUtils.insertAtomicBlock(state, entityKey, ' ');
   assertAtomic(newState);
   return newState;
 };

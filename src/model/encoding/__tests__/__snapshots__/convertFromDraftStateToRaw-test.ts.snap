@@ -1,29 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must be able to convert from draft state with ContentBlock to raw 1`] = `
-Object {
-  "blocks": Array [
-    Object {
-      "data": Object {},
+{
+  "blocks": [
+    {
+      "data": {},
       "depth": 0,
-      "entityRanges": Array [],
-      "inlineStyleRanges": Array [],
+      "entityRanges": [],
+      "inlineStyleRanges": [],
       "key": "a",
       "text": "Alpha",
       "type": "unstyled",
     },
-    Object {
-      "data": Object {},
+    {
+      "data": {},
       "depth": 0,
-      "entityRanges": Array [
-        Object {
+      "entityRanges": [
+        {
           "key": 0,
           "length": 5,
           "offset": 0,
         },
       ],
-      "inlineStyleRanges": Array [
-        Object {
+      "inlineStyleRanges": [
+        {
           "length": 5,
           "offset": 0,
           "style": "BOLD",
@@ -33,39 +33,39 @@ Object {
       "text": "Bravo",
       "type": "unordered-list-item",
     },
-    Object {
-      "data": Object {},
+    {
+      "data": {},
       "depth": 0,
-      "entityRanges": Array [],
-      "inlineStyleRanges": Array [],
+      "entityRanges": [],
+      "inlineStyleRanges": [],
       "key": "c",
       "text": "Test",
       "type": "code-block",
     },
-    Object {
-      "data": Object {},
+    {
+      "data": {},
       "depth": 0,
-      "entityRanges": Array [],
-      "inlineStyleRanges": Array [],
+      "entityRanges": [],
+      "inlineStyleRanges": [],
       "key": "d",
       "text": "",
       "type": "code-block",
     },
-    Object {
-      "data": Object {},
+    {
+      "data": {},
       "depth": 0,
-      "entityRanges": Array [],
-      "inlineStyleRanges": Array [],
+      "entityRanges": [],
+      "inlineStyleRanges": [],
       "key": "e",
       "text": "",
       "type": "code-block",
     },
-    Object {
-      "data": Object {},
+    {
+      "data": {},
       "depth": 0,
-      "entityRanges": Array [],
-      "inlineStyleRanges": Array [
-        Object {
+      "entityRanges": [],
+      "inlineStyleRanges": [
+        {
           "length": 7,
           "offset": 0,
           "style": "ITALIC",
@@ -76,9 +76,9 @@ Object {
       "type": "blockquote",
     },
   ],
-  "entityMap": Object {
-    "0": Object {
-      "data": Object {},
+  "entityMap": {
+    "0": {
+      "data": {},
       "mutability": "IMMUTABLE",
       "type": "IMAGE",
     },
