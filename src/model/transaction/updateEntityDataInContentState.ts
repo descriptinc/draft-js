@@ -9,7 +9,7 @@
  */
 
 import {ContentState} from '../immutable/ContentState';
-import DraftEntity from '../entity/DraftEntity';
+import {getEntity} from '../immutable/EntityMap';
 
 export default function updateEntityDataInContentState(
   contentState: ContentState,
@@ -17,14 +17,16 @@ export default function updateEntityDataInContentState(
   data: {[K in string]: unknown},
   merge: boolean,
 ): ContentState {
-  const instance = DraftEntity.__get(key);
+  const instance = getEntity(contentState.entityMap, key);
   const entityData = instance.data;
   const newData = merge ? {...entityData, ...data} : data;
-  DraftEntity.__replaceData(key, newData);
+  const newInstance = {...instance, data: newData};
 
-  // FIXME [mvp]: global entity map
+  const newEntityMap = new Map(contentState.entityMap);
+  newEntityMap.set(key, newInstance);
 
-  // const newEntityMap =  contentState.getEntityMap().set(key, newInstance);
-  // return contentState.set('entityMap', newEntityMap);
-  return contentState;
+  return {
+    ...contentState,
+    entityMap: newEntityMap,
+  };
 }

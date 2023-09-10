@@ -7,7 +7,7 @@
  * @emails oncall+draft_js
  */
 
-import {EntityMap} from '../immutable/EntityMap';
+import {EntityMap, getEntity} from '../immutable/EntityMap';
 import {ContentState} from '../immutable/ContentState';
 import {
   getStartKey,
@@ -16,7 +16,6 @@ import {
   SelectionState,
 } from '../immutable/SelectionState';
 import {getEntityAt} from '../immutable/ContentBlock';
-import DraftEntity from './DraftEntity';
 import {notEmptyKey} from '../../component/utils/draftKeyUtils';
 
 /**
@@ -39,7 +38,7 @@ export default function getEntityKeyForSelection(
       if (entityKey !== getEntityAt(contentState.blockMap.get(key)!, offset)) {
         return null;
       }
-      return filterKey(DraftEntity, entityKey);
+      return filterKey(contentState.entityMap, entityKey);
     }
     return null;
   }
@@ -53,7 +52,7 @@ export default function getEntityKeyForSelection(
       ? null
       : getEntityAt(startBlock, startOffset);
 
-  return filterKey(DraftEntity, entityKey);
+  return filterKey(contentState.entityMap, entityKey);
 }
 
 /**
@@ -65,7 +64,7 @@ function filterKey(
   entityKey: string | null,
 ): string | null {
   if (notEmptyKey(entityKey)) {
-    const entity = entityMap.__get(entityKey);
+    const entity = getEntity(entityMap, entityKey);
     return entity.mutability === 'MUTABLE' ? entityKey : null;
   }
   return null;

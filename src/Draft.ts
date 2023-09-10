@@ -11,7 +11,6 @@ import Editor from './component/base/DraftEditor.react';
 export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
 import CompositeDraftDecorator from './model/decorators/CompositeDraftDecorator';
-import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';
 export {AtomicBlockUtils};
 import KeyBindingUtil from './component/utils/KeyBindingUtil';
@@ -40,7 +39,6 @@ export {DraftHandleValue} from './model/constants/DraftHandleValue';
 
 export const EditorBlock = DraftEditorBlock;
 export const CompositeDecorator = CompositeDraftDecorator;
-export const Entity = DraftEntity;
 
 export * from './model/immutable/BlockMapBuilder';
 export * from './model/immutable/EditorState';
@@ -53,4 +51,5 @@ export * from './model/immutable/DraftInlineStyle';
 export * from './model/immutable/findRangesImmutable';
 export * from './model/immutable/BlockNode';
 export * from './model/immutable/BlockTree';
+export * from './model/immutable/EntityMap';
 export * from './model/entity/DraftEntityInstance';

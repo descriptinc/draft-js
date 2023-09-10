@@ -23,6 +23,7 @@ export function last<T>(iter: Iterable<T>): T | undefined {
 
 export function size<T>(iter: Iterable<T>): number {
   let count = 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   for (const _ of iter) {
     count += 1;
   }

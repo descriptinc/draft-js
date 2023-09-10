@@ -15,7 +15,6 @@ import {
   setEditorState,
 } from '../../../../model/immutable/EditorState';
 import {
-  ContentState,
   createFromBlockArray,
 } from '../../../../model/immutable/ContentState';
 import {
@@ -156,7 +155,6 @@ const HASHTAG_REGEX = /#[a-z]+/g;
 function hashtagStrategy(
   contentBlock: ContentBlock,
   callback,
-  _contentState: ContentState,
 ) {
   findWithRegex(HASHTAG_REGEX, contentBlock, callback);
 }
@@ -202,13 +200,13 @@ function testDecoratorFingerprint(
   const ev = getInputEvent(charToInsert);
   editOnBeforeInput(editor, ev);
 
-  expect(ev.preventDefault.mock.calls.length).toBe(shouldPrevent ? 1 : 0);
+  expect((ev.preventDefault as ReturnType<typeof jest.fn>).mock.calls.length).toBe(shouldPrevent ? 1 : 0);
 }
 
 test('decorator fingerprint logic bails out of native insertion', () => {
   const oldGetSelection = global.getSelection;
   try {
-    global.getSelection = () => ({});
+    global.getSelection = () => ({} as Selection);
 
     // Make sure we prevent native insertion in the right cases
     testDecoratorFingerprint('hi #', 4, 'f', true);

@@ -24,7 +24,7 @@ exports[`must allow update when forcing selection 1`] = `1`;
 
 exports[`must allow update when forcing selection 2`] = `2`;
 
-exports[`must not scroll the window if unnecessary 1`] = `Array []`;
+exports[`must not scroll the window if unnecessary 1`] = `[]`;
 
 exports[`must reject update if conditions are not met 1`] = `1`;
 
@@ -65,8 +65,8 @@ exports[`must render multiple leaf nodes 9`] = `true`;
 exports[`must render multiple leaf nodes 10`] = `true`;
 
 exports[`must scroll the window if needed 1`] = `
-Array [
-  Array [
+[
+  [
     0,
     26,
   ],

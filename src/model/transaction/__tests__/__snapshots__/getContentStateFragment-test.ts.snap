@@ -1,122 +1,122 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must be able to return all selected contentBlocks 1`] = `
-Object {
-  "key0": Object {
-    "characterList": Array [
-      Object {
+{
+  "key0": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "key1": Object {
-    "characterList": Array [
-      Object {
+  "key1": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "Beta",
     "type": "unstyled",
   },
-  "key2": Object {
-    "characterList": Array [
-      Object {
+  "key2": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key2",
     "text": "Charlie",
     "type": "unstyled",
   },
-  "key3": Object {
-    "characterList": Array [
-      Object {
+  "key3": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key3",
     "text": "Delta",
@@ -126,31 +126,31 @@ Object {
 `;
 
 exports[`must be able to return first ContentBlock selected 1`] = `
-Object {
-  "key0": Object {
-    "characterList": Array [
-      Object {
+{
+  "key0": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "Alpha",
@@ -160,31 +160,31 @@ Object {
 `;
 
 exports[`must be able to return last ContentBlock selected 1`] = `
-Object {
-  "key0": Object {
-    "characterList": Array [
-      Object {
+{
+  "key0": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "Delta",

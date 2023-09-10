@@ -14,6 +14,7 @@ import NonASCIIStringSnapshotSerializer from '../../../NonASCIIStringSnapshotSer
 import convertFromHTMLToContentBlocks from '../convertFromHTMLToContentBlocks';
 import {blockToJson} from '../../../util/blockMapToJson';
 import GKX from '../../../stubs/gkx';
+import {first} from '../../descript/Iterables';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -113,9 +114,7 @@ test('img with http protocol should have camera emoji content', () => {
   const entityMap = blocks?.entityMap;
   expect(entityMap).not.toBe(null);
   if (entityMap != null) {
-    expect(
-      entityMap.__get(entityMap.__getLastCreatedEntityKey()).mutability,
-    ).toBe('IMMUTABLE');
+    expect(first(entityMap.values())?.mutability).toBe('IMMUTABLE');
   }
 });
 
@@ -127,9 +126,7 @@ test('img with https protocol should have camera emoji content', () => {
   const entityMap = blocks?.entityMap;
   expect(entityMap).not.toBe(null);
   if (entityMap != null) {
-    expect(
-      entityMap.__get(entityMap.__getLastCreatedEntityKey()).mutability,
-    ).toBe('IMMUTABLE');
+    expect(first(entityMap.values())?.mutability).toBe('IMMUTABLE');
   }
 });
 

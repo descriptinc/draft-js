@@ -14,14 +14,13 @@ import {
   getStartOffset,
   SelectionState,
 } from '../immutable/SelectionState';
-import DraftEntity from '../entity/DraftEntity';
 import {ContentBlock} from '../immutable/ContentBlock';
 import {mergeMapUpdates} from '../immutable/BlockMap';
 import {applyEntity, CharacterMetadata} from '../immutable/CharacterMetadata';
 import {findRangesImmutable} from '../immutable/findRangesImmutable';
 import invariant from '../../fbjs/invariant';
 import {DraftRange} from '../modifier/DraftRange';
-import {EntityMap} from '../immutable/EntityMap';
+import {EntityMap, getEntity} from '../immutable/EntityMap';
 import {BlockNode} from '../immutable/BlockNode';
 
 export default function removeEntitiesAtEdges(
@@ -29,7 +28,7 @@ export default function removeEntitiesAtEdges(
   selectionState: SelectionState,
 ): ContentState {
   const blockMap = contentState.blockMap;
-  const entityMap = DraftEntity;
+  const entityMap = contentState.entityMap;
 
   const updatedBlocks: Record<string, ContentBlock> = {};
 
@@ -122,7 +121,7 @@ function removeForBlock(
   const entityAfterCursor = charAfter ? charAfter.entity : undefined;
 
   if (entityAfterCursor && entityAfterCursor === entityBeforeCursor) {
-    const entity = entityMap.__get(entityAfterCursor);
+    const entity = getEntity(entityMap, entityAfterCursor);
     if (entity.mutability !== 'MUTABLE') {
       let {start, end} = getRemovalRange(chars, entityAfterCursor, offset);
       let current;

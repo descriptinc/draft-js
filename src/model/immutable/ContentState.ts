@@ -14,32 +14,32 @@ import {
   makeNullSelection,
 } from './SelectionState';
 import {first, join, makeMemoizedToArray, map} from '../descript/Iterables';
-import {DraftEntityType} from '../entity/DraftEntityType';
-import {DraftEntityMutability} from '../entity/DraftEntityMutability';
 import {createFromArray} from './BlockMapBuilder';
 import {makeContentBlock} from './ContentBlock';
-import DraftEntity, {DraftEntityMapObject} from '../entity/DraftEntity';
-import {DraftEntityInstance} from '../entity/DraftEntityInstance';
 import sanitizeDraftText from '../encoding/sanitizeDraftText';
 import {BlockNode} from './BlockNode';
 import memoizeOne from 'memoize-one';
 import {genKey} from '../../Draft';
+import {EntityMap} from './EntityMap';
 
 export type ContentState = Readonly<{
   blockMap: BlockMap;
   selectionBefore: SelectionState;
   selectionAfter: SelectionState;
+  entityMap: EntityMap;
 }>;
 
 export function makeContentState({
   blockMap,
   selectionAfter = makeEmptySelection(first(blockMap.keys())!),
   selectionBefore = makeEmptySelection(first(blockMap.keys())!),
+  entityMap = new Map(),
 }: Partial<ContentState> & Pick<ContentState, 'blockMap'>): ContentState {
   return {
     blockMap,
     selectionBefore,
     selectionAfter,
+    entityMap,
   };
 }
 
@@ -68,11 +68,6 @@ function getIndexForBlockKey(blockMap: BlockMap, blockKey: string): number {
     throw new Error('No index for block key');
   }
   return index;
-}
-
-export function getLastCreatedEntityKey(): string {
-  // TODO: update this when we fully remove DraftEntity
-  return DraftEntity.__getLastCreatedEntityKey();
 }
 
 export function getBlockForKey(
@@ -124,41 +119,6 @@ export function getPlainText(content: ContentState, separator = '\n'): string {
     map(content.blockMap.values(), b => b.text),
     separator,
   );
-}
-
-export function createEntity(
-  type: DraftEntityType,
-  mutability: DraftEntityMutability,
-  data?: Record<string, unknown> | null,
-): string {
-  // TODO: update this when we fully remove DraftEntity
-  return DraftEntity.__create(type, mutability, data);
-}
-
-export function mergeEntityData(
-  key: string,
-  toMerge: Record<string, any>,
-): void {
-  // TODO: update this when we fully remove DraftEntity
-  DraftEntity.__mergeData(key, toMerge);
-}
-
-export function replaceEntityData(
-  key: string,
-  newData: Record<string, any>,
-): void {
-  // TODO: update this when we fully remove DraftEntity
-  DraftEntity.__replaceData(key, newData);
-}
-
-export function addEntity(instance: DraftEntityInstance): void {
-  // TODO: update this when we fully remove DraftEntity
-  DraftEntity.__add(instance);
-}
-
-export function getEntity(key: string): DraftEntityInstance {
-  // TODO: update this when we fully remove DraftEntity
-  return DraftEntity.__get(key);
 }
 
 export function createFromBlockArray(
@@ -226,8 +186,4 @@ export function getBlockAfter(
     throw new Error('No block for key');
   }
   return block;
-}
-
-export function getEntityMap(_: ContentState): DraftEntityMapObject {
-  return DraftEntity;
 }

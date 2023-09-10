@@ -30,7 +30,7 @@ const isFirefox = UserAgent.isBrowser('Firefox');
 const selectionHandler: (e: DraftEditor) => void =
   isChromium || isFirefox
     ? editOnSelect
-    : _ => {
+    : () => {
         //
       };
 

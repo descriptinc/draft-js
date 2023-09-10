@@ -18,17 +18,16 @@ import {
 import AtomicBlockUtils from '../AtomicBlockUtils';
 import {
   ContentState,
-  createEntity,
   getBlockBefore,
   getFirstBlock,
   getLastBlock,
-  getLastCreatedEntityKey,
 } from '../../immutable/ContentState';
 import DraftModifier from '../DraftModifier';
 import {makeSelectionState} from '../../immutable/SelectionState';
 import {find, some} from '../../descript/Iterables';
 import {DraftBlockType} from '../../constants/DraftBlockType';
 import {blockToJson} from '../../../util/blockMapToJson';
+import {createEntity} from '../../immutable/EntityMap';
 
 const {editorState, selectionState} = getSampleStateForTesting();
 const {
@@ -39,8 +38,14 @@ const {
 } = RichTextEditorUtil;
 
 const insertAtomicBlock = (targetEditorState: EditorState) => {
-  createEntity('TEST', 'IMMUTABLE', null);
-  const entityKey = getLastCreatedEntityKey();
+  const {entityMap, entityKey} = createEntity(targetEditorState.currentContent.entityMap, 'TEST', 'IMMUTABLE');
+  targetEditorState = {
+    ...targetEditorState,
+    currentContent: {
+      ...targetEditorState.currentContent,
+      entityMap,
+    }
+  };
   const character = ' ';
   const movedSelection = moveSelectionToEnd(targetEditorState);
   return AtomicBlockUtils.insertAtomicBlock(

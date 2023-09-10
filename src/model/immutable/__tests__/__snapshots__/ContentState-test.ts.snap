@@ -18,19 +18,13 @@ exports[`key fetching must succeed or fail properly 6`] = `"b"`;
 
 exports[`key fetching must succeed or fail properly 7`] = `undefined`;
 
-exports[`must create entities instances 1`] = `"string"`;
-
-exports[`must merge entities data 1`] = `
-Object {
-  "foo": "bar",
-  "uri": "zombo.com",
-}
-`;
-
-exports[`must merge entities data 2`] = `
-Object {
-  "foo": "bar",
-  "uri": "homestarrunner.com",
+exports[`must create entities instances 1`] = `
+{
+  "data": {
+    "uri": "zombo.com",
+  },
+  "mutability": "MUTABLE",
+  "type": "LINK",
 }
 `;
 
@@ -41,18 +35,8 @@ exports[`must not include zero width chars for has text 2`] = `true`;
 exports[`must not include zero width chars for has text 3`] = `true`;
 
 exports[`must replace entities data 1`] = `
-Object {
+{
   "newProp": "baz",
   "uri": "something.com",
-}
-`;
-
-exports[`must retrieve an entities instance given a key 1`] = `
-Object {
-  "data": Object {
-    "uri": "zombo.com",
-  },
-  "mutability": "MUTABLE",
-  "type": "LINK",
 }
 `;
