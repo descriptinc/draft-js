@@ -13,6 +13,7 @@ import {
   getStartOffset,
   hasEdgeWithin,
   isCollapsed,
+  isOnlyOnTrailingEdgeAndIsNotLastInBlock,
   makeSelectionState,
   SelectionState,
 } from '../SelectionState';
@@ -184,3 +185,79 @@ test('properly identifies start and end offsets when backward', () => {
   expect(getEndOffset(withinBlock)).toMatchSnapshot();
   expect(getEndOffset(MULTI_BLOCK)).toMatchSnapshot();
 });
+
+describe('isOnlyOnTrailingEdgeAndIsNotLastInBlock', () => {
+  it('is false if selection intersects block', () => {
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 0,
+      focusKey: 'b',
+      focusOffset: 5,
+    }), 'b', 3, 10)).toBe(false);
+  });
+  it('is false if selection is not in block', () => {
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'c',
+      anchorOffset: 0,
+      focusKey: 'c',
+      focusOffset: 5,
+    }), 'b', 3, 10)).toBe(false);
+  });
+  it('is true if selection is on the trailing edge and extends beyond the current leaf', () => {
+    // forward
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 8,
+    }), 'b', 5, 10)).toBe(true);
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 5,
+    }), 'b', 5, 10)).toBe(true);
+
+    // backward
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 8,
+      focusKey: 'b',
+      focusOffset: 5,
+      isBackward: true,
+    }), 'b', 5, 10)).toBe(true);
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 5,
+      isBackward: true,
+    }), 'b', 5, 10)).toBe(true);
+  });
+  it('is false if selection is on the trailing edge and does not extend beyond the current leaf in the current block', () => {
+    // forward
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 5,
+    }), 'b', 5, 5)).toBe(false);
+
+    // backward
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 5,
+      isBackward: true,
+    }), 'b', 5, 5)).toBe(false);
+
+    // multi-block
+    expect(isOnlyOnTrailingEdgeAndIsNotLastInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'c',
+      focusOffset: 1,
+    }), 'b', 5, 5)).toBe(false);
+  });
+})
