@@ -105,6 +105,28 @@ export function isOnlyOnTrailingEdgeAndIsNotLastInBlock(
   );
 }
 
+/**
+ * Returns whether the selection ends (if forward) or starts (if backward)
+ * on the leading edge of a leaf node, and if there are additional leaves
+ * in the block _and in the selection_ before it.
+ */
+export function isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(
+  sel: SelectionState,
+  blockKey: string,
+  start: number,
+): boolean {
+  const {isBackward, anchorOffset, focusOffset, focusKey, anchorKey} = sel;
+  if (isBackward && anchorKey === blockKey && anchorOffset === start && start > 0) {
+    // are there any leaves in the selection before this one?
+    return focusKey !== blockKey || focusOffset < start;
+  }
+  if (!isBackward && focusKey === blockKey && focusOffset === start && start > 0) {
+    // are there any leaves in the selection before this one?
+    return anchorKey !== blockKey || anchorOffset < start;
+  }
+  return false;
+}
+
 export function makeSelectionState({
   anchorKey,
   anchorOffset = 0,

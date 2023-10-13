@@ -13,6 +13,7 @@ import {
   getStartOffset,
   hasEdgeWithin,
   isCollapsed,
+  isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock,
   isOnlyOnTrailingEdgeAndIsNotLastInBlock,
   makeSelectionState,
   SelectionState,
@@ -261,3 +262,72 @@ describe('isOnlyOnTrailingEdgeAndIsNotLastInBlock', () => {
     }), 'b', 5, 5)).toBe(false);
   });
 })
+
+describe('isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock', () => {
+  it('is false if selection intersects block', () => {
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 0,
+      focusKey: 'b',
+      focusOffset: 5,
+    }), 'b', 3)).toBe(false);
+  });
+  it('is false if selection is not in block', () => {
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'c',
+      anchorOffset: 0,
+      focusKey: 'c',
+      focusOffset: 5,
+    }), 'b', 3)).toBe(false);
+  });
+  it('is false if selection is on the leading edge but there is not a leaf in the same block in the selection before it', () => {
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 5,
+    }), 'b', 5)).toBe(false);
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 5,
+      isBackward: true,
+    }), 'b', 5)).toBe(false);
+  });
+  it('is true if selection is on the leading edge and extends before the current leaf', () => {
+    // forward
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 4,
+      focusKey: 'b',
+      focusOffset: 5,
+    }), 'b', 5)).toBe(true);
+
+    // backward
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 5,
+      focusKey: 'b',
+      focusOffset: 4,
+      isBackward: true,
+    }), 'b', 5)).toBe(true);
+  });
+  it('is false if selection is first in block', () => {
+    // multi-block
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'a',
+      anchorOffset: 0,
+      focusKey: 'b',
+      focusOffset: 5,
+    }), 'b', 0)).toBe(false);
+
+    // same block
+    expect(isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(makeSelectionState({
+      anchorKey: 'b',
+      anchorOffset: 0,
+      focusKey: 'b',
+      focusOffset: 0,
+    }), 'b', 0)).toBe(false);
+  });
+});

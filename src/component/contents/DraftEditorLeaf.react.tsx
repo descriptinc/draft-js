@@ -12,6 +12,7 @@ import React from 'react';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {
   hasEdgeWithin,
+  isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock,
   isOnlyOnTrailingEdgeAndIsNotLastInBlock,
   SelectionState,
 } from '../../model/immutable/SelectionState';
@@ -88,7 +89,8 @@ export default class DraftEditorLeaf extends React.Component<Props> {
     const end = start + text.length;
     if (
       !hasEdgeWithin(selection, blockKey, start, end) ||
-      isOnlyOnTrailingEdgeAndIsNotLastInBlock(selection, blockKey, end, block.text.length)
+      isOnlyOnTrailingEdgeAndIsNotLastInBlock(selection, blockKey, end, block.text.length) ||
+      isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(selection, blockKey, start)
     ) {
       return;
     }
