@@ -18,6 +18,7 @@ import {SelectionState} from '../../model/immutable/SelectionState';
 import {SelectionObject} from '../utils/DraftDOMTypes';
 import DraftJsDebugLogging from '../../stubs/DraftJsDebugLogging';
 import DraftEffects from '../../stubs/DraftEffects';
+import {DomSelectionUpdate} from '../contents/DomSelectionUpdate';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -111,6 +112,10 @@ export function setDraftEditorSelection(
   blockKey: string,
   nodeStart: number,
   nodeEnd: number,
+  scheduleDomSelectionUpdate:
+    | ((update: DomSelectionUpdate) => void)
+    | undefined
+    | null,
 ): void {
   // It's possible that the editor has been removed from the DOM but
   // our selection code doesn't know it yet. Forcing selection in
@@ -149,6 +154,20 @@ export function setDraftEditorSelection(
   // If the selection is entirely bound within this node, set the selection
   // and be done.
   if (hasAnchor && hasFocus) {
+    if (scheduleDomSelectionUpdate) {
+      scheduleDomSelectionUpdate({
+        type: 'anchor',
+        node,
+        offset: anchorOffset - nodeStart,
+      });
+      scheduleDomSelectionUpdate({
+        type: 'focus',
+        node,
+        offset: focusOffset - nodeStart,
+      });
+      return;
+    }
+
     if (
       selection.anchorNode === node &&
       selection.focusNode === node &&
@@ -178,61 +197,93 @@ export function setDraftEditorSelection(
   if (!isBackward) {
     // If the anchor is within this node, set the range start.
     if (hasAnchor) {
-      selection.removeAllRanges();
-      addPointToSelection(
-        selection,
-        node,
-        anchorOffset - nodeStart,
-        selectionState,
-      );
+      if (scheduleDomSelectionUpdate) {
+        scheduleDomSelectionUpdate({
+          type: 'anchor',
+          node,
+          offset: anchorOffset - nodeStart,
+        });
+      } else {
+        selection.removeAllRanges();
+        addPointToSelection(
+          selection,
+          node,
+          anchorOffset - nodeStart,
+          selectionState,
+        );
+      }
     }
 
     // If the focus is within this node, we can assume that we have
     // already set the appropriate start range on the selection, and
     // can simply extend the selection.
     if (hasFocus) {
-      addFocusToSelection(
-        selection,
-        node,
-        focusOffset - nodeStart,
-        selectionState,
-      );
+      if (scheduleDomSelectionUpdate) {
+        scheduleDomSelectionUpdate({
+          type: 'focus',
+          node,
+          offset: focusOffset - nodeStart,
+        });
+      } else {
+        addFocusToSelection(
+          selection,
+          node,
+          focusOffset - nodeStart,
+          selectionState,
+        );
+      }
     }
   } else {
     // If this node has the focus, set the selection range to be a
     // collapsed range beginning here. Later, when we encounter the anchor,
     // we'll use this information to extend the selection.
     if (hasFocus) {
-      selection.removeAllRanges();
-      addPointToSelection(
-        selection,
-        node,
-        focusOffset - nodeStart,
-        selectionState,
-      );
+      if (scheduleDomSelectionUpdate) {
+        scheduleDomSelectionUpdate({
+          type: 'focus',
+          node,
+          offset: focusOffset - nodeStart,
+        });
+      } else {
+        selection.removeAllRanges();
+        addPointToSelection(
+          selection,
+          node,
+          focusOffset - nodeStart,
+          selectionState,
+        );
+      }
     }
 
-    // If this node has the anchor, we may assume that the correct
-    // focus information is already stored on the selection object.
-    // We keep track of it, reset the selection range, and extend it
-    // back to the focus point.
     if (hasAnchor) {
-      const storedFocusNode = selection.focusNode;
-      const storedFocusOffset = selection.focusOffset;
+      if (scheduleDomSelectionUpdate) {
+        scheduleDomSelectionUpdate({
+          type: 'anchor',
+          node,
+          offset: anchorOffset - nodeStart,
+        });
+      } else {
+        // If this node has the anchor, we may assume that the correct
+        // focus information is already stored on the selection object.
+        // We keep track of it, reset the selection range, and extend it
+        // back to the focus point.
+        const storedFocusNode = selection.focusNode;
+        const storedFocusOffset = selection.focusOffset;
 
-      selection.removeAllRanges();
-      addPointToSelection(
-        selection,
-        node,
-        anchorOffset - nodeStart,
-        selectionState,
-      );
-      addFocusToSelection(
-        selection,
-        storedFocusNode,
-        storedFocusOffset,
-        selectionState,
-      );
+        selection.removeAllRanges();
+        addPointToSelection(
+          selection,
+          node,
+          anchorOffset - nodeStart,
+          selectionState,
+        );
+        addFocusToSelection(
+          selection,
+          storedFocusNode,
+          storedFocusOffset,
+          selectionState,
+        );
+      }
     }
   }
 }
@@ -331,7 +382,7 @@ export function addFocusToSelection(
   }
 }
 
-function addPointToSelection(
+export function addPointToSelection(
   selection: SelectionObject,
   node: Node,
   offset: number,

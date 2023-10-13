@@ -15,10 +15,18 @@ import {EditorState, getBlockTree} from '../../model/immutable/EditorState';
 import React, {CSSProperties, ReactNode} from 'react';
 import cx from 'fbjs/lib/cx';
 import joinClasses from 'fbjs/lib/joinClasses';
+import containsNode from 'fbjs/lib/containsNode';
 import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from '../selection/DraftOffsetKey';
 import DraftEditorBlock from './DraftEditorBlock.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
+import {DomSelectionUpdate} from './DomSelectionUpdate';
+import getCorrectDocumentFromNode from '../utils/getCorrectDocumentFromNode';
+import {SelectionObject} from '../utils/DraftDOMTypes';
+import {
+  addFocusToSelection,
+  addPointToSelection,
+} from '../selection/setDraftEditorSelection';
 
 type Props = {
   blockRenderMap: DraftBlockRenderMap;
@@ -37,6 +45,11 @@ type Props = {
   scrollUpHeight?: number;
   scrollDownThreshold?: number;
   scrollDownHeight?: number;
+  /**
+   * Enables support for experimental (more performant) strategy for
+   * updating DOM selection
+   */
+  globalDomSelectionUpdate?: boolean;
 };
 
 /**
@@ -76,6 +89,9 @@ const getListItemClasses = (
  * the contents of the editor.
  */
 export default class DraftEditorContents extends React.Component<Props> {
+  private scheduledDomSelectionUpdates: DomSelectionUpdate[] | undefined;
+  private ref = React.createRef<HTMLDivElement>();
+
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
@@ -96,6 +112,13 @@ export default class DraftEditorContents extends React.Component<Props> {
     }
 
     if (this.props.blockStyleFn !== nextProps.blockStyleFn) {
+      return true;
+    }
+
+    if (
+      Boolean(this.props.globalDomSelectionUpdate) !==
+      Boolean(nextProps.globalDomSelectionUpdate)
+    ) {
       return true;
     }
 
@@ -127,7 +150,91 @@ export default class DraftEditorContents extends React.Component<Props> {
     );
   }
 
+  componentDidUpdate() {
+    if (this.props.globalDomSelectionUpdate) {
+      this._updateDomSelection();
+    }
+  }
+
+  _updateDomSelection() {
+    const thisNode = this.ref.current;
+    if (this.scheduledDomSelectionUpdates && thisNode) {
+      // FIXME: add getDomSelection helper
+
+      // It's possible that the editor has been removed from the DOM but
+      // our selection code doesn't know it yet. Forcing selection in
+      // this case may lead to errors, so just bail now.
+      const documentObject = getCorrectDocumentFromNode(thisNode);
+      if (!containsNode(documentObject.documentElement, thisNode)) {
+        return;
+      }
+
+      const selection = documentObject.defaultView!.getSelection() as SelectionObject;
+
+      // get the last anchor and last focus, since those are the ones that
+      // that would "stick" if we were updating the selection using the
+      // existing in-leaf mechanism
+      let lastAnchor: DomSelectionUpdate | undefined;
+      let lastFocus: DomSelectionUpdate | undefined;
+      for (const update of this.scheduledDomSelectionUpdates) {
+        if (update.type === 'anchor') {
+          lastAnchor = update;
+        } else if (update.type === 'focus') {
+          lastFocus = update;
+        }
+      }
+
+      // if only one of them is defined, assume a point selection
+      lastAnchor = lastAnchor ?? lastFocus;
+      lastFocus = lastFocus ?? lastAnchor;
+
+      if (lastAnchor && lastFocus) {
+        // only update the selection if it is not already correct
+        if (
+          selection.anchorNode !== lastAnchor.node ||
+          selection.anchorOffset !== lastAnchor.offset ||
+          selection.focusNode !== lastFocus.node ||
+          selection.focusOffset !== lastFocus.offset
+        ) {
+          // has the anchor changed?
+          if (
+            selection.anchorNode !== lastAnchor.node ||
+            selection.anchorOffset !== lastAnchor.offset
+          ) {
+            // start a selection from scratch
+            selection.removeAllRanges();
+            addPointToSelection(
+              selection,
+              lastAnchor.node,
+              lastAnchor.offset,
+              this.props.editorState.selection,
+            );
+          }
+          // add the focus
+          addFocusToSelection(
+            selection,
+            lastFocus.node,
+            lastFocus.offset,
+            this.props.editorState.selection,
+          );
+        }
+      }
+
+      this.scheduledDomSelectionUpdates = undefined;
+    }
+  }
+
+  scheduleDomSelectionUpdate = (update: DomSelectionUpdate) => {
+    if (!this.scheduledDomSelectionUpdates) {
+      this.scheduledDomSelectionUpdates = [];
+    }
+    this.scheduledDomSelectionUpdates.push(update);
+  };
+
   render(): React.ReactNode {
+    // Reset the DOM selection updates before each render
+    this.scheduledDomSelectionUpdates = undefined;
+
     const {
       blockRenderMap,
       blockRendererFn,
@@ -197,6 +304,9 @@ export default class DraftEditorContents extends React.Component<Props> {
         scrollUpHeight,
         scrollDownThreshold,
         scrollDownHeight,
+        scheduleDomSelectionUpdate: this.props.globalDomSelectionUpdate
+          ? this.scheduleDomSelectionUpdate
+          : undefined,
       };
 
       const configForType =
@@ -302,6 +412,10 @@ export default class DraftEditorContents extends React.Component<Props> {
       }
     }
 
-    return <div data-contents="true">{outputBlocks}</div>;
+    return (
+      <div data-contents="true" ref={this.ref}>
+        {outputBlocks}
+      </div>
+    );
   }
 }

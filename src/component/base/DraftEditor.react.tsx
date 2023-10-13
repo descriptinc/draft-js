@@ -345,6 +345,7 @@ export default class DraftEditor extends React.Component<
       scrollUpHeight,
       scrollDownHeight,
       scrollDownThreshold,
+      globalDomSelectionUpdate,
     } = this.props;
 
     const rootClass = cx({
@@ -386,6 +387,7 @@ export default class DraftEditor extends React.Component<
       scrollUpHeight,
       scrollDownThreshold,
       scrollDownHeight,
+      globalDomSelectionUpdate,
     };
 
     return (

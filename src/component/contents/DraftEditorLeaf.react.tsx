@@ -21,6 +21,7 @@ import isHTMLBRElement from '../utils/isHTMLBRElement';
 import {setDraftEditorSelection} from '../selection/setDraftEditorSelection';
 import DraftEditorTextNode from './DraftEditorTextNode.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
+import {DomSelectionUpdate} from './DomSelectionUpdate';
 
 type CSSStyleObject = {[K in string]: string | number};
 
@@ -52,6 +53,7 @@ type Props = {
   styleSet: DraftInlineStyle;
   // The full text to be rendered within this node.
   text: string;
+  scheduleDomSelectionUpdate?: (update: DomSelectionUpdate) => void;
 };
 
 /**
@@ -89,8 +91,17 @@ export default class DraftEditorLeaf extends React.Component<Props> {
     const end = start + text.length;
     if (
       !hasEdgeWithin(selection, blockKey, start, end) ||
-      isOnlyOnTrailingEdgeAndIsNotLastInBlock(selection, blockKey, end, block.text.length) ||
-      isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(selection, blockKey, start)
+      isOnlyOnTrailingEdgeAndIsNotLastInBlock(
+        selection,
+        blockKey,
+        end,
+        block.text.length,
+      ) ||
+      isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(
+        selection,
+        blockKey,
+        start,
+      )
     ) {
       return;
     }
@@ -113,7 +124,14 @@ export default class DraftEditorLeaf extends React.Component<Props> {
       invariant(targetNode, 'Missing targetNode');
     }
 
-    setDraftEditorSelection(selection, targetNode!, blockKey, start, end);
+    setDraftEditorSelection(
+      selection,
+      targetNode!,
+      blockKey,
+      start,
+      end,
+      this.props.scheduleDomSelectionUpdate,
+    );
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
