@@ -19,6 +19,7 @@ import {SelectionObject} from '../utils/DraftDOMTypes';
 import DraftJsDebugLogging from '../../stubs/DraftJsDebugLogging';
 import DraftEffects from '../../stubs/DraftEffects';
 import {DOMSelectionUpdateFn} from './DOMSelectionUpdate';
+import {getDOMSelection} from './DOMSelection';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -114,15 +115,11 @@ export function setDraftEditorSelection(
   nodeEnd: number,
   scheduleDomSelectionUpdate: DOMSelectionUpdateFn | undefined | null,
 ): void {
-  // It's possible that the editor has been removed from the DOM but
-  // our selection code doesn't know it yet. Forcing selection in
-  // this case may lead to errors, so just bail now.
-  const documentObject = getCorrectDocumentFromNode(node);
-  if (!containsNode(documentObject.documentElement, node)) {
+  const selection = getDOMSelection(node);
+  if (!selection) {
     return;
   }
 
-  const selection = documentObject.defaultView!.getSelection() as SelectionObject;
   let anchorKey = selectionState.anchorKey;
   let anchorOffset = selectionState.anchorOffset;
   let focusKey = selectionState.focusKey;
