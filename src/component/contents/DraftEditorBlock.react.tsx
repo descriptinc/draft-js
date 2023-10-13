@@ -38,7 +38,7 @@ import {
 } from '../../model/immutable/ContentBlock';
 import {DraftDecoratorComponentProps} from '../../model/decorators/DraftDecorator';
 import {BlockNode} from '../../model/immutable/BlockNode';
-import {DomSelectionUpdate} from './DomSelectionUpdate';
+import {DOMSelectionUpdateFn} from '../selection/DOMSelectionUpdate';
 
 const DEFAULT_SCROLL_BUFFER = 10;
 
@@ -64,7 +64,7 @@ type Props = {
   scrollUpHeight?: number;
   scrollDownThreshold?: number;
   scrollDownHeight?: number;
-  scheduleDomSelectionUpdate?: (update: DomSelectionUpdate) => void;
+  scheduleDomSelectionUpdate?: DOMSelectionUpdateFn;
 };
 
 /**

@@ -21,7 +21,7 @@ import isHTMLBRElement from '../utils/isHTMLBRElement';
 import {setDraftEditorSelection} from '../selection/setDraftEditorSelection';
 import DraftEditorTextNode from './DraftEditorTextNode.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
-import {DomSelectionUpdate} from './DomSelectionUpdate';
+import {DOMSelectionUpdateFn} from '../selection/DOMSelectionUpdate';
 
 type CSSStyleObject = {[K in string]: string | number};
 
@@ -53,7 +53,7 @@ type Props = {
   styleSet: DraftInlineStyle;
   // The full text to be rendered within this node.
   text: string;
-  scheduleDomSelectionUpdate?: (update: DomSelectionUpdate) => void;
+  scheduleDomSelectionUpdate?: DOMSelectionUpdateFn;
 };
 
 /**

@@ -18,7 +18,7 @@ import {SelectionState} from '../../model/immutable/SelectionState';
 import {SelectionObject} from '../utils/DraftDOMTypes';
 import DraftJsDebugLogging from '../../stubs/DraftJsDebugLogging';
 import DraftEffects from '../../stubs/DraftEffects';
-import {DomSelectionUpdate} from '../contents/DomSelectionUpdate';
+import {DOMSelectionUpdateFn} from './DOMSelectionUpdate';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -112,10 +112,7 @@ export function setDraftEditorSelection(
   blockKey: string,
   nodeStart: number,
   nodeEnd: number,
-  scheduleDomSelectionUpdate:
-    | ((update: DomSelectionUpdate) => void)
-    | undefined
-    | null,
+  scheduleDomSelectionUpdate: DOMSelectionUpdateFn | undefined | null,
 ): void {
   // It's possible that the editor has been removed from the DOM but
   // our selection code doesn't know it yet. Forcing selection in
@@ -155,13 +152,11 @@ export function setDraftEditorSelection(
   // and be done.
   if (hasAnchor && hasFocus) {
     if (scheduleDomSelectionUpdate) {
-      scheduleDomSelectionUpdate({
-        type: 'anchor',
+      scheduleDomSelectionUpdate('anchor', {
         node,
         offset: anchorOffset - nodeStart,
       });
-      scheduleDomSelectionUpdate({
-        type: 'focus',
+      scheduleDomSelectionUpdate('focus', {
         node,
         offset: focusOffset - nodeStart,
       });
@@ -198,8 +193,7 @@ export function setDraftEditorSelection(
     // If the anchor is within this node, set the range start.
     if (hasAnchor) {
       if (scheduleDomSelectionUpdate) {
-        scheduleDomSelectionUpdate({
-          type: 'anchor',
+        scheduleDomSelectionUpdate('anchor', {
           node,
           offset: anchorOffset - nodeStart,
         });
@@ -219,8 +213,7 @@ export function setDraftEditorSelection(
     // can simply extend the selection.
     if (hasFocus) {
       if (scheduleDomSelectionUpdate) {
-        scheduleDomSelectionUpdate({
-          type: 'focus',
+        scheduleDomSelectionUpdate('focus', {
           node,
           offset: focusOffset - nodeStart,
         });
@@ -239,8 +232,7 @@ export function setDraftEditorSelection(
     // we'll use this information to extend the selection.
     if (hasFocus) {
       if (scheduleDomSelectionUpdate) {
-        scheduleDomSelectionUpdate({
-          type: 'focus',
+        scheduleDomSelectionUpdate('focus', {
           node,
           offset: focusOffset - nodeStart,
         });
@@ -257,8 +249,7 @@ export function setDraftEditorSelection(
 
     if (hasAnchor) {
       if (scheduleDomSelectionUpdate) {
-        scheduleDomSelectionUpdate({
-          type: 'anchor',
+        scheduleDomSelectionUpdate('anchor', {
           node,
           offset: anchorOffset - nodeStart,
         });
