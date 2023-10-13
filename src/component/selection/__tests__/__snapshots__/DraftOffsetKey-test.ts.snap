@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`decodes offset key with delimiter at the beginning 1`] = `
-Object {
+{
   "blockKey": "-key",
   "decoratorKey": 0,
   "leafKey": 1,
@@ -9,7 +9,7 @@ Object {
 `;
 
 exports[`decodes offset key with delimiter at the end 1`] = `
-Object {
+{
   "blockKey": "key-",
   "decoratorKey": 0,
   "leafKey": 1,
@@ -17,7 +17,7 @@ Object {
 `;
 
 exports[`decodes offset key with delimiter in between 1`] = `
-Object {
+{
   "blockKey": "key-with-delimiter",
   "decoratorKey": 0,
   "leafKey": 1,
@@ -25,7 +25,7 @@ Object {
 `;
 
 exports[`decodes offset key with no delimiter 1`] = `
-Object {
+{
   "blockKey": "key",
   "decoratorKey": 0,
   "leafKey": 1,
