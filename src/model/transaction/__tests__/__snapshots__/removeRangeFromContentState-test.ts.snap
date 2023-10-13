@@ -1,94 +1,94 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must remove blocks entirely within the selection 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpt",
     "type": "unstyled",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -98,150 +98,150 @@ Object {
 `;
 
 exports[`must remove from the beginning of the block 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "ha",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -251,123 +251,123 @@ Object {
 `;
 
 exports[`must remove from the end of A to the end of B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -377,153 +377,153 @@ Object {
 `;
 
 exports[`must remove from the end of A to the start of B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "AlphaBravo",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -533,135 +533,135 @@ Object {
 `;
 
 exports[`must remove from the end of A to within B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alphavo",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -671,102 +671,102 @@ Object {
 `;
 
 exports[`must remove from the start of A to the end of B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [],
-    "data": Object {},
+{
+  "a": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -776,133 +776,133 @@ Object {
 `;
 
 exports[`must remove from the start of A to the start of B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Bravo",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -912,115 +912,115 @@ Object {
 `;
 
 exports[`must remove from the start of A to within B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "vo",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -1030,115 +1030,115 @@ Object {
 `;
 
 exports[`must remove from within A to the end of B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alp",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -1148,145 +1148,145 @@ Object {
 `;
 
 exports[`must remove from within A to the start of B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "AlpBravo",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -1296,127 +1296,127 @@ Object {
 `;
 
 exports[`must remove from within A to within B 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpvo",
     "type": "unstyled",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -1426,154 +1426,154 @@ Object {
 `;
 
 exports[`must remove from within the block 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Ala",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -1583,154 +1583,154 @@ Object {
 `;
 
 exports[`must remove to the end of the block 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alp",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",
@@ -1740,162 +1740,162 @@ Object {
 `;
 
 exports[`must return the input ContentState if selection is collapsed 1`] = `
-Object {
-  "a": Object {
-    "characterList": Array [
-      Object {
+{
+  "a": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "a",
     "text": "Alpha",
     "type": "unstyled",
   },
-  "b": Object {
-    "characterList": Array [
-      Object {
+  "b": {
+    "characterList": [
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": "2",
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "b",
     "text": "Bravo",
     "type": "unordered-list-item",
   },
-  "c": Object {
-    "characterList": Array [
-      Object {
+  "c": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "c",
     "text": "Test",
     "type": "code-block",
   },
-  "d": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "d": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "d",
     "text": "",
     "type": "code-block",
   },
-  "e": Object {
-    "characterList": Array [],
-    "data": Object {},
+  "e": {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "e",
     "text": "",
     "type": "code-block",
   },
-  "f": Object {
-    "characterList": Array [
-      Object {
+  "f": {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "f",
     "text": "Charlie",

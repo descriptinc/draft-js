@@ -13,7 +13,7 @@ export default function isInstanceOfNode(target: EventTarget | null): boolean {
     return false;
   }
   if ('ownerDocument' in target) {
-    const node: Node = target;
+    const node: Node = target as Node;
     if (!node.ownerDocument?.defaultView) {
       return node instanceof Node;
     }

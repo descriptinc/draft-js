@@ -1,61 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should detect when somthing is un-styled in a child 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hellothere",
@@ -65,61 +65,61 @@ Array [
 `;
 
 exports[`Should detect when somthing is un-styled in a child 2`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "hellothere",
@@ -129,51 +129,51 @@ Array [
 `;
 
 exports[`Should detect when somthing is un-styled in a child 3`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key2",
     "text": "hellothere",
@@ -183,56 +183,56 @@ Array [
 `;
 
 exports[`Strip whitespace after block dividers 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hello",
     "type": "paragraph",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "what",
@@ -242,51 +242,51 @@ Array [
 `;
 
 exports[`Tolerate doule BR tags separated by whitespace 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi
@@ -298,47 +298,47 @@ hello",
 `;
 
 exports[`must NOT split unstyled blocks inside a styled block 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi
@@ -350,48 +350,48 @@ hello",
 `;
 
 exports[`must NOT treat divs as Ps when we pave Ps 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "hi",
     "type": "paragraph",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key2",
     "text": "hello",
@@ -401,31 +401,31 @@ Array [
 `;
 
 exports[`must collapse nested blocks to the topmost level 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "what
@@ -436,93 +436,93 @@ Array [
 `;
 
 exports[`must create ContentBlocks when experimentalTreeDataSupport is disabled while processing text 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "Alpha",
     "type": "unstyled",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "Beta",
     "type": "unstyled",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key2",
     "text": "Charlie",
@@ -532,91 +532,91 @@ Array [
 `;
 
 exports[`must detect links in pasted content 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "This is a link, yep.",
@@ -626,36 +626,36 @@ Array [
 `;
 
 exports[`must detect two touching blocks 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi",
     "type": "header-one",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "hi",
@@ -665,48 +665,48 @@ Array [
 `;
 
 exports[`must identify block styles 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi",
     "type": "ordered-list-item",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "there",
@@ -716,53 +716,53 @@ Array [
 `;
 
 exports[`must identify italics text 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hello hi",
@@ -772,73 +772,73 @@ Array [
 `;
 
 exports[`must identify overlapping inline styles 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "he      hi",
@@ -848,91 +848,91 @@ Array [
 `;
 
 exports[`must ignore javascript: links 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "This is a link, yep.",
@@ -942,91 +942,91 @@ Array [
 `;
 
 exports[`must ignore links that do not actually link anywhere 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "This is a link, yep.",
@@ -1036,85 +1036,85 @@ Array [
 `;
 
 exports[`must insert a block when needed 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi",
     "type": "header-one",
   },
-  Object {
-    "characterList": Array [],
-    "data": Object {},
+  {
+    "characterList": [],
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "",
     "type": "header-one",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key2",
     "text": "whatever",
     "type": "unstyled",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key3",
     "text": "hi",
@@ -1124,47 +1124,47 @@ Array [
 `;
 
 exports[`must not generate fake blocks on heavy nesting 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "Word    ,",
@@ -1174,100 +1174,100 @@ Array [
 `;
 
 exports[`must parse based on style attribute 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
-          "BOLD",
-          "ITALIC",
-        ],
-      },
-      Object {
-        "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
           "BOLD",
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [
+        "style": [
+          "BOLD",
+          "ITALIC",
+        ],
+      },
+      {
+        "entity": null,
+        "style": [
           "BOLD",
         ],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "Bold Italic  .",
@@ -1277,109 +1277,109 @@ Array [
 `;
 
 exports[`must preserve list formatting 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "what",
     "type": "unstyled",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "what",
     "type": "unordered-list-item",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key2",
     "text": "whatone
@@ -1387,26 +1387,26 @@ two
 ",
     "type": "unordered-list-item",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key6",
     "text": "what",
@@ -1416,91 +1416,91 @@ two
 `;
 
 exports[`must preserve mailto: links 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "This is a link, yep.",
@@ -1510,55 +1510,55 @@ Array [
 `;
 
 exports[`must preserve newlines in pre tags 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hello
@@ -1569,55 +1569,55 @@ there",
 `;
 
 exports[`must preserve newlines in whitespace in pre tags 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hello
@@ -1628,43 +1628,43 @@ there",
 `;
 
 exports[`must preserve spaces 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hello hi",
@@ -1674,43 +1674,43 @@ Array [
 `;
 
 exports[`must preserve spaces 2`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "hello hi",
@@ -1720,43 +1720,43 @@ Array [
 `;
 
 exports[`must preserve spaces 3`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key2",
     "text": "hello hi",
@@ -1766,87 +1766,87 @@ Array [
 `;
 
 exports[`must preserve styles inside links in a good way 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [
+        "style": [
           "ITALIC",
         ],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": "1",
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "A cool link, yep.",
@@ -1856,43 +1856,43 @@ Array [
 `;
 
 exports[`must replace br tags with soft newlines 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi
@@ -1903,55 +1903,55 @@ hello",
 `;
 
 exports[`must replace newlines in regular tags 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hello there",
@@ -1961,47 +1961,47 @@ Array [
 `;
 
 exports[`must split unstyled blocks on two br tags 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi
@@ -2013,39 +2013,39 @@ hello",
 `;
 
 exports[`must strip xml carriages and zero width spaces 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hihello",
@@ -2055,48 +2055,48 @@ Array [
 `;
 
 exports[`must treat divs as Ps when we do not have semantic markup 1`] = `
-Array [
-  Object {
-    "characterList": Array [
-      Object {
+[
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key0",
     "text": "hi",
     "type": "unstyled",
   },
-  Object {
-    "characterList": Array [
-      Object {
+  {
+    "characterList": [
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
-      Object {
+      {
         "entity": null,
-        "style": Array [],
+        "style": [],
       },
     ],
-    "data": Object {},
+    "data": {},
     "depth": 0,
     "key": "key1",
     "text": "hello",

@@ -1,28 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`must be able to move block after other block 1`] = `
-Array [
-  Object {
+[
+  {
     "key": "B",
   },
-  Object {
+  {
     "key": "C",
   },
-  Object {
+  {
     "key": "A",
   },
 ]
 `;
 
 exports[`must be able to move block before other block 1`] = `
-Array [
-  Object {
+[
+  {
     "key": "C",
   },
-  Object {
+  {
     "key": "A",
   },
-  Object {
+  {
     "key": "B",
   },
 ]

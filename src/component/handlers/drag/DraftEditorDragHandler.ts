@@ -36,20 +36,18 @@ function getSelectionForEvent(
   let offset: number | null = null;
 
   const eventTargetDocument = getCorrectDocumentFromNode(event.currentTarget);
-  /* $FlowFixMe(>=0.68.0 site=www,mobile) This comment suppresses an error
-   * found when Flow v0.68 was deployed. To see the error delete this comment
-   * and run Flow. */
   if (typeof eventTargetDocument.caretRangeFromPoint === 'function') {
-    /* $FlowFixMe(>=0.68.0 site=www,mobile) This comment suppresses an error
-     * found when Flow v0.68 was deployed. To see the error delete this comment
-     * and run Flow. */
     const dropRange = eventTargetDocument.caretRangeFromPoint(event.x, event.y);
-    node = dropRange.startContainer;
-    offset = dropRange.startOffset;
-  } else if (event.rangeParent) {
+    if (dropRange) {
+      node = dropRange.startContainer;
+      offset = dropRange.startOffset;
+    }
+  }
+  if (!node && event.rangeParent) {
     node = event.rangeParent;
     offset = event.rangeOffset;
-  } else {
+  }
+  if (!node) {
     return null;
   }
 

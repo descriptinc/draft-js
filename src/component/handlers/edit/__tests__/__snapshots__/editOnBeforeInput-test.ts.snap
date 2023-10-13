@@ -1,47 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`editor is updated with new text if it does not match current selection 1`] = `
-Object {
+{
   "blockMap": Map {
-    "a" => Object {
-      "characterList": Array [
-        Object {
+    "a" => {
+      "characterList": [
+        {
           "entity": null,
           "style": Set {},
         },
-        Object {
+        {
           "entity": null,
           "style": Set {},
         },
-        Object {
+        {
           "entity": null,
           "style": Set {},
         },
-        Object {
+        {
           "entity": null,
           "style": Set {},
         },
-        Object {
+        {
           "entity": null,
           "style": Set {},
         },
-        Object {
+        {
           "entity": null,
           "style": Set {},
         },
-        Object {
+        {
           "entity": null,
           "style": Set {},
         },
       ],
-      "data": Object {},
+      "data": {},
       "depth": 0,
       "key": "a",
       "text": "Orsenal",
       "type": "unstyled",
     },
   },
-  "selectionAfter": Object {
+  "selectionAfter": {
     "anchorKey": "a",
     "anchorOffset": 1,
     "focusKey": "a",
@@ -49,7 +49,7 @@ Object {
     "hasFocus": false,
     "isBackward": false,
   },
-  "selectionBefore": Object {
+  "selectionBefore": {
     "anchorKey": "a",
     "anchorOffset": 0,
     "focusKey": "a",
@@ -61,7 +61,7 @@ Object {
 `;
 
 exports[`editor selectionstate is updated if new text matches current selection 1`] = `
-Object {
+{
   "anchorKey": "a",
   "anchorOffset": 1,
   "focusKey": "a",
@@ -72,7 +72,7 @@ Object {
 `;
 
 exports[`editor selectionstate is updated if new text matches current selection and user selected backwards 1`] = `
-Object {
+{
   "anchorKey": "a",
   "anchorOffset": 1,
   "focusKey": "a",
