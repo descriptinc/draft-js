@@ -16,10 +16,11 @@ export type DOMSelectionUpdateFn = (
 ) => void;
 
 /**
- * Modifies the DOM selection according to a set of updates.
- * The updates are assumed to be in order of occurrence within the document.
- * A later update of the same type (e.g., "anchor") will override a previous
- * update of that type.
+ * Modifies the DOM selection according to a new anchor and focus.
+ * This function attempts to perform a minimal update for performance
+ * reasons (i.e., it the selection hasn't changed, it will not update
+ * the selection; if only the focus has changed, it will not modify the
+ * anchor).
  */
 export function updateDOMSelection(
   domSelection: SelectionObject,
