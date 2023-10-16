@@ -205,6 +205,12 @@ export type DraftEditorProps = {
     draftEditor: DraftEditor,
     syntheticClipboardEvent: SyntheticClipboardEvent,
   ) => void;
+
+  /**
+   * Enables support for experimental (more performant) strategy for
+   * updating DOM selection
+   */
+  globalDomSelectionUpdate?: boolean;
 };
 
 export type DraftEditorDefaultProps = {

@@ -12,6 +12,8 @@ import React from 'react';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {
   hasEdgeWithin,
+  isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock,
+  isOnlyOnTrailingEdgeAndIsNotLastInBlock,
   SelectionState,
 } from '../../model/immutable/SelectionState';
 import invariant from '../../fbjs/invariant';
@@ -19,6 +21,7 @@ import isHTMLBRElement from '../utils/isHTMLBRElement';
 import {setDraftEditorSelection} from '../selection/setDraftEditorSelection';
 import DraftEditorTextNode from './DraftEditorTextNode.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
+import {DOMSelectionUpdateFn} from '../selection/DOMSelectionUpdate';
 
 type CSSStyleObject = {[K in string]: string | number};
 
@@ -50,6 +53,7 @@ type Props = {
   styleSet: DraftInlineStyle;
   // The full text to be rendered within this node.
   text: string;
+  scheduleDomSelectionUpdate?: DOMSelectionUpdateFn;
 };
 
 /**
@@ -85,7 +89,41 @@ export default class DraftEditorLeaf extends React.Component<Props> {
     const {block, start, text} = this.props;
     const blockKey = block.key;
     const end = start + text.length;
-    if (!hasEdgeWithin(selection, blockKey, start, end)) {
+    if (
+      !hasEdgeWithin(selection, blockKey, start, end) ||
+      /**
+       * There are two ways to represent a selection point that falls on the
+       * boundary of two nodes:
+       * 1. The end of node `n`
+       * 2. The beginning of node `n+1`
+       *
+       * In order to keep selection consistent from one render to the next, we
+       * need to establish rules for how we decide how to represent a selection.
+       *
+       * There are multiple sets of rules that would work here. As long as we're
+       * consistent, we'll be ok (especially with the new global selection
+       * management mechanism, which ensures that only a single anchor and focus
+       * are updated per Editor render).
+       *
+       * Here are the rules for deciding how we represent each selection:
+       * 1. Bias toward condition #2 above when not adjusted by the other rules.
+       * 2. When there is no node `n+1` (covered by the `...isNotLastInBlock`)
+       *    we need to represent the selection as the end of node `n`.
+       * 3. When the selection contains some of node `n` and ends at the end
+       *    point of node `n`, we do not include node `n+1` in the selection.
+       */
+      isOnlyOnTrailingEdgeAndIsNotLastInBlock(
+        selection,
+        blockKey,
+        end,
+        block.text.length,
+      ) ||
+      isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(
+        selection,
+        blockKey,
+        start,
+      )
+    ) {
       return;
     }
 
@@ -107,7 +145,14 @@ export default class DraftEditorLeaf extends React.Component<Props> {
       invariant(targetNode, 'Missing targetNode');
     }
 
-    setDraftEditorSelection(selection, targetNode!, blockKey, start, end);
+    setDraftEditorSelection(
+      selection,
+      targetNode!,
+      blockKey,
+      start,
+      end,
+      this.props.scheduleDomSelectionUpdate,
+    );
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {

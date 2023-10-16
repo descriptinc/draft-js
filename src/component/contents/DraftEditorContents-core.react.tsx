@@ -19,6 +19,12 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from '../selection/DraftOffsetKey';
 import DraftEditorBlock from './DraftEditorBlock.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
+import {
+  DOMLocation,
+  DOMSelectionUpdateFn,
+  updateDOMSelection,
+} from '../selection/DOMSelectionUpdate';
+import {getDOMSelection} from '../selection/DOMSelection';
 
 type Props = {
   blockRenderMap: DraftBlockRenderMap;
@@ -37,6 +43,11 @@ type Props = {
   scrollUpHeight?: number;
   scrollDownThreshold?: number;
   scrollDownHeight?: number;
+  /**
+   * Enables support for experimental (more performant) strategy for
+   * updating DOM selection
+   */
+  globalDomSelectionUpdate?: boolean;
 };
 
 /**
@@ -76,6 +87,12 @@ const getListItemClasses = (
  * the contents of the editor.
  */
 export default class DraftEditorContents extends React.Component<Props> {
+  private scheduledDomSelectionUpdates: {
+    anchor?: DOMLocation;
+    focus?: DOMLocation;
+  } = {anchor: undefined, focus: undefined};
+  private ref = React.createRef<HTMLDivElement>();
+
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
     const nextEditorState = nextProps.editorState;
@@ -96,6 +113,13 @@ export default class DraftEditorContents extends React.Component<Props> {
     }
 
     if (this.props.blockStyleFn !== nextProps.blockStyleFn) {
+      return true;
+    }
+
+    if (
+      Boolean(this.props.globalDomSelectionUpdate) !==
+      Boolean(nextProps.globalDomSelectionUpdate)
+    ) {
       return true;
     }
 
@@ -127,7 +151,41 @@ export default class DraftEditorContents extends React.Component<Props> {
     );
   }
 
+  componentDidUpdate() {
+    if (this.props.globalDomSelectionUpdate) {
+      this._updateDomSelection();
+    }
+  }
+
+  _updateDomSelection() {
+    const thisNode = this.ref.current;
+    if (thisNode) {
+      const selection = getDOMSelection(thisNode);
+      if (selection) {
+        updateDOMSelection(
+          selection,
+          this.scheduledDomSelectionUpdates.anchor,
+          this.scheduledDomSelectionUpdates.focus,
+          this.props.editorState.selection,
+        );
+      }
+      this._clearDomSelectionUpdates();
+    }
+  }
+
+  _clearDomSelectionUpdates() {
+    this.scheduledDomSelectionUpdates.anchor = undefined;
+    this.scheduledDomSelectionUpdates.focus = undefined;
+  }
+
+  scheduleDomSelectionUpdate: DOMSelectionUpdateFn = (type, loc) => {
+    this.scheduledDomSelectionUpdates[type] = loc;
+  };
+
   render(): React.ReactNode {
+    // Reset the DOM selection updates before each render
+    this._clearDomSelectionUpdates();
+
     const {
       blockRenderMap,
       blockRendererFn,
@@ -197,6 +255,9 @@ export default class DraftEditorContents extends React.Component<Props> {
         scrollUpHeight,
         scrollDownThreshold,
         scrollDownHeight,
+        scheduleDomSelectionUpdate: this.props.globalDomSelectionUpdate
+          ? this.scheduleDomSelectionUpdate
+          : undefined,
       };
 
       const configForType =
@@ -302,6 +363,10 @@ export default class DraftEditorContents extends React.Component<Props> {
       }
     }
 
-    return <div data-contents="true">{outputBlocks}</div>;
+    return (
+      <div data-contents="true" ref={this.ref}>
+        {outputBlocks}
+      </div>
+    );
   }
 }

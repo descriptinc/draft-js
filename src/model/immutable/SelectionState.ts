@@ -87,6 +87,46 @@ export function hasEdgeWithin(
   return start <= offsetToCheck && end >= offsetToCheck;
 }
 
+/**
+ * Returns whether the selection starts (if forward) or ends (if backward)
+ * on the trailing edge of a leaf node, and if there are additional leaves
+ * in the block after it.
+ */
+export function isOnlyOnTrailingEdgeAndIsNotLastInBlock(
+  sel: SelectionState,
+  blockKey: string,
+  end: number,
+  blockLength: number,
+): boolean {
+  const {isBackward, anchorOffset, focusOffset, focusKey, anchorKey} = sel;
+  return (
+    (isBackward && focusKey === blockKey && focusOffset === end && end < blockLength) ||
+    (!isBackward && anchorKey === blockKey && anchorOffset === end && end < blockLength)
+  );
+}
+
+/**
+ * Returns whether the selection ends (if forward) or starts (if backward)
+ * on the leading edge of a leaf node, and if there are additional leaves
+ * in the block _and in the selection_ before it.
+ */
+export function isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock(
+  sel: SelectionState,
+  blockKey: string,
+  start: number,
+): boolean {
+  const {isBackward, anchorOffset, focusOffset, focusKey, anchorKey} = sel;
+  if (isBackward && anchorKey === blockKey && anchorOffset === start && start > 0) {
+    // are there any leaves in the selection before this one?
+    return focusKey !== blockKey || focusOffset < start;
+  }
+  if (!isBackward && focusKey === blockKey && focusOffset === start && start > 0) {
+    // are there any leaves in the selection before this one?
+    return anchorKey !== blockKey || anchorOffset < start;
+  }
+  return false;
+}
+
 export function makeSelectionState({
   anchorKey,
   anchorOffset = 0,
