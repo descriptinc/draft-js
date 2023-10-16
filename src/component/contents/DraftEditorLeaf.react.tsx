@@ -91,6 +91,27 @@ export default class DraftEditorLeaf extends React.Component<Props> {
     const end = start + text.length;
     if (
       !hasEdgeWithin(selection, blockKey, start, end) ||
+      /**
+       * There are two ways to represent a selection point that falls on the
+       * boundary of two nodes:
+       * 1. The end of node `n`
+       * 2. The beginning of node `n+1`
+       *
+       * In order to keep selection consistent from one render to the next, we
+       * need to establish rules for how we decide how to represent a selection.
+       *
+       * There are multiple sets of rules that would work here. As long as we're
+       * consistent, we'll be ok (especially with the new global selection
+       * management mechanism, which ensures that only a single anchor and focus
+       * are updated per Editor render).
+       *
+       * Here are the rules for deciding how we represent each selection:
+       * 1. Bias toward condition #2 above when not adjusted by the other rules.
+       * 2. When there is no node `n+1` (covered by the `...isNotLastInBlock`)
+       *    we need to represent the selection as the end of node `n`.
+       * 3. When the selection contains some of node `n` and ends at the end
+       *    point of node `n`, we do not include node `n+1` in the selection.
+       */
       isOnlyOnTrailingEdgeAndIsNotLastInBlock(
         selection,
         blockKey,
