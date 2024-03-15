@@ -578,29 +578,21 @@ export default class DraftEditor extends React.Component<
   setMode: (draftEditorModes: DraftEditorModes) => void = (
     mode: DraftEditorModes,
   ): void => {
-    const {onPaste, onCut, onCopy} = this.props;
-    const editHandler = {...handlerMap.edit};
+    const {onPaste, onCut, onCopy, onInput} = this.props;
 
-    if (onPaste) {
-      /* $FlowFixMe(>=0.117.0 site=www,mobile) This comment suppresses an error found
-       * when Flow v0.117 was deployed. To see the error delete this comment
-       * and run Flow. */
-      editHandler.onPaste = onPaste;
+    if (mode === 'edit') {
+      const editHandler = handlerMap.edit;
+      this._handler = {
+        ...editHandler,
+        onInput: onInput || editHandler.onInput,
+        onCopy: onCopy || editHandler.onCopy,
+        onCut: onCut || editHandler.onCut,
+        onPaste: onPaste || editHandler.onPaste,
+      };
+    } else {
+      this._handler = handlerMap[mode];
     }
 
-    if (onCut) {
-      editHandler.onCut = onCut;
-    }
-
-    if (onCopy) {
-      editHandler.onCopy = onCopy;
-    }
-
-    const handler = {
-      ...handlerMap,
-      edit: editHandler,
-    };
-    this._handler = handler[mode];
     this.mode = mode;
 
     if (mode !== 'drag') {

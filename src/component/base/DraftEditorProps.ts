@@ -20,7 +20,10 @@ import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {DraftBlockRenderMap} from '../../model/immutable/DraftBlockRenderMap';
 import {CSSProperties} from 'react';
 import DraftEditor from './DraftEditor.react';
-import {SyntheticClipboardEvent} from '../utils/eventTypes';
+import {
+  SyntheticClipboardEvent,
+  SyntheticInputEvent,
+} from '../utils/eventTypes';
 import {BlockNode} from '../../model/immutable/BlockNode';
 
 export type DraftEditorProps = {
@@ -204,6 +207,19 @@ export type DraftEditorProps = {
   onCopy?: (
     draftEditor: DraftEditor,
     syntheticClipboardEvent: SyntheticClipboardEvent,
+  ) => void;
+
+  /**
+   * Override the default behavior for the editor's `onInput` handler in edit mode.
+   * The draft.js implementation is typically an important feature of draft.js
+   * but if the user is attempting to fully control the input (e.g., via
+   * overriding `handleBeforeInput` then they might want to override this
+   * in order to provide error handling in the unexpected event that we do
+   * end up in this handler).
+   */
+  onInput?: (
+    draftEditor: DraftEditor,
+    syntheticClipboardEvent: SyntheticInputEvent,
   ) => void;
 
   /**
