@@ -116,6 +116,7 @@ export default function editOnBeforeInput(
   // In some cases (ex: IE ideographic space insertion) no character data
   // is provided. There's nothing to do when this happens.
   if (!chars) {
+    e.preventDefault();
     return;
   }
 
