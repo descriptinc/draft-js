@@ -26,7 +26,7 @@
     "dev": "gulp dev",
     "postbuild": "node node_modules/fbjs-scripts/node/check-lib-requires.js lib",
     "lint": "eslint src/.",
-    "lint-docs": "alex . && yarn format-docs:diff",
+    "lint-docs": "alex . && pnpm format-docs:diff",
     "format": "eslint . --fix",
     "format-docs": "prettier --config prettier.config.js --write \"docs/**/*.md\"",
     "format-docs:diff": "prettier --config prettier.config.js --list-different \"docs/**/*.md\"",
@@ -40,16 +40,16 @@
     "object-assign": "^4.1.1"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0-rc || ^16.0.0-rc || ^16.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0-rc || ^16.0.0-rc || ^16.0.0"
+    "react": ">=18.3.1",
+    "react-dom": ">=18.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@types/jest": "^29.5.4",
-    "@types/react": "^16.9.36",
-    "@types/react-dom": "^16.9.8",
+    "@types/react": "^18.3.24",
+    "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "alex": "^8.0.0",
@@ -80,15 +80,15 @@
     "jest-environment-jsdom": "^29.6.4",
     "merge2": "^1.4.1",
     "prettier": "1.19.1",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0",
-    "react-test-renderer": "^16.0.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-test-renderer": "^18.3.1",
     "stats-webpack-plugin": "^0.7.0",
     "terser-webpack-plugin": "^3.0.5",
     "through2": "^3.0.1",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2",
-    "webpack": "^5.88.2",
+    "typescript": "^5.9.2",
+    "webpack": "^5.101.3",
     "webpack-stream": "^7.0.0"
   },
   "devEngines": {

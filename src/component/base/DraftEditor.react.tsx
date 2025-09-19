@@ -10,6 +10,7 @@
  */
 
 import React, {Component, CSSProperties, DragEventHandler} from 'react';
+import {flushSync} from 'react-dom';
 import Scroll from 'fbjs/lib/Scroll';
 import Style from 'fbjs/lib/Style';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
@@ -35,7 +36,6 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import DraftEditorPlaceholder from './DraftEditorPlaceholder.react';
 import {DefaultDraftInlineStyle} from '../../model/immutable/DefaultDraftInlineStyle';
 import DraftEditorContents from '../contents/DraftEditorContents-core.react';
-import flushControlled from './DraftEditorFlushControlled';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -262,18 +262,14 @@ export default class DraftEditor extends React.Component<
    * editor mode, if any has been specified.
    */
   _buildHandler(eventName: string): (e: any) => void {
-    // Wrap event handlers in `flushControlled`. In sync mode, this is
+    // Wrap event handlers in `flushSync`. In sync mode, this is
     // effectively a no-op. In async mode, this ensures all updates scheduled
     // inside the handler are flushed before React yields to the browser.
     return e => {
       if (!this.props.readOnly) {
         const method = this._handler && this._handler[eventName];
         if (method) {
-          if (flushControlled) {
-            flushControlled(() => method(this, e));
-          } else {
-            method(this, e);
-          }
+          flushSync(() => method(this, e));
         }
       }
     };

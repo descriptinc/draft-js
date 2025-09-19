@@ -6,7 +6,6 @@
   "dependencies": {
     "draft-js": "file:../../../",
     "express": "^4.17.1",
-    "immutable": "^3.8.2",
     "react": "file:../../../node_modules/react",
     "react-dom": "file:../../../node_modules/react-dom"
   },

@@ -6,7 +6,6 @@
     "codemirror": "^5.52.2",
     "draft-convert": "^2.1.8",
     "draft-js": "file:../../..",
-    "immutable": "^3.8.2",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-codemirror2": "^7.1.0",

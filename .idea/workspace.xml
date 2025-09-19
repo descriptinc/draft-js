@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="cbbf7afd-c542-4b03-82b8-fd917a7db8e4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/pr.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pr.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/draft-0-10-0/playground/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/yarn.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/rich/rich.html" beforeDir="false" afterPath="$PROJECT_DIR$/examples/draft-0-10-0/rich/rich.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/draft-0-10-0/tex/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/draft-0-10-0/universal/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/gulpfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/base/DraftEditorFlushControlled.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="zg0l0648" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2FzodqFVstr0VMeGm7WCzZyUkxl" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "steve/react-18-and-19",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/srubin/code/draft-js",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs.jest.jest_package": "/Users/srubin/code/draft-js/node_modules/jest",
+    "nodejs_package_manager_path": "yarn",
+    "prettierjs.PrettierConfiguration.Package": "/Users/srubin/code/draft-js/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/srubin/code/draft-js/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/component/selection" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Jest.isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock">
+    <configuration name="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/model/immutable/__tests__/SelectionState-test.ts" />
+      <test-names>
+        <test-name value="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock.is false if selection is first in block" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/model/immutable/__tests__/SelectionState-test.ts" />
+      <test-names>
+        <test-name value="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock" />
+        <test-name value="is false if selection is first in block" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock.is false if selection is on the leading edge and does not extend beyond the current leaf in the current block" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/model/immutable/__tests__/SelectionState-test.ts" />
+      <test-names>
+        <test-name value="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock" />
+        <test-name value="is false if selection is on the leading edge and does not extend beyond the current leaf in the current block" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock.is false if selection is on the leading edge but there is not a leaf in the same block in the selection before it" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/model/immutable/__tests__/SelectionState-test.ts" />
+      <test-names>
+        <test-name value="isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock" />
+        <test-name value="is false if selection is on the leading edge but there is not a leaf in the same block in the selection before it" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="isOnlyOnTrailingEdgeAndIsNotLastInBlock.is false if selection is on the trailing edge and does not extend beyond the current leaf in the current block" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/model/immutable/__tests__/SelectionState-test.ts" />
+      <test-names>
+        <test-name value="isOnlyOnTrailingEdgeAndIsNotLastInBlock" />
+        <test-name value="is false if selection is on the trailing edge and does not extend beyond the current leaf in the current block" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Jest.isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock" />
+        <item itemvalue="Jest.isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock.is false if selection is first in block" />
+        <item itemvalue="Jest.isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock.is false if selection is on the leading edge and does not extend beyond the current leaf in the current block" />
+        <item itemvalue="Jest.isOnlyOnLeadingEdgeAndIsNotFirstSelectionInBlock.is false if selection is on the leading edge but there is not a leaf in the same block in the selection before it" />
+        <item itemvalue="Jest.isOnlyOnTrailingEdgeAndIsNotLastInBlock.is false if selection is on the trailing edge and does not extend beyond the current leaf in the current block" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-WS-252.23892.411" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="cbbf7afd-c542-4b03-82b8-fd917a7db8e4" name="Changes" comment="" />
+      <created>1665504363621</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1665504363621</updated>
+      <workItem from="1665504364883" duration="1670000" />
+      <workItem from="1676931736726" duration="1714000" />
+      <workItem from="1677094695656" duration="978000" />
+      <workItem from="1683145388260" duration="2300000" />
+      <workItem from="1694118112610" duration="7883000" />
+      <workItem from="1694190123202" duration="2842000" />
+      <workItem from="1694302883659" duration="7074000" />
+      <workItem from="1697160897495" duration="27376000" />
+      <workItem from="1701397914750" duration="1752000" />
+      <workItem from="1701470709831" duration="2223000" />
+      <workItem from="1701713628123" duration="602000" />
+      <workItem from="1704316617600" duration="1722000" />
+      <workItem from="1704385743960" duration="44000" />
+      <workItem from="1705528160997" duration="2597000" />
+      <workItem from="1708458987459" duration="2733000" />
+      <workItem from="1708720205719" duration="560000" />
+      <workItem from="1710350599240" duration="14927000" />
+      <workItem from="1710728647284" duration="1763000" />
+      <workItem from="1714759091326" duration="770000" />
+      <workItem from="1719627476319" duration="688000" />
+      <workItem from="1720577743167" duration="599000" />
+      <workItem from="1722039420905" duration="413000" />
+      <workItem from="1722046273195" duration="576000" />
+      <workItem from="1726612428914" duration="1415000" />
+      <workItem from="1730311151962" duration="5221000" />
+      <workItem from="1758323019817" duration="2985000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/encoding/__tests__/convertFromHTMLToContentBlocks-test.ts</url>
+          <line>115</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/encoding/__tests__/convertFromHTMLToContentBlocks-test.ts</url>
+          <line>108</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/encoding/convertFromDraftStateToRaw.ts</url>
+          <line>93</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/encoding/encodeEntityRanges.ts</url>
+          <line>44</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/encoding/convertFromDraftStateToRaw.ts</url>
+          <line>124</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/encoding/convertFromDraftStateToRaw.ts</url>
+          <line>107</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/model/encoding/convertFromDraftStateToRaw.ts</url>
+          <line>75</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

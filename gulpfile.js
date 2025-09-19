@@ -10,7 +10,6 @@
 var packageData = require('./package.json');
 var moduleMap = require('./scripts/module-map');
 var del = require('del');
-var gulpCheckDependencies = require('fbjs-scripts/gulp/check-dependencies');
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var cleanCSS = require('gulp-clean-css');
@@ -92,12 +91,6 @@ const terserPlugin = outputEcmaVersion =>
 var buildDist = function(opts) {
   var webpackOpts = {
     externals: {
-      immutable: {
-        root: 'Immutable',
-        commonjs2: 'immutable',
-        commonjs: 'immutable',
-        amd: 'immutable',
-      },
       react: {
         root: 'React',
         commonjs2: 'react',
@@ -266,13 +259,6 @@ gulp.task(
 );
 
 gulp.task(
-  'check-dependencies',
-  gulp.series(function() {
-    return gulp.src('package.json').pipe(gulpCheckDependencies());
-  }),
-);
-
-gulp.task(
   'watch',
   gulp.series(function() {
     gulp.watch(paths.src, gulp.parallel('modules'));
@@ -289,7 +275,6 @@ gulp.task(
 gulp.task(
   'default',
   gulp.series(
-    'check-dependencies',
     'clean',
     gulp.parallel('modules'),
     gulp.parallel('dist', 'dist:min'),

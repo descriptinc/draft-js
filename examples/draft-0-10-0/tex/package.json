@@ -11,7 +11,6 @@
     "babel-preset-react": "^6.11.1",
     "draft-js": "file:../../../",
     "express": "^4.13.1",
-    "immutable": "^3.7.4",
     "katex": "^0.5.1",
     "react": "file:../../../node_modules/react",
     "react-dom": "file:../../../node_modules/react-dom",
