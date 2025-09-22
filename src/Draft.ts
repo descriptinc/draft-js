@@ -10,7 +10,7 @@
 import Editor from './component/base/DraftEditor.react';
 export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
-import CompositeDraftDecorator from './model/decorators/CompositeDraftDecorator';
+export * as CompositeDecorator from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';
 export {AtomicBlockUtils};
@@ -41,7 +41,6 @@ export type {DraftDecoratorType} from './model/decorators/DraftDecoratorType';
 export type {DraftDecorator, DraftDecoratorComponentProps} from './model/decorators/DraftDecorator';
 
 export const EditorBlock = DraftEditorBlock;
-export const CompositeDecorator = CompositeDraftDecorator;
 export const Entity = DraftEntity;
 
 export * from './model/immutable/BlockMapBuilder';

@@ -15,7 +15,7 @@ import {ComponentType} from 'react';
 const DELIMITER = '.';
 
 /**
- * A CompositeDraftDecorator traverses through a list of DraftDecorator
+ * A CompositeDecorator traverses through a list of DraftDecorator
  * instances to identify sections of a ContentBlock that should be rendered
  * in a "decorated" manner. For example, hashtags, mentions, and links may
  * be intended to stand out visually, be rendered as anchors, etc.
@@ -33,7 +33,7 @@ const DELIMITER = '.';
  * Thus, when a collision like this is encountered, the earlier match is
  * preserved and the new match is discarded.
  */
-export default class CompositeDraftDecorator {
+export default class CompositeDecorator {
   _decorators: ReadonlyArray<DraftDecorator>;
 
   constructor(decorators: ReadonlyArray<DraftDecorator>) {

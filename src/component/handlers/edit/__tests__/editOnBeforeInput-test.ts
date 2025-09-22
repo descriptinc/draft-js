@@ -25,7 +25,7 @@ import {
 import DraftEditor from '../../../base/DraftEditor.react';
 import {SyntheticInputEvent} from '../../../utils/eventTypes';
 import editOnBeforeInput from '../editOnBeforeInput';
-import CompositeDraftDecorator from '../../../../model/decorators/CompositeDraftDecorator';
+import CompositeDecorator from '../../../../model/decorators/CompositeDraftDecorator';
 
 const DEFAULT_SELECTION = {
   anchorKey: 'a',
@@ -178,7 +178,7 @@ function testDecoratorFingerprint(
 ) {
   const editorState = acceptSelection(
     setEditorState(getEditorState(text), {
-      decorator: new CompositeDraftDecorator([
+      decorator: new CompositeDecorator([
         {
           strategy: hashtagStrategy,
           component: () => null,
@@ -202,7 +202,9 @@ function testDecoratorFingerprint(
   const ev = getInputEvent(charToInsert);
   editOnBeforeInput(editor, ev);
 
-  expect((ev.preventDefault as jest.Mock).mock.calls.length).toBe(shouldPrevent ? 1 : 0);
+  expect((ev.preventDefault as jest.Mock).mock.calls.length).toBe(
+    shouldPrevent ? 1 : 0,
+  );
 }
 
 test('decorator fingerprint logic bails out of native insertion', () => {

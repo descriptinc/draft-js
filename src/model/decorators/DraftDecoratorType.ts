@@ -17,7 +17,7 @@ import {DraftDecoratorComponentProps} from './DraftDecorator';
  * An interface for document decorator classes, allowing the creation of
  * custom decorator classes.
  *
- * See `CompositeDraftDecorator` for the most common use case.
+ * See `CompositeDecorator` for the most common use case.
  */
 export type DraftDecoratorType = {
   /**
