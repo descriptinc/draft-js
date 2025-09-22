@@ -10,6 +10,7 @@
 import Editor from './component/base/DraftEditor.react';
 export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
+export type {DraftEditorProps} from './component/base/DraftEditorProps';
 export {CompositeDecorator} from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';
@@ -54,4 +55,5 @@ export * from './model/immutable/DraftInlineStyle';
 export * from './model/immutable/findRangesImmutable';
 export * from './model/immutable/BlockNode';
 export * from './model/immutable/BlockTree';
+export * from './model/immutable/EditorChangeType';
 export * from './model/entity/DraftEntityInstance';
