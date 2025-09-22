@@ -10,7 +10,7 @@
  */
 
 import React, {Component, CSSProperties, DragEventHandler} from 'react';
-import {flushSync} from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import Scroll from 'fbjs/lib/Scroll';
 import Style from 'fbjs/lib/Style';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
@@ -269,7 +269,16 @@ export default class DraftEditor extends React.Component<
       if (!this.props.readOnly) {
         const method = this._handler && this._handler[eventName];
         if (method) {
-          flushSync(() => method(this, e));
+          const flush =
+            'flushSync' in ReactDOM
+              ? ReactDOM.flushSync
+              : ((ReactDOM as unknown) as Record<string, any>)
+                  .unstable_flushControlled;
+          if (flush) {
+            flush(() => method(this, e));
+          } else {
+            method(this, e);
+          }
         }
       }
     };
@@ -362,7 +371,8 @@ export default class DraftEditor extends React.Component<
 
     // The aria-expanded and aria-haspopup properties should only be rendered
     // for a combobox.
-    const ariaRole = (this.props as DraftEditorProps & {role?: string}).role || 'textbox';
+    const ariaRole =
+      (this.props as DraftEditorProps & {role?: string}).role || 'textbox';
     const ariaExpanded =
       ariaRole === 'combobox' ? !!this.props.ariaExpanded : null;
 

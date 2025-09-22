@@ -7,16 +7,8 @@
     <list default="true" id="cbbf7afd-c542-4b03-82b8-fd917a7db8e4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/base/__tests__/DraftEditor.react-test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/base/__tests__/DraftEditor.react-test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/composition/__tests__/DraftEditorCompostionHandler-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/composition/__tests__/DraftEditorCompostionHandler-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/drag/DraftEditorDragHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/drag/DraftEditorDragHandler.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnInput-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnInput-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnBlur.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnBlur.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnFocus.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnFocus.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/utils/getTextContentFromFiles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/utils/getTextContentFromFiles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stats.html" beforeDir="false" afterPath="$PROJECT_DIR$/stats.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vite.config.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.css.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
