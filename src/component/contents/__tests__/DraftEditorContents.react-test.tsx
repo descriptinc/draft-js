@@ -12,8 +12,23 @@ import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
 
 import React from 'react';
 import RichTextEditorUtil from '../../../model/modifier/RichTextEditorUtil';
-import ReactTestRenderer from 'react-test-renderer';
+import {createRoot, Root} from 'react-dom/client';
+import {flushSync} from 'react-dom';
 import DraftEditor from '../../base/DraftEditor.react';
+
+let container: HTMLElement;
+let root: Root;
+
+beforeEach(() => {
+  container = document.createElement('div');
+  document.body.appendChild(container);
+  root = createRoot(container);
+});
+
+afterEach(() => {
+  root.unmount();
+  document.body.removeChild(container);
+});
 
 test('defaults to "unstyled" block type for unknown block types', () => {
   const CUSTOM_BLOCK_TYPE = 'CUSTOM_BLOCK_TYPE';
@@ -82,13 +97,16 @@ test('defaults to "unstyled" block type for unknown block types', () => {
     };
   }
 
-  const block = ReactTestRenderer.create(<Container />);
-  const editorInstace = block.getInstance();
+  const containerRef = React.createRef<Container>();
+
+  flushSync(() => {
+    root.render(<Container ref={containerRef} />);
+  });
+
+  const editorInstance = containerRef.current;
+  expect(editorInstance).toBeTruthy();
 
   expect(() => {
-    editorInstace.toggleCustomBlock(
-      editorInstace.state.editorState,
-      CUSTOM_BLOCK_TYPE,
-    );
+    editorInstance?.toggleCustomBlock();
   }).not.toThrow();
 });

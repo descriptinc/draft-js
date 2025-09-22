@@ -12,6 +12,7 @@ import React, {ReactInstance} from 'react';
 import UserAgent from 'fbjs/lib/UserAgent';
 import DraftEditorTextNode from '../DraftEditorTextNode.react';
 import {createRoot, Root} from 'react-dom/client';
+import {flushSync} from 'react-dom';
 
 const BLOCK_DELIMITER_CHAR = '\n';
 const TEST_A = 'Hello';
@@ -33,7 +34,9 @@ afterEach(() => {
 });
 
 const renderIntoContainer = (element: any): HTMLElement => {
-  root.render(element);
+  flushSync(() => {
+    root.render(element);
+  });
   return container.firstChild as HTMLElement;
 };
 
@@ -99,27 +102,27 @@ test('must initialize correctly with a string, IE', function() {
 
 test('must update from empty to non-empty, non-IE', function() {
   initializeAsNonIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{''}</DraftEditorTextNode>,
   );
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_A);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A);
 });
 
 test('must update from empty to non-empty, IE', function() {
   initializeAsIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{''}</DraftEditorTextNode>,
   );
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_A);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A);
 });
 
 test('must update from non-empty to non-empty, non-IE', function() {
   initializeAsNonIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
@@ -127,61 +130,61 @@ test('must update from non-empty to non-empty, non-IE', function() {
     <DraftEditorTextNode>{TEST_A + TEST_B}</DraftEditorTextNode>,
   );
 
-  expectPopulatedSpan(stub, TEST_A + TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A + TEST_B);
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_B);
 });
 
-test('must update from non-empty to non-empty, non-IE', function() {
+test('must update from non-empty to non-empty, IE', function() {
   initializeAsIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
   renderIntoContainer(
     <DraftEditorTextNode>{TEST_A + TEST_B}</DraftEditorTextNode>,
   );
-  expectPopulatedSpan(stub, TEST_A + TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A + TEST_B);
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_B);
 });
 
 test('must skip updates if text already matches DOM, non-IE', function() {
   initializeAsNonIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
-  const initialText = stub.textContent;
+  const initialText = (container.firstChild as HTMLElement).textContent;
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
 
-  expect(stub.textContent).toBe(initialText);
+  expect((container.firstChild as HTMLElement).textContent).toBe(initialText);
 
   // Sanity check that updating is performed when appropriate.
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
 
-  expect(stub.textContent).toBe(TEST_B);
+  expect((container.firstChild as HTMLElement).textContent).toBe(TEST_B);
 });
 
 test('must skip updates if text already matches DOM, IE', function() {
   initializeAsIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
-  const initialText = stub.textContent;
+  const initialText = (container.firstChild as HTMLElement).textContent;
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
 
-  expect(stub.textContent).toBe(initialText);
+  expect((container.firstChild as HTMLElement).textContent).toBe(initialText);
 
   // Sanity check that updating is performed when appropriate.
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
 
-  expect(stub.textContent).toBe(TEST_B);
+  expect((container.firstChild as HTMLElement).textContent).toBe(TEST_B);
 });
 
 test('must update from non-empty to empty, non-IE', function() {

@@ -6,72 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="cbbf7afd-c542-4b03-82b8-fd917a7db8e4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/color/color.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/convertFromHTML/convert.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/convertFromHTML/image.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/entity/entity.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/iframe/iframe.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/link/link.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/media/media.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/media/media.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/media/media.mp4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/media/media.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/plaintext/plaintext.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/public/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/public/manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/App.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/App.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/App.test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/DraftJsPlaygroundContainer.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/DraftJsRichEditorExample.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/DraftJsRichEditorExample.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/GkManager.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/playground/src/registerServiceWorker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/rich/RichEditor.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/rich/rich.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/.babelrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/js/app.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/js/components/TeXBlock.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/js/components/TeXEditorExample.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/js/data/content.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/js/modifiers/insertTeXBlock.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/js/modifiers/removeTeXBlock.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/public/TeXEditor.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/server.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tex/yarn.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/tweet/tweet.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/.babelrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/client.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/editor.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/static/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/draft-0-10-0/universal/yarn.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gulpfile.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Draft.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Draft.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/base/__tests__/DraftEditor.react-test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/base/__tests__/DraftEditor.react-test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/base/__tests__/__snapshots__/DraftEditor.react-test.tsx.snap" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorBlock.react-test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorBlock.react-test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorContents.react-test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorContents.react-test.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorTextNode-test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorTextNode-test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/composition/__tests__/DraftEditorCompostionHandler-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/composition/__tests__/DraftEditorCompostionHandler-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBeforeInput-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBeforeInput-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBlur-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBlur-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnInput-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnInput-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/selection/getUpdatedSelectionState.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/selection/getUpdatedSelectionState.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/selection/setDraftEditorSelection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/selection/setDraftEditorSelection.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/decorators/DraftDecorator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/decorators/DraftDecorator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.dist.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.dist.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/contents/__tests__/__snapshots__/DraftEditorBlock.react-test.tsx.snap" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/contents/__tests__/__snapshots__/DraftEditorBlock.react-test.tsx.snap" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,30 +44,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "steve/react-18-and-19",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/srubin/code/draft-js",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs.jest.jest_package": "/Users/srubin/code/draft-js/node_modules/jest",
-    "nodejs_package_manager_path": "yarn",
-    "prettierjs.PrettierConfiguration.Package": "/Users/srubin/code/draft-js/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/srubin/code/draft-js/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;steve/react-18-and-19&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/srubin/code/draft-js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.jest.jest_package&quot;: &quot;/Users/srubin/code/draft-js/node_modules/jest&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/srubin/code/draft-js/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/srubin/code/draft-js/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/component/selection" />

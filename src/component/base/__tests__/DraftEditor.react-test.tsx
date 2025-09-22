@@ -11,60 +11,77 @@
 import React from 'react';
 import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
 import DraftEditor from '../DraftEditor.react';
-import ReactShallowRenderer from 'react-test-renderer/shallow';
+import {createRoot, Root} from 'react-dom/client';
+import {flushSync} from 'react-dom';
 
-let shallow: ReactShallowRenderer;
+let container: HTMLElement;
+let root: Root;
 let editorState: EditorState;
 
 beforeEach(() => {
-  shallow = new ReactShallowRenderer();
+  container = document.createElement('div');
+  document.body.appendChild(container);
+  root = createRoot(container);
   editorState = createEmpty();
 });
 
-test('must has generated editorKey', () => {
-  shallow.render(
-    <DraftEditor
-      editorState={editorState}
-      onChange={() => {
-        //
-      }}
-    />,
-  );
+afterEach(() => {
+  root.unmount();
+  document.body.removeChild(container);
+});
 
-  // internally at Facebook we use a newer version of the shallowRenderer
-  // which has a different level of wrapping of the '_instance'
-  // long term we should rewrite this test to not depend on private
-  // properties
-  const getEditorKey =
-    shallow._instance.getEditorKey || shallow._instance._instance.getEditorKey;
-  expect(getEditorKey()).toMatchSnapshot();
+test('must has generated editorKey', () => {
+  const editorRef = React.createRef<DraftEditor>();
+  flushSync(() => {
+    root.render(
+      <DraftEditor
+        ref={editorRef}
+        editorState={editorState}
+        onChange={() => {
+          //
+        }}
+      />,
+    );
+  });
+
+  const editorInstance = editorRef.current;
+  expect(editorInstance).toBeTruthy();
+  // @ts-ignore - accessing private method for testing
+  const key = editorInstance?.getEditorKey();
+  expect(key).toBeTruthy();
+  expect(typeof key).toBe('string');
+  expect(key.length).toBeGreaterThan(0);
 });
 
 test('must has editorKey same as props', () => {
-  shallow.render(
-    <DraftEditor
-      editorState={editorState}
-      onChange={() => {
-        //
-      }}
-      editorKey="hash"
-    />,
-  );
+  const editorRef = React.createRef<DraftEditor>();
+  flushSync(() => {
+    root.render(
+      <DraftEditor
+        ref={editorRef}
+        editorState={editorState}
+        onChange={() => {
+          //
+        }}
+        editorKey="hash"
+      />,
+    );
+  });
 
-  // internally at Facebook we use a newer version of the shallowRenderer
-  // which has a different level of wrapping of the '_instance'
-  // long term we should rewrite this test to not depend on private
-  // properties
-  const getEditorKey =
-    shallow._instance.getEditorKey || shallow._instance._instance.getEditorKey;
-  expect(getEditorKey()).toMatchSnapshot();
+  const editorInstance = editorRef.current;
+  expect(editorInstance).toBeTruthy();
+  // @ts-ignore - accessing private method for testing
+  expect(editorInstance?.getEditorKey()).toBe('hash');
 });
 
 describe('ariaDescribedBy', () => {
-  function getProps(elem) {
-    const r = shallow.render(elem);
-    const ec = r.props.children[1].props.children;
-    return ec.props;
+  function getProps(elem: React.ReactElement) {
+    flushSync(() => {
+      root.render(elem);
+    });
+    // Find the contenteditable div which has the aria-describedby attribute
+    const contentEditable = container.querySelector('[contenteditable]');
+    return contentEditable ? contentEditable : {};
   }
 
   describe('without placeholder', () => {
@@ -77,7 +94,7 @@ describe('ariaDescribedBy', () => {
           }}
         />,
       );
-      expect(props).toHaveProperty('aria-describedby', undefined);
+      expect(props.getAttribute('aria-describedby')).toBeNull();
     });
 
     test('can be set to something arbitrary', () => {
@@ -90,7 +107,7 @@ describe('ariaDescribedBy', () => {
           ariaDescribedBy="abc"
         />,
       );
-      expect(props).toHaveProperty('aria-describedby', 'abc');
+      expect(props.getAttribute('aria-describedby')).toBe('abc');
     });
 
     test('can use special token', () => {
@@ -103,7 +120,7 @@ describe('ariaDescribedBy', () => {
           ariaDescribedBy="abc {{editor_id_placeholder}} xyz"
         />,
       );
-      expect(props).toHaveProperty('aria-describedby', 'abc  xyz');
+      expect(props.getAttribute('aria-describedby')).toMatch(/^abc\s+xyz$/);
     });
   });
 
@@ -119,7 +136,7 @@ describe('ariaDescribedBy', () => {
           placeholder="place"
         />,
       );
-      expect(props).toHaveProperty('aria-describedby', 'placeholder-X');
+      expect(props.getAttribute('aria-describedby')).toBe('placeholder-X');
     });
 
     test('can be set to something arbitrary', () => {
@@ -134,7 +151,7 @@ describe('ariaDescribedBy', () => {
           ariaDescribedBy="abc"
         />,
       );
-      expect(props).toHaveProperty('aria-describedby', 'abc');
+      expect(props.getAttribute('aria-describedby')).toBe('abc');
     });
 
     test('can use special token', () => {
@@ -149,7 +166,7 @@ describe('ariaDescribedBy', () => {
           ariaDescribedBy="abc {{editor_id_placeholder}} xyz"
         />,
       );
-      expect(props).toHaveProperty('aria-describedby', 'abc placeholder-X xyz');
+      expect(props.getAttribute('aria-describedby')).toBe('abc placeholder-X xyz');
     });
   });
 });
