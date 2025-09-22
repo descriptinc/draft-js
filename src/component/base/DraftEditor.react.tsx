@@ -270,10 +270,7 @@ export default class DraftEditor extends React.Component<
         const method = this._handler && this._handler[eventName];
         if (method) {
           const flush =
-            'flushSync' in ReactDOM
-              ? ReactDOM.flushSync
-              : ((ReactDOM as unknown) as Record<string, any>)
-                  .unstable_flushControlled;
+            'flushSync' in ReactDOM ? ReactDOM.flushSync : undefined;
           if (flush) {
             flush(() => method(this, e));
           } else {
