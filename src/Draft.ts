@@ -30,12 +30,14 @@ import getDefaultKeyBinding from './component/utils/getDefaultKeyBinding';
 export {getDefaultKeyBinding};
 import getVisibleSelectionRect from './component/selection/getVisibleSelectionRect';
 export {getVisibleSelectionRect};
+export type {SyntheticInputEvent, SyntheticClipboardEvent} from './component/utils/eventTypes';
 import convertFromDraftStateToRaw from './model/encoding/convertFromDraftStateToRaw';
 export {convertFromDraftStateToRaw};
 export type {RawDraftContentState} from './model/encoding/convertFromDraftStateToRaw';
 
 export type {DraftEditorCommand} from './model/constants/DraftEditorCommand';
 export type {DraftHandleValue} from './model/constants/DraftHandleValue';
+export type {DraftDecoratorType} from './model/decorators/DraftDecoratorType';
 
 export const EditorBlock = DraftEditorBlock;
 export const CompositeDecorator = CompositeDraftDecorator;
