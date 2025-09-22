@@ -1,0 +1,101 @@
+.EntityEditor-root {
+  font-family: 'Georgia', serif;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.EntityEditor-root h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.EntityEditor-instructions {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.EntityEditor-instructions ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.EntityEditor-buttons {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.EntityEditor-button {
+  padding: 8px 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.EntityEditor-button.immutable {
+  background: #9c27b0;
+}
+
+.EntityEditor-button.immutable:hover {
+  background: #7b1fa2;
+}
+
+.EntityEditor-button.mutable {
+  background: #2196f3;
+}
+
+.EntityEditor-button.mutable:hover {
+  background: #1976d2;
+}
+
+.EntityEditor-button.segmented {
+  background: #4caf50;
+}
+
+.EntityEditor-button.segmented:hover {
+  background: #388e3c;
+}
+
+.EntityEditor-button.remove {
+  background: #ff9800;
+}
+
+.EntityEditor-button.remove:hover {
+  background: #f57c00;
+}
+
+.EntityEditor-button.log {
+  background: #f44336;
+}
+
+.EntityEditor-button.log:hover {
+  background: #d32f2f;
+}
+
+.EntityEditor-editor {
+  border: 1px solid #ddd;
+  min-height: 200px;
+  padding: 15px;
+  border-radius: 4px;
+  cursor: text;
+  font-size: 16px;
+}
+
+.token-immutable {
+  background-color: #f3e5f5;
+  border-bottom: 2px solid #9c27b0;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.token-mutable {
+  background-color: #e3f2fd;
+  border-bottom: 2px solid #2196f3;
+  padding: 2px 4px;
+  border-radius: 2px;
+}

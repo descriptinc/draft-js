@@ -10,6 +10,7 @@
  */
 
 import React, {Component, CSSProperties, DragEventHandler} from 'react';
+import * as ReactDOM from 'react-dom';
 import Scroll from 'fbjs/lib/Scroll';
 import Style from 'fbjs/lib/Style';
 import getScrollPosition from 'fbjs/lib/getScrollPosition';
@@ -35,7 +36,6 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import DraftEditorPlaceholder from './DraftEditorPlaceholder.react';
 import {DefaultDraftInlineStyle} from '../../model/immutable/DefaultDraftInlineStyle';
 import DraftEditorContents from '../contents/DraftEditorContents-core.react';
-import flushControlled from './DraftEditorFlushControlled';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -231,7 +231,7 @@ export default class DraftEditor extends React.Component<
 
     this.getEditorKey = () => this._editorKey;
 
-    if (global.__DEV__) {
+    if (globalThis.__DEV__) {
       [
         'onDownArrow',
         'onEscape',
@@ -262,15 +262,17 @@ export default class DraftEditor extends React.Component<
    * editor mode, if any has been specified.
    */
   _buildHandler(eventName: string): (e: any) => void {
-    // Wrap event handlers in `flushControlled`. In sync mode, this is
+    // Wrap event handlers in `flushSync`. In sync mode, this is
     // effectively a no-op. In async mode, this ensures all updates scheduled
     // inside the handler are flushed before React yields to the browser.
     return e => {
       if (!this.props.readOnly) {
         const method = this._handler && this._handler[eventName];
         if (method) {
-          if (flushControlled) {
-            flushControlled(() => method(this, e));
+          const flush =
+            'flushSync' in ReactDOM ? ReactDOM.flushSync : undefined;
+          if (flush) {
+            flush(() => method(this, e));
           } else {
             method(this, e);
           }
@@ -366,7 +368,8 @@ export default class DraftEditor extends React.Component<
 
     // The aria-expanded and aria-haspopup properties should only be rendered
     // for a combobox.
-    const ariaRole = (this.props as any).role || 'textbox';
+    const ariaRole =
+      (this.props as DraftEditorProps & {role?: string}).role || 'textbox';
     const ariaExpanded =
       ariaRole === 'combobox' ? !!this.props.ariaExpanded : null;
 
@@ -458,7 +461,7 @@ export default class DraftEditor extends React.Component<
             onPaste={this._onPaste}
             onSelect={this._onSelect}
             ref={this.props.editorRef}
-            role={readOnly ? null : ariaRole}
+            role={readOnly ? undefined : ariaRole}
             spellCheck={allowSpellCheck && this.props.spellCheck}
             style={contentStyle}
             suppressContentEditableWarning
@@ -497,7 +500,7 @@ export default class DraftEditor extends React.Component<
       // editor can be null after mounting
       // https://stackoverflow.com/questions/44074747/componentdidmount-called-before-ref-callback
       if (!this.editor) {
-        global.execCommand('AutoUrlDetect', false, false);
+        globalThis.execCommand('AutoUrlDetect', false, false);
       } else {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

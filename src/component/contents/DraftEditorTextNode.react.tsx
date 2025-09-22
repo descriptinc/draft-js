@@ -80,7 +80,7 @@ export default class DraftEditorTextNode extends React.Component<Props> {
     const shouldBeNewline = nextProps.children === '';
 
     invariant(isElement(node), 'node is not an Element');
-    const elementNode: Element = node as any;
+    const elementNode = node as Element;
     if (shouldBeNewline) {
       return !isNewline(elementNode);
     }

@@ -1,0 +1,49 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background-color: #282c34;
+  padding: 1rem 2rem;
+  color: white;
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.example-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.example-nav button {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: white;
+  border: 1px solid #4a5568;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.example-nav button:hover {
+  background-color: #4a5568;
+}
+
+.example-nav button.active {
+  background-color: #61dafb;
+  color: #282c34;
+  border-color: #61dafb;
+}
+
+.app-main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}

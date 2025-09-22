@@ -86,18 +86,18 @@ function editorTextContent() {
 }
 
 function withGlobalGetSelectionAs(getSelectionValue, callback) {
-  const oldGetSelection = global.getSelection;
+  const oldGetSelection = globalThis.getSelection;
   try {
-    global.getSelection = () => getSelectionValue;
+    globalThis.getSelection = () => getSelectionValue;
     callback();
   } finally {
-    global.getSelection = oldGetSelection;
+    globalThis.getSelection = oldGetSelection;
   }
 }
 
 beforeEach(() => {
   jest.resetModules();
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
   compositionHandler = require('../DraftEditorCompositionHandler').default;
   editor = ({
     _latestEditorState: createEmpty(),
@@ -128,7 +128,7 @@ test('Can handle a single mutation', () => {
   withGlobalGetSelectionAs({}, () => {
     editor._latestEditorState = getEditorState({blockkey0: ''});
     const mutations = new Map([['blockkey0-0-0', '\u79c1']]);
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
     require('../DOMObserver').prototype.stopAndFlushMutations.mockReturnValue(
       mutations,
     );
@@ -152,7 +152,7 @@ test('Can handle mutations in multiple blocks', () => {
       ['blockkey0-0-0', 'reactjs'],
       ['blockkey1-0-0', 'draftjs'],
     ]);
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
     require('../DOMObserver').prototype.stopAndFlushMutations.mockReturnValue(
       mutations,
     );
@@ -178,7 +178,7 @@ test('Can handle mutations in the same block in multiple leaf nodes', () => {
       [`${blockKey}-0-1`, 'draftbb'],
       [`${blockKey}-0-2`, ' graphqlccc'],
     ]);
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
     require('../DOMObserver').prototype.stopAndFlushMutations.mockReturnValue(
       mutations,
     );

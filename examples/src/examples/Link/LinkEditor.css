@@ -1,0 +1,99 @@
+.LinkEditor-root {
+  font-family: 'Georgia', serif;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.LinkEditor-root h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.LinkEditor-instructions {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.LinkEditor-buttons {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.LinkEditor-button {
+  padding: 8px 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.LinkEditor-button.add {
+  background: #4CAF50;
+}
+
+.LinkEditor-button.add:hover {
+  background: #45a049;
+}
+
+.LinkEditor-button.remove {
+  background: #ff9800;
+}
+
+.LinkEditor-button.remove:hover {
+  background: #e68900;
+}
+
+.LinkEditor-button.log {
+  background: #f44336;
+}
+
+.LinkEditor-button.log:hover {
+  background: #da190b;
+}
+
+.LinkEditor-urlInput {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  gap: 10px;
+}
+
+.LinkEditor-urlInput input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.LinkEditor-urlInput button {
+  padding: 8px 16px;
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.LinkEditor-urlInput button:hover {
+  background: #0b7dda;
+}
+
+.LinkEditor-editor {
+  border: 1px solid #ddd;
+  min-height: 200px;
+  padding: 15px;
+  border-radius: 4px;
+  cursor: text;
+}
+
+.link-entity {
+  color: #3b5998;
+  text-decoration: underline;
+}

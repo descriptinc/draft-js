@@ -26,7 +26,7 @@ export default function getUpdatedSelectionState(
   const selection: SelectionState = nullthrows(editorState.selection);
   if (!anchorKey || !focusKey) {
     // If we cannot make sense of the updated selection state, stick to the current one.
-    if (global.__DEV__) {
+    if (globalThis.__DEV__) {
       /* eslint-disable-next-line */
       console.warn('Invalid selection state.', arguments, editorState);
     }
@@ -49,7 +49,7 @@ export default function getUpdatedSelectionState(
 
   if (!anchorLeaf || !focusLeaf) {
     // If we cannot make sense of the updated selection state, stick to the current one.
-    if (global.__DEV__) {
+    if (globalThis.__DEV__) {
       /* eslint-disable-next-line */
       console.warn('Invalid selection state.', arguments, editorState);
     }

@@ -34,13 +34,14 @@ const initialBlock = first(contentState.blockMap.values())!;
 const ENTITY_KEY = createEntity('TOKEN', 'MUTABLE');
 const CHARACTER = ' ';
 
-const getInvariantViolation = (msg: string) => {
+const getInvariantViolation = (msg: string): Error => {
   try {
     /* eslint-disable-next-line */
     invariant(false, msg);
   } catch (e) {
-    return e;
+    return e as Error;
   }
+  return new Error('Expected invariant to throw');
 };
 
 const toggleExperimentalTreeDataSupport = (enabled: boolean) => {

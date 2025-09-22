@@ -30,13 +30,12 @@ import getDefaultKeyBinding from './component/utils/getDefaultKeyBinding';
 export {getDefaultKeyBinding};
 import getVisibleSelectionRect from './component/selection/getVisibleSelectionRect';
 export {getVisibleSelectionRect};
-import convertFromDraftStateToRaw, {
-  RawDraftContentState,
-} from './model/encoding/convertFromDraftStateToRaw';
-export {convertFromDraftStateToRaw, RawDraftContentState};
+import convertFromDraftStateToRaw from './model/encoding/convertFromDraftStateToRaw';
+export {convertFromDraftStateToRaw};
+export type {RawDraftContentState} from './model/encoding/convertFromDraftStateToRaw';
 
-export {DraftEditorCommand} from './model/constants/DraftEditorCommand';
-export {DraftHandleValue} from './model/constants/DraftHandleValue';
+export type {DraftEditorCommand} from './model/constants/DraftEditorCommand';
+export type {DraftHandleValue} from './model/constants/DraftHandleValue';
 
 export const EditorBlock = DraftEditorBlock;
 export const CompositeDecorator = CompositeDraftDecorator;

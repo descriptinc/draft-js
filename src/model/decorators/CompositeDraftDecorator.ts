@@ -67,9 +67,9 @@ export default class CompositeDraftDecorator {
     return decorations;
   }
 
-  getComponentForKey(key: string): ComponentType {
+  getComponentForKey(key: string): ComponentType<any> {
     const componentKey = parseInt(key.split(DELIMITER)[0], 10);
-    return this._decorators[componentKey].component;
+    return this._decorators[componentKey]?.component;
   }
 
   getPropsForKey(key: string): Record<string, unknown> | null {

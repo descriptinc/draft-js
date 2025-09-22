@@ -11,25 +11,37 @@
 import React, {ReactInstance} from 'react';
 import UserAgent from 'fbjs/lib/UserAgent';
 import DraftEditorTextNode from '../DraftEditorTextNode.react';
-import ReactDOM from 'react-dom';
+import {createRoot, Root} from 'react-dom/client';
+import {flushSync} from 'react-dom';
 
 const BLOCK_DELIMITER_CHAR = '\n';
 const TEST_A = 'Hello';
 const TEST_B = ' World!';
 
 let container: HTMLElement;
+let root: Root;
 
 beforeEach(() => {
   jest.resetModules();
   container = document.createElement('div');
+  document.body.appendChild(container);
+  root = createRoot(container);
+});
+
+afterEach(() => {
+  root.unmount();
+  document.body.removeChild(container);
 });
 
 const renderIntoContainer = (element: any): HTMLElement => {
-  return ReactDOM.render(element, container) as HTMLElement;
+  flushSync(() => {
+    root.render(element);
+  });
+  return container.firstChild as HTMLElement;
 };
 
 const isBrowserImpl = UserAgent.isBrowser;
-afterEach(() => {
+afterAll(() => {
   UserAgent.isBrowser = isBrowserImpl;
 });
 
@@ -48,9 +60,8 @@ const initializeAsNonIE = () => {
   UserAgent.isBrowser = jest.fn().mockImplementation(() => false);
 };
 
-const expectPopulatedSpan = (stub: ReactInstance, testString: string) => {
-  // $FlowExpectedError node could be null
-  const node = ReactDOM.findDOMNode(stub) as HTMLElement;
+const expectPopulatedSpan = (stub: ReactInstance | HTMLElement, testString: string) => {
+  const node = stub instanceof HTMLElement ? stub : container.firstChild as HTMLElement;
   expect(node.tagName).toBe('SPAN');
   expect(node.childNodes.length).toBe(1);
   expect(node.firstChild && node.firstChild.textContent).toBe(testString);
@@ -61,8 +72,7 @@ test('must initialize correctly with an empty string, non-IE', function() {
   const stub = renderIntoContainer(
     <DraftEditorTextNode>{''}</DraftEditorTextNode>,
   );
-  // $FlowExpectedError we know node is an Element
-  expect((ReactDOM.findDOMNode(stub) as Element).tagName).toBe('BR');
+  expect(stub.tagName).toBe('BR');
 });
 
 // FIXME [correctness]: IE mock is broken
@@ -92,27 +102,27 @@ test('must initialize correctly with a string, IE', function() {
 
 test('must update from empty to non-empty, non-IE', function() {
   initializeAsNonIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{''}</DraftEditorTextNode>,
   );
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_A);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A);
 });
 
 test('must update from empty to non-empty, IE', function() {
   initializeAsIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{''}</DraftEditorTextNode>,
   );
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_A);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A);
 });
 
 test('must update from non-empty to non-empty, non-IE', function() {
   initializeAsNonIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
@@ -120,77 +130,73 @@ test('must update from non-empty to non-empty, non-IE', function() {
     <DraftEditorTextNode>{TEST_A + TEST_B}</DraftEditorTextNode>,
   );
 
-  expectPopulatedSpan(stub, TEST_A + TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A + TEST_B);
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_B);
 });
 
-test('must update from non-empty to non-empty, non-IE', function() {
+test('must update from non-empty to non-empty, IE', function() {
   initializeAsIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
   renderIntoContainer(
     <DraftEditorTextNode>{TEST_A + TEST_B}</DraftEditorTextNode>,
   );
-  expectPopulatedSpan(stub, TEST_A + TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_A + TEST_B);
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
-  expectPopulatedSpan(stub, TEST_B);
+  expectPopulatedSpan(container.firstChild as HTMLElement, TEST_B);
 });
 
 test('must skip updates if text already matches DOM, non-IE', function() {
   initializeAsNonIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
-  jest.spyOn(stub, 'render');
+  const initialText = (container.firstChild as HTMLElement).textContent;
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
 
-  // $FlowExpectedError property render is missing in HTMLDivElement
-  expect(stub.render.mock.calls.length).toBe(0);
+  expect((container.firstChild as HTMLElement).textContent).toBe(initialText);
 
   // Sanity check that updating is performed when appropriate.
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
 
-  // $FlowExpectedError property render is missing in HTMLDivElement
-  expect(stub.render.mock.calls.length).toBe(1);
+  expect((container.firstChild as HTMLElement).textContent).toBe(TEST_B);
 });
 
 test('must skip updates if text already matches DOM, IE', function() {
   initializeAsIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
-  jest.spyOn(stub, 'render');
+  const initialText = (container.firstChild as HTMLElement).textContent;
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
 
-  // $FlowExpectedError property render is missing in HTMLDivElement
-  expect(stub.render.mock.calls.length).toBe(0);
+  expect((container.firstChild as HTMLElement).textContent).toBe(initialText);
 
   // Sanity check that updating is performed when appropriate.
   renderIntoContainer(<DraftEditorTextNode>{TEST_B}</DraftEditorTextNode>);
 
-  // $FlowExpectedError property render is missing in HTMLDivElement
-  expect(stub.render.mock.calls.length).toBe(1);
+  expect((container.firstChild as HTMLElement).textContent).toBe(TEST_B);
 });
 
 test('must update from non-empty to empty, non-IE', function() {
   initializeAsNonIE();
-  const stub = renderIntoContainer(
+  renderIntoContainer(
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
   renderIntoContainer(<DraftEditorTextNode>{''}</DraftEditorTextNode>);
 
-  // $FlowExpectedError we know node is an Element
-  expect((ReactDOM.findDOMNode(stub) as Element).tagName).toBe('BR');
+  const updatedNode = container.firstChild as Element;
+  expect(updatedNode.tagName).toBe('BR');
 });
 
 // FIXME [correctness]: IE mock is broken
@@ -220,11 +226,10 @@ test('must force unchanged text back into the DOM', function() {
     <DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>,
   );
 
-  // $FlowExpectedError we know node is not null
-  (ReactDOM.findDOMNode(stub) as Text).textContent = TEST_B;
+  stub.textContent = TEST_B;
 
   renderIntoContainer(<DraftEditorTextNode>{TEST_A}</DraftEditorTextNode>);
 
-  // $FlowExpectedError we know node is not null
-  expect((ReactDOM.findDOMNode(stub) as Text).textContent).toBe(TEST_A);
+  const updatedNode = container.firstChild as HTMLElement;
+  expect(updatedNode.textContent).toBe(TEST_A);
 });

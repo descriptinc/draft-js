@@ -1,0 +1,29 @@
+.IframeEditor-root {
+  font-family: 'Georgia', serif;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.IframeEditor-root h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.IframeEditor-instructions {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.iframe-container {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+  display: none;
+}
