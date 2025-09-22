@@ -25,7 +25,7 @@ import {
 import DraftEditor from '../../../base/DraftEditor.react';
 import {SyntheticInputEvent} from '../../../utils/eventTypes';
 import editOnBeforeInput from '../editOnBeforeInput';
-import CompositeDecorator from '../../../../model/decorators/CompositeDraftDecorator';
+import {CompositeDecorator} from '../../../../model/decorators/CompositeDraftDecorator';
 
 const DEFAULT_SELECTION = {
   anchorKey: 'a',

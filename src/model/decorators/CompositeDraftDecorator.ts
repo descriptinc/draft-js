@@ -33,7 +33,7 @@ const DELIMITER = '.';
  * Thus, when a collision like this is encountered, the earlier match is
  * preserved and the new match is discarded.
  */
-export default class CompositeDecorator {
+export class CompositeDecorator {
   _decorators: ReadonlyArray<DraftDecorator>;
 
   constructor(decorators: ReadonlyArray<DraftDecorator>) {

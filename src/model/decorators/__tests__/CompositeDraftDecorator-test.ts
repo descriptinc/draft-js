@@ -9,7 +9,7 @@
  */
 
 import {createFromText} from '../../immutable/ContentState';
-import CompositeDecorator from '../CompositeDraftDecorator';
+import {CompositeDecorator} from '../CompositeDraftDecorator';
 import {ContentBlock, makeContentBlock} from '../../immutable/ContentBlock';
 import {genKey} from '../../../Draft';
 
