@@ -31,14 +31,14 @@ const getBlurEvent = (currentTarget: any) => ({
 });
 
 function withGlobalGetSelectionAs(getSelectionValue = {}, callback) {
-  const oldGetSelection = global.getSelection;
+  const oldGetSelection = globalThis.getSelection;
   try {
-    global.getSelection = () => {
+    globalThis.getSelection = () => {
       return getSelectionValue;
     };
     callback();
   } finally {
-    global.getSelection = oldGetSelection;
+    globalThis.getSelection = oldGetSelection;
   }
 }
 

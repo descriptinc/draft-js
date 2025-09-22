@@ -33,12 +33,12 @@ const getEditorState = (text: string = '') => {
 };
 
 function withGlobalGetSelectionAs(getSelectionValue = {}, callback) {
-  const oldGetSelection = global.getSelection;
+  const oldGetSelection = globalThis.getSelection;
   try {
-    global.getSelection = () => getSelectionValue as Selection;
+    globalThis.getSelection = () => getSelectionValue as Selection;
     callback();
   } finally {
-    global.getSelection = oldGetSelection;
+    globalThis.getSelection = oldGetSelection;
   }
 }
 

@@ -86,12 +86,12 @@ function editorTextContent() {
 }
 
 function withGlobalGetSelectionAs(getSelectionValue, callback) {
-  const oldGetSelection = global.getSelection;
+  const oldGetSelection = globalThis.getSelection;
   try {
-    global.getSelection = () => getSelectionValue;
+    globalThis.getSelection = () => getSelectionValue;
     callback();
   } finally {
-    global.getSelection = oldGetSelection;
+    globalThis.getSelection = oldGetSelection;
   }
 }
 

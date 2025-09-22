@@ -1,0 +1,120 @@
+.TweetEditor-root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.TweetEditor-root h2 {
+  margin-top: 0;
+  color: #14171a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.TweetEditor-instructions {
+  margin-bottom: 20px;
+  color: #657786;
+  font-size: 14px;
+}
+
+.TweetEditor-composer {
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f7f9fa;
+}
+
+.TweetEditor-editor {
+  min-height: 100px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  cursor: text;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.TweetEditor-editor .public-DraftEditorPlaceholder-root {
+  color: #8899a6;
+}
+
+.tweet-mention {
+  color: #1b95e0;
+  text-decoration: none;
+}
+
+.tweet-hashtag {
+  color: #1b95e0;
+  text-decoration: none;
+}
+
+.TweetEditor-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.TweetEditor-charCount {
+  font-size: 14px;
+  color: #657786;
+  font-weight: 500;
+}
+
+.TweetEditor-charCount.warning {
+  color: #ff9800;
+}
+
+.TweetEditor-charCount.over {
+  color: #e0245e;
+}
+
+.TweetEditor-tweetButton {
+  background: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.TweetEditor-tweetButton:hover:not(:disabled) {
+  background: #1a91da;
+}
+
+.TweetEditor-tweetButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.TweetEditor-tips {
+  margin-top: 20px;
+  padding: 12px;
+  background: #f7f9fa;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #657786;
+}
+
+.TweetEditor-tips p {
+  margin: 0 0 8px 0;
+  font-weight: 500;
+}
+
+.TweetEditor-tips ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.TweetEditor-tips li {
+  margin: 4px 0;
+}

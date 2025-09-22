@@ -1,0 +1,129 @@
+.ConvertFromHTMLEditor-root {
+  font-family: 'Helvetica', sans-serif;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ConvertFromHTMLEditor-root h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.ConvertFromHTMLEditor-root h3 {
+  color: #555;
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.ConvertFromHTMLEditor-instructions {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.ConvertFromHTMLEditor-inputSection {
+  margin-bottom: 30px;
+}
+
+.ConvertFromHTMLEditor-textarea {
+  width: 100%;
+  padding: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.ConvertFromHTMLEditor-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ConvertFromHTMLEditor-button.convert {
+  background: #4CAF50;
+  color: white;
+}
+
+.ConvertFromHTMLEditor-button.convert:hover {
+  background: #45a049;
+}
+
+.ConvertFromHTMLEditor-button.log {
+  background: #2196F3;
+  color: white;
+}
+
+.ConvertFromHTMLEditor-button.log:hover {
+  background: #0b7dda;
+}
+
+.ConvertFromHTMLEditor-editorSection {
+  margin-bottom: 30px;
+}
+
+.ConvertFromHTMLEditor-editor {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: text;
+  min-height: 150px;
+  padding: 15px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.ConvertFromHTMLEditor-editor .public-DraftEditorPlaceholder-root {
+  color: #999;
+}
+
+.converted-link {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.converted-link:hover {
+  color: #0052a3;
+}
+
+.ConvertFromHTMLEditor-tips {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 15px;
+  margin-top: 30px;
+}
+
+.ConvertFromHTMLEditor-tips h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.ConvertFromHTMLEditor-tips ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.ConvertFromHTMLEditor-tips li {
+  margin: 5px 0;
+  color: #555;
+  font-size: 13px;
+}
+
+.ConvertFromHTMLEditor-tips code {
+  background: #fff;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #d14;
+}

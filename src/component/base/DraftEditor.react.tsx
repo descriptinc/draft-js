@@ -231,7 +231,7 @@ export default class DraftEditor extends React.Component<
 
     this.getEditorKey = () => this._editorKey;
 
-    if (global.__DEV__) {
+    if (globalThis.__DEV__) {
       [
         'onDownArrow',
         'onEscape',
@@ -493,7 +493,7 @@ export default class DraftEditor extends React.Component<
       // editor can be null after mounting
       // https://stackoverflow.com/questions/44074747/componentdidmount-called-before-ref-callback
       if (!this.editor) {
-        global.execCommand('AutoUrlDetect', false, false);
+        globalThis.execCommand('AutoUrlDetect', false, false);
       } else {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
