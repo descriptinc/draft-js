@@ -202,13 +202,13 @@ function testDecoratorFingerprint(
   const ev = getInputEvent(charToInsert);
   editOnBeforeInput(editor, ev);
 
-  expect(ev.preventDefault.mock.calls.length).toBe(shouldPrevent ? 1 : 0);
+  expect((ev.preventDefault as jest.Mock).mock.calls.length).toBe(shouldPrevent ? 1 : 0);
 }
 
 test('decorator fingerprint logic bails out of native insertion', () => {
   const oldGetSelection = globalThis.getSelection;
   try {
-    globalThis.getSelection = () => ({});
+    globalThis.getSelection = () => ({} as any);
 
     // Make sure we prevent native insertion in the right cases
     testDecoratorFingerprint('hi #', 4, 'f', true);

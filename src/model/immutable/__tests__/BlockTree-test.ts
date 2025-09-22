@@ -16,7 +16,7 @@ import BlockTree from '../BlockTree';
 import {BOLD} from '../SampleDraftInlineStyle';
 import {DraftDecoratorType} from '../../decorators/DraftDecoratorType';
 
-const PLAIN_BLOCK = {
+const PLAIN_BLOCK: Partial<ContentBlock> = {
   key: 'a',
   text: 'Lincoln',
   characterList: Array.from(repeat(7, EMPTY_CHARACTER)),
@@ -108,25 +108,25 @@ const assertBlockTreeGenerate = (
 };
 
 it('must generate for unstyled block with empty decorator', () => {
-  assertBlockTreeGenerate(PLAIN_BLOCK);
+  assertBlockTreeGenerate(PLAIN_BLOCK as Partial<ContentBlock> & {key: string});
 });
 
 it('must generate for styled block with empty decorator', () => {
-  assertBlockTreeGenerate(STYLED_BLOCK);
+  assertBlockTreeGenerate(STYLED_BLOCK as Partial<ContentBlock> & {key: string});
 });
 
 it('must generate for unstyled block with single decorator', () => {
-  assertBlockTreeGenerate(PLAIN_BLOCK, singleDecoratorFactory);
+  assertBlockTreeGenerate(PLAIN_BLOCK as Partial<ContentBlock> & {key: string}, singleDecoratorFactory);
 });
 
 it('must generate for styled block with single decorator', () => {
-  assertBlockTreeGenerate(STYLED_BLOCK, singleDecoratorFactory);
+  assertBlockTreeGenerate(STYLED_BLOCK as Partial<ContentBlock> & {key: string}, singleDecoratorFactory);
 });
 
 it('must generate for unstyled block with multiple decorators', () => {
-  assertBlockTreeGenerate(PLAIN_BLOCK, multiDecoratorFactory);
+  assertBlockTreeGenerate(PLAIN_BLOCK as Partial<ContentBlock> & {key: string}, multiDecoratorFactory);
 });
 
 it('must generate for styled block with multiple decorators', () => {
-  assertBlockTreeGenerate(STYLED_BLOCK, multiDecoratorFactory);
+  assertBlockTreeGenerate(STYLED_BLOCK as Partial<ContentBlock> & {key: string}, multiDecoratorFactory);
 });

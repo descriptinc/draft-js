@@ -122,7 +122,7 @@ export default function editOnPaste(
     // editor in Firefox and IE will not include empty lines. The resulting
     // paste will preserve the newlines correctly.
     const internalClipboard = editor.getClipboard();
-    if ((data as any).isRichText() && internalClipboard) {
+    if (data.isRichText() && internalClipboard) {
       if (
         // If the editorKey is present in the pasted HTML, it should be safe to
         // assume this is an internal paste.

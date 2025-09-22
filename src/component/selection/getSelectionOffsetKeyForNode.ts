@@ -18,7 +18,7 @@ export default function getSelectionOffsetKeyForNode(
   node: Node,
 ): string | null {
   if (isElement(node)) {
-    const castedNode: Element = node as any;
+    const castedNode = node as Element;
     const offsetKey = castedNode.getAttribute('data-offset-key');
     if (offsetKey) {
       return offsetKey;

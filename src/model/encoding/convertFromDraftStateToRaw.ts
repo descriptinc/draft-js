@@ -86,7 +86,7 @@ const encodeRawBlocks = (
         // where we will later on flip the entity map and populate it with
         // real entity, at this stage we just need to map back the entity
         // key used by the BlockNode
-        entityMap[stringifiedEntityKey] = `${entityStorageKey}` as any;
+        entityMap[stringifiedEntityKey] = entityStorageKey;
         entityStorageKey++;
       },
     );

@@ -45,7 +45,7 @@ export default function editOnCut(
   // Track the current scroll position so that it can be forced back in place
   // after the editor regains control of the DOM.
   if (isInstanceOfNode(element)) {
-    const node: Node = element as any;
+    const node = element as Node;
     scrollPosition = getScrollPosition(Style.getScrollParent(node));
   }
 

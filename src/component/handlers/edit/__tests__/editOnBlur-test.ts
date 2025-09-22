@@ -34,7 +34,7 @@ function withGlobalGetSelectionAs(getSelectionValue = {}, callback) {
   const oldGetSelection = globalThis.getSelection;
   try {
     globalThis.getSelection = () => {
-      return getSelectionValue;
+      return getSelectionValue as any;
     };
     callback();
   } finally {
@@ -65,8 +65,8 @@ test('editor removes selection on blur (default behaviour)', () => {
       editor: editorNode,
     };
 
-    // $FlowExpectedError
-    onBlur(editor, getBlurEvent(editorNode));
+    // @ts-expect-error - testing with partial editor object
+    onBlur(editor as any, getBlurEvent(editorNode));
 
     expect(globalSelection.removeAllRanges).toHaveBeenCalledTimes(1);
   });
@@ -95,8 +95,8 @@ test('editor preserves selection on blur', () => {
       editor: editorNode,
     };
 
-    // $FlowExpectedError
-    onBlur(editor, getBlurEvent(editorNode));
+    // @ts-expect-error - testing with partial editor object
+    onBlur(editor as any, getBlurEvent(editorNode));
 
     expect(globalSelection.removeAllRanges).toHaveBeenCalledTimes(0);
   });

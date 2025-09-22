@@ -50,7 +50,7 @@ test('must has generated editorKey', () => {
   const key = editorInstance?.getEditorKey();
   expect(key).toBeTruthy();
   expect(typeof key).toBe('string');
-  expect(key.length).toBeGreaterThan(0);
+  expect(key!.length).toBeGreaterThan(0);
 });
 
 test('must has editorKey same as props', () => {
@@ -75,13 +75,16 @@ test('must has editorKey same as props', () => {
 });
 
 describe('ariaDescribedBy', () => {
-  function getProps(elem: React.ReactElement) {
+  function getProps(elem: React.ReactElement): Element {
     flushSync(() => {
       root.render(elem);
     });
     // Find the contenteditable div which has the aria-describedby attribute
     const contentEditable = container.querySelector('[contenteditable]');
-    return contentEditable ? contentEditable : {};
+    if (!contentEditable) {
+      throw new Error('Could not find contenteditable element');
+    }
+    return contentEditable;
   }
 
   describe('without placeholder', () => {

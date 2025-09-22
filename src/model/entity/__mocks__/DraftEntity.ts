@@ -8,7 +8,7 @@
  * @emails oncall+draft_js
  */
 
-const DraftEntity = jest.genMockFromModule('../DraftEntity');
+const DraftEntity = jest.genMockFromModule('../DraftEntity') as any;
 
 const DraftEntityInstance = {
   getType: jest.fn(() => ''),

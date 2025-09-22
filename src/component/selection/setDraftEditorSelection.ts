@@ -40,7 +40,7 @@ function getAnonymizedDOM(
     isElement(anonymized),
     'Node must be an Element if it is not a text node.',
   );
-  const castedElement: Element = anonymized as any;
+  const castedElement = anonymized as Element;
   return castedElement.outerHTML;
 }
 
@@ -79,14 +79,14 @@ function getAnonymizedEditorDOM(
   // grabbing the DOM content of the Draft editor
   let currentNode: Node | null = node;
   // this should only be used after checking with isElement
-  let castedNode: Element = currentNode as any;
+  let castedNode = currentNode as Element;
   while (currentNode) {
     if (isElement(currentNode) && castedNode.hasAttribute('contenteditable')) {
       // found the Draft editor container
       return getAnonymizedDOM(currentNode, getNodeLabels);
     } else {
       currentNode = currentNode.parentNode;
-      castedNode = currentNode as any;
+      castedNode = currentNode as Element;
     }
   }
   return 'Could not find contentEditable parent of node';

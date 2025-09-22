@@ -362,7 +362,7 @@ export default class DraftEditor extends React.Component<
 
     // The aria-expanded and aria-haspopup properties should only be rendered
     // for a combobox.
-    const ariaRole = (this.props as any).role || 'textbox';
+    const ariaRole = (this.props as DraftEditorProps & {role?: string}).role || 'textbox';
     const ariaExpanded =
       ariaRole === 'combobox' ? !!this.props.ariaExpanded : null;
 
@@ -454,7 +454,7 @@ export default class DraftEditor extends React.Component<
             onPaste={this._onPaste}
             onSelect={this._onSelect}
             ref={this.props.editorRef}
-            role={readOnly ? null : ariaRole}
+            role={readOnly ? undefined : ariaRole}
             spellCheck={allowSpellCheck && this.props.spellCheck}
             style={contentStyle}
             suppressContentEditableWarning

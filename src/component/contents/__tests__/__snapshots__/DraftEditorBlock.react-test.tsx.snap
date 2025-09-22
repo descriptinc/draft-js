@@ -30,36 +30,6 @@ exports[`must re-render if selection state changes from non-selection to selecti
 
 exports[`must re-render if selection state changes from non-selection to selection 2`] = `1`;
 
-exports[`must render a leaf node 1`] = `true`;
-
-exports[`must render a leaf node 2`] = `true`;
-
-exports[`must render a leaf node 3`] = `true`;
-
-exports[`must render a leaf node 4`] = `true`;
-
-exports[`must render a leaf node 5`] = `true`;
-
-exports[`must render multiple leaf nodes 1`] = `true`;
-
-exports[`must render multiple leaf nodes 2`] = `true`;
-
-exports[`must render multiple leaf nodes 3`] = `true`;
-
-exports[`must render multiple leaf nodes 4`] = `true`;
-
-exports[`must render multiple leaf nodes 5`] = `true`;
-
-exports[`must render multiple leaf nodes 6`] = `true`;
-
-exports[`must render multiple leaf nodes 7`] = `true`;
-
-exports[`must render multiple leaf nodes 8`] = `true`;
-
-exports[`must render multiple leaf nodes 9`] = `true`;
-
-exports[`must render multiple leaf nodes 10`] = `true`;
-
 exports[`scroll-to-top for block with smaller top than visibletop 1`] = `0`;
 
 exports[`should not scroll if block is entirely visible 1`] = `0`;

@@ -20,15 +20,17 @@ jest
   .mock('fbjs/lib/getElementPosition')
   .mock('fbjs/lib/getScrollPosition')
   .mock('fbjs/lib/getViewportDimensions');
-const mockLeafRender = jest.fn(() => <span />);
-class MockEditorLeaf extends React.Component {
+const mockLeafRender = jest.fn((props) => {
+  // Return a span with data attributes that we can query in tests
+  return <span data-test-leaf="true" data-offset-key={props?.offsetKey} data-style-set={props?.styleSet?.size || 0}>{props?.text}</span>;
+});
+class MockEditorLeaf extends React.Component<any> {
   render() {
-    return mockLeafRender();
+    return mockLeafRender(this.props);
   }
 }
 jest.setMock('../DraftEditorLeaf.react', MockEditorLeaf);
 
-import fastDeepEqual from 'fast-deep-equal/es6';
 import Style from 'fbjs/lib/Style';
 import UnicodeBidiDirection from 'fbjs/lib/UnicodeBidiDirection';
 import getElementPosition from 'fbjs/lib/getElementPosition';
@@ -43,18 +45,16 @@ import BlockTree from '../../../model/immutable/BlockTree';
 import {createFromText} from '../../../model/immutable/ContentState';
 import {
   BOLD,
-  ITALIC,
   NONE,
 } from '../../../model/immutable/SampleDraftInlineStyle';
-import DraftEditorLeaf from '../DraftEditorLeaf.react';
 import DraftEditorBlock from '../DraftEditorBlock.react';
 import {DraftDecoratorType} from '../../../model/decorators/DraftDecoratorType';
-import {createRoot, Root} from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 
 const mockGetDecorations = jest.fn();
 
-class DecoratorSpan extends React.Component {
+class DecoratorSpan extends React.Component<any> {
   render() {
     return <span>{this.props.children}</span>;
   }
@@ -74,7 +74,7 @@ class Decorator {
 }
 
 Style.getScrollParent.mockReturnValue(window);
-window.scrollTo = jest.fn();
+(window.scrollTo as jest.Mock) = jest.fn();
 getElementPosition.mockReturnValue({
   x: 0,
   y: 600,
@@ -97,7 +97,7 @@ const getHelloBlock = () => {
   });
 };
 
-const getProps = (block: ContentBlock, decorator?: DraftDecoratorType) => {
+const getProps = (block: ContentBlock, decorator: DraftDecoratorType | null = null) => {
   const contentState = createFromText('');
   return {
     block,
@@ -119,7 +119,7 @@ const getProps = (block: ContentBlock, decorator?: DraftDecoratorType) => {
 const getPropsWithBlockStyle = (
   block: ContentBlock,
   blockStyle?: string,
-  decorator?: DraftDecoratorType,
+  decorator: DraftDecoratorType | null = null,
 ) => {
   const contentState = createFromText('');
   return {
@@ -129,7 +129,7 @@ const getPropsWithBlockStyle = (
     decorator,
     forceSelection: false,
     direction: UnicodeBidiDirection.LTR,
-    blockStyleFn: () => blockStyle,
+    blockStyleFn: () => blockStyle || '',
     startIndent: true,
     blockKey: 'a',
     offsetKey: 'a-0',
@@ -139,53 +139,51 @@ const getPropsWithBlockStyle = (
   };
 };
 
-// Helper to render components for testing
-const renderComponent = (element: React.ReactElement) => {
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  const root = createRoot(container);
-
-  let component: any = null;
-  flushSync(() => {
-    root.render(
-      React.cloneElement(element, {
-        ref: (ref: any) => {
-          component = ref;
-        },
-      }),
-    );
-  });
-
-  return {container, root, component};
-};
-
-const arePropsEqual = (renderedChild: any, leafPropSet: any) => {
-  Object.keys(leafPropSet).forEach(key => {
-    expect(
-      fastDeepEqual(leafPropSet[key], renderedChild.props[key]),
-    ).toMatchSnapshot();
-  });
-};
-
-const assertLeaves = (renderedBlock: any[], leafProps: any[]) => {
-  leafProps.forEach((leafPropSet, ii) => {
-    const child = renderedBlock[ii];
-    expect(child.type).toBe(DraftEditorLeaf);
-    arePropsEqual(child, leafPropSet);
-  });
-};
-
 beforeEach(() => {
   mockLeafRender.mockClear();
 });
 
-// Skip tests that rely on ReactTestRenderer for now
-test.skip('must render a leaf node', () => {
+// Tests rewritten without ReactTestRenderer
+test('must render a leaf node', () => {
   const props = getProps(getHelloBlock());
-  // Test needs to be rewritten without ReactTestRenderer
+
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+  const root = createRoot(container);
+
+  flushSync(() => {
+    root.render(<DraftEditorBlock {...props} />);
+  });
+
+  // Check that the block container exists
+  const blockDiv = container.querySelector('[data-offset-key="a-0"]');
+  expect(blockDiv).toBeTruthy();
+
+  // Check that leaf nodes were rendered using our test attributes
+  const leafNodes = container.querySelectorAll('[data-test-leaf="true"]');
+  expect(leafNodes.length).toBe(1);
+
+  // Verify the leaf has correct text
+  expect(leafNodes[0].textContent).toBe('hello');
+
+  // Verify the leaf has correct offset key
+  expect(leafNodes[0].getAttribute('data-offset-key')).toBe('a-0-0');
+
+  // Verify mock leaf render was called with correct props
+  expect(mockLeafRender).toHaveBeenCalledWith(
+    expect.objectContaining({
+      text: 'hello',
+      offsetKey: 'a-0-0',
+      start: 0,
+      isLast: true,
+    })
+  );
+
+  root.unmount();
+  document.body.removeChild(container);
 });
 
-test.skip('must render multiple leaf nodes', () => {
+test('must render multiple leaf nodes', () => {
   const boldLength = 2;
   let helloBlock = getHelloBlock();
   let characters = helloBlock.characterList;
@@ -196,7 +194,57 @@ test.skip('must render multiple leaf nodes', () => {
 
   helloBlock = {...helloBlock, characterList: characters};
   const props = getProps(helloBlock);
-  // Test needs to be rewritten without ReactTestRenderer
+
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+  const root = createRoot(container);
+
+  flushSync(() => {
+    root.render(<DraftEditorBlock {...props} />);
+  });
+
+  // Check that multiple leaf nodes were rendered
+  const leafNodes = container.querySelectorAll('[data-test-leaf="true"]');
+  expect(leafNodes.length).toBe(2); // One for bold "he", one for plain "llo"
+
+  // Check the text content is preserved
+  expect(container.textContent).toBe('hello');
+
+  // Verify first leaf is styled (bold)
+  const firstLeaf = leafNodes[0];
+  expect(firstLeaf.textContent).toBe('he');
+  expect(firstLeaf.getAttribute('data-offset-key')).toBe('a-0-0');
+  expect(Number(firstLeaf.getAttribute('data-style-set'))).toBeGreaterThan(0);
+
+  // Verify second leaf is unstyled
+  const secondLeaf = leafNodes[1];
+  expect(secondLeaf.textContent).toBe('llo');
+  expect(secondLeaf.getAttribute('data-offset-key')).toBe('a-0-1');
+  expect(Number(secondLeaf.getAttribute('data-style-set'))).toBe(0);
+
+  // Verify mock calls
+  expect(mockLeafRender).toHaveBeenCalledWith(
+    expect.objectContaining({
+      text: 'he',
+      offsetKey: 'a-0-0',
+      start: 0,
+      styleSet: BOLD,
+      isLast: false,
+    })
+  );
+
+  expect(mockLeafRender).toHaveBeenCalledWith(
+    expect.objectContaining({
+      text: 'llo',
+      offsetKey: 'a-0-1',
+      start: 2,
+      styleSet: NONE,
+      isLast: true,
+    })
+  );
+
+  root.unmount();
+  document.body.removeChild(container);
 });
 
 test('must not re-render if parent does not re-render', () => {
@@ -215,7 +263,7 @@ test('must not re-render if parent does not re-render', () => {
 
   const nextProps = {
     ...props,
-    tree: BlockTree.generate(createFromText(''), props.block),
+    tree: BlockTree.generate(createFromText(''), props.block, null),
   };
 
   expect(props.block !== nextProps.block).toMatchSnapshot();
@@ -244,7 +292,7 @@ test('must not re-render if props do not change', () => {
 
   const nextProps = {
     ...props,
-    tree: BlockTree.generate(createFromText(''), props.block),
+    tree: BlockTree.generate(createFromText(''), props.block, null),
   };
 
   // Tree changes are irrelevant if block and score are unchanged.
@@ -493,7 +541,7 @@ test('scroll-to-top for block with smaller top than visibletop', () => {
     root.render(<DraftEditorBlock {...props} />);
   });
 
-  const scrollCalls = window.scrollTo.mock.calls;
+  const scrollCalls = (window.scrollTo as jest.Mock).mock.calls;
   expect(scrollCalls.length).toMatchSnapshot();
   root.unmount();
   document.body.removeChild(container);
@@ -508,7 +556,7 @@ test('should not scroll if block is entirely visible', () => {
     root.render(<DraftEditorBlock {...props} />);
   });
 
-  const scrollCalls = window.scrollTo.mock.calls;
+  const scrollCalls = (window.scrollTo as jest.Mock).mock.calls;
   expect(scrollCalls.length).toMatchSnapshot();
   root.unmount();
   document.body.removeChild(container);

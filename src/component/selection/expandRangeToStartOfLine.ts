@@ -96,7 +96,7 @@ function getNodeLength(node: Node): number {
     case Node.TEXT_NODE:
     case Node.PROCESSING_INSTRUCTION_NODE:
     case Node.COMMENT_NODE:
-      return (node as any).length;
+      return (node as CharacterData).length;
     default:
       return node.childNodes.length;
   }
@@ -117,7 +117,7 @@ export default function expandRangeToStartOfLine(range: Range): Range {
   if (containingElement.nodeType !== 1) {
     containingElement = containingElement.parentNode;
   }
-  const lineHeight = getLineHeightPx(containingElement as any);
+  const lineHeight = getLineHeightPx(containingElement as Element);
 
   // Imagine our text looks like:
   //   <div><span>once upon a time, there was a <em>boy
@@ -144,7 +144,7 @@ export default function expandRangeToStartOfLine(range: Range): Range {
     range.setStartBefore(bestContainer);
     if (
       bestContainer.nodeType === 1 &&
-      getComputedStyle(bestContainer as any).display !== 'inline'
+      getComputedStyle(bestContainer as Element).display !== 'inline'
     ) {
       // The start of the line is never in a different block-level container.
       break;

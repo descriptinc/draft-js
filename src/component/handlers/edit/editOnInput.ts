@@ -77,7 +77,7 @@ export default function editOnInput(
     editor._pendingStateFromBeforeInput = undefined;
   }
   // at this point editor is not null for sure (after input)
-  const castedEditorElement: HTMLElement = editor.editor as any;
+  const castedEditorElement = editor.editor as HTMLElement;
   const domSelection = castedEditorElement.ownerDocument.defaultView!.getSelection() as SelectionObject;
 
   const {anchorNode, isCollapsed} = domSelection;
@@ -147,7 +147,7 @@ export default function editOnInput(
 
     /* $FlowFixMe inputType is only defined on a draft of a standard.
      * https://w3c.github.io/input-events/#dom-inputevent-inputtype */
-    const inputType = (e.nativeEvent as any).inputType;
+    const inputType = (e.nativeEvent as InputEvent).inputType;
     if (inputType) {
       const newEditorState = onInputType(inputType, editorState);
       if (newEditorState !== editorState) {
