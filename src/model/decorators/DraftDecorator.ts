@@ -36,11 +36,7 @@ export type DraftDecoratorStrategy = (
  */
 export type DraftDecorator = {
   strategy: DraftDecoratorStrategy;
-  component: ComponentType<{
-    contentState: ContentState;
-    entityKey: string | null;
-    children: React.ReactNode;
-  }>;
+  component: ComponentType<DraftDecoratorComponentProps>;
   props?: Record<string, unknown>;
 };
 

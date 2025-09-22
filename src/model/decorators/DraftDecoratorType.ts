@@ -10,7 +10,8 @@
 
 import {ContentState} from '../immutable/ContentState';
 import {BlockNode} from '../immutable/BlockNode';
-import {ComponentType, ReactNode} from 'react';
+import {ComponentType} from 'react';
+import {DraftDecoratorComponentProps} from './DraftDecorator';
 
 /**
  * An interface for document decorator classes, allowing the creation of
@@ -32,11 +33,7 @@ export type DraftDecoratorType = {
    */
   getComponentForKey: (
     key: string,
-  ) => ComponentType<{
-    contentState: ContentState;
-    entityKey: string | null;
-    children: ReactNode;
-  }>;
+  ) => ComponentType<DraftDecoratorComponentProps>;
   /**
    * Given a decorator key, optionally return the props to use when rendering
    * this decorated range.

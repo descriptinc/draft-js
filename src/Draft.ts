@@ -38,6 +38,7 @@ export type {RawDraftContentState} from './model/encoding/convertFromDraftStateT
 export type {DraftEditorCommand} from './model/constants/DraftEditorCommand';
 export type {DraftHandleValue} from './model/constants/DraftHandleValue';
 export type {DraftDecoratorType} from './model/decorators/DraftDecoratorType';
+export type {DraftDecorator, DraftDecoratorComponentProps} from './model/decorators/DraftDecorator';
 
 export const EditorBlock = DraftEditorBlock;
 export const CompositeDecorator = CompositeDraftDecorator;
