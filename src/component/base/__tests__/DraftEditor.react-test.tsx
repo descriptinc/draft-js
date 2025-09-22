@@ -46,7 +46,6 @@ test('must has generated editorKey', () => {
 
   const editorInstance = editorRef.current;
   expect(editorInstance).toBeTruthy();
-  // @ts-ignore - accessing private method for testing
   const key = editorInstance?.getEditorKey();
   expect(key).toBeTruthy();
   expect(typeof key).toBe('string');
@@ -70,7 +69,6 @@ test('must has editorKey same as props', () => {
 
   const editorInstance = editorRef.current;
   expect(editorInstance).toBeTruthy();
-  // @ts-ignore - accessing private method for testing
   expect(editorInstance?.getEditorKey()).toBe('hash');
 });
 
@@ -169,7 +167,9 @@ describe('ariaDescribedBy', () => {
           ariaDescribedBy="abc {{editor_id_placeholder}} xyz"
         />,
       );
-      expect(props.getAttribute('aria-describedby')).toBe('abc placeholder-X xyz');
+      expect(props.getAttribute('aria-describedby')).toBe(
+        'abc placeholder-X xyz',
+      );
     });
   });
 });

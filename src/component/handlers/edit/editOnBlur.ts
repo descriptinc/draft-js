@@ -51,6 +51,6 @@ export default function editOnBlur(
   }
 
   const selection = {...currentSelection, hasFocus: false};
-  editor.props.onBlur && editor.props.onBlur(e);
+  editor.props.onBlur?.(e);
   editor.update(acceptSelection(editorState, selection));
 }

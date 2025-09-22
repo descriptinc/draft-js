@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import path from 'path';
 import fs from 'fs';
 
@@ -29,29 +29,26 @@ const draftCssPlugin = () => {
                 return cls.replace(/\//g, '-');
               }
               return match;
-            }
+            },
           )
           // Replace CSS variables
-          .replace(
-            /\bvar\(([\w-]+)\)/g,
-            (match, name) => {
-              const vars = {
-                'fig-secondary-text': '#9197a3',
-                'fig-light-20': '#bdc1c9',
-              };
-              if (vars[name]) {
-                return vars[name];
-              }
-              throw new Error(`Unknown CSS variable ${name}`);
+          .replace(/\bvar\(([\w-]+)\)/g, (match, name) => {
+            const vars = {
+              'fig-secondary-text': '#9197a3',
+              'fig-light-20': '#bdc1c9',
+            };
+            if (vars[name]) {
+              return vars[name];
             }
-          );
+            throw new Error(`Unknown CSS variable ${name}`);
+          });
 
         combinedCss += processed + '\n';
       });
 
       // Add copyright header
       const packageData = JSON.parse(
-        fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
+        fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8'),
       );
 
       const header = `/**
@@ -82,9 +79,9 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: false,
     lib: {
-      entry: path.resolve(__dirname, 'src/Draft.ts'), // Dummy entry, CSS is handled by plugin
+      entry: path.resolve(__dirname, 'src/Draft.ts'), // Placeholder entry, CSS is handled by plugin
       formats: ['es'],
-      fileName: () => 'dummy.js',
+      fileName: () => 'placeholder.js',
     },
     minify: 'esbuild',
     cssMinify: true,

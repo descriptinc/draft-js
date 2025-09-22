@@ -105,10 +105,11 @@ const DraftEditorDragHandler = {
        * typed. getFiles() returns an array of <Files extends Blob>, not Blob
        */
       getTextContentFromFiles(files, fileText => {
-        fileText &&
+        if (fileText) {
           editor.update(
             insertTextAtSelection(editorState, dropSelection, fileText),
           );
+        }
       });
       return;
     }

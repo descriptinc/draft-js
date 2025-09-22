@@ -24,7 +24,7 @@ export function editOnFocus(editor: DraftEditor, e: SyntheticEvent): void {
   }
 
   const selection = {...currentSelection, hasFocus: true};
-  editor.props.onFocus && editor.props.onFocus(e);
+  editor.props.onFocus?.(e);
 
   // When the tab containing this text editor is hidden and the user does a
   // find-in-page in a _different_ tab, Chrome on Mac likes to forget what the

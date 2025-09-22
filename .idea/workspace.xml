@@ -6,25 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="cbbf7afd-c542-4b03-82b8-fd917a7db8e4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/base/DraftEditor.react.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/component/base/__tests__/DraftEditor.react-test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/base/__tests__/DraftEditor.react-test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/contents/DraftEditorTextNode.react.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/contents/DraftEditorTextNode.react.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorBlock.react-test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/contents/__tests__/DraftEditorBlock.react-test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/contents/__tests__/__snapshots__/DraftEditorBlock.react-test.tsx.snap" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/contents/__tests__/__snapshots__/DraftEditorBlock.react-test.tsx.snap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBeforeInput-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBeforeInput-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBlur-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnBlur-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnBeforeInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnBeforeInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnCut.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnCut.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnInput.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnInput.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnPaste.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnPaste.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/selection/expandRangeToStartOfLine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/selection/expandRangeToStartOfLine.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/selection/getSelectionOffsetKeyForNode.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/selection/getSelectionOffsetKeyForNode.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/selection/setDraftEditorSelection.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/selection/setDraftEditorSelection.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/decorators/CompositeDraftDecorator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/decorators/CompositeDraftDecorator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/encoding/convertFromDraftStateToRaw.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/encoding/convertFromDraftStateToRaw.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/entity/__mocks__/DraftEntity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/entity/__mocks__/DraftEntity.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/immutable/__tests__/BlockTree-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/immutable/__tests__/BlockTree-test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/modifier/__tests__/AtomicBlockUtils-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/modifier/__tests__/AtomicBlockUtils-test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/handlers/composition/__tests__/DraftEditorCompostionHandler-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/composition/__tests__/DraftEditorCompostionHandler-test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/handlers/drag/DraftEditorDragHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/drag/DraftEditorDragHandler.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnInput-test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/__tests__/editOnInput-test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnBlur.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnBlur.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/handlers/edit/editOnFocus.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/handlers/edit/editOnFocus.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/utils/getTextContentFromFiles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/utils/getTextContentFromFiles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stats.html" beforeDir="false" afterPath="$PROJECT_DIR$/stats.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.css.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

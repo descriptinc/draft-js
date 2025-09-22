@@ -68,7 +68,7 @@ test('restoreEditorDOM and keyCommandPlainBackspace are NOT called when the `inp
     onInput(editor, inputEvent);
 
     expect(
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
       require('../commands/keyCommandPlainBackspace'),
     ).toHaveBeenCalledTimes(0);
     expect(editor.restoreEditorDOM).toHaveBeenCalledTimes(0);
@@ -103,11 +103,11 @@ test('restoreEditorDOM and keyCommandPlainBackspace are called when backspace is
     // @ts-ignore
     onInput(editor, inputEvent);
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
     const newEditorState = require('../commands/keyCommandPlainBackspace').mock
       .results[0].value;
     expect(
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
       require('../commands/keyCommandPlainBackspace'),
     ).toHaveBeenCalledWith(editorState);
     expect(editor.restoreEditorDOM).toHaveBeenCalledTimes(1);
