@@ -1,7 +1,7 @@
 {
   "name": "@descript/draft-js",
   "description": "A React framework for building text editors.",
-  "version": "0.11.6-descript.28",
+  "version": "0.11.6-descript.34",
   "keywords": [
     "draftjs",
     "editor",
@@ -60,6 +60,14 @@
   "peerDependencies": {
     "react": ">=16.0.0",
     "react-dom": ">=16.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

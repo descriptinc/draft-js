@@ -11,12 +11,13 @@
 import {ContentState} from '../immutable/ContentState';
 import {BlockNode} from '../immutable/BlockNode';
 import {ComponentType} from 'react';
+import {DraftDecoratorComponentProps} from './DraftDecorator';
 
 /**
  * An interface for document decorator classes, allowing the creation of
  * custom decorator classes.
  *
- * See `CompositeDraftDecorator` for the most common use case.
+ * See `CompositeDecorator` for the most common use case.
  */
 export type DraftDecoratorType = {
   /**
@@ -30,7 +31,9 @@ export type DraftDecoratorType = {
    * Given a decorator key, return the component to use when rendering
    * this decorated range.
    */
-  getComponentForKey: (key: string) => ComponentType;
+  getComponentForKey: (
+    key: string,
+  ) => ComponentType<DraftDecoratorComponentProps>;
   /**
    * Given a decorator key, optionally return the props to use when rendering
    * this decorated range.

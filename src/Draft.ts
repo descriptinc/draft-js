@@ -10,7 +10,8 @@
 import Editor from './component/base/DraftEditor.react';
 export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
-import CompositeDraftDecorator from './model/decorators/CompositeDraftDecorator';
+export type {DraftEditorProps} from './component/base/DraftEditorProps';
+export {CompositeDecorator} from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';
 export {AtomicBlockUtils};
@@ -30,15 +31,17 @@ import getDefaultKeyBinding from './component/utils/getDefaultKeyBinding';
 export {getDefaultKeyBinding};
 import getVisibleSelectionRect from './component/selection/getVisibleSelectionRect';
 export {getVisibleSelectionRect};
+export type {SyntheticInputEvent, SyntheticClipboardEvent} from './component/utils/eventTypes';
 import convertFromDraftStateToRaw from './model/encoding/convertFromDraftStateToRaw';
 export {convertFromDraftStateToRaw};
 export type {RawDraftContentState} from './model/encoding/convertFromDraftStateToRaw';
 
 export type {DraftEditorCommand} from './model/constants/DraftEditorCommand';
 export type {DraftHandleValue} from './model/constants/DraftHandleValue';
+export type {DraftDecoratorType} from './model/decorators/DraftDecoratorType';
+export type {DraftDecorator, DraftDecoratorComponentProps} from './model/decorators/DraftDecorator';
 
 export const EditorBlock = DraftEditorBlock;
-export const CompositeDecorator = CompositeDraftDecorator;
 export const Entity = DraftEntity;
 
 export * from './model/immutable/BlockMapBuilder';
@@ -52,4 +55,5 @@ export * from './model/immutable/DraftInlineStyle';
 export * from './model/immutable/findRangesImmutable';
 export * from './model/immutable/BlockNode';
 export * from './model/immutable/BlockTree';
+export * from './model/immutable/EditorChangeType';
 export * from './model/entity/DraftEntityInstance';

@@ -9,7 +9,7 @@
  */
 
 import {createFromText} from '../../immutable/ContentState';
-import CompositeDraftDecorator from '../CompositeDraftDecorator';
+import {CompositeDecorator} from '../CompositeDraftDecorator';
 import {ContentBlock, makeContentBlock} from '../../immutable/ContentBlock';
 import {genKey} from '../../../Draft';
 
@@ -45,7 +45,7 @@ const assertCompositeDraftDecorator = (
   decorators = [FooDecorator, BarDecorator],
 ) => {
   expect(
-    new CompositeDraftDecorator(decorators).getDecorations(
+    new CompositeDecorator(decorators).getDecorations(
       makeContentBlock({text, key: genKey()}),
       createFromText(text),
     ),
