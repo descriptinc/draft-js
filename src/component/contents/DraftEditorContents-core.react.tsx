@@ -19,6 +19,7 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from '../selection/DraftOffsetKey';
 import DraftEditorBlock from './DraftEditorBlock.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
+import {DraftEditorBlockWindowing} from '../base/DraftEditorProps';
 import {
   DOMLocation,
   DOMSelectionUpdateFn,
@@ -30,6 +31,7 @@ type Props = {
   blockRenderMap: DraftBlockRenderMap;
   blockRendererFn: (block: BlockNode) => Record<string, any> | null;
   blockStyleFn?: (block: BlockNode) => string | CSSProperties | undefined;
+  blockWindowing?: DraftEditorBlockWindowing;
   customStyleFn?: (
     style: DraftInlineStyle,
     block: BlockNode,
@@ -128,6 +130,12 @@ export default class DraftEditorContents extends React.Component<Props> {
     const wasComposing = prevEditorState.inCompositionMode;
     const nowComposing = nextEditorState.inCompositionMode;
 
+    if (!(wasComposing && nowComposing)) {
+      if (this.props.blockWindowing !== nextProps.blockWindowing) {
+        return true;
+      }
+    }
+
     // If the state is unchanged or we're currently rendering a natively
     // rendered state, there's nothing new to be done.
     if (
@@ -190,6 +198,7 @@ export default class DraftEditorContents extends React.Component<Props> {
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
+      blockWindowing,
       customStyleMap,
       customStyleFn,
       editorState,
@@ -221,8 +230,57 @@ export default class DraftEditorContents extends React.Component<Props> {
       | ReactNode
       | undefined = undefined;
 
+    let spacerHeight = 0;
+    let spacerBlockLayout: Array<[number, number]> = [];
+    let spacerTextLength = 0;
+    let spacerStartKey: string | undefined;
+
+    const flushSpacer = () => {
+      if (spacerStartKey === undefined) {
+        return;
+      }
+      const key = `window-spacer-${spacerStartKey}`;
+      processedBlocks.push({
+        block: (
+          <div
+            aria-hidden="true"
+            contentEditable={false}
+            data-block-window-spacer="true"
+            data-block-window-spacer-layout={JSON.stringify(spacerBlockLayout)}
+            data-block-window-spacer-text-length={spacerTextLength}
+            key={key}
+            style={{height: spacerHeight, pointerEvents: 'none'}}
+          />
+        ),
+        wrapperTemplate: undefined,
+        key,
+        offsetKey: key,
+      });
+      spacerHeight = 0;
+      spacerBlockLayout = [];
+      spacerTextLength = 0;
+      spacerStartKey = undefined;
+      currentDepth = null;
+      lastWrapperTemplate = undefined;
+    };
+
     for (const block of content.blockMap.values()) {
       const key = block.key;
+
+      if (blockWindowing && !blockWindowing.shouldRenderBlock(block)) {
+        spacerStartKey = spacerStartKey || key;
+        const blockHeight = Math.max(
+          0,
+          blockWindowing.getSpacerHeight(block),
+        );
+        const blockTextLength = block.text.length + 1;
+        spacerHeight += blockHeight;
+        spacerBlockLayout.push([blockHeight, block.text.length]);
+        spacerTextLength += blockTextLength;
+        continue;
+      }
+
+      flushSpacer();
       const blockType = block.type;
 
       const customRenderer = blockRendererFn(block);
@@ -334,6 +392,8 @@ export default class DraftEditorContents extends React.Component<Props> {
       }
       lastWrapperTemplate = wrapperTemplate;
     }
+
+    flushSpacer();
 
     // Group contiguous runs of blocks that have the same wrapperTemplate
     const outputBlocks: ReactNode[] = [];

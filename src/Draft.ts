@@ -10,7 +10,10 @@
 import Editor from './component/base/DraftEditor.react';
 export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
-export type {DraftEditorProps} from './component/base/DraftEditorProps';
+export type {
+  DraftEditorBlockWindowing,
+  DraftEditorProps,
+} from './component/base/DraftEditorProps';
 export {CompositeDecorator} from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';

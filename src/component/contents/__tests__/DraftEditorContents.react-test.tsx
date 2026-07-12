@@ -8,7 +8,12 @@
  * @format
  */
 
-import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
+import {
+  createEmpty,
+  createWithContent,
+  EditorState,
+} from '../../../model/immutable/EditorState';
+import {createFromText} from '../../../model/immutable/ContentState';
 
 import React from 'react';
 import RichTextEditorUtil from '../../../model/modifier/RichTextEditorUtil';
@@ -109,4 +114,43 @@ test('defaults to "unstyled" block type for unknown block types', () => {
   expect(() => {
     editorInstance?.toggleCustomBlock();
   }).not.toThrow();
+});
+
+test('renders windowed blocks and replaces omitted runs with spacers', () => {
+  const editorState = createWithContent(createFromText('zero\none\ntwo\nthree'));
+  const blocks = Array.from(editorState.currentContent.blockMap.values());
+  const blockRendererFn = jest.fn(() => null);
+
+  flushSync(() => {
+    root.render(
+      <DraftEditor
+        editorState={editorState}
+        onChange={() => {}}
+        blockRendererFn={blockRendererFn}
+        blockWindowing={{
+          shouldRenderBlock: block => block === blocks[1] || block === blocks[3],
+          getSpacerHeight: block => (blocks.indexOf(block) + 1) * 10,
+        }}
+      />,
+    );
+  });
+
+  expect(Array.from(container.querySelectorAll('[data-block]'))).toHaveLength(2);
+  expect(blockRendererFn).toHaveBeenCalledTimes(2);
+  expect(
+    Array.from(
+      container.querySelectorAll<HTMLElement>('[data-block-window-spacer]'),
+    ).map(spacer => spacer.style.height),
+  ).toEqual(['10px', '30px']);
+  expect(
+    Array.from(
+      container.querySelectorAll<HTMLElement>('[data-block-window-spacer]'),
+    ).map(spacer => spacer.dataset.blockWindowSpacerTextLength),
+  ).toEqual(['5', '4']);
+  expect(
+    Array.from(
+      container.querySelectorAll<HTMLElement>('[data-block-window-spacer]'),
+    ).map(spacer => spacer.dataset.blockWindowSpacerLayout),
+  ).toEqual(['[[10,4]]', '[[30,3]]']);
+  expect(container.textContent).toBe('onethree');
 });

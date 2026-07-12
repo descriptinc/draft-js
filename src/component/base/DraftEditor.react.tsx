@@ -336,6 +336,7 @@ export default class DraftEditor extends React.Component<
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
+      blockWindowing,
       customStyleFn,
       customStyleMap,
       editorState,
@@ -377,6 +378,7 @@ export default class DraftEditor extends React.Component<
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
+      blockWindowing,
       customStyleMap: {
         ...DefaultDraftInlineStyle,
         ...customStyleMap,
