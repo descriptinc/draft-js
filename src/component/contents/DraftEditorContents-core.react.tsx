@@ -234,6 +234,8 @@ export default class DraftEditorContents extends React.Component<Props> {
     let spacerBlockLayout: Array<[number, number]> = [];
     let spacerTextLength = 0;
     let spacerStartKey: string | undefined;
+    let spacerWrapperTemplate: (() => ReactNode) | ReactNode | undefined;
+    let SpacerElement = 'div';
 
     const flushSpacer = () => {
       if (spacerStartKey === undefined) {
@@ -241,18 +243,21 @@ export default class DraftEditorContents extends React.Component<Props> {
       }
       const key = `window-spacer-${spacerStartKey}`;
       processedBlocks.push({
-        block: (
-          <div
-            aria-hidden="true"
-            contentEditable={false}
-            data-block-window-spacer="true"
-            data-block-window-spacer-layout={JSON.stringify(spacerBlockLayout)}
-            data-block-window-spacer-text-length={spacerTextLength}
-            key={key}
-            style={{height: spacerHeight, pointerEvents: 'none'}}
-          />
-        ),
-        wrapperTemplate: undefined,
+        block: React.createElement(SpacerElement, {
+          'aria-hidden': true,
+          contentEditable: false,
+          'data-block-window-spacer': true,
+          'data-block-window-spacer-layout': JSON.stringify(spacerBlockLayout),
+          'data-block-window-spacer-text-length': spacerTextLength,
+          key,
+          style: {
+            display: 'block',
+            height: spacerHeight,
+            listStyle: 'none',
+            pointerEvents: 'none',
+          },
+        }),
+        wrapperTemplate: spacerWrapperTemplate,
         key,
         offsetKey: key,
       });
@@ -260,15 +265,34 @@ export default class DraftEditorContents extends React.Component<Props> {
       spacerBlockLayout = [];
       spacerTextLength = 0;
       spacerStartKey = undefined;
+      spacerWrapperTemplate = undefined;
+      SpacerElement = 'div';
       currentDepth = null;
       lastWrapperTemplate = undefined;
     };
 
     for (const block of content.blockMap.values()) {
       const key = block.key;
+      const blockType = block.type;
+      const configForType =
+        blockRenderMap[blockType] || blockRenderMap['unstyled'];
+      const wrapperTemplate: (() => ReactNode) | ReactNode | undefined =
+        configForType.wrapper;
+      const Element =
+        configForType.element || blockRenderMap['unstyled'].element;
 
       if (blockWindowing && !blockWindowing.shouldRenderBlock(block)) {
+        const nextSpacerElement = wrapperTemplate ? Element : 'div';
+        if (
+          spacerStartKey !== undefined &&
+          (spacerWrapperTemplate !== wrapperTemplate ||
+            SpacerElement !== nextSpacerElement)
+        ) {
+          flushSpacer();
+        }
         spacerStartKey = spacerStartKey || key;
+        spacerWrapperTemplate = wrapperTemplate;
+        SpacerElement = nextSpacerElement;
         const blockHeight = Math.max(
           0,
           blockWindowing.getSpacerHeight(block),
@@ -281,7 +305,6 @@ export default class DraftEditorContents extends React.Component<Props> {
       }
 
       flushSpacer();
-      const blockType = block.type;
 
       const customRenderer = blockRendererFn(block);
       let CustomComponent, customProps, customEditable;
@@ -317,14 +340,6 @@ export default class DraftEditorContents extends React.Component<Props> {
           ? this.scheduleDomSelectionUpdate
           : undefined,
       };
-
-      const configForType =
-        blockRenderMap[blockType] || blockRenderMap['unstyled'];
-      const wrapperTemplate: (() => ReactNode) | ReactNode | undefined =
-        configForType.wrapper;
-
-      const Element =
-        configForType.element || blockRenderMap['unstyled'].element;
 
       const depth = block.depth;
       let className = '';

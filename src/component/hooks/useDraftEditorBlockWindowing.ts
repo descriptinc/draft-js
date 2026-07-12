@@ -28,7 +28,29 @@ export type DraftEditorBlockWindowingOptions = {
   scrollContainerRef: RefObject<HTMLElement>;
   editorContainerRef: RefObject<HTMLElement>;
   layoutKey?: unknown;
+  pinnedBlockKeys?: ReadonlySet<string>;
 };
+
+function haveEqualLayout(
+  previous: ReadonlyMap<string, BlockMeasurement>,
+  next: ReadonlyMap<string, BlockMeasurement>,
+): boolean {
+  if (previous.size !== next.size) {
+    return false;
+  }
+  const previousEntries = previous.entries();
+  for (const [nextKey, nextMeasurement] of next) {
+    const previousEntry = previousEntries.next();
+    if (
+      previousEntry.done ||
+      previousEntry.value[0] !== nextKey ||
+      previousEntry.value[1].height !== nextMeasurement.height
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
 
 function getWindowRange(
   blockLayout: BlockLayout,
@@ -94,6 +116,7 @@ export function useDraftEditorBlockWindowing({
   scrollContainerRef,
   editorContainerRef,
   layoutKey,
+  pinnedBlockKeys,
 }: DraftEditorBlockWindowingOptions): DraftEditorBlockWindowing | undefined {
   const blockMap = editorState.currentContent.blockMap;
   const measurementsRef = useRef<ReadonlyMap<string, BlockMeasurement>>(new Map());
@@ -107,7 +130,11 @@ export function useDraftEditorBlockWindowing({
   const updateMeasurements = useCallback(() => {
     const nextMeasurements = measureBlocks(blockMap, measurementsRef.current);
     measurementsRef.current = nextMeasurements;
-    setMeasurements(nextMeasurements);
+    setMeasurements(previousMeasurements =>
+      haveEqualLayout(previousMeasurements, nextMeasurements)
+        ? previousMeasurements
+        : nextMeasurements,
+    );
     return nextMeasurements.size === blockMap.size;
   }, [blockMap]);
 
@@ -222,11 +249,20 @@ export function useDraftEditorBlockWindowing({
     );
     renderedKeys.add(editorState.selection.anchorKey);
     renderedKeys.add(editorState.selection.focusKey);
+    for (const blockKey of pinnedBlockKeys || []) {
+      renderedKeys.add(blockKey);
+    }
     return {
       shouldRenderBlock: block => renderedKeys.has(block.key),
       getSpacerHeight: block => blockLayout.heights.get(block.key) || 0,
     };
-  }, [blockLayout, editorState.selection.anchorKey, editorState.selection.focusKey, windowRange]);
+  }, [
+    blockLayout,
+    editorState.selection.anchorKey,
+    editorState.selection.focusKey,
+    pinnedBlockKeys,
+    windowRange,
+  ]);
 }
 
-export const exportedForTesting = {getWindowRange};
+export const exportedForTesting = {getWindowRange, haveEqualLayout};

@@ -1,5 +1,21 @@
 import {ContentState} from '../../model/immutable/ContentState';
 
+export function getDraftEditorBlockKeyForTextOffset(
+  contentState: ContentState,
+  textOffset: number,
+): string | undefined {
+  let remainingOffset = Math.max(0, textOffset);
+  let lastBlockKey: string | undefined;
+  for (const block of contentState.blockMap.values()) {
+    lastBlockKey = block.key;
+    if (remainingOffset <= block.text.length) {
+      return block.key;
+    }
+    remainingOffset -= block.text.length + 1;
+  }
+  return lastBlockKey;
+}
+
 function getTextLengthWithinWindowSpacer(
   element: HTMLElement,
   visibleHeight: number,

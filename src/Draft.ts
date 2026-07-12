@@ -18,7 +18,10 @@ export {
   useDraftEditorBlockWindowing,
   type DraftEditorBlockWindowingOptions,
 } from './component/hooks/useDraftEditorBlockWindowing';
-export {getDraftEditorWindowedTextOffset} from './component/contents/getDraftEditorWindowedTextOffset';
+export {
+  getDraftEditorBlockKeyForTextOffset,
+  getDraftEditorWindowedTextOffset,
+} from './component/contents/getDraftEditorWindowedTextOffset';
 export {CompositeDecorator} from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';

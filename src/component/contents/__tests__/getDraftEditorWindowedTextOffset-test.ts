@@ -1,5 +1,8 @@
 import {createFromText} from '../../../model/immutable/ContentState';
-import {getDraftEditorWindowedTextOffset} from '../getDraftEditorWindowedTextOffset';
+import {
+  getDraftEditorBlockKeyForTextOffset,
+  getDraftEditorWindowedTextOffset,
+} from '../getDraftEditorWindowedTextOffset';
 
 function createRect({y, height}: {y: number; height: number}): DOMRect {
   return {
@@ -73,5 +76,17 @@ describe('getDraftEditorWindowedTextOffset', () => {
         100,
       ),
     ).toBeUndefined();
+  });
+});
+
+describe('getDraftEditorBlockKeyForTextOffset', () => {
+  test('maps block text and newline offsets to block keys', () => {
+    const contentState = createFromText('zero\none\ntwo');
+    const [first, second, third] = Array.from(contentState.blockMap.values());
+
+    expect(getDraftEditorBlockKeyForTextOffset(contentState, 4)).toBe(first?.key);
+    expect(getDraftEditorBlockKeyForTextOffset(contentState, 5)).toBe(second?.key);
+    expect(getDraftEditorBlockKeyForTextOffset(contentState, 9)).toBe(third?.key);
+    expect(getDraftEditorBlockKeyForTextOffset(contentState, 100)).toBe(third?.key);
   });
 });

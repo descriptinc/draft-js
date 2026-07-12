@@ -154,3 +154,37 @@ test('renders windowed blocks and replaces omitted runs with spacers', () => {
   ).toEqual(['[[10,4]]', '[[30,3]]']);
   expect(container.textContent).toBe('onethree');
 });
+
+test('keeps windowed spacers in the same custom block wrapper', () => {
+  const editorState = createWithContent(createFromText('zero\none\ntwo'));
+  const blocks = Array.from(editorState.currentContent.blockMap.values());
+  const wrapper = (
+    <div data-testid="fixed-height-wrapper" style={{height: 200}} />
+  );
+
+  flushSync(() => {
+    root.render(
+      <DraftEditor
+        editorState={editorState}
+        onChange={() => {}}
+        blockRenderMap={{
+          unstyled: {
+            element: 'div',
+            wrapper,
+          },
+        }}
+        blockWindowing={{
+          shouldRenderBlock: block => block !== blocks[1],
+          getSpacerHeight: () => 40,
+        }}
+      />,
+    );
+  });
+
+  const wrappers = container.querySelectorAll('[data-testid="fixed-height-wrapper"]');
+  expect(wrappers).toHaveLength(1);
+  expect(wrappers[0]?.children).toHaveLength(3);
+  expect(
+    wrappers[0]?.querySelector<HTMLElement>('[data-block-window-spacer]')?.style.height,
+  ).toBe('40px');
+});
