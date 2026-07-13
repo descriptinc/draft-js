@@ -12,7 +12,6 @@ import {BlockNode} from '../../model/immutable/BlockNode';
 import {DraftEditorBlockWindowing} from '../base/DraftEditorProps';
 
 type BlockMeasurement = {
-  block: BlockNode;
   height: number;
 };
 
@@ -96,18 +95,72 @@ function measureBlocks(
           ? 0
           : parseFloat(getComputedStyle(element).marginBottom) || 0;
       measurements.set(block.key, {
-        block,
         height: element.getBoundingClientRect().height + marginBottom,
       });
       continue;
     }
 
     const previousMeasurement = previousMeasurements.get(block.key);
-    if (previousMeasurement?.block === block) {
+    if (previousMeasurement) {
       measurements.set(block.key, previousMeasurement);
     }
   }
   return measurements;
+}
+
+function getBlockLayout(
+  blocks: ReadonlyMap<string, BlockNode>,
+  measurements: ReadonlyMap<string, BlockMeasurement>,
+): BlockLayout | undefined {
+  const blockEntries = Array.from(blocks.entries());
+  const retainedHeights = blockEntries
+    .map(([key]) => measurements.get(key)?.height)
+    .filter((height): height is number => height !== undefined);
+  if (blockEntries.length > 0 && retainedHeights.length === 0) {
+    return undefined;
+  }
+
+  const sortedHeights = Array.from(measurements.values(), ({height}) => height).sort(
+    (a, b) => a - b,
+  );
+  const fallbackHeight = sortedHeights[Math.floor(sortedHeights.length / 2)] || 0;
+  const nextMeasuredHeights: Array<number | undefined> = new Array(
+    blockEntries.length,
+  );
+  let nextMeasuredHeight: number | undefined;
+  for (let index = blockEntries.length - 1; index >= 0; index -= 1) {
+    const blockEntry = blockEntries[index];
+    const measuredHeight = blockEntry
+      ? measurements.get(blockEntry[0])?.height
+      : undefined;
+    if (measuredHeight !== undefined) {
+      nextMeasuredHeight = measuredHeight;
+    }
+    nextMeasuredHeights[index] = nextMeasuredHeight;
+  }
+
+  const keys: string[] = [];
+  const offsets: number[] = [];
+  const heights = new Map<string, number>();
+  let offset = 0;
+  let previousMeasuredHeight: number | undefined;
+  for (const [index, [key]] of blockEntries.entries()) {
+    const measuredHeight = measurements.get(key)?.height;
+    const nextHeight = nextMeasuredHeights[index];
+    const height =
+      measuredHeight ??
+      (previousMeasuredHeight !== undefined && nextHeight !== undefined
+        ? (previousMeasuredHeight + nextHeight) / 2
+        : previousMeasuredHeight ?? nextHeight ?? fallbackHeight);
+    keys.push(key);
+    offsets.push(offset);
+    heights.set(key, height);
+    offset += height;
+    if (measuredHeight !== undefined) {
+      previousMeasuredHeight = measuredHeight;
+    }
+  }
+  return {keys, offsets, heights};
 }
 
 export function useDraftEditorBlockWindowing({
@@ -120,10 +173,10 @@ export function useDraftEditorBlockWindowing({
 }: DraftEditorBlockWindowingOptions): DraftEditorBlockWindowing | undefined {
   const blockMap = editorState.currentContent.blockMap;
   const measurementsRef = useRef<ReadonlyMap<string, BlockMeasurement>>(new Map());
+  const measuredWidthRef = useRef<number>();
   const [measurements, setMeasurements] = useState<
     ReadonlyMap<string, BlockMeasurement>
   >(new Map());
-  const [needsFullMeasurement, setNeedsFullMeasurement] = useState(false);
   const [measurementRevision, setMeasurementRevision] = useState(0);
   const [windowRange, setWindowRange] = useState<{start: number; end: number}>();
 
@@ -143,55 +196,52 @@ export function useDraftEditorBlockWindowing({
       return;
     }
     const animationFrame = requestAnimationFrame(() => {
-      setNeedsFullMeasurement(!updateMeasurements());
+      updateMeasurements();
     });
     return () => cancelAnimationFrame(animationFrame);
   }, [enabled, layoutKey, measurementRevision, updateMeasurements]);
 
   useLayoutEffect(() => {
-    if (!enabled || !needsFullMeasurement) {
+    if (!enabled || measurements.size >= blockMap.size || !windowRange) {
       return;
     }
     const animationFrame = requestAnimationFrame(() => {
       updateMeasurements();
-      setNeedsFullMeasurement(false);
     });
     return () => cancelAnimationFrame(animationFrame);
-  }, [enabled, needsFullMeasurement, updateMeasurements]);
+  }, [blockMap.size, enabled, measurements.size, updateMeasurements, windowRange]);
 
   useEffect(() => {
     const editorContainer = editorContainerRef.current;
     if (!enabled || !editorContainer || typeof ResizeObserver === 'undefined') {
       return;
     }
-    const resizeObserver = new ResizeObserver(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      const width = entries[0]?.contentRect.width;
+      if (width === undefined) {
+        return;
+      }
+      const previousWidth = measuredWidthRef.current;
+      measuredWidthRef.current = width;
+      if (previousWidth === undefined || width === previousWidth) {
+        return;
+      }
       measurementsRef.current = new Map();
       setMeasurements(new Map());
       setMeasurementRevision(revision => revision + 1);
     });
     resizeObserver.observe(editorContainer);
-    return () => resizeObserver.disconnect();
+    return () => {
+      measuredWidthRef.current = undefined;
+      resizeObserver.disconnect();
+    };
   }, [editorContainerRef, enabled]);
 
   const blockLayout = useMemo<BlockLayout | undefined>(() => {
-    if (!enabled || measurements.size !== blockMap.size) {
+    if (!enabled) {
       return undefined;
     }
-    const keys: string[] = [];
-    const offsets: number[] = [];
-    const heights = new Map<string, number>();
-    let offset = 0;
-    for (const block of blockMap.values()) {
-      const measurement = measurements.get(block.key);
-      if (!measurement) {
-        return undefined;
-      }
-      keys.push(block.key);
-      offsets.push(offset);
-      heights.set(block.key, measurement.height);
-      offset += measurement.height;
-    }
-    return {keys, offsets, heights};
+    return getBlockLayout(blockMap, measurements);
   }, [blockMap, enabled, measurements]);
 
   useEffect(() => {
@@ -265,4 +315,8 @@ export function useDraftEditorBlockWindowing({
   ]);
 }
 
-export const exportedForTesting = {getWindowRange, haveEqualLayout};
+export const exportedForTesting = {
+  getBlockLayout,
+  getWindowRange,
+  haveEqualLayout,
+};

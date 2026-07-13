@@ -3,15 +3,17 @@ import {createRoot} from 'react-dom/client';
 import {
   createWithContent,
   forceSelection,
+  pushContent,
 } from '../../../model/immutable/EditorState';
 import {createFromText} from '../../../model/immutable/ContentState';
 import {makeSelectionState} from '../../../model/immutable/SelectionState';
+import DraftModifier from '../../../model/modifier/DraftModifier';
 import {
   exportedForTesting,
   useDraftEditorBlockWindowing,
 } from '../useDraftEditorBlockWindowing';
 
-const {getWindowRange, haveEqualLayout} = exportedForTesting;
+const {getBlockLayout, getWindowRange, haveEqualLayout} = exportedForTesting;
 
 describe('getWindowRange', () => {
   const blockLayout = {
@@ -38,28 +40,26 @@ describe('getWindowRange', () => {
 });
 
 describe('haveEqualLayout', () => {
-  const block = {key: 'a'} as any;
-
-  test('ignores block identity changes when ordered heights are unchanged', () => {
+  test('preserves layout identity when ordered heights are unchanged', () => {
     expect(
       haveEqualLayout(
-        new Map([['a', {block, height: 10}]]),
-        new Map([['a', {block: {...block}, height: 10}]]),
+        new Map([['a', {height: 10}]]),
+        new Map([['a', {height: 10}]]),
       ),
     ).toBe(true);
   });
 
   test('detects height and block order changes', () => {
     const previous = new Map([
-      ['a', {block, height: 10}],
-      ['b', {block, height: 20}],
+      ['a', {height: 10}],
+      ['b', {height: 20}],
     ]);
     expect(
       haveEqualLayout(
         previous,
         new Map([
-          ['a', {block, height: 11}],
-          ['b', {block, height: 20}],
+          ['a', {height: 11}],
+          ['b', {height: 20}],
         ]),
       ),
     ).toBe(false);
@@ -67,12 +67,28 @@ describe('haveEqualLayout', () => {
       haveEqualLayout(
         previous,
         new Map([
-          ['b', {block, height: 20}],
-          ['a', {block, height: 10}],
+          ['b', {height: 20}],
+          ['a', {height: 10}],
         ]),
       ),
     ).toBe(false);
   });
+});
+
+test('estimates new block heights without discarding the measured layout', () => {
+  const contentState = createFromText('zero\none\ntwo');
+  const blocks = Array.from(contentState.blockMap.values());
+  const layout = getBlockLayout(
+    contentState.blockMap,
+    new Map([
+      [blocks[0]!.key, {height: 20}],
+      [blocks[2]!.key, {height: 40}],
+    ]),
+  );
+
+  expect(layout?.keys).toEqual(blocks.map(block => block.key));
+  expect(layout?.heights.get(blocks[1]!.key)).toBe(30);
+  expect(layout?.offsets).toEqual([0, 20, 50]);
 });
 
 test('keeps selection endpoints and external pinned blocks rendered', async () => {
@@ -103,6 +119,8 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
     ({top: 0, bottom: 100, height: 100} as DOMRect);
   contents.getBoundingClientRect = () =>
     ({top: 0, bottom: 3000, height: 3000} as DOMRect);
+  editorContainer.getBoundingClientRect = () =>
+    ({width: 500, height: 3000} as DOMRect);
   for (const [index, block] of blocks.entries()) {
     const element = document.createElement('div');
     element.id = `block-${block.key}`;
@@ -125,6 +143,17 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
   jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(id => {
     animationFrames.delete(id);
   });
+  let resizeCallback: ResizeObserverCallback | undefined;
+  const originalResizeObserver = globalThis.ResizeObserver;
+  const resizeObserver = {
+    disconnect: jest.fn(),
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+  };
+  globalThis.ResizeObserver = jest.fn(callback => {
+    resizeCallback = callback;
+    return resizeObserver;
+  }) as unknown as typeof ResizeObserver;
   const flushAnimationFrames = () => {
     const callbacks = Array.from(animationFrames.values());
     animationFrames.clear();
@@ -134,10 +163,10 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
   };
 
   let blockWindowing: ReturnType<typeof useDraftEditorBlockWindowing> = undefined;
-  function Harness() {
+  function Harness({state}: {state: typeof editorState}) {
     blockWindowing = useDraftEditorBlockWindowing({
       enabled: true,
-      editorState,
+      editorState: state,
       scrollContainerRef: {current: scrollContainer},
       editorContainerRef: {current: editorContainer},
       pinnedBlockKeys: new Set([blocks[20]!.key]),
@@ -146,8 +175,14 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
   }
 
   const root = createRoot(document.createElement('div'));
-  await act(async () => root.render(React.createElement(Harness)));
+  await act(async () => root.render(React.createElement(Harness, {state: editorState})));
   await act(async () => flushAnimationFrames());
+  await act(async () =>
+    resizeCallback?.(
+      [{contentRect: {width: 500, height: 3000}} as ResizeObserverEntry],
+      resizeObserver as unknown as ResizeObserver,
+    ),
+  );
 
   expect(blockWindowing).toBeDefined();
   expect(blockWindowing?.shouldRenderBlock(blocks[20]!)).toBe(true);
@@ -155,9 +190,38 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
   expect(blockWindowing?.shouldRenderBlock(blocks[29]!)).toBe(true);
   expect(blockWindowing?.shouldRenderBlock(blocks[21]!)).toBe(false);
 
+  const splitSelection = makeSelectionState({
+    anchorKey: blocks[20]!.key,
+    anchorOffset: 3,
+    focusKey: blocks[20]!.key,
+    focusOffset: 3,
+  });
+  const beforeSplit = forceSelection(editorState, splitSelection);
+  const afterSplit = pushContent(
+    beforeSplit,
+    DraftModifier.splitBlock(beforeSplit.currentContent, splitSelection),
+    'split-block',
+  );
+  const blocksAfterSplit = Array.from(afterSplit.currentContent.blockMap.values());
+  await act(async () =>
+    root.render(React.createElement(Harness, {state: afterSplit})),
+  );
+  await act(async () =>
+    resizeCallback?.(
+      [{contentRect: {width: 500, height: 3100}} as ResizeObserverEntry],
+      resizeObserver as unknown as ResizeObserver,
+    ),
+  );
+
+  expect(blockWindowing).toBeDefined();
+  expect(
+    blocksAfterSplit.filter(block => blockWindowing?.shouldRenderBlock(block)),
+  ).not.toHaveLength(blocksAfterSplit.length);
+
   await act(async () => root.unmount());
   scrollContainer.remove();
   editorContainer.remove();
   jest.restoreAllMocks();
+  globalThis.ResizeObserver = originalResizeObserver;
   reactActEnvironment.IS_REACT_ACT_ENVIRONMENT = previousReactActEnvironment;
 });
