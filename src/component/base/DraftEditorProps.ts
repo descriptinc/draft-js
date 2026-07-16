@@ -26,9 +26,10 @@ import {
 } from '../utils/eventTypes';
 import {BlockNode} from '../../model/immutable/BlockNode';
 
-export type DraftEditorBlockWindowing = {
-  shouldRenderBlock: (block: BlockNode) => boolean;
-  getSpacerHeight: (block: BlockNode) => number;
+export type DraftEditorBlockWindowingOptions = {
+  enabled: boolean;
+  scrollContainerRef: RefObject<HTMLElement>;
+  pinnedBlockKeys?: ReadonlySet<string>;
 };
 
 export type DraftEditorProps = {
@@ -65,7 +66,7 @@ export type DraftEditorProps = {
   blockRendererFn: (block: BlockNode) => any | null;
   // Function that returns a cx map corresponding to block-level styles.
   blockStyleFn: (block: BlockNode) => string | CSSProperties | undefined;
-  blockWindowing?: DraftEditorBlockWindowing;
+  blockWindowing?: DraftEditorBlockWindowingOptions;
   // If supplied, a ref which will be passed to the contenteditable.
   // Currently, only object refs are supported.
   editorRef?: RefObject<HTMLDivElement> | Ref<HTMLDivElement>;

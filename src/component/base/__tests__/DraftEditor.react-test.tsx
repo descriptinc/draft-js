@@ -13,16 +13,52 @@ import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
 import DraftEditor from '../DraftEditor.react';
 import {createRoot, Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
+import {useDraftEditorBlockWindowing} from '../../hooks/useDraftEditorBlockWindowing';
+
+jest.mock('../../hooks/useDraftEditorBlockWindowing');
 
 let container: HTMLElement;
 let root: Root;
 let editorState: EditorState;
 
 beforeEach(() => {
+  jest.mocked(useDraftEditorBlockWindowing).mockReset().mockReturnValue(undefined);
   container = document.createElement('div');
   document.body.appendChild(container);
   root = createRoot(container);
   editorState = createEmpty();
+});
+
+test('owns block windowing lifecycle inputs', () => {
+  const editorRef = React.createRef<DraftEditor>();
+  const scrollContainerRef = {current: container};
+  const pinnedBlockKeys = new Set(['pinned']);
+
+  flushSync(() => {
+    root.render(
+      <DraftEditor
+        ref={editorRef}
+        editorState={editorState}
+        onChange={() => {}}
+        blockWindowing={{
+          enabled: true,
+          scrollContainerRef,
+          pinnedBlockKeys,
+        }}
+      />,
+    );
+  });
+
+  expect(useDraftEditorBlockWindowing).toHaveBeenLastCalledWith({
+    enabled: true,
+    editorState,
+    scrollContainerRef,
+    editorContainerRef: expect.objectContaining({
+      current: editorRef.current?.editorContainer,
+    }),
+    layoutKey: DraftEditor.defaultProps.blockStyleFn,
+    pinnedBlockKeys,
+  });
 });
 
 afterEach(() => {

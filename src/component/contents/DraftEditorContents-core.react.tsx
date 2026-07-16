@@ -19,7 +19,7 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from '../selection/DraftOffsetKey';
 import DraftEditorBlock from './DraftEditorBlock.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
-import {DraftEditorBlockWindowing} from '../base/DraftEditorProps';
+import {DraftEditorBlockWindowingState} from '../hooks/useDraftEditorBlockWindowing';
 import {
   DOMLocation,
   DOMSelectionUpdateFn,
@@ -31,7 +31,7 @@ type Props = {
   blockRenderMap: DraftBlockRenderMap;
   blockRendererFn: (block: BlockNode) => Record<string, any> | null;
   blockStyleFn?: (block: BlockNode) => string | CSSProperties | undefined;
-  blockWindowing?: DraftEditorBlockWindowing;
+  blockWindowing?: DraftEditorBlockWindowingState;
   customStyleFn?: (
     style: DraftInlineStyle,
     block: BlockNode,

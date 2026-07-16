@@ -11,13 +11,9 @@ import Editor from './component/base/DraftEditor.react';
 export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
 export type {
-  DraftEditorBlockWindowing,
+  DraftEditorBlockWindowingOptions,
   DraftEditorProps,
 } from './component/base/DraftEditorProps';
-export {
-  useDraftEditorBlockWindowing,
-  type DraftEditorBlockWindowingOptions,
-} from './component/hooks/useDraftEditorBlockWindowing';
 export {
   getDraftEditorBlockKeyForTextOffset,
   getDraftEditorWindowedTextOffset,

@@ -9,7 +9,7 @@ import {
 } from 'react';
 import {EditorState} from '../../model/immutable/EditorState';
 import {BlockNode} from '../../model/immutable/BlockNode';
-import {DraftEditorBlockWindowing} from '../base/DraftEditorProps';
+import {DraftEditorBlockWindowingOptions} from '../base/DraftEditorProps';
 
 type BlockMeasurement = {
   height: number;
@@ -21,13 +21,15 @@ type BlockLayout = {
   heights: Map<string, number>;
 };
 
-export type DraftEditorBlockWindowingOptions = {
-  enabled: boolean;
+export type DraftEditorBlockWindowingState = {
+  shouldRenderBlock: (block: BlockNode) => boolean;
+  getSpacerHeight: (block: BlockNode) => number;
+};
+
+type UseDraftEditorBlockWindowingOptions = DraftEditorBlockWindowingOptions & {
   editorState: EditorState;
-  scrollContainerRef: RefObject<HTMLElement>;
   editorContainerRef: RefObject<HTMLElement>;
   layoutKey?: unknown;
-  pinnedBlockKeys?: ReadonlySet<string>;
 };
 
 function haveEqualLayout(
@@ -170,7 +172,9 @@ export function useDraftEditorBlockWindowing({
   editorContainerRef,
   layoutKey,
   pinnedBlockKeys,
-}: DraftEditorBlockWindowingOptions): DraftEditorBlockWindowing | undefined {
+}: UseDraftEditorBlockWindowingOptions):
+  | DraftEditorBlockWindowingState
+  | undefined {
   const blockMap = editorState.currentContent.blockMap;
   const measurementsRef = useRef<ReadonlyMap<string, BlockMeasurement>>(new Map());
   const measuredWidthRef = useRef<number>();
@@ -290,7 +294,7 @@ export function useDraftEditorBlockWindowing({
     };
   }, [blockLayout, editorContainerRef, scrollContainerRef]);
 
-  return useMemo<DraftEditorBlockWindowing | undefined>(() => {
+  return useMemo<DraftEditorBlockWindowingState | undefined>(() => {
     if (!blockLayout || !windowRange) {
       return undefined;
     }

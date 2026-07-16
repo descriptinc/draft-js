@@ -162,9 +162,11 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
     }
   };
 
-  let blockWindowing: ReturnType<typeof useDraftEditorBlockWindowing> = undefined;
+  const blockWindowing: {
+    current: ReturnType<typeof useDraftEditorBlockWindowing>;
+  } = {current: undefined};
   function Harness({state}: {state: typeof editorState}) {
-    blockWindowing = useDraftEditorBlockWindowing({
+    blockWindowing.current = useDraftEditorBlockWindowing({
       enabled: true,
       editorState: state,
       scrollContainerRef: {current: scrollContainer},
@@ -184,11 +186,11 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
     ),
   );
 
-  expect(blockWindowing).toBeDefined();
-  expect(blockWindowing?.shouldRenderBlock(blocks[20]!)).toBe(true);
-  expect(blockWindowing?.shouldRenderBlock(blocks[28]!)).toBe(true);
-  expect(blockWindowing?.shouldRenderBlock(blocks[29]!)).toBe(true);
-  expect(blockWindowing?.shouldRenderBlock(blocks[21]!)).toBe(false);
+  expect(blockWindowing.current).toBeDefined();
+  expect(blockWindowing.current?.shouldRenderBlock(blocks[20]!)).toBe(true);
+  expect(blockWindowing.current?.shouldRenderBlock(blocks[28]!)).toBe(true);
+  expect(blockWindowing.current?.shouldRenderBlock(blocks[29]!)).toBe(true);
+  expect(blockWindowing.current?.shouldRenderBlock(blocks[21]!)).toBe(false);
 
   const splitSelection = makeSelectionState({
     anchorKey: blocks[20]!.key,
@@ -213,9 +215,11 @@ test('keeps selection endpoints and external pinned blocks rendered', async () =
     ),
   );
 
-  expect(blockWindowing).toBeDefined();
+  expect(blockWindowing.current).toBeDefined();
   expect(
-    blocksAfterSplit.filter(block => blockWindowing?.shouldRenderBlock(block)),
+    blocksAfterSplit.filter(block =>
+      blockWindowing.current?.shouldRenderBlock(block),
+    ),
   ).not.toHaveLength(blocksAfterSplit.length);
 
   await act(async () => root.unmount());

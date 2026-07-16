@@ -35,7 +35,7 @@ import {hasText} from '../../model/immutable/ContentState';
 import {nullthrows} from '../../fbjs/nullthrows';
 import DraftEditorPlaceholder from './DraftEditorPlaceholder.react';
 import {DefaultDraftInlineStyle} from '../../model/immutable/DefaultDraftInlineStyle';
-import DraftEditorContents from '../contents/DraftEditorContents-core.react';
+import DraftEditorWindowedContents from '../contents/DraftEditorWindowedContents.react';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -195,6 +195,7 @@ export default class DraftEditor extends React.Component<
 
   editor: HTMLElement | null = null;
   editorContainer: HTMLElement | null = null;
+  _editorContainerRef: {current: HTMLElement | null} = {current: null};
   getEditorKey: () => string;
 
   constructor(props: DraftEditorProps) {
@@ -285,6 +286,7 @@ export default class DraftEditor extends React.Component<
     node: HTMLElement | null,
   ): void => {
     this.editorContainer = node;
+    this._editorContainerRef.current = node;
     // Instead of having a direct ref on the child, we'll grab it here.
     // This is safe as long as the rendered structure is static (which it is).
     // This lets the child support ref={props.editorRef} without merging refs.
@@ -473,9 +475,10 @@ export default class DraftEditor extends React.Component<
               all DraftEditorLeaf nodes so it's first in postorder traversal.
             */}
             <UpdateDraftEditorFlags editor={this} editorState={editorState} />
-            <DraftEditorContents
+            <DraftEditorWindowedContents
               {...editorContentsProps}
-              key={'contents' + this.state.contentsKey}
+              contentsKey={this.state.contentsKey}
+              editorContainerRef={this._editorContainerRef}
             />
           </div>
         </div>

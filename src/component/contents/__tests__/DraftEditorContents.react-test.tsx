@@ -20,6 +20,8 @@ import RichTextEditorUtil from '../../../model/modifier/RichTextEditorUtil';
 import {createRoot, Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import DraftEditor from '../../base/DraftEditor.react';
+import DraftEditorContents from '../DraftEditorContents-core.react';
+import {DefaultDraftBlockRenderMap} from '../../../model/immutable/DefaultDraftBlockRenderMap';
 
 let container: HTMLElement;
 let root: Root;
@@ -123,9 +125,9 @@ test('renders windowed blocks and replaces omitted runs with spacers', () => {
 
   flushSync(() => {
     root.render(
-      <DraftEditor
+      <DraftEditorContents
         editorState={editorState}
-        onChange={() => {}}
+        blockRenderMap={DefaultDraftBlockRenderMap}
         blockRendererFn={blockRendererFn}
         blockWindowing={{
           shouldRenderBlock: block => block === blocks[1] || block === blocks[3],
@@ -164,9 +166,9 @@ test('keeps windowed spacers in the same custom block wrapper', () => {
 
   flushSync(() => {
     root.render(
-      <DraftEditor
+      <DraftEditorContents
         editorState={editorState}
-        onChange={() => {}}
+        blockRendererFn={() => null}
         blockRenderMap={{
           unstyled: {
             element: 'div',
