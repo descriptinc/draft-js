@@ -13,6 +13,19 @@ import {BlockNode} from '../immutable/BlockNode';
 import {ComponentType} from 'react';
 import {DraftDecoratorComponentProps} from './DraftDecorator';
 
+export type DraftDecoratorSkeletonAttributes = Readonly<
+  Record<string, string | number | boolean | undefined>
+>;
+
+export type DraftDecoratorSkeletonRange = Readonly<{
+  block: BlockNode;
+  contentState: ContentState;
+  decoratorKey: string;
+  start: number;
+  end: number;
+  entityKey: string | null;
+}>;
+
 /**
  * An interface for document decorator classes, allowing the creation of
  * custom decorator classes.
@@ -39,4 +52,11 @@ export type DraftDecoratorType = {
    * this decorated range.
    */
   getPropsForKey: (key: string) => Record<string, unknown> | null;
+  /**
+   * Return the DOM attributes that must remain available when a decorated
+   * range is rendered as part of an offscreen block skeleton.
+   */
+  getSkeletonAttributesForRange?: (
+    range: DraftDecoratorSkeletonRange,
+  ) => readonly DraftDecoratorSkeletonAttributes[] | undefined;
 };

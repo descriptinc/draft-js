@@ -9,10 +9,15 @@
  */
 
 import React from 'react';
-import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
+import {
+  createEmpty,
+  createWithContent,
+  EditorState,
+} from '../../../model/immutable/EditorState';
 import DraftEditor from '../DraftEditor.react';
 import {createRoot, Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
+import {createFromText} from '../../../model/immutable/ContentState';
 
 let container: HTMLElement;
 let root: Root;
@@ -70,6 +75,127 @@ test('must has editorKey same as props', () => {
   const editorInstance = editorRef.current;
   expect(editorInstance).toBeTruthy();
   expect(editorInstance?.getEditorKey()).toBe('hash');
+});
+
+test('promotes intersecting skeleton blocks to full rendering', () => {
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
+  let observerCallback: IntersectionObserverCallback | undefined;
+  const observedElements: Element[] = [];
+
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root = container;
+    readonly rootMargin = '1200px 0px';
+    readonly thresholds = [0];
+
+    constructor(callback: IntersectionObserverCallback) {
+      observerCallback = callback;
+    }
+
+    disconnect(): void {}
+    observe(target: Element): void {
+      observedElements.push(target);
+    }
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(): void {}
+  }
+
+  globalThis.IntersectionObserver = MockIntersectionObserver;
+  try {
+    editorState = createWithContent(createFromText('zero\none\ntwo'));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+
+    expect(observedElements).toHaveLength(3);
+    expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(2);
+
+    const secondBlock = observedElements[1];
+    expect(secondBlock).toBeDefined();
+    flushSync(() => {
+      observerCallback?.(
+        [
+          {
+            isIntersecting: true,
+            target: secondBlock,
+          } as IntersectionObserverEntry,
+        ],
+        {} as IntersectionObserver,
+      );
+    });
+
+    expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(1);
+  } finally {
+    globalThis.IntersectionObserver = originalIntersectionObserver;
+  }
+});
+
+test('renders newly introduced block keys as skeletons immediately', () => {
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
+
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root = container;
+    readonly rootMargin = '1200px 0px';
+    readonly thresholds = [0];
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(): void {}
+  }
+
+  globalThis.IntersectionObserver = MockIntersectionObserver;
+  try {
+    const blockRendererFn = jest.fn(() => null);
+    editorState = createWithContent(createFromText('zero\none'));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockRendererFn={blockRendererFn}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+    expect(blockRendererFn).toHaveBeenCalledTimes(1);
+
+    blockRendererFn.mockClear();
+    editorState = createWithContent(createFromText('zero\none\ntwo'));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockRendererFn={blockRendererFn}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+
+    expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(2);
+    expect(blockRendererFn).toHaveBeenCalledTimes(1);
+  } finally {
+    globalThis.IntersectionObserver = originalIntersectionObserver;
+  }
 });
 
 describe('ariaDescribedBy', () => {

@@ -100,6 +100,16 @@ const getNodeScrollTopAndBottom = (
  * A `DraftEditorBlock` is able to render a given `ContentBlock` to its
  * appropriate decorator and inline style components.
  */
+export function getDraftEditorBlockClassName(
+  direction: BidiDirection,
+): string {
+  return cx({
+    'public/DraftStyleDefault/block': true,
+    'public/DraftStyleDefault/ltr': direction === 'LTR',
+    'public/DraftStyleDefault/rtl': direction === 'RTL',
+  });
+}
+
 export default class DraftEditorBlock extends React.Component<Props> {
   _node: HTMLDivElement | null = null;
 
@@ -362,11 +372,7 @@ export default class DraftEditorBlock extends React.Component<Props> {
 
   render(): React.ReactNode {
     const {direction, offsetKey} = this.props;
-    const className = cx({
-      'public/DraftStyleDefault/block': true,
-      'public/DraftStyleDefault/ltr': direction === 'LTR',
-      'public/DraftStyleDefault/rtl': direction === 'RTL',
-    });
+    const className = getDraftEditorBlockClassName(direction);
 
     return (
       <div
