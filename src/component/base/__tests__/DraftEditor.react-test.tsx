@@ -198,6 +198,93 @@ test('renders newly introduced block keys as skeletons immediately', () => {
   }
 });
 
+test('selects all content across skeleton blocks', () => {
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
+
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root = container;
+    readonly rootMargin = '1200px 0px';
+    readonly thresholds = [0];
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(): void {}
+  }
+
+  globalThis.IntersectionObserver = MockIntersectionObserver;
+  try {
+    editorState = createWithContent(createFromText('zero\none\ntwo'));
+    const onChange = jest.fn();
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={onChange}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+
+    const contentEditable = container.querySelector(
+      '[contenteditable="true"]',
+    );
+    expect(contentEditable).not.toBeNull();
+
+    const event = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      ctrlKey: true,
+      key: 'a',
+      metaKey: true,
+    });
+    Object.defineProperties(event, {
+      keyCode: {value: 65},
+      which: {value: 65},
+    });
+    contentEditable!.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const nextEditorState = onChange.mock.calls[0][0] as EditorState;
+    const blocks = [...nextEditorState.currentContent.blockMap.values()];
+    const firstBlock = blocks[0];
+    const lastBlock = blocks[blocks.length - 1];
+    expect(nextEditorState.selection).toEqual({
+      anchorKey: firstBlock.key,
+      anchorOffset: 0,
+      focusKey: lastBlock.key,
+      focusOffset: lastBlock.text.length,
+      hasFocus: true,
+      isBackward: false,
+    });
+
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={nextEditorState}
+          onChange={onChange}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+    const renderedBlocks = container.querySelectorAll('[data-block-key]');
+    expect(renderedBlocks[0].hasAttribute('data-block-skeleton')).toBe(false);
+    expect(renderedBlocks[1].hasAttribute('data-block-skeleton')).toBe(true);
+    expect(renderedBlocks[2].hasAttribute('data-block-skeleton')).toBe(false);
+  } finally {
+    globalThis.IntersectionObserver = originalIntersectionObserver;
+  }
+});
+
 describe('ariaDescribedBy', () => {
   function getProps(elem: React.ReactElement): Element {
     flushSync(() => {
