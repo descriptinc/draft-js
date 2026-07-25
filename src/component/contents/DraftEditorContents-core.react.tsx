@@ -17,9 +17,7 @@ import cx from 'fbjs/lib/cx';
 import joinClasses from 'fbjs/lib/joinClasses';
 import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from '../selection/DraftOffsetKey';
-import DraftEditorBlock, {
-  getDraftEditorBlockClassName,
-} from './DraftEditorBlock.react';
+import DraftEditorBlock from './DraftEditorBlock.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
 import {getEntityAt} from '../../model/immutable/ContentBlock';
 import {DraftEditorBlockSkeletonState} from '../hooks/useDraftEditorBlockSkeleton';
@@ -353,12 +351,15 @@ export default class DraftEditorContents extends React.Component<Props> {
       if (blockSkeleton && !blockSkeleton.fullBlockKeys.has(key)) {
         childProps = {
           ...childProps,
-          className: joinClasses(
-            className,
-            getDraftEditorBlockClassName(direction),
-          ),
           contentEditable: false,
           'data-block-skeleton': true,
+          style: {
+            ...inlineStyle,
+            direction: direction === 'RTL' ? 'rtl' : 'ltr',
+            position: 'relative',
+            textAlign: direction === 'RTL' ? 'right' : 'left',
+            whiteSpace: 'pre-wrap',
+          },
           suppressContentEditableWarning: true,
         };
         const tree = decorator?.getSkeletonAttributesForRange

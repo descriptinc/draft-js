@@ -100,9 +100,7 @@ const getNodeScrollTopAndBottom = (
  * A `DraftEditorBlock` is able to render a given `ContentBlock` to its
  * appropriate decorator and inline style components.
  */
-export function getDraftEditorBlockClassName(
-  direction: BidiDirection,
-): string {
+function getDraftEditorBlockClassName(direction: BidiDirection): string {
   return cx({
     'public/DraftStyleDefault/block': true,
     'public/DraftStyleDefault/ltr': direction === 'LTR',

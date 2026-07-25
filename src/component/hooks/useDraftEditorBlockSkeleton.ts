@@ -1,4 +1,4 @@
-import {RefObject, useLayoutEffect, useMemo, useState} from 'react';
+import {RefObject, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {EditorState} from '../../model/immutable/EditorState';
 
 export type DraftEditorBlockSkeletonState = Readonly<{
@@ -25,12 +25,14 @@ export function useDraftEditorBlockSkeleton({
   const [visibleBlockKeys, setVisibleBlockKeys] = useState<ReadonlySet<string>>(
     new Set(),
   );
+  const hasRefreshedGeometry = useRef(false);
   const blockMap = editorState.currentContent.blockMap;
   const canObserve =
     typeof window !== 'undefined' && typeof IntersectionObserver !== 'undefined';
 
   useLayoutEffect(() => {
     if (!enabled || !canObserve) {
+      hasRefreshedGeometry.current = false;
       return;
     }
 
@@ -39,35 +41,41 @@ export function useDraftEditorBlockSkeleton({
       return;
     }
 
-    const observer = new IntersectionObserver(
-      entries => {
-        setVisibleBlockKeys(previousKeys => {
-          const nextKeys = new Set(previousKeys);
-          let changed = false;
-          for (const entry of entries) {
-            const blockKey = (entry.target as HTMLElement).dataset.blockKey;
-            if (!blockKey) {
-              continue;
-            }
-            if (entry.isIntersecting) {
-              if (!nextKeys.has(blockKey)) {
-                nextKeys.add(blockKey);
-                changed = true;
-              }
-            } else if (nextKeys.delete(blockKey)) {
+    const observerOptions = {
+      root: scrollContainerRef.current,
+      rootMargin: OBSERVER_MARGIN,
+    };
+    const handleEntries: IntersectionObserverCallback = entries => {
+      setVisibleBlockKeys(previousKeys => {
+        const nextKeys = new Set(previousKeys);
+        let changed = false;
+        for (const entry of entries) {
+          const blockKey = (entry.target as HTMLElement).dataset.blockKey;
+          if (!blockKey) {
+            continue;
+          }
+          if (entry.isIntersecting) {
+            if (!nextKeys.has(blockKey)) {
+              nextKeys.add(blockKey);
               changed = true;
             }
+          } else if (nextKeys.delete(blockKey)) {
+            changed = true;
           }
-          return changed ? nextKeys : previousKeys;
-        });
-      },
-      {
-        root: scrollContainerRef.current,
-        rootMargin: OBSERVER_MARGIN,
-      },
-    );
+        }
+        return changed ? nextKeys : previousKeys;
+      });
+    };
+    const observer = new IntersectionObserver(handleEntries, observerOptions);
 
-    for (const blockElement of contents.querySelectorAll('[data-block-key]')) {
+    const blockElements = contents.querySelectorAll('[data-block-key]');
+    if (!hasRefreshedGeometry.current && visibleBlockKeys.size > 0) {
+      hasRefreshedGeometry.current = true;
+      for (const blockElement of blockElements) {
+        blockElement.getBoundingClientRect();
+      }
+    }
+    for (const blockElement of blockElements) {
       observer.observe(blockElement);
     }
     return () => observer.disconnect();
@@ -77,6 +85,7 @@ export function useDraftEditorBlockSkeleton({
     contentsRef,
     enabled,
     scrollContainerRef,
+    visibleBlockKeys,
   ]);
 
   return useMemo(() => {

@@ -146,6 +146,7 @@ test('renders offscreen blocks as text skeletons with persistent decorator attri
         editorState={editorState}
         blockRenderMap={DefaultDraftBlockRenderMap}
         blockRendererFn={blockRendererFn}
+        blockStyleFn={() => ({marginBottom: '16px'})}
         blockSkeleton={{
           fullBlockKeys: new Set(fullBlock ? [fullBlock.key] : []),
         }}
@@ -167,10 +168,15 @@ test('renders offscreen blocks as text skeletons with persistent decorator attri
   }
 
   for (const block of blocks.slice(1)) {
-    const skeleton = container.querySelector(
+    const skeleton = container.querySelector<HTMLElement>(
       `[data-block-key="${block.key}"]`,
     );
     expect(skeleton?.getAttribute('contenteditable')).toBe('false');
+    expect(skeleton?.classList.contains('public-DraftStyleDefault-block')).toBe(
+      false,
+    );
+    expect(skeleton?.style.marginBottom).toBe('16px');
+    expect(skeleton?.style.whiteSpace).toBe('pre-wrap');
     expect(
       skeleton?.querySelector(`#persistent-${block.key}`)?.textContent,
     ).toBe(block.text.slice(0, 3));
