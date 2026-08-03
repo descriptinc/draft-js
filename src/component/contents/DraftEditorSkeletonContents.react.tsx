@@ -20,7 +20,6 @@ export default function DraftEditorSkeletonContents({
     editorState: contentsProps.editorState,
     contentsRef,
     scrollContainerRef: blockSkeleton?.scrollContainerRef ?? contentsRef,
-    pinnedBlockKeys: blockSkeleton?.pinnedBlockKeys,
   });
 
   return (

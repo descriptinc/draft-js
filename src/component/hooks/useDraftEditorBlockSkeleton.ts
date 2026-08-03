@@ -10,7 +10,6 @@ type Options = Readonly<{
   editorState: EditorState;
   contentsRef: RefObject<HTMLElement>;
   scrollContainerRef: RefObject<HTMLElement>;
-  pinnedBlockKeys?: ReadonlySet<string>;
 }>;
 
 const OBSERVER_MARGIN = '500px 0px';
@@ -20,7 +19,6 @@ export function useDraftEditorBlockSkeleton({
   editorState,
   contentsRef,
   scrollContainerRef,
-  pinnedBlockKeys,
 }: Options): DraftEditorBlockSkeletonState | undefined {
   const [visibleBlockKeys, setVisibleBlockKeys] = useState<ReadonlySet<string>>(
     new Set(),
@@ -96,16 +94,12 @@ export function useDraftEditorBlockSkeleton({
     const fullBlockKeys = new Set(visibleBlockKeys);
     fullBlockKeys.add(editorState.selection.anchorKey);
     fullBlockKeys.add(editorState.selection.focusKey);
-    for (const blockKey of pinnedBlockKeys || []) {
-      fullBlockKeys.add(blockKey);
-    }
     return {fullBlockKeys};
   }, [
     canObserve,
     editorState.selection.anchorKey,
     editorState.selection.focusKey,
     enabled,
-    pinnedBlockKeys,
     visibleBlockKeys,
   ]);
 }
