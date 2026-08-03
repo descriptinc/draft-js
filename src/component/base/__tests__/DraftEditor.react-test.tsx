@@ -84,7 +84,7 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
-    readonly rootMargin = '1200px 0px';
+    readonly rootMargin = '500px 0px';
     readonly thresholds = [0];
 
     constructor(callback: IntersectionObserverCallback) {
@@ -145,7 +145,7 @@ test('renders newly introduced block keys as skeletons immediately', () => {
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
-    readonly rootMargin = '1200px 0px';
+    readonly rootMargin = '500px 0px';
     readonly thresholds = [0];
 
     disconnect(): void {}
@@ -203,7 +203,7 @@ test('selects all content across skeleton blocks', () => {
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
-    readonly rootMargin = '1200px 0px';
+    readonly rootMargin = '500px 0px';
     readonly thresholds = [0];
 
     disconnect(): void {}

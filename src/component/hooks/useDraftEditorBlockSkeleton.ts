@@ -13,7 +13,7 @@ type Options = Readonly<{
   pinnedBlockKeys?: ReadonlySet<string>;
 }>;
 
-const OBSERVER_MARGIN = '1200px 0px';
+const OBSERVER_MARGIN = '500px 0px';
 
 export function useDraftEditorBlockSkeleton({
   enabled,
