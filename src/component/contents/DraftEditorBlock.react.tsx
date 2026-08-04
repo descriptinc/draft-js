@@ -39,6 +39,7 @@ import {
 import {DraftDecoratorComponentProps} from '../../model/decorators/DraftDecorator';
 import {BlockNode} from '../../model/immutable/BlockNode';
 import {DOMSelectionUpdateFn} from '../selection/DOMSelectionUpdate';
+import wrapInDOMAnchors from './DraftDecoratorDOMAnchors.react';
 
 const DEFAULT_SCROLL_BUFFER = 10;
 
@@ -360,11 +361,23 @@ export default class DraftEditorBlock extends React.Component<Props> {
         offsetKey: decoratorOffsetKey,
       };
 
-      return (
+      const anchorIds = decorator.getDOMAnchorIdsForRange?.({
+        block,
+        contentState: this.props.contentState,
+        decoratorKey,
+        start,
+        end,
+        entityKey,
+      });
+
+      const decoratedRange = (
         <DecoratorComponent {...decoratorProps} {...commonProps}>
           {leaves}
         </DecoratorComponent>
       );
+      return anchorIds?.length
+        ? wrapInDOMAnchors(decoratedRange, anchorIds)
+        : decoratedRange;
     });
   }
 

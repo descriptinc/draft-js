@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useState} from 'react';
 import {DraftEditorBlockSkeletonOptions} from '../base/DraftEditorProps';
 import DraftEditorContents from './DraftEditorContents-core.react';
 import {useDraftEditorBlockSkeleton} from '../hooks/useDraftEditorBlockSkeleton';
@@ -14,21 +14,21 @@ export default function DraftEditorSkeletonContents({
   blockSkeleton,
   ...contentsProps
 }: Props): React.ReactNode {
-  const contentsRef = useRef<HTMLDivElement | null>(null);
+  const [contentsElement, setContentsElement] = useState<HTMLDivElement | null>(
+    null,
+  );
   const skeletonState = useDraftEditorBlockSkeleton({
     enabled: blockSkeleton?.enabled ?? false,
     editorState: contentsProps.editorState,
-    contentsRef,
-    scrollContainerRef: blockSkeleton?.scrollContainerRef ?? contentsRef,
+    contentsElement,
+    scrollContainerRef: blockSkeleton?.scrollContainerRef,
   });
 
   return (
     <DraftEditorContents
       {...contentsProps}
       blockSkeleton={skeletonState}
-      contentsRef={node => {
-        contentsRef.current = node;
-      }}
+      contentsRef={setContentsElement}
     />
   );
 }

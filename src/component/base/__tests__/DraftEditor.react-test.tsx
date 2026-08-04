@@ -80,6 +80,7 @@ test('must has editorKey same as props', () => {
 test('promotes intersecting skeleton blocks to full rendering', () => {
   const originalIntersectionObserver = globalThis.IntersectionObserver;
   let observerCallback: IntersectionObserverCallback | undefined;
+  let observerCount = 0;
   const observedElements: Element[] = [];
 
   class MockIntersectionObserver implements IntersectionObserver {
@@ -88,6 +89,7 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
     readonly thresholds = [0];
 
     constructor(callback: IntersectionObserverCallback) {
+      observerCount++;
       observerCallback = callback;
     }
 
@@ -118,6 +120,7 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
     });
 
     expect(observedElements).toHaveLength(3);
+    expect(observerCount).toBe(1);
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(2);
 
     const secondBlock = observedElements[1];
@@ -135,6 +138,7 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
     });
 
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(1);
+    expect(observerCount).toBe(1);
   } finally {
     globalThis.IntersectionObserver = originalIntersectionObserver;
   }
@@ -142,6 +146,9 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
 
 test('renders newly introduced block keys as skeletons immediately', () => {
   const originalIntersectionObserver = globalThis.IntersectionObserver;
+  const originalMutationObserver = globalThis.MutationObserver;
+  const observedElements: Element[] = [];
+  let mutationCallback: MutationCallback | undefined;
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
@@ -149,14 +156,29 @@ test('renders newly introduced block keys as skeletons immediately', () => {
     readonly thresholds = [0];
 
     disconnect(): void {}
-    observe(): void {}
+    observe(target: Element): void {
+      observedElements.push(target);
+    }
     takeRecords(): IntersectionObserverEntry[] {
       return [];
     }
     unobserve(): void {}
   }
 
+  class MockMutationObserver implements MutationObserver {
+    constructor(callback: MutationCallback) {
+      mutationCallback = callback;
+    }
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): MutationRecord[] {
+      return [];
+    }
+  }
+
   globalThis.IntersectionObserver = MockIntersectionObserver;
+  globalThis.MutationObserver = MockMutationObserver;
   try {
     const blockRendererFn = jest.fn(() => null);
     editorState = createWithContent(createFromText('zero\none'));
@@ -193,12 +215,26 @@ test('renders newly introduced block keys as skeletons immediately', () => {
 
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(2);
     expect(blockRendererFn).toHaveBeenCalledTimes(1);
+
+    const newBlock = container.querySelectorAll('[data-block-key]')[2];
+    mutationCallback?.(
+      [
+        ({
+          addedNodes: [newBlock],
+          removedNodes: [],
+        } as unknown) as MutationRecord,
+      ],
+      {} as MutationObserver,
+    );
+    expect(observedElements).toContain(newBlock);
   } finally {
     globalThis.IntersectionObserver = originalIntersectionObserver;
+    globalThis.MutationObserver = originalMutationObserver;
   }
 });
 
-test('selects all content across skeleton blocks', () => {
+test('renders full blocks when native scroll anchoring is unsupported', () => {
+  const originalCSS = globalThis.CSS;
   const originalIntersectionObserver = globalThis.IntersectionObserver;
 
   class MockIntersectionObserver implements IntersectionObserver {
@@ -215,14 +251,17 @@ test('selects all content across skeleton blocks', () => {
   }
 
   globalThis.IntersectionObserver = MockIntersectionObserver;
+  Object.defineProperty(globalThis, 'CSS', {
+    configurable: true,
+    value: {supports: () => false},
+  });
   try {
     editorState = createWithContent(createFromText('zero\none\ntwo'));
-    const onChange = jest.fn();
     flushSync(() => {
       root.render(
         <DraftEditor
           editorState={editorState}
-          onChange={onChange}
+          onChange={() => {}}
           blockSkeleton={{
             enabled: true,
             scrollContainerRef: {current: container},
@@ -231,57 +270,13 @@ test('selects all content across skeleton blocks', () => {
       );
     });
 
-    const contentEditable = container.querySelector(
-      '[contenteditable="true"]',
-    );
-    expect(contentEditable).not.toBeNull();
-
-    const event = new KeyboardEvent('keydown', {
-      bubbles: true,
-      cancelable: true,
-      ctrlKey: true,
-      key: 'a',
-      metaKey: true,
-    });
-    Object.defineProperties(event, {
-      keyCode: {value: 65},
-      which: {value: 65},
-    });
-    contentEditable!.dispatchEvent(event);
-
-    expect(event.defaultPrevented).toBe(true);
-    expect(onChange).toHaveBeenCalledTimes(1);
-    const nextEditorState = onChange.mock.calls[0][0] as EditorState;
-    const blocks = [...nextEditorState.currentContent.blockMap.values()];
-    const firstBlock = blocks[0];
-    const lastBlock = blocks[blocks.length - 1];
-    expect(nextEditorState.selection).toEqual({
-      anchorKey: firstBlock.key,
-      anchorOffset: 0,
-      focusKey: lastBlock.key,
-      focusOffset: lastBlock.text.length,
-      hasFocus: true,
-      isBackward: false,
-    });
-
-    flushSync(() => {
-      root.render(
-        <DraftEditor
-          editorState={nextEditorState}
-          onChange={onChange}
-          blockSkeleton={{
-            enabled: true,
-            scrollContainerRef: {current: container},
-          }}
-        />,
-      );
-    });
-    const renderedBlocks = container.querySelectorAll('[data-block-key]');
-    expect(renderedBlocks[0].hasAttribute('data-block-skeleton')).toBe(false);
-    expect(renderedBlocks[1].hasAttribute('data-block-skeleton')).toBe(true);
-    expect(renderedBlocks[2].hasAttribute('data-block-skeleton')).toBe(false);
+    expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(0);
   } finally {
     globalThis.IntersectionObserver = originalIntersectionObserver;
+    Object.defineProperty(globalThis, 'CSS', {
+      configurable: true,
+      value: originalCSS,
+    });
   }
 });
 

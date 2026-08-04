@@ -1,4 +1,4 @@
-import {RefObject, useLayoutEffect, useMemo, useRef, useState} from 'react';
+import {RefObject, useLayoutEffect, useMemo, useState} from 'react';
 import {EditorState} from '../../model/immutable/EditorState';
 
 export type DraftEditorBlockSkeletonState = Readonly<{
@@ -8,39 +8,44 @@ export type DraftEditorBlockSkeletonState = Readonly<{
 type Options = Readonly<{
   enabled: boolean;
   editorState: EditorState;
-  contentsRef: RefObject<HTMLElement>;
-  scrollContainerRef: RefObject<HTMLElement>;
+  contentsElement: HTMLElement | null;
+  scrollContainerRef?: RefObject<HTMLElement>;
 }>;
 
 const OBSERVER_MARGIN = '500px 0px';
 
+function supportsNativeScrollAnchoring(): boolean {
+  return (
+    typeof CSS === 'undefined' ||
+    typeof CSS.supports !== 'function' ||
+    CSS.supports('overflow-anchor: auto')
+  );
+}
+
 export function useDraftEditorBlockSkeleton({
   enabled,
   editorState,
-  contentsRef,
+  contentsElement,
   scrollContainerRef,
 }: Options): DraftEditorBlockSkeletonState | undefined {
   const [visibleBlockKeys, setVisibleBlockKeys] = useState<ReadonlySet<string>>(
     new Set(),
   );
-  const hasRefreshedGeometry = useRef(false);
-  const blockMap = editorState.currentContent.blockMap;
   const canObserve =
-    typeof window !== 'undefined' && typeof IntersectionObserver !== 'undefined';
+    typeof window !== 'undefined' &&
+    typeof IntersectionObserver !== 'undefined' &&
+    supportsNativeScrollAnchoring();
 
   useLayoutEffect(() => {
     if (!enabled || !canObserve) {
-      hasRefreshedGeometry.current = false;
       return;
     }
-
-    const contents = contentsRef.current;
-    if (!contents) {
+    if (!contentsElement) {
       return;
     }
 
     const observerOptions = {
-      root: scrollContainerRef.current,
+      root: scrollContainerRef?.current ?? contentsElement,
       rootMargin: OBSERVER_MARGIN,
     };
     const handleEntries: IntersectionObserverCallback = entries => {
@@ -66,25 +71,55 @@ export function useDraftEditorBlockSkeleton({
     };
     const observer = new IntersectionObserver(handleEntries, observerOptions);
 
-    const blockElements = contents.querySelectorAll('[data-block-key]');
-    if (!hasRefreshedGeometry.current && visibleBlockKeys.size > 0) {
-      hasRefreshedGeometry.current = true;
-      for (const blockElement of blockElements) {
-        blockElement.getBoundingClientRect();
+    const getBlockElements = (node: Node): Element[] => {
+      if (!(node instanceof Element)) {
+        return [];
       }
-    }
-    for (const blockElement of blockElements) {
+      const elements = Array.from(node.querySelectorAll('[data-block-key]'));
+      if (node.matches('[data-block-key]')) {
+        elements.unshift(node);
+      }
+      return elements;
+    };
+    for (const blockElement of getBlockElements(contentsElement)) {
       observer.observe(blockElement);
     }
-    return () => observer.disconnect();
-  }, [
-    blockMap,
-    canObserve,
-    contentsRef,
-    enabled,
-    scrollContainerRef,
-    visibleBlockKeys,
-  ]);
+
+    const mutationObserver = new MutationObserver(mutations => {
+      const removedKeys = new Set<string>();
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          for (const blockElement of getBlockElements(node)) {
+            observer.observe(blockElement);
+          }
+        }
+        for (const node of mutation.removedNodes) {
+          for (const blockElement of getBlockElements(node)) {
+            observer.unobserve(blockElement);
+            const blockKey = (blockElement as HTMLElement).dataset.blockKey;
+            if (blockKey) {
+              removedKeys.add(blockKey);
+            }
+          }
+        }
+      }
+      if (removedKeys.size > 0) {
+        setVisibleBlockKeys(previousKeys => {
+          const nextKeys = new Set(previousKeys);
+          for (const key of removedKeys) {
+            nextKeys.delete(key);
+          }
+          return nextKeys.size === previousKeys.size ? previousKeys : nextKeys;
+        });
+      }
+    });
+    mutationObserver.observe(contentsElement, {childList: true, subtree: true});
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [canObserve, contentsElement, enabled, scrollContainerRef]);
 
   return useMemo(() => {
     if (!enabled || !canObserve) {

@@ -119,7 +119,7 @@ test('defaults to "unstyled" block type for unknown block types', () => {
   }).not.toThrow();
 });
 
-test('renders offscreen blocks as text skeletons with persistent decorator attributes', () => {
+test('renders offscreen blocks as text skeletons with persistent DOM anchors', () => {
   const decorator: DraftDecoratorType = {
     getDecorations: block =>
       block.text.split('').map((_, index) => (index < 3 ? 'linked' : null)),
@@ -128,9 +128,7 @@ test('renders offscreen blocks as text skeletons with persistent decorator attri
         return <strong data-full-decoration={true}>{children}</strong>;
       },
     getPropsForKey: () => null,
-    getSkeletonAttributesForRange: ({block}) => [
-      {id: `persistent-${block.key}`},
-    ],
+    getDOMAnchorIdsForRange: ({block}) => [`persistent-${block.key}`],
   };
   const editorState = createWithContent(
     createFromText('zero\none\ntwo'),
@@ -161,24 +159,22 @@ test('renders offscreen blocks as text skeletons with persistent decorator attri
   expect(blockRendererFn).toHaveBeenCalledTimes(1);
 
   for (const block of blocks) {
-    const skeleton = container.querySelector(
-      `[data-block-key="${block.key}"]`,
-    );
+    const skeleton = container.querySelector(`[data-block-key="${block.key}"]`);
     expect(skeleton?.id).toBe(`block-${block.key}`);
+    expect(
+      skeleton?.querySelector(`#persistent-${block.key}`)?.textContent,
+    ).toBe(block.text.slice(0, 3));
   }
 
   for (const block of blocks.slice(1)) {
     const skeleton = container.querySelector<HTMLElement>(
       `[data-block-key="${block.key}"]`,
     );
-    expect(skeleton?.getAttribute('contenteditable')).toBe('false');
+    expect(skeleton?.hasAttribute('contenteditable')).toBe(false);
     expect(skeleton?.classList.contains('public-DraftStyleDefault-block')).toBe(
       false,
     );
     expect(skeleton?.style.marginBottom).toBe('16px');
     expect(skeleton?.style.whiteSpace).toBe('pre-wrap');
-    expect(
-      skeleton?.querySelector(`#persistent-${block.key}`)?.textContent,
-    ).toBe(block.text.slice(0, 3));
   }
 });

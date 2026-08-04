@@ -42,8 +42,7 @@ export type {RawDraftContentState} from './model/encoding/convertFromDraftStateT
 export type {DraftEditorCommand} from './model/constants/DraftEditorCommand';
 export type {DraftHandleValue} from './model/constants/DraftHandleValue';
 export type {
-  DraftDecoratorSkeletonAttributes,
-  DraftDecoratorSkeletonRange,
+  DraftDecoratorDOMAnchorRange,
   DraftDecoratorType,
 } from './model/decorators/DraftDecoratorType';
 export type {DraftDecorator, DraftDecoratorComponentProps} from './model/decorators/DraftDecorator';

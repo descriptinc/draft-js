@@ -13,11 +13,7 @@ import {BlockNode} from '../immutable/BlockNode';
 import {ComponentType} from 'react';
 import {DraftDecoratorComponentProps} from './DraftDecorator';
 
-export type DraftDecoratorSkeletonAttributes = Readonly<
-  Record<string, string | number | boolean | undefined>
->;
-
-export type DraftDecoratorSkeletonRange = Readonly<{
+export type DraftDecoratorDOMAnchorRange = Readonly<{
   block: BlockNode;
   contentState: ContentState;
   decoratorKey: string;
@@ -50,13 +46,12 @@ export type DraftDecoratorType = {
   /**
    * Given a decorator key, optionally return the props to use when rendering
    * this decorated range.
-   */
+  */
   getPropsForKey: (key: string) => Record<string, unknown> | null;
   /**
-   * Return the DOM attributes that must remain available when a decorated
-   * range is rendered as part of an offscreen block skeleton.
+   * Return stable DOM ids that Draft renders around this decorated range.
    */
-  getSkeletonAttributesForRange?: (
-    range: DraftDecoratorSkeletonRange,
-  ) => readonly DraftDecoratorSkeletonAttributes[] | undefined;
+  getDOMAnchorIdsForRange?: (
+    range: DraftDecoratorDOMAnchorRange,
+  ) => readonly string[] | undefined;
 };

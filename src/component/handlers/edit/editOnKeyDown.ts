@@ -15,15 +15,9 @@ import KeyBindingUtil from '../../utils/KeyBindingUtil';
 import {DraftEditorCommand} from '../../../model/constants/DraftEditorCommand';
 import {
   EditorState,
-  forceSelection,
   pushContent,
   redo,
 } from '../../../model/immutable/EditorState';
-import {
-  getFirstBlock,
-  getLastBlock,
-} from '../../../model/immutable/ContentState';
-import {makeSelectionState} from '../../../model/immutable/SelectionState';
 import isEventHandled from '../../utils/isEventHandled';
 import keyCommandPlainDelete from './commands/keyCommandPlainDelete';
 import keyCommandDeleteWord from './commands/keyCommandDeleteWord';
@@ -39,7 +33,7 @@ import DraftEditor from '../../base/DraftEditor.react';
 import DraftModifier from '../../../model/modifier/DraftModifier';
 import keyCommandUndo from './commands/keyCommandUndo';
 
-const {hasCommandModifier, isOptionKeyCommand} = KeyBindingUtil;
+const {isOptionKeyCommand} = KeyBindingUtil;
 const isChromium =
   UserAgent.isBrowser('Chrome') || UserAgent.isBrowser('Electron');
 
@@ -175,29 +169,6 @@ export function editOnKeyDown(
 
   // If no command is specified, allow keydown event to continue.
   if (command == null || command === '') {
-    if (
-      editor.props.blockSkeleton?.enabled &&
-      keyCode === 65 &&
-      hasCommandModifier(e)
-    ) {
-      e.preventDefault();
-      const content = editorState.currentContent;
-      const firstBlock = getFirstBlock(content);
-      const lastBlock = getLastBlock(content);
-      editor.update(
-        forceSelection(
-          editorState,
-          makeSelectionState({
-            anchorKey: firstBlock.key,
-            anchorOffset: 0,
-            focusKey: lastBlock.key,
-            focusOffset: lastBlock.text.length,
-          }),
-        ),
-      );
-      return;
-    }
-
     if (keyCode === Keys.SPACE && isChromium && isOptionKeyCommand(e)) {
       // The default keydown event has already been prevented in order to stop
       // Chrome from scrolling. Insert a nbsp into the editor as OSX would for

@@ -21,6 +21,7 @@ import DraftEditorBlock from './DraftEditorBlock.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
 import {getEntityAt} from '../../model/immutable/ContentBlock';
 import {DraftEditorBlockSkeletonState} from '../hooks/useDraftEditorBlockSkeleton';
+import wrapInDOMAnchors from './DraftDecoratorDOMAnchors.react';
 import {
   DOMLocation,
   DOMSelectionUpdateFn,
@@ -92,7 +93,7 @@ function renderSkeletonChildren({
   decorator: EditorState['decorator'];
   tree: ReturnType<typeof getBlockTree>;
 }): ReactNode {
-  if (!decorator?.getSkeletonAttributesForRange) {
+  if (!decorator?.getDOMAnchorIdsForRange) {
     return block.text || <br data-text={true} />;
   }
 
@@ -102,7 +103,7 @@ function renderSkeletonChildren({
     if (range.decoratorKey === null) {
       continue;
     }
-    const skeletonAttributes = decorator.getSkeletonAttributesForRange({
+    const anchorIds = decorator.getDOMAnchorIdsForRange({
       block,
       contentState,
       decoratorKey: range.decoratorKey,
@@ -110,25 +111,16 @@ function renderSkeletonChildren({
       end: range.end,
       entityKey: getEntityAt(block, range.start),
     });
-    if (!skeletonAttributes?.length) {
+    if (!anchorIds?.length) {
       continue;
     }
 
     if (plainTextStart < range.start) {
       children.push(block.text.slice(plainTextStart, range.start));
     }
-    let decoratedText: ReactNode = block.text.slice(range.start, range.end);
-    for (const [index, attributes] of skeletonAttributes.entries()) {
-      decoratedText = React.createElement(
-        'span',
-        {
-          ...attributes,
-          key: `${range.start}-${index}`,
-        },
-        decoratedText,
-      );
-    }
-    children.push(decoratedText);
+    children.push(
+      wrapInDOMAnchors(block.text.slice(range.start, range.end), anchorIds),
+    );
     plainTextStart = range.end;
   }
 
@@ -351,7 +343,6 @@ export default class DraftEditorContents extends React.Component<Props> {
       if (blockSkeleton && !blockSkeleton.fullBlockKeys.has(key)) {
         childProps = {
           ...childProps,
-          contentEditable: false,
           'data-block-skeleton': true,
           style: {
             ...inlineStyle,
@@ -360,9 +351,8 @@ export default class DraftEditorContents extends React.Component<Props> {
             textAlign: direction === 'RTL' ? 'right' : 'left',
             whiteSpace: 'pre-wrap',
           },
-          suppressContentEditableWarning: true,
         };
-        const tree = decorator?.getSkeletonAttributesForRange
+        const tree = decorator?.getDOMAnchorIdsForRange
           ? getBlockTree(editorState, key)
           : [];
         child = React.createElement(
