@@ -111,6 +111,10 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
         <DraftEditor
           editorState={editorState}
           onChange={() => {}}
+          blockStyleFn={() => ({
+            containIntrinsicSize: '1px 20px',
+            contentVisibility: 'auto',
+          })}
           blockSkeleton={{
             enabled: true,
             scrollContainerRef: {current: container},
@@ -125,6 +129,10 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
 
     const secondBlock = observedElements[1];
     expect(secondBlock).toBeDefined();
+    expect((secondBlock as HTMLElement).style.contentVisibility).toBe('auto');
+    expect((secondBlock as HTMLElement).style.containIntrinsicSize).toBe(
+      '1px 20px',
+    );
     flushSync(() => {
       observerCallback?.(
         [
@@ -138,6 +146,10 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
     });
 
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(1);
+    expect((secondBlock as HTMLElement).style.contentVisibility).toBe(
+      'visible',
+    );
+    expect((secondBlock as HTMLElement).style.containIntrinsicSize).toBe('');
     expect(observerCount).toBe(1);
   } finally {
     globalThis.IntersectionObserver = originalIntersectionObserver;

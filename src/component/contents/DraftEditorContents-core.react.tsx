@@ -316,6 +316,20 @@ export default class DraftEditorContents extends React.Component<Props> {
         }
       }
 
+      const shouldRenderSkeleton =
+        blockSkeleton && !blockSkeleton.fullBlockKeys.has(key);
+      if (
+        blockSkeleton &&
+        !shouldRenderSkeleton &&
+        inlineStyle?.contentVisibility === 'auto'
+      ) {
+        inlineStyle = {
+          ...inlineStyle,
+          containIntrinsicSize: undefined,
+          contentVisibility: 'visible',
+        };
+      }
+
       // List items are special snowflakes, since we handle nesting and
       // counters manually.
       if (Element === 'li') {
@@ -340,7 +354,7 @@ export default class DraftEditorContents extends React.Component<Props> {
         style: inlineStyle,
       };
       let child: ReactNode;
-      if (blockSkeleton && !blockSkeleton.fullBlockKeys.has(key)) {
+      if (shouldRenderSkeleton) {
         childProps = {
           ...childProps,
           'data-block-skeleton': true,
