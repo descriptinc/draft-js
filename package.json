@@ -30,9 +30,9 @@
   "repository": "facebook/draft-js",
   "license": "MIT",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublish": "pnpm run build",
     "pretest": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
-    "build": "npm run clean && npm run build:lib && npm run build:umd && npm run build:css",
+    "build": "pnpm run clean && pnpm run build:lib && pnpm run build:umd && pnpm run build:css",
     "build:lib": "vite build",
     "build:umd": "vite build --config vite.config.umd.ts",
     "build:css": "vite build --config vite.config.css.ts && rm -f dist/dummy.js",
@@ -49,7 +49,7 @@
     "format-docs": "prettier --config prettier.config.js --write \"docs/**/*.md\"",
     "format-docs:diff": "prettier --config prettier.config.js --list-different \"docs/**/*.md\"",
     "test": "cross-env NODE_ENV=test jest",
-    "test-ci": "cross-env NODE_ENV=test npm run lint && npm run test"
+    "test-ci": "cross-env NODE_ENV=test pnpm run lint && pnpm run test"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3",
