@@ -156,6 +156,59 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
   }
 });
 
+test('promotes viewport skeleton blocks synchronously while scrolling', () => {
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
+
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root = container;
+    readonly rootMargin = '500px 0px';
+    readonly thresholds = [0];
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(): void {}
+  }
+
+  globalThis.IntersectionObserver = MockIntersectionObserver;
+  try {
+    editorState = createWithContent(createFromText('zero\none\ntwo'));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+
+    container.getBoundingClientRect = () =>
+      ({top: 0, bottom: 100} as DOMRect);
+    const blocks = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-block-key]'),
+    );
+    blocks[0]!.getBoundingClientRect = () =>
+      ({top: -40, bottom: -20} as DOMRect);
+    blocks[1]!.getBoundingClientRect = () =>
+      ({top: 20, bottom: 40} as DOMRect);
+    blocks[2]!.getBoundingClientRect = () =>
+      ({top: 120, bottom: 140} as DOMRect);
+
+    container.dispatchEvent(new Event('scroll'));
+
+    expect(blocks[1]!.hasAttribute('data-block-skeleton')).toBe(false);
+    expect(blocks[2]!.hasAttribute('data-block-skeleton')).toBe(true);
+  } finally {
+    globalThis.IntersectionObserver = originalIntersectionObserver;
+  }
+});
+
 test('renders newly introduced block keys as skeletons immediately', () => {
   const originalIntersectionObserver = globalThis.IntersectionObserver;
   const originalMutationObserver = globalThis.MutationObserver;
