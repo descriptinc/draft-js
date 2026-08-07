@@ -298,6 +298,95 @@ test('renders newly introduced block keys as skeletons immediately', () => {
   }
 });
 
+test('keeps a promoted block full when its DOM node is moved', () => {
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
+  const originalMutationObserver = globalThis.MutationObserver;
+  let intersectionCallback: IntersectionObserverCallback | undefined;
+  let mutationCallback: MutationCallback | undefined;
+
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root = container;
+    readonly rootMargin = '500px 0px';
+    readonly thresholds = [0];
+
+    constructor(callback: IntersectionObserverCallback) {
+      intersectionCallback = callback;
+    }
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(): void {}
+  }
+
+  class MockMutationObserver implements MutationObserver {
+    constructor(callback: MutationCallback) {
+      mutationCallback = callback;
+    }
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): MutationRecord[] {
+      return [];
+    }
+  }
+
+  globalThis.IntersectionObserver = MockIntersectionObserver;
+  globalThis.MutationObserver = MockMutationObserver;
+  try {
+    editorState = createWithContent(createFromText('zero\none\ntwo'));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+
+    const secondBlock = container.querySelectorAll('[data-block-key]')[1]!;
+    flushSync(() => {
+      intersectionCallback?.(
+        [
+          {
+            isIntersecting: true,
+            target: secondBlock,
+          } as IntersectionObserverEntry,
+        ],
+        {} as IntersectionObserver,
+      );
+    });
+    expect(secondBlock.hasAttribute('data-block-skeleton')).toBe(false);
+
+    flushSync(() => {
+      mutationCallback?.(
+        [
+          ({
+            addedNodes: [secondBlock],
+            removedNodes: [secondBlock],
+          } as unknown) as MutationRecord,
+        ],
+        {} as MutationObserver,
+      );
+    });
+
+    expect(
+      container.querySelectorAll('[data-block-key]')[1]!.hasAttribute(
+        'data-block-skeleton',
+      ),
+    ).toBe(false);
+  } finally {
+    globalThis.IntersectionObserver = originalIntersectionObserver;
+    globalThis.MutationObserver = originalMutationObserver;
+  }
+});
+
 test('renders full blocks when native scroll anchoring is unsupported', () => {
   const originalCSS = globalThis.CSS;
   const originalIntersectionObserver = globalThis.IntersectionObserver;

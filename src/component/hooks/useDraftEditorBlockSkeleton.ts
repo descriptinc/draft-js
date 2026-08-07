@@ -155,11 +155,16 @@ export function useDraftEditorBlockSkeleton({
     scrollContainer.addEventListener('scroll', handleScroll, {passive: true});
 
     const mutationObserver = new MutationObserver(mutations => {
+      const addedKeys = new Set<string>();
       const removedKeys = new Set<string>();
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
           for (const blockElement of getBlockElements(node)) {
             observer.observe(blockElement);
+            const blockKey = blockElement.dataset.blockKey;
+            if (blockKey) {
+              addedKeys.add(blockKey);
+            }
           }
         }
         for (const node of mutation.removedNodes) {
@@ -176,7 +181,9 @@ export function useDraftEditorBlockSkeleton({
         setVisibleBlockKeys(previousKeys => {
           const nextKeys = new Set(previousKeys);
           for (const key of removedKeys) {
-            nextKeys.delete(key);
+            if (!addedKeys.has(key)) {
+              nextKeys.delete(key);
+            }
           }
           return nextKeys.size === previousKeys.size ? previousKeys : nextKeys;
         });
