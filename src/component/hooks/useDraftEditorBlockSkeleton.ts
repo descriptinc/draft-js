@@ -10,6 +10,7 @@ type Options = Readonly<{
   enabled: boolean;
   editorState: EditorState;
   contentsElement: HTMLElement | null;
+  onBlockSkeletonsRendered?: () => void;
   scrollContainerRef?: RefObject<HTMLElement>;
 }>;
 
@@ -77,6 +78,7 @@ export function useDraftEditorBlockSkeleton({
   enabled,
   editorState,
   contentsElement,
+  onBlockSkeletonsRendered,
   scrollContainerRef,
 }: Options): DraftEditorBlockSkeletonState | undefined {
   const [visibleBlockKeys, setVisibleBlockKeys] = useState<ReadonlySet<string>>(
@@ -199,7 +201,7 @@ export function useDraftEditorBlockSkeleton({
     };
   }, [canObserve, contentsElement, enabled, scrollContainerRef]);
 
-  return useMemo(() => {
+  const skeletonState = useMemo(() => {
     if (!enabled || !canObserve) {
       return undefined;
     }
@@ -215,4 +217,12 @@ export function useDraftEditorBlockSkeleton({
     enabled,
     visibleBlockKeys,
   ]);
+
+  useLayoutEffect(() => {
+    if (skeletonState) {
+      onBlockSkeletonsRendered?.();
+    }
+  }, [onBlockSkeletonsRendered, skeletonState]);
+
+  return skeletonState;
 }

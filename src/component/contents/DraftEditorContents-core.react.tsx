@@ -318,17 +318,6 @@ export default class DraftEditorContents extends React.Component<Props> {
 
       const shouldRenderSkeleton =
         blockSkeleton && !blockSkeleton.fullBlockKeys.has(key);
-      if (
-        blockSkeleton &&
-        !shouldRenderSkeleton &&
-        inlineStyle?.contentVisibility === 'auto'
-      ) {
-        inlineStyle = {
-          ...inlineStyle,
-          containIntrinsicSize: undefined,
-          contentVisibility: 'visible',
-        };
-      }
 
       // List items are special snowflakes, since we handle nesting and
       // counters manually.

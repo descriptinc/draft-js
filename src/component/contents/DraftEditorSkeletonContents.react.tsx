@@ -21,6 +21,7 @@ export default function DraftEditorSkeletonContents({
     enabled: blockSkeleton?.enabled ?? false,
     editorState: contentsProps.editorState,
     contentsElement,
+    onBlockSkeletonsRendered: blockSkeleton?.onBlockSkeletonsRendered,
     scrollContainerRef: blockSkeleton?.scrollContainerRef,
   });
 

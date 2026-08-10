@@ -82,6 +82,7 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
   let observerCallback: IntersectionObserverCallback | undefined;
   let observerCount = 0;
   const observedElements: Element[] = [];
+  const renderedSkeletonCounts: number[] = [];
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
@@ -111,12 +112,13 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
         <DraftEditor
           editorState={editorState}
           onChange={() => {}}
-          blockStyleFn={() => ({
-            containIntrinsicSize: '1px 20px',
-            contentVisibility: 'auto',
-          })}
           blockSkeleton={{
             enabled: true,
+            onBlockSkeletonsRendered: () => {
+              renderedSkeletonCounts.push(
+                container.querySelectorAll('[data-block-skeleton]').length,
+              );
+            },
             scrollContainerRef: {current: container},
           }}
         />,
@@ -126,13 +128,10 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
     expect(observedElements).toHaveLength(3);
     expect(observerCount).toBe(1);
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(2);
+    expect(renderedSkeletonCounts).toEqual([2]);
 
     const secondBlock = observedElements[1];
     expect(secondBlock).toBeDefined();
-    expect((secondBlock as HTMLElement).style.contentVisibility).toBe('auto');
-    expect((secondBlock as HTMLElement).style.containIntrinsicSize).toBe(
-      '1px 20px',
-    );
     flushSync(() => {
       observerCallback?.(
         [
@@ -146,10 +145,7 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
     });
 
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(1);
-    expect((secondBlock as HTMLElement).style.contentVisibility).toBe(
-      'visible',
-    );
-    expect((secondBlock as HTMLElement).style.containIntrinsicSize).toBe('');
+    expect(renderedSkeletonCounts).toEqual([2, 1]);
     expect(observerCount).toBe(1);
   } finally {
     globalThis.IntersectionObserver = originalIntersectionObserver;
