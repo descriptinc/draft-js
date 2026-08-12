@@ -18,6 +18,7 @@ import DraftEditor from '../DraftEditor.react';
 import {createRoot, Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {createFromText} from '../../../model/immutable/ContentState';
+import {supportsBlockSkeletonRendering} from '../../hooks/useDraftEditorBlockSkeleton';
 
 let container: HTMLElement;
 let root: Root;
@@ -406,6 +407,7 @@ test('renders full blocks when native scroll anchoring is unsupported', () => {
     value: {supports: () => false},
   });
   try {
+    expect(supportsBlockSkeletonRendering()).toBe(false);
     editorState = createWithContent(createFromText('zero\none\ntwo'));
     flushSync(() => {
       root.render(

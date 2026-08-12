@@ -14,6 +14,7 @@ export type {
   DraftEditorBlockSkeletonOptions,
   DraftEditorProps,
 } from './component/base/DraftEditorProps';
+export {supportsBlockSkeletonRendering} from './component/hooks/useDraftEditorBlockSkeleton';
 export {CompositeDecorator} from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';

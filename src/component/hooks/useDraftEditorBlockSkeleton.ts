@@ -16,11 +16,13 @@ type Options = Readonly<{
 
 const OBSERVER_MARGIN = '500px 0px';
 
-function supportsNativeScrollAnchoring(): boolean {
+export function supportsBlockSkeletonRendering(): boolean {
   return (
-    typeof CSS === 'undefined' ||
-    typeof CSS.supports !== 'function' ||
-    CSS.supports('overflow-anchor: auto')
+    typeof window !== 'undefined' &&
+    typeof IntersectionObserver !== 'undefined' &&
+    (typeof CSS === 'undefined' ||
+      typeof CSS.supports !== 'function' ||
+      CSS.supports('overflow-anchor: auto'))
   );
 }
 
@@ -84,10 +86,7 @@ export function useDraftEditorBlockSkeleton({
   const [visibleBlockKeys, setVisibleBlockKeys] = useState<ReadonlySet<string>>(
     new Set(),
   );
-  const canObserve =
-    typeof window !== 'undefined' &&
-    typeof IntersectionObserver !== 'undefined' &&
-    supportsNativeScrollAnchoring();
+  const canObserve = supportsBlockSkeletonRendering();
 
   useLayoutEffect(() => {
     if (!enabled || !canObserve) {
