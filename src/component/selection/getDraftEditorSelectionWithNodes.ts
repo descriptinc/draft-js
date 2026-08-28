@@ -14,11 +14,59 @@ import isElement from '../utils/isElement';
 import getSelectionOffsetKeyForNode from './getSelectionOffsetKeyForNode';
 import invariant from '../../fbjs/invariant';
 import findAncestorOffsetKey from './findAncestorOffsetKey';
+import getCorrectDocumentFromNode from '../utils/getCorrectDocumentFromNode';
 
 type SelectionPoint = {
   key: string;
   offset: number;
 };
+
+function getSkeletonSelectionPoint(
+  node: Node,
+  offset: number,
+): SelectionPoint | null {
+  let searchNode: Node | null = node;
+  while (searchNode) {
+    if (isElement(searchNode)) {
+      const skeleton = searchNode as Element;
+      if (skeleton.getAttribute('data-block-skeleton') !== 'true') {
+        searchNode = searchNode.parentNode;
+        continue;
+      }
+      const key = skeleton.getAttribute('data-offset-key');
+      if (key == null) {
+        return null;
+      }
+
+      const range = getCorrectDocumentFromNode(skeleton).createRange();
+      range.setStart(skeleton, 0);
+      range.setEnd(node, offset);
+      const blockOffset = range.toString().length;
+      range.detach();
+      return {key, offset: blockOffset};
+    }
+    searchNode = searchNode.parentNode;
+  }
+  return null;
+}
+
+function getSelectionPoint(
+  editorRoot: HTMLElement | null,
+  node: Node,
+  offset: number,
+): SelectionPoint {
+  const skeletonPoint = getSkeletonSelectionPoint(node, offset);
+  if (skeletonPoint) {
+    return skeletonPoint;
+  }
+  if (node.nodeType === Node.TEXT_NODE) {
+    return {
+      key: nullthrows(findAncestorOffsetKey(node)),
+      offset,
+    };
+  }
+  return getPointForNonTextNode(editorRoot, node, offset);
+}
 
 /**
  * Convert the current selection range to an anchor/focus pair of offset keys
@@ -39,20 +87,20 @@ export default function getDraftEditorSelectionWithNodes(
   // Find the nearest offset-aware elements and use the
   // offset values supplied by the selection range.
   if (anchorIsTextNode && focusIsTextNode) {
+    const anchorPoint = getSelectionPoint(root, anchorNode, anchorOffset);
+    const focusPoint = getSelectionPoint(root, focusNode, focusOffset);
     return {
       selectionState: getUpdatedSelectionState(
         editorState,
-        nullthrows(findAncestorOffsetKey(anchorNode)),
-        anchorOffset,
-        nullthrows(findAncestorOffsetKey(focusNode)),
-        focusOffset,
+        anchorPoint.key,
+        anchorPoint.offset,
+        focusPoint.key,
+        focusPoint.offset,
       ),
       needsRecovery: false,
     };
   }
 
-  let anchorPoint: SelectionPoint | null = null;
-  let focusPoint: SelectionPoint | null = null;
   let needsRecovery = true;
 
   // An element is selected. Convert this selection range into leaf offset
@@ -73,22 +121,10 @@ export default function getDraftEditorSelectionWithNodes(
   // for manually setting the selection state on the rendered document to
   // ensure proper selection state maintenance.
 
-  if (anchorIsTextNode) {
-    anchorPoint = {
-      key: nullthrows(findAncestorOffsetKey(anchorNode)),
-      offset: anchorOffset,
-    };
-    focusPoint = getPointForNonTextNode(root, focusNode, focusOffset);
-  } else if (focusIsTextNode) {
-    focusPoint = {
-      key: nullthrows(findAncestorOffsetKey(focusNode)),
-      offset: focusOffset,
-    };
-    anchorPoint = getPointForNonTextNode(root, anchorNode, anchorOffset);
-  } else {
-    anchorPoint = getPointForNonTextNode(root, anchorNode, anchorOffset);
-    focusPoint = getPointForNonTextNode(root, focusNode, focusOffset);
+  const anchorPoint = getSelectionPoint(root, anchorNode, anchorOffset);
+  const focusPoint = getSelectionPoint(root, focusNode, focusOffset);
 
+  if (!anchorIsTextNode && !focusIsTextNode) {
     // If the selection is collapsed on an empty block, don't force recovery.
     // This way, on arrow key selection changes, the browser can move the
     // cursor from a non-zero offset on one block, through empty blocks,
