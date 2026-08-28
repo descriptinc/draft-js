@@ -2,6 +2,7 @@
     "name": "@descript/draft-js",
     "description": "A React framework for building text editors.",
     "version": "0.11.6-descript.40",
+    "packageManager": "pnpm@10.28.1",
     "keywords": [
         "draftjs",
         "editor",
