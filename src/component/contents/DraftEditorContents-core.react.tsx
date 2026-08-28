@@ -19,6 +19,9 @@ import {nullthrows} from '../../fbjs/nullthrows';
 import DraftOffsetKey from '../selection/DraftOffsetKey';
 import DraftEditorBlock from './DraftEditorBlock.react';
 import {BlockNode} from '../../model/immutable/BlockNode';
+import {getEntityAt} from '../../model/immutable/ContentBlock';
+import {DraftEditorBlockSkeletonState} from '../hooks/useDraftEditorBlockSkeleton';
+import wrapInDOMAnchors from './DraftDecoratorDOMAnchors.react';
 import {
   DOMLocation,
   DOMSelectionUpdateFn,
@@ -30,11 +33,13 @@ type Props = {
   blockRenderMap: DraftBlockRenderMap;
   blockRendererFn: (block: BlockNode) => Record<string, any> | null;
   blockStyleFn?: (block: BlockNode) => string | CSSProperties | undefined;
+  blockSkeleton?: DraftEditorBlockSkeletonState;
   customStyleFn?: (
     style: DraftInlineStyle,
     block: BlockNode,
   ) => Record<string, any> | null;
   customStyleMap?: Record<string, any>;
+  contentsRef?: (node: HTMLDivElement | null) => void;
   editorKey?: string;
   editorState: EditorState;
   preventScroll?: boolean;
@@ -77,6 +82,54 @@ const getListItemClasses = (
   });
 };
 
+function renderSkeletonChildren({
+  block,
+  contentState,
+  decorator,
+  tree,
+}: {
+  block: BlockNode;
+  contentState: EditorState['currentContent'];
+  decorator: EditorState['decorator'];
+  tree: ReturnType<typeof getBlockTree>;
+}): ReactNode {
+  if (!decorator?.getDOMAnchorIdsForRange) {
+    return block.text || <br data-text={true} />;
+  }
+
+  const children: ReactNode[] = [];
+  let plainTextStart = 0;
+  for (const range of tree) {
+    if (range.decoratorKey === null) {
+      continue;
+    }
+    const anchorIds = decorator.getDOMAnchorIdsForRange({
+      block,
+      contentState,
+      decoratorKey: range.decoratorKey,
+      start: range.start,
+      end: range.end,
+      entityKey: getEntityAt(block, range.start),
+    });
+    if (!anchorIds?.length) {
+      continue;
+    }
+
+    if (plainTextStart < range.start) {
+      children.push(block.text.slice(plainTextStart, range.start));
+    }
+    children.push(
+      wrapInDOMAnchors(block.text.slice(range.start, range.end), anchorIds),
+    );
+    plainTextStart = range.end;
+  }
+
+  if (plainTextStart < block.text.length) {
+    children.push(block.text.slice(plainTextStart));
+  }
+  return children.length ? children : block.text || <br data-text={true} />;
+}
+
 /**
  * `DraftEditorContents` is the container component for all block components
  * rendered for a `DraftEditor`. It is optimized to aggressively avoid
@@ -91,7 +144,7 @@ export default class DraftEditorContents extends React.Component<Props> {
     anchor?: DOMLocation;
     focus?: DOMLocation;
   } = {anchor: undefined, focus: undefined};
-  private ref = React.createRef<HTMLDivElement>();
+  private contentsElement: HTMLDivElement | null = null;
 
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
@@ -128,6 +181,13 @@ export default class DraftEditorContents extends React.Component<Props> {
     const wasComposing = prevEditorState.inCompositionMode;
     const nowComposing = nextEditorState.inCompositionMode;
 
+    if (
+      !(wasComposing && nowComposing) &&
+      this.props.blockSkeleton !== nextProps.blockSkeleton
+    ) {
+      return true;
+    }
+
     // If the state is unchanged or we're currently rendering a natively
     // rendered state, there's nothing new to be done.
     if (
@@ -158,7 +218,7 @@ export default class DraftEditorContents extends React.Component<Props> {
   }
 
   _updateDomSelection() {
-    const thisNode = this.ref.current;
+    const thisNode = this.contentsElement;
     if (thisNode) {
       const selection = getDOMSelection(thisNode);
       if (selection) {
@@ -182,6 +242,11 @@ export default class DraftEditorContents extends React.Component<Props> {
     this.scheduledDomSelectionUpdates[type] = loc;
   };
 
+  _setContentsRef = (node: HTMLDivElement | null) => {
+    this.contentsElement = node;
+    this.props.contentsRef?.(node);
+  };
+
   render(): React.ReactNode {
     // Reset the DOM selection updates before each render
     this._clearDomSelectionUpdates();
@@ -190,6 +255,7 @@ export default class DraftEditorContents extends React.Component<Props> {
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
+      blockSkeleton,
       customStyleMap,
       customStyleFn,
       editorState,
@@ -225,40 +291,10 @@ export default class DraftEditorContents extends React.Component<Props> {
       const key = block.key;
       const blockType = block.type;
 
-      const customRenderer = blockRendererFn(block);
-      let CustomComponent, customProps, customEditable;
-      if (customRenderer) {
-        CustomComponent = customRenderer.component;
-        customProps = customRenderer.props;
-        customEditable = customRenderer.editable;
-      }
-
       const direction = textDirectionality
         ? textDirectionality
         : directionMap.get(key);
       const offsetKey = DraftOffsetKey.encode(key, 0, 0);
-      const componentProps = {
-        contentState: content,
-        block,
-        blockProps: customProps,
-        blockStyleFn,
-        customStyleMap,
-        customStyleFn,
-        decorator,
-        direction,
-        forceSelection,
-        offsetKey,
-        preventScroll,
-        selection,
-        tree: getBlockTree(editorState, key),
-        scrollUpThreshold,
-        scrollUpHeight,
-        scrollDownThreshold,
-        scrollDownHeight,
-        scheduleDomSelectionUpdate: this.props.globalDomSelectionUpdate
-          ? this.scheduleDomSelectionUpdate
-          : undefined,
-      };
 
       const configForType =
         blockRenderMap[blockType] || blockRenderMap['unstyled'];
@@ -280,6 +316,9 @@ export default class DraftEditorContents extends React.Component<Props> {
         }
       }
 
+      const shouldRenderSkeleton =
+        blockSkeleton && !blockSkeleton.fullBlockKeys.has(key);
+
       // List items are special snowflakes, since we handle nesting and
       // counters manually.
       if (Element === 'li') {
@@ -293,32 +332,89 @@ export default class DraftEditorContents extends React.Component<Props> {
         );
       }
 
-      const Component = CustomComponent || DraftEditorBlock;
       let childProps: Record<string, any> = {
         className,
         'data-block': true,
+        'data-block-key': key,
         'data-editor': editorKey,
         'data-offset-key': offsetKey,
         id: `block-${key}`,
         key,
         style: inlineStyle,
       };
-      if (customEditable !== undefined) {
+      let child: ReactNode;
+      if (shouldRenderSkeleton) {
         childProps = {
           ...childProps,
-          contentEditable: customEditable,
-          suppressContentEditableWarning: true,
+          'data-block-skeleton': true,
+          style: {
+            ...inlineStyle,
+            direction: direction === 'RTL' ? 'rtl' : 'ltr',
+            position: 'relative',
+            textAlign: direction === 'RTL' ? 'right' : 'left',
+            whiteSpace: 'pre-wrap',
+          },
         };
+        const tree = decorator?.getDOMAnchorIdsForRange
+          ? getBlockTree(editorState, key)
+          : [];
+        child = React.createElement(
+          Element,
+          childProps,
+          renderSkeletonChildren({
+            block,
+            contentState: content,
+            decorator,
+            tree,
+          }),
+        );
+      } else {
+        const customRenderer = blockRendererFn(block);
+        let CustomComponent, customProps, customEditable;
+        if (customRenderer) {
+          CustomComponent = customRenderer.component;
+          customProps = customRenderer.props;
+          customEditable = customRenderer.editable;
+        }
+        const componentProps = {
+          contentState: content,
+          block,
+          blockProps: customProps,
+          blockStyleFn,
+          customStyleMap,
+          customStyleFn,
+          decorator,
+          direction,
+          forceSelection,
+          offsetKey,
+          preventScroll,
+          selection,
+          tree: getBlockTree(editorState, key),
+          scrollUpThreshold,
+          scrollUpHeight,
+          scrollDownThreshold,
+          scrollDownHeight,
+          scheduleDomSelectionUpdate: this.props.globalDomSelectionUpdate
+            ? this.scheduleDomSelectionUpdate
+            : undefined,
+        };
+        const Component = CustomComponent || DraftEditorBlock;
+        if (customEditable !== undefined) {
+          childProps = {
+            ...childProps,
+            contentEditable: customEditable,
+            suppressContentEditableWarning: true,
+          };
+        }
+        child = React.createElement(
+          Element,
+          childProps,
+          /* $FlowFixMe(>=0.112.0 site=www,mobile) This comment suppresses an
+           * error found when Flow v0.112 was deployed. To see the error delete
+           * this comment and run Flow. */
+          <Component {...componentProps} key={key} />,
+        );
       }
-
-      const child = React.createElement(
-        Element,
-        childProps,
-        /* $FlowFixMe(>=0.112.0 site=www,mobile) This comment suppresses an
-         * error found when Flow v0.112 was deployed. To see the error delete
-         * this comment and run Flow. */
-        <Component {...componentProps} key={key} />,
-      );
 
       processedBlocks.push({
         block: child,
@@ -364,7 +460,7 @@ export default class DraftEditorContents extends React.Component<Props> {
     }
 
     return (
-      <div data-contents="true" ref={this.ref}>
+      <div data-contents="true" ref={this._setContentsRef}>
         {outputBlocks}
       </div>
     );

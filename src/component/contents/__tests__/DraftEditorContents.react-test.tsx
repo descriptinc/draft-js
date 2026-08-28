@@ -8,13 +8,21 @@
  * @format
  */
 
-import {createEmpty, EditorState} from '../../../model/immutable/EditorState';
+import {
+  createEmpty,
+  createWithContent,
+  EditorState,
+} from '../../../model/immutable/EditorState';
 
 import React from 'react';
 import RichTextEditorUtil from '../../../model/modifier/RichTextEditorUtil';
 import {createRoot, Root} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import DraftEditor from '../../base/DraftEditor.react';
+import DraftEditorContents from '../DraftEditorContents-core.react';
+import {createFromText} from '../../../model/immutable/ContentState';
+import {DefaultDraftBlockRenderMap} from '../../../model/immutable/DefaultDraftBlockRenderMap';
+import {DraftDecoratorType} from '../../../model/decorators/DraftDecoratorType';
 
 let container: HTMLElement;
 let root: Root;
@@ -109,4 +117,64 @@ test('defaults to "unstyled" block type for unknown block types', () => {
   expect(() => {
     editorInstance?.toggleCustomBlock();
   }).not.toThrow();
+});
+
+test('renders offscreen blocks as text skeletons with persistent DOM anchors', () => {
+  const decorator: DraftDecoratorType = {
+    getDecorations: block =>
+      block.text.split('').map((_, index) => (index < 3 ? 'linked' : null)),
+    getComponentForKey: () =>
+      function FullDecorator({children}) {
+        return <strong data-full-decoration={true}>{children}</strong>;
+      },
+    getPropsForKey: () => null,
+    getDOMAnchorIdsForRange: ({block}) => [`persistent-${block.key}`],
+  };
+  const editorState = createWithContent(
+    createFromText('zero\none\ntwo'),
+    decorator,
+  );
+  const blocks = Array.from(editorState.currentContent.blockMap.values());
+  const fullBlock = blocks[0];
+  const blockRendererFn = jest.fn(() => null);
+
+  flushSync(() => {
+    root.render(
+      <DraftEditorContents
+        editorState={editorState}
+        blockRenderMap={DefaultDraftBlockRenderMap}
+        blockRendererFn={blockRendererFn}
+        blockStyleFn={() => ({marginBottom: '16px'})}
+        blockSkeleton={{
+          fullBlockKeys: new Set(fullBlock ? [fullBlock.key] : []),
+        }}
+      />,
+    );
+  });
+
+  expect(container.textContent).toBe('zeroonetwo');
+  expect(container.querySelectorAll('[data-block]')).toHaveLength(3);
+  expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(2);
+  expect(container.querySelectorAll('[data-full-decoration]')).toHaveLength(1);
+  expect(blockRendererFn).toHaveBeenCalledTimes(1);
+
+  for (const block of blocks) {
+    const skeleton = container.querySelector(`[data-block-key="${block.key}"]`);
+    expect(skeleton?.id).toBe(`block-${block.key}`);
+    expect(
+      skeleton?.querySelector(`#persistent-${block.key}`)?.textContent,
+    ).toBe(block.text.slice(0, 3));
+  }
+
+  for (const block of blocks.slice(1)) {
+    const skeleton = container.querySelector<HTMLElement>(
+      `[data-block-key="${block.key}"]`,
+    );
+    expect(skeleton?.hasAttribute('contenteditable')).toBe(false);
+    expect(skeleton?.classList.contains('public-DraftStyleDefault-block')).toBe(
+      false,
+    );
+    expect(skeleton?.style.marginBottom).toBe('16px');
+    expect(skeleton?.style.whiteSpace).toBe('pre-wrap');
+  }
 });

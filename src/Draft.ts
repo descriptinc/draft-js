@@ -10,7 +10,11 @@
 import Editor from './component/base/DraftEditor.react';
 export {Editor};
 import DraftEditorBlock from './component/contents/DraftEditorBlock.react';
-export type {DraftEditorProps} from './component/base/DraftEditorProps';
+export type {
+  DraftEditorBlockSkeletonOptions,
+  DraftEditorProps,
+} from './component/base/DraftEditorProps';
+export {supportsBlockSkeletonRendering} from './component/hooks/useDraftEditorBlockSkeleton';
 export {CompositeDecorator} from './model/decorators/CompositeDraftDecorator';
 import DraftEntity from './model/entity/DraftEntity';
 import AtomicBlockUtils from './model/modifier/AtomicBlockUtils';
@@ -38,7 +42,10 @@ export type {RawDraftContentState} from './model/encoding/convertFromDraftStateT
 
 export type {DraftEditorCommand} from './model/constants/DraftEditorCommand';
 export type {DraftHandleValue} from './model/constants/DraftHandleValue';
-export type {DraftDecoratorType} from './model/decorators/DraftDecoratorType';
+export type {
+  DraftDecoratorDOMAnchorRange,
+  DraftDecoratorType,
+} from './model/decorators/DraftDecoratorType';
 export type {DraftDecorator, DraftDecoratorComponentProps} from './model/decorators/DraftDecorator';
 
 export const EditorBlock = DraftEditorBlock;

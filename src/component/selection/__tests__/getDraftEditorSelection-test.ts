@@ -10,7 +10,11 @@
 
 import getSampleSelectionMocksForTesting from '../getSampleSelectionMocksForTesting';
 import getDraftEditorSelection from '../getDraftEditorSelection';
-import {EditorState} from '../../../model/immutable/EditorState';
+import {
+  createWithContent,
+  EditorState,
+} from '../../../model/immutable/EditorState';
+import {createFromText} from '../../../model/immutable/ContentState';
 
 let editorState: EditorState;
 let root: HTMLDivElement;
@@ -40,6 +44,34 @@ const assertGetDraftEditorSelection = (getSelectionReturnValue: any) => {
     ...selection,
     selectionState: selection.selectionState,
   }).toMatchSnapshot();
+};
+
+const getSelectionState = (getSelectionReturnValue: any) => {
+  (document as any).selection = null;
+  window.getSelection = jest.fn().mockReturnValueOnce(getSelectionReturnValue);
+  return getDraftEditorSelection(editorState, root).selectionState;
+};
+
+const replaceLastBlockWithSkeleton = () => {
+  const skeleton = document.createElement('div');
+  skeleton.setAttribute('data-block', 'true');
+  skeleton.setAttribute('data-block-skeleton', 'true');
+  skeleton.setAttribute('data-offset-key', 'c-0-0');
+
+  const leadingText = document.createTextNode('Kennedy');
+  const marker = document.createElement('span');
+  marker.id = 'marker';
+  const card = document.createElement('span');
+  card.id = 'card';
+  const anchoredText = document.createTextNode('Oba');
+  const trailingText = document.createTextNode('ma');
+
+  card.appendChild(anchoredText);
+  marker.appendChild(card);
+  skeleton.append(leadingText, marker, trailingText);
+  contents.replaceChild(skeleton, blocks[2]);
+
+  return {anchoredText, skeleton, trailingText};
 };
 
 beforeEach(() => {
@@ -539,6 +571,129 @@ test('is reversed from above', () => {
     anchorNode: root,
     anchorOffset: root.childNodes.length,
     focusNode: root,
+    focusOffset: 0,
+  });
+});
+
+test('maps a text endpoint after skeleton DOM anchors to its block offset', () => {
+  const {trailingText} = replaceLastBlockWithSkeleton();
+  const selection = getSelectionState({
+    rangeCount: 1,
+    anchorNode: textNodes[0],
+    anchorOffset: 0,
+    focusNode: trailingText,
+    focusOffset: trailingText.length,
+  });
+
+  expect(selection).toMatchObject({
+    anchorKey: 'a',
+    anchorOffset: 0,
+    focusKey: 'c',
+    focusOffset: 'KennedyObama'.length,
+    isBackward: false,
+  });
+});
+
+test('maps a skeleton element endpoint after DOM anchors to its block offset', () => {
+  const {skeleton} = replaceLastBlockWithSkeleton();
+  const selection = getSelectionState({
+    rangeCount: 1,
+    anchorNode: textNodes[0],
+    anchorOffset: 0,
+    focusNode: skeleton,
+    focusOffset: skeleton.childNodes.length,
+  });
+
+  expect(selection).toMatchObject({
+    anchorKey: 'a',
+    anchorOffset: 0,
+    focusKey: 'c',
+    focusOffset: 'KennedyObama'.length,
+    isBackward: false,
+  });
+});
+
+test('maps nested skeleton DOM anchor text to its block offset', () => {
+  const {anchoredText} = replaceLastBlockWithSkeleton();
+  const selection = getSelectionState({
+    rangeCount: 1,
+    anchorNode: textNodes[0],
+    anchorOffset: 0,
+    focusNode: anchoredText,
+    focusOffset: 2,
+  });
+
+  expect(selection).toMatchObject({
+    focusKey: 'c',
+    focusOffset: 'KennedyOb'.length,
+  });
+});
+
+test('maps a backward selection from a skeleton endpoint', () => {
+  const {skeleton} = replaceLastBlockWithSkeleton();
+  const selection = getSelectionState({
+    rangeCount: 1,
+    anchorNode: skeleton,
+    anchorOffset: skeleton.childNodes.length,
+    focusNode: textNodes[0],
+    focusOffset: 0,
+  });
+
+  expect(selection).toMatchObject({
+    anchorKey: 'c',
+    anchorOffset: 'KennedyObama'.length,
+    focusKey: 'a',
+    focusOffset: 0,
+    isBackward: true,
+  });
+});
+
+test('maps an unsplit skeleton text endpoint normally', () => {
+  const {skeleton} = replaceLastBlockWithSkeleton();
+  const text = document.createTextNode('KennedyObama');
+  skeleton.replaceChildren(text);
+  const selection = getSelectionState({
+    rangeCount: 1,
+    anchorNode: text,
+    anchorOffset: text.length,
+    focusNode: text,
+    focusOffset: text.length,
+  });
+
+  expect(selection).toMatchObject({
+    anchorKey: 'c',
+    anchorOffset: text.length,
+    focusKey: 'c',
+    focusOffset: text.length,
+  });
+});
+
+test('maps an empty skeleton endpoint to the start of its block', () => {
+  editorState = createWithContent(createFromText(''));
+  const blockKey = [...editorState.currentContent.blockMap.keys()][0]!;
+  root = document.createElement('div');
+  contents = document.createElement('div');
+  contents.setAttribute('data-contents', 'true');
+  root.appendChild(contents);
+  const skeleton = document.createElement('div');
+  skeleton.setAttribute('data-block', 'true');
+  skeleton.setAttribute('data-block-skeleton', 'true');
+  skeleton.setAttribute('data-offset-key', `${blockKey}-0-0`);
+  skeleton.appendChild(document.createElement('br'));
+  contents.appendChild(skeleton);
+
+  const selection = getSelectionState({
+    rangeCount: 1,
+    anchorNode: skeleton,
+    anchorOffset: skeleton.childNodes.length,
+    focusNode: skeleton,
+    focusOffset: skeleton.childNodes.length,
+  });
+
+  expect(selection).toMatchObject({
+    anchorKey: blockKey,
+    anchorOffset: 0,
+    focusKey: blockKey,
     focusOffset: 0,
   });
 });

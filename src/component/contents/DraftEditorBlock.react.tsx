@@ -39,6 +39,7 @@ import {
 import {DraftDecoratorComponentProps} from '../../model/decorators/DraftDecorator';
 import {BlockNode} from '../../model/immutable/BlockNode';
 import {DOMSelectionUpdateFn} from '../selection/DOMSelectionUpdate';
+import wrapInDOMAnchors from './DraftDecoratorDOMAnchors.react';
 
 const DEFAULT_SCROLL_BUFFER = 10;
 
@@ -100,6 +101,14 @@ const getNodeScrollTopAndBottom = (
  * A `DraftEditorBlock` is able to render a given `ContentBlock` to its
  * appropriate decorator and inline style components.
  */
+function getDraftEditorBlockClassName(direction: BidiDirection): string {
+  return cx({
+    'public/DraftStyleDefault/block': true,
+    'public/DraftStyleDefault/ltr': direction === 'LTR',
+    'public/DraftStyleDefault/rtl': direction === 'RTL',
+  });
+}
+
 export default class DraftEditorBlock extends React.Component<Props> {
   _node: HTMLDivElement | null = null;
 
@@ -352,21 +361,29 @@ export default class DraftEditorBlock extends React.Component<Props> {
         offsetKey: decoratorOffsetKey,
       };
 
-      return (
+      const anchorIds = decorator.getDOMAnchorIdsForRange?.({
+        block,
+        contentState: this.props.contentState,
+        decoratorKey,
+        start,
+        end,
+        entityKey,
+      });
+
+      const decoratedRange = (
         <DecoratorComponent {...decoratorProps} {...commonProps}>
           {leaves}
         </DecoratorComponent>
       );
+      return anchorIds?.length
+        ? wrapInDOMAnchors(decoratedRange, anchorIds)
+        : decoratedRange;
     });
   }
 
   render(): React.ReactNode {
     const {direction, offsetKey} = this.props;
-    const className = cx({
-      'public/DraftStyleDefault/block': true,
-      'public/DraftStyleDefault/ltr': direction === 'LTR',
-      'public/DraftStyleDefault/rtl': direction === 'RTL',
-    });
+    const className = getDraftEditorBlockClassName(direction);
 
     return (
       <div

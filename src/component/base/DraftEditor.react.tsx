@@ -35,7 +35,7 @@ import {hasText} from '../../model/immutable/ContentState';
 import {nullthrows} from '../../fbjs/nullthrows';
 import DraftEditorPlaceholder from './DraftEditorPlaceholder.react';
 import {DefaultDraftInlineStyle} from '../../model/immutable/DefaultDraftInlineStyle';
-import DraftEditorContents from '../contents/DraftEditorContents-core.react';
+import DraftEditorSkeletonContents from '../contents/DraftEditorSkeletonContents.react';
 
 const isIE = UserAgent.isBrowser('IE');
 
@@ -336,6 +336,7 @@ export default class DraftEditor extends React.Component<
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
+      blockSkeleton,
       customStyleFn,
       customStyleMap,
       editorState,
@@ -377,6 +378,7 @@ export default class DraftEditor extends React.Component<
       blockRenderMap,
       blockRendererFn,
       blockStyleFn,
+      blockSkeleton,
       customStyleMap: {
         ...DefaultDraftInlineStyle,
         ...customStyleMap,
@@ -471,7 +473,7 @@ export default class DraftEditor extends React.Component<
               all DraftEditorLeaf nodes so it's first in postorder traversal.
             */}
             <UpdateDraftEditorFlags editor={this} editorState={editorState} />
-            <DraftEditorContents
+            <DraftEditorSkeletonContents
               {...editorContentsProps}
               key={'contents' + this.state.contentsKey}
             />

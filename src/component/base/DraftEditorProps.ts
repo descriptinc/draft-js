@@ -26,6 +26,12 @@ import {
 } from '../utils/eventTypes';
 import {BlockNode} from '../../model/immutable/BlockNode';
 
+export type DraftEditorBlockSkeletonOptions = Readonly<{
+  enabled: boolean;
+  scrollContainerRef: RefObject<HTMLElement>;
+  onBlockSkeletonsRendered?: () => void;
+}>;
+
 export type DraftEditorProps = {
   /**
    * The two most critical props are `editorState` and `onChange`.
@@ -60,6 +66,8 @@ export type DraftEditorProps = {
   blockRendererFn: (block: BlockNode) => any | null;
   // Function that returns a cx map corresponding to block-level styles.
   blockStyleFn: (block: BlockNode) => string | CSSProperties | undefined;
+  // Replace offscreen block contents with text-only skeletons.
+  blockSkeleton?: DraftEditorBlockSkeletonOptions;
   // If supplied, a ref which will be passed to the contenteditable.
   // Currently, only object refs are supported.
   editorRef?: RefObject<HTMLDivElement> | Ref<HTMLDivElement>;

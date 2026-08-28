@@ -13,6 +13,15 @@ import {BlockNode} from '../immutable/BlockNode';
 import {ComponentType} from 'react';
 import {DraftDecoratorComponentProps} from './DraftDecorator';
 
+export type DraftDecoratorDOMAnchorRange = Readonly<{
+  block: BlockNode;
+  contentState: ContentState;
+  decoratorKey: string;
+  start: number;
+  end: number;
+  entityKey: string | null;
+}>;
+
 /**
  * An interface for document decorator classes, allowing the creation of
  * custom decorator classes.
@@ -37,6 +46,12 @@ export type DraftDecoratorType = {
   /**
    * Given a decorator key, optionally return the props to use when rendering
    * this decorated range.
-   */
+  */
   getPropsForKey: (key: string) => Record<string, unknown> | null;
+  /**
+   * Return stable DOM ids that Draft renders around this decorated range.
+   */
+  getDOMAnchorIdsForRange?: (
+    range: DraftDecoratorDOMAnchorRange,
+  ) => readonly string[] | undefined;
 };
