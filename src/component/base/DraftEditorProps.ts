@@ -28,7 +28,7 @@ import {BlockNode} from '../../model/immutable/BlockNode';
 
 export type DraftEditorBlockSkeletonOptions = Readonly<{
   enabled: boolean;
-  scrollContainerRef: RefObject<HTMLElement>;
+  scrollContainerRef: RefObject<HTMLElement | null>;
   onBlockSkeletonsRendered?: () => void;
 }>;
 

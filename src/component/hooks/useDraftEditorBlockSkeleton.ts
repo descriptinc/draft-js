@@ -11,7 +11,7 @@ type Options = Readonly<{
   editorState: EditorState;
   contentsElement: HTMLElement | null;
   onBlockSkeletonsRendered?: () => void;
-  scrollContainerRef?: RefObject<HTMLElement>;
+  scrollContainerRef?: RefObject<HTMLElement | null>;
 }>;
 
 const OBSERVER_MARGIN = '500px 0px';

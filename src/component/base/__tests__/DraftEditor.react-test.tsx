@@ -78,12 +78,15 @@ test('must has editorKey same as props', () => {
   expect(editorInstance?.getEditorKey()).toBe('hash');
 });
 
-test('promotes intersecting skeleton blocks to full rendering', () => {
+test.each([true, false])('promotes blocks; null ref: %s', nullRef => {
   const originalIntersectionObserver = globalThis.IntersectionObserver;
   let observerCallback: IntersectionObserverCallback | undefined;
   let observerCount = 0;
   const observedElements: Element[] = [];
   const renderedSkeletonCounts: number[] = [];
+  const scrollContainerRef: React.RefObject<HTMLElement | null> = {
+    current: nullRef ? null : container,
+  };
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
@@ -120,7 +123,7 @@ test('promotes intersecting skeleton blocks to full rendering', () => {
                 container.querySelectorAll('[data-block-skeleton]').length,
               );
             },
-            scrollContainerRef: {current: container},
+            scrollContainerRef,
           }}
         />,
       );
