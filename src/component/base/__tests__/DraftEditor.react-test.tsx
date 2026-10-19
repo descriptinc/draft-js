@@ -588,9 +588,8 @@ test('settles a block whose skeleton is taller than its full render', () => {
   const heights = blockTexts.map((_, index) =>
     index === 1 ? {full: 224, skeleton: 256} : {full: 100, skeleton: 100},
   );
-  // Block 1 starts at 100. With one 500px margin, a scrollTop in
-  // (100 + 224 + 500, 100 + 256 + 500) demotes it when full and promotes it
-  // when a skeleton.
+  // At scrollTop 840, block 1's full bottom sits 516px above the viewport and
+  // its skeleton bottom 484px above, straddling the 500px promote edge.
   const layout = installLayoutIntersectionObserver({
     heights,
     viewportHeight: 400,

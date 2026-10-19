@@ -14,11 +14,9 @@ type Options = Readonly<{
   scrollContainerRef?: RefObject<HTMLElement | null>;
 }>;
 
-// Blocks promote within the smaller margin and demote only past the larger
-// one. A skeleton can be taller than its full render, and Chrome's scroll
-// anchoring may not absorb the swap while the editor is unfocused, so equal
-// margins let a block at the edge flip every frame. The gap tolerates a
-// skeleton up to 500px taller.
+// A skeleton can be taller than its full render, and Chrome's scroll anchoring
+// may not absorb the swap while the editor is unfocused, so a block at a single
+// margin's edge would flip every frame.
 const PROMOTE_MARGIN = '500px 0px';
 const DEMOTE_MARGIN = '1000px 0px';
 
@@ -30,14 +28,6 @@ export function supportsBlockSkeletonRendering(): boolean {
       typeof CSS.supports !== 'function' ||
       CSS.supports('overflow-anchor: auto'))
   );
-}
-
-// One callback can carry several entries per block from successive updates, so
-// only the last one reflects where the block is now.
-function getLatestEntries(
-  entries: readonly IntersectionObserverEntry[],
-): IntersectionObserverEntry[] {
-  return [...new Map(entries.map(entry => [entry.target, entry])).values()];
 }
 
 function getBlockElements(node: Node): HTMLElement[] {
@@ -111,42 +101,39 @@ export function useDraftEditorBlockSkeleton({
     }
 
     const scrollContainer = scrollContainerRef?.current ?? contentsElement;
-    const handleEntries = (entries: readonly IntersectionObserverEntry[]) => {
+    const createObserverCallback = (
+      direction: 'promote' | 'demote',
+    ): IntersectionObserverCallback => entries => {
+      // One delivery can carry several entries per block; only the last is
+      // current.
+      const latestEntries = new Map(
+        entries.map(entry => [entry.target, entry]),
+      );
       setVisibleBlockKeys(previousKeys => {
         const nextKeys = new Set(previousKeys);
-        let changed = false;
-        for (const entry of entries) {
+        for (const entry of latestEntries.values()) {
           const blockKey = (entry.target as HTMLElement).dataset.blockKey;
           if (!blockKey) {
             continue;
           }
-          if (entry.isIntersecting) {
-            if (!nextKeys.has(blockKey)) {
-              nextKeys.add(blockKey);
-              changed = true;
-            }
-          } else if (nextKeys.delete(blockKey)) {
-            changed = true;
+          if (direction === 'promote' && entry.isIntersecting) {
+            nextKeys.add(blockKey);
+          } else if (direction === 'demote' && !entry.isIntersecting) {
+            nextKeys.delete(blockKey);
           }
         }
-        return changed ? nextKeys : previousKeys;
+        return nextKeys.size === previousKeys.size ? previousKeys : nextKeys;
       });
     };
     const observers = [
-      new IntersectionObserver(
-        entries =>
-          handleEntries(
-            getLatestEntries(entries).filter(entry => entry.isIntersecting),
-          ),
-        {root: scrollContainer, rootMargin: PROMOTE_MARGIN},
-      ),
-      new IntersectionObserver(
-        entries =>
-          handleEntries(
-            getLatestEntries(entries).filter(entry => !entry.isIntersecting),
-          ),
-        {root: scrollContainer, rootMargin: DEMOTE_MARGIN},
-      ),
+      new IntersectionObserver(createObserverCallback('promote'), {
+        root: scrollContainer,
+        rootMargin: PROMOTE_MARGIN,
+      }),
+      new IntersectionObserver(createObserverCallback('demote'), {
+        root: scrollContainer,
+        rootMargin: DEMOTE_MARGIN,
+      }),
     ];
 
     let blockElements = getBlockElements(contentsElement);
