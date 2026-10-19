@@ -4,6 +4,7 @@ import {EditorState} from '../../model/immutable/EditorState';
 
 export type DraftEditorBlockSkeletonState = Readonly<{
   fullBlockKeys: ReadonlySet<string>;
+  fullBlockHeights: ReadonlyMap<string, number>;
 }>;
 
 type Options = Readonly<{
@@ -86,6 +87,9 @@ export function useDraftEditorBlockSkeleton({
   const [visibleBlockKeys, setVisibleBlockKeys] = useState<ReadonlySet<string>>(
     new Set(),
   );
+  const [fullBlockHeights, setFullBlockHeights] = useState<
+    ReadonlyMap<string, number>
+  >(new Map());
   const canObserve = supportsBlockSkeletonRendering();
 
   useLayoutEffect(() => {
@@ -101,6 +105,30 @@ export function useDraftEditorBlockSkeleton({
       rootMargin: OBSERVER_MARGIN,
     };
     const handleEntries: IntersectionObserverCallback = entries => {
+      // A block whose skeleton is taller than its full render can flip between
+      // the two every frame at the margin edge unless scroll anchoring absorbs
+      // the swap, which Chrome may skip while the editor is unfocused. Giving
+      // the skeleton the floored full height keeps it from being the taller.
+      const measuredHeights = new Map<string, number>();
+      for (const entry of entries) {
+        const target = entry.target as HTMLElement;
+        const blockKey = target.dataset.blockKey;
+        if (
+          blockKey &&
+          !entry.isIntersecting &&
+          !target.hasAttribute('data-block-skeleton')
+        ) {
+          measuredHeights.set(
+            blockKey,
+            Math.floor(entry.boundingClientRect.height),
+          );
+        }
+      }
+      if (measuredHeights.size > 0) {
+        setFullBlockHeights(
+          previousHeights => new Map([...previousHeights, ...measuredHeights]),
+        );
+      }
       setVisibleBlockKeys(previousKeys => {
         const nextKeys = new Set(previousKeys);
         let changed = false;
@@ -208,12 +236,13 @@ export function useDraftEditorBlockSkeleton({
     const fullBlockKeys = new Set(visibleBlockKeys);
     fullBlockKeys.add(editorState.selection.anchorKey);
     fullBlockKeys.add(editorState.selection.focusKey);
-    return {fullBlockKeys};
+    return {fullBlockKeys, fullBlockHeights};
   }, [
     canObserve,
     editorState.selection.anchorKey,
     editorState.selection.focusKey,
     enabled,
+    fullBlockHeights,
     visibleBlockKeys,
   ]);
 

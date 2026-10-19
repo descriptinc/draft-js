@@ -549,48 +549,93 @@ function installLayoutIntersectionObserver({
   };
 }
 
-test.failing(
-  'settles a block above the viewport whose skeleton is taller than its full render',
-  () => {
-    // The selection pins block 0, so block 1 is the one under test.
-    const blockTexts = Array.from({length: 12}, (_, index) => `block ${index}`);
-    const heights = blockTexts.map((_, index) =>
-      index === 1 ? {full: 224, skeleton: 256} : {full: 100, skeleton: 100},
-    );
-    // Block 1 starts at 100. With a 500px margin, a scrollTop in
-    // (100 + 224 + 500, 100 + 256 + 500) demotes it when full and promotes it
-    // when a skeleton.
-    const layout = installLayoutIntersectionObserver({
-      heights,
-      viewportHeight: 400,
-      getScrollTop: () => 840,
+test('settles a block whose skeleton is taller than its full render', () => {
+  // The selection pins block 0, so block 1 is the one under test.
+  const blockTexts = Array.from({length: 12}, (_, index) => `block ${index}`);
+  const heights = blockTexts.map((_, index) =>
+    index === 1 ? {full: 224, skeleton: 256} : {full: 100, skeleton: 100},
+  );
+  // Block 1 starts at 100. With a 500px margin, a scrollTop in
+  // (100 + 224 + 500, 100 + 256 + 500) demotes it when full and promotes it
+  // when a skeleton.
+  const layout = installLayoutIntersectionObserver({
+    heights,
+    viewportHeight: 400,
+    getScrollTop: () => 840,
+  });
+  try {
+    editorState = createWithContent(createFromText(blockTexts.join('\n')));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
     });
-    try {
-      editorState = createWithContent(createFromText(blockTexts.join('\n')));
-      flushSync(() => {
-        root.render(
-          <DraftEditor
-            editorState={editorState}
-            onChange={() => {}}
-            blockSkeleton={{
-              enabled: true,
-              scrollContainerRef: {current: container},
-            }}
-          />,
-        );
-      });
 
-      expect(layout.runFrames(20)).toBe(true);
-      expect(
-        container
-          .querySelectorAll('[data-block-key]')[1]!
-          .hasAttribute('data-block-skeleton'),
-      ).toBe(true);
-    } finally {
-      layout.restore();
-    }
-  },
-);
+    expect(layout.runFrames(20)).toBe(true);
+    expect(
+      container
+        .querySelectorAll('[data-block-key]')[1]!
+        .hasAttribute('data-block-skeleton'),
+    ).toBe(true);
+  } finally {
+    layout.restore();
+  }
+});
+
+test('gives a demoted block its floored full height until promoted', () => {
+  let scrollTop = 0;
+  const layout = installLayoutIntersectionObserver({
+    heights: [
+      {full: 100, skeleton: 100},
+      {full: 224.6, skeleton: 256},
+      {full: 100, skeleton: 100},
+    ],
+    viewportHeight: 400,
+    getScrollTop: () => scrollTop,
+  });
+  try {
+    editorState = createWithContent(createFromText('zero\none\ntwo'));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+    const block = container.querySelectorAll<HTMLElement>(
+      '[data-block-key]',
+    )[1]!;
+
+    expect(layout.runFrames(20)).toBe(true);
+    expect(block.hasAttribute('data-block-skeleton')).toBe(false);
+    expect(block.style.height).toBe('');
+
+    scrollTop = 3000;
+    expect(layout.runFrames(20)).toBe(true);
+    expect(block.hasAttribute('data-block-skeleton')).toBe(true);
+    expect(block.style.height).toBe('224px');
+    expect(block.style.boxSizing).toBe('border-box');
+
+    scrollTop = 0;
+    expect(layout.runFrames(20)).toBe(true);
+    expect(block.hasAttribute('data-block-skeleton')).toBe(false);
+    expect(block.style.height).toBe('');
+  } finally {
+    layout.restore();
+  }
+});
 
 describe('ariaDescribedBy', () => {
   function getProps(elem: React.ReactElement): Element {

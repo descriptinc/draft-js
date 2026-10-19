@@ -147,6 +147,7 @@ test('renders offscreen blocks as text skeletons with persistent DOM anchors', (
         blockStyleFn={() => ({marginBottom: '16px'})}
         blockSkeleton={{
           fullBlockKeys: new Set(fullBlock ? [fullBlock.key] : []),
+          fullBlockHeights: new Map(),
         }}
       />,
     );
