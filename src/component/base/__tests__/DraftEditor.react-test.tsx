@@ -637,6 +637,71 @@ test('gives a demoted block its floored full height until promoted', () => {
   }
 });
 
+test('reserves no height for a block hidden with display: none', () => {
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
+  let observerCallback: IntersectionObserverCallback | undefined;
+
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root = container;
+    readonly rootMargin = '500px 0px';
+    readonly thresholds = [0];
+
+    constructor(callback: IntersectionObserverCallback) {
+      observerCallback = callback;
+    }
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(): void {}
+  }
+
+  globalThis.IntersectionObserver = MockIntersectionObserver;
+  try {
+    editorState = createWithContent(createFromText('zero\none'));
+    flushSync(() => {
+      root.render(
+        <DraftEditor
+          editorState={editorState}
+          onChange={() => {}}
+          blockSkeleton={{
+            enabled: true,
+            scrollContainerRef: {current: container},
+          }}
+        />,
+      );
+    });
+    const block = container.querySelectorAll<HTMLElement>(
+      '[data-block-key]',
+    )[1]!;
+    const deliver = (isIntersecting: boolean, height: number) =>
+      flushSync(() => {
+        observerCallback?.(
+          [
+            ({
+              boundingClientRect: {top: 0, bottom: height, height},
+              isIntersecting,
+              target: block,
+            } as unknown) as IntersectionObserverEntry,
+          ],
+          {} as IntersectionObserver,
+        );
+      });
+
+    deliver(true, 224);
+    expect(block.hasAttribute('data-block-skeleton')).toBe(false);
+
+    // Chrome reports a zero rect for a target under `display: none`.
+    deliver(false, 0);
+    expect(block.hasAttribute('data-block-skeleton')).toBe(true);
+    expect(block.style.height).toBe('');
+  } finally {
+    globalThis.IntersectionObserver = originalIntersectionObserver;
+  }
+});
+
 describe('ariaDescribedBy', () => {
   function getProps(elem: React.ReactElement): Element {
     flushSync(() => {

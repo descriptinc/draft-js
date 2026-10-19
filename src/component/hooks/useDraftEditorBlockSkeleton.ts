@@ -116,6 +116,7 @@ export function useDraftEditorBlockSkeleton({
         if (
           blockKey &&
           !entry.isIntersecting &&
+          entry.boundingClientRect.height > 0 &&
           !target.hasAttribute('data-block-skeleton')
         ) {
           measuredHeights.set(
