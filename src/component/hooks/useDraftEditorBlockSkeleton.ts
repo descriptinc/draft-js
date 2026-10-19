@@ -32,6 +32,14 @@ export function supportsBlockSkeletonRendering(): boolean {
   );
 }
 
+// One callback can carry several entries per block from successive updates, so
+// only the last one reflects where the block is now.
+function getLatestEntries(
+  entries: readonly IntersectionObserverEntry[],
+): IntersectionObserverEntry[] {
+  return [...new Map(entries.map(entry => [entry.target, entry])).values()];
+}
+
 function getBlockElements(node: Node): HTMLElement[] {
   if (!(node instanceof Element)) {
     return [];
@@ -126,12 +134,17 @@ export function useDraftEditorBlockSkeleton({
     };
     const observers = [
       new IntersectionObserver(
-        entries => handleEntries(entries.filter(entry => entry.isIntersecting)),
+        entries =>
+          handleEntries(
+            getLatestEntries(entries).filter(entry => entry.isIntersecting),
+          ),
         {root: scrollContainer, rootMargin: PROMOTE_MARGIN},
       ),
       new IntersectionObserver(
         entries =>
-          handleEntries(entries.filter(entry => !entry.isIntersecting)),
+          handleEntries(
+            getLatestEntries(entries).filter(entry => !entry.isIntersecting),
+          ),
         {root: scrollContainer, rootMargin: DEMOTE_MARGIN},
       ),
     ];

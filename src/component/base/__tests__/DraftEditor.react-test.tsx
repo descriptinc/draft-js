@@ -454,6 +454,9 @@ type MockBlockHeights = Readonly<{full: number; skeleton: number}>;
  * intersects them with a fixed viewport, like a browser without scroll
  * anchoring. Each observer uses its own `rootMargin`. `runFrames` delivers
  * changed entries once per frame and returns whether the observers went quiet.
+ * `queueUpdate` records entries for the current layout without delivering
+ * them; `deliverQueued` then delivers each observer's batch in the given
+ * margin order.
  */
 function installLayoutIntersectionObserver({
   heights,
@@ -511,9 +514,10 @@ function installLayoutIntersectionObserver({
       this.wasIntersecting.delete(target);
     }
 
-    deliver(rects: ReadonlyMap<Element, Rect>): boolean {
+    private queuedEntries: IntersectionObserverEntry[] = [];
+
+    queue(rects: ReadonlyMap<Element, Rect>): void {
       const margin = parseFloat(this.rootMargin);
-      const entries: IntersectionObserverEntry[] = [];
       for (const [target, wasIntersecting] of this.wasIntersecting) {
         const rect = rects.get(target);
         if (!rect) {
@@ -523,13 +527,18 @@ function installLayoutIntersectionObserver({
           rect.bottom >= -margin && rect.top <= viewportHeight + margin;
         if (isIntersecting !== wasIntersecting) {
           this.wasIntersecting.set(target, isIntersecting);
-          entries.push(({
+          this.queuedEntries.push(({
             boundingClientRect: rect,
             isIntersecting,
             target,
           } as unknown) as IntersectionObserverEntry);
         }
       }
+    }
+
+    deliver(): boolean {
+      const entries = this.queuedEntries;
+      this.queuedEntries = [];
       if (entries.length > 0) {
         flushSync(() => this.callback(entries, this));
       }
@@ -537,20 +546,35 @@ function installLayoutIntersectionObserver({
     }
   }
 
+  const queueUpdate = () => {
+    const rects = layOutBlocks();
+    for (const observer of observers) {
+      observer.queue(rects);
+    }
+  };
+
   globalThis.IntersectionObserver = LayoutIntersectionObserver;
   return {
     runFrames(maxFrames: number): boolean {
       for (let frame = 0; frame < maxFrames; frame += 1) {
-        const rects = layOutBlocks();
+        queueUpdate();
         let delivered = false;
         for (const observer of observers) {
-          delivered = observer.deliver(rects) || delivered;
+          delivered = observer.deliver() || delivered;
         }
         if (!delivered) {
           return true;
         }
       }
       return false;
+    },
+    queueUpdate,
+    deliverQueued(rootMargins: readonly string[]) {
+      for (const rootMargin of rootMargins) {
+        observers
+          .find(observer => observer.rootMargin === rootMargin)!
+          .deliver();
+      }
     },
     restore() {
       globalThis.IntersectionObserver = originalIntersectionObserver;
@@ -641,6 +665,47 @@ test('keeps a block between the two margins in its current state', () => {
     layout.restore();
   }
 });
+
+test.each([[['500px 0px', '1000px 0px']], [['1000px 0px', '500px 0px']]])(
+  'keeps a block full that leaves and returns before delivery; order: %j',
+  rootMargins => {
+    let scrollTop = 0;
+    const layout = installLayoutIntersectionObserver({
+      heights: Array.from({length: 3}, () => ({full: 100, skeleton: 100})),
+      viewportHeight: 400,
+      getScrollTop: () => scrollTop,
+    });
+    try {
+      editorState = createWithContent(createFromText('zero\none\ntwo'));
+      flushSync(() => {
+        root.render(
+          <DraftEditor
+            editorState={editorState}
+            onChange={() => {}}
+            blockSkeleton={{
+              enabled: true,
+              scrollContainerRef: {current: container},
+            }}
+          />,
+        );
+      });
+      const block = container.querySelectorAll('[data-block-key]')[1]!;
+      expect(layout.runFrames(20)).toBe(true);
+      expect(block.hasAttribute('data-block-skeleton')).toBe(false);
+
+      // One callback per observer carries both updates: past 1000px, then back.
+      scrollTop = 2000;
+      layout.queueUpdate();
+      scrollTop = 0;
+      layout.queueUpdate();
+      layout.deliverQueued(rootMargins);
+
+      expect(block.hasAttribute('data-block-skeleton')).toBe(false);
+    } finally {
+      layout.restore();
+    }
+  },
+);
 
 describe('ariaDescribedBy', () => {
   function getProps(elem: React.ReactElement): Element {
