@@ -344,7 +344,6 @@ export default class DraftEditorContents extends React.Component<Props> {
       };
       let child: ReactNode;
       if (shouldRenderSkeleton) {
-        const fullHeight = blockSkeleton.fullBlockHeights.get(key);
         childProps = {
           ...childProps,
           'data-block-skeleton': true,
@@ -354,11 +353,6 @@ export default class DraftEditorContents extends React.Component<Props> {
             position: 'relative',
             textAlign: direction === 'RTL' ? 'right' : 'left',
             whiteSpace: 'pre-wrap',
-            ...(fullHeight !== undefined && {
-              boxSizing: 'border-box',
-              height: fullHeight,
-              overflow: 'clip',
-            }),
           },
         };
         const tree = decorator?.getDOMAnchorIdsForRange

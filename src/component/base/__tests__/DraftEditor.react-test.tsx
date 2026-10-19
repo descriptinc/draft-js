@@ -90,12 +90,18 @@ test.each([true, false])('promotes blocks; null ref: %s', nullRef => {
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
-    readonly rootMargin = '500px 0px';
+    readonly rootMargin: string;
     readonly thresholds = [0];
 
-    constructor(callback: IntersectionObserverCallback) {
+    constructor(
+      callback: IntersectionObserverCallback,
+      options?: IntersectionObserverInit,
+    ) {
       observerCount++;
-      observerCallback = callback;
+      this.rootMargin = options?.rootMargin ?? '0px';
+      if (this.rootMargin === '500px 0px') {
+        observerCallback = callback;
+      }
     }
 
     disconnect(): void {}
@@ -129,13 +135,13 @@ test.each([true, false])('promotes blocks; null ref: %s', nullRef => {
       );
     });
 
-    expect(observedElements).toHaveLength(3);
-    expect(observerCount).toBe(1);
+    expect(new Set(observedElements).size).toBe(3);
+    expect(observerCount).toBe(2);
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(2);
     expect(renderedSkeletonCounts).toEqual([2]);
 
-    const secondBlock = observedElements[1];
-    expect(secondBlock).toBeDefined();
+    const secondBlock = container.querySelectorAll('[data-block-key]')[1];
+    expect(observedElements).toContain(secondBlock);
     flushSync(() => {
       observerCallback?.(
         [
@@ -150,7 +156,7 @@ test.each([true, false])('promotes blocks; null ref: %s', nullRef => {
 
     expect(container.querySelectorAll('[data-block-skeleton]')).toHaveLength(1);
     expect(renderedSkeletonCounts).toEqual([2, 1]);
-    expect(observerCount).toBe(1);
+    expect(observerCount).toBe(2);
   } finally {
     globalThis.IntersectionObserver = originalIntersectionObserver;
   }
@@ -306,11 +312,17 @@ test('keeps a promoted block full when its DOM node is moved', () => {
 
   class MockIntersectionObserver implements IntersectionObserver {
     readonly root = container;
-    readonly rootMargin = '500px 0px';
+    readonly rootMargin: string;
     readonly thresholds = [0];
 
-    constructor(callback: IntersectionObserverCallback) {
-      intersectionCallback = callback;
+    constructor(
+      callback: IntersectionObserverCallback,
+      options?: IntersectionObserverInit,
+    ) {
+      this.rootMargin = options?.rootMargin ?? '0px';
+      if (this.rootMargin === '500px 0px') {
+        intersectionCallback = callback;
+      }
     }
 
     disconnect(): void {}
@@ -440,9 +452,8 @@ type MockBlockHeights = Readonly<{full: number; skeleton: number}>;
 /**
  * Replaces `IntersectionObserver` with one that stacks blocks top to bottom and
  * intersects them with a fixed viewport, like a browser without scroll
- * anchoring. A block is as tall as its inline `height`, else its full or
- * skeleton height. `runFrames` delivers changed entries once per frame and
- * returns whether the observers went quiet.
+ * anchoring. Each observer uses its own `rootMargin`. `runFrames` delivers
+ * changed entries once per frame and returns whether the observers went quiet.
  */
 function installLayoutIntersectionObserver({
   heights,
@@ -464,9 +475,7 @@ function installLayoutIntersectionObserver({
       .querySelectorAll<HTMLElement>('[data-block-key]')
       .forEach((block, index) => {
         const blockHeights = heights[index]!;
-        const height = block.style.height
-          ? parseFloat(block.style.height)
-          : block.hasAttribute('data-block-skeleton')
+        const height = block.hasAttribute('data-block-skeleton')
           ? blockHeights.skeleton
           : blockHeights.full;
         rects.set(block, {top, bottom: top + height, height});
@@ -555,7 +564,7 @@ test('settles a block whose skeleton is taller than its full render', () => {
   const heights = blockTexts.map((_, index) =>
     index === 1 ? {full: 224, skeleton: 256} : {full: 100, skeleton: 100},
   );
-  // Block 1 starts at 100. With a 500px margin, a scrollTop in
+  // Block 1 starts at 100. With one 500px margin, a scrollTop in
   // (100 + 224 + 500, 100 + 256 + 500) demotes it when full and promotes it
   // when a skeleton.
   const layout = installLayoutIntersectionObserver({
@@ -583,20 +592,19 @@ test('settles a block whose skeleton is taller than its full render', () => {
       container
         .querySelectorAll('[data-block-key]')[1]!
         .hasAttribute('data-block-skeleton'),
-    ).toBe(true);
+    ).toBe(false);
   } finally {
     layout.restore();
   }
 });
 
-test('gives a demoted block its floored full height until promoted', () => {
+test('keeps a block between the two margins in its current state', () => {
+  // Block 1 spans 100 to 200, so at scrollTop 950 its bottom is 750px above
+  // the viewport: outside the 500px promote margin, inside the 1000px demote
+  // margin.
   let scrollTop = 0;
   const layout = installLayoutIntersectionObserver({
-    heights: [
-      {full: 100, skeleton: 100},
-      {full: 224.6, skeleton: 256},
-      {full: 100, skeleton: 100},
-    ],
+    heights: Array.from({length: 3}, () => ({full: 100, skeleton: 100})),
     viewportHeight: 400,
     getScrollTop: () => scrollTop,
   });
@@ -614,91 +622,23 @@ test('gives a demoted block its floored full height until promoted', () => {
         />,
       );
     });
-    const block = container.querySelectorAll<HTMLElement>(
-      '[data-block-key]',
-    )[1]!;
+    const block = container.querySelectorAll('[data-block-key]')[1]!;
+    const scrollTo = (nextScrollTop: number) => {
+      scrollTop = nextScrollTop;
+      expect(layout.runFrames(20)).toBe(true);
+    };
 
-    expect(layout.runFrames(20)).toBe(true);
+    scrollTo(0);
     expect(block.hasAttribute('data-block-skeleton')).toBe(false);
-    expect(block.style.height).toBe('');
+    scrollTo(950);
+    expect(block.hasAttribute('data-block-skeleton')).toBe(false);
 
-    scrollTop = 3000;
-    expect(layout.runFrames(20)).toBe(true);
+    scrollTo(2000);
     expect(block.hasAttribute('data-block-skeleton')).toBe(true);
-    expect(block.style.height).toBe('224px');
-    expect(block.style.boxSizing).toBe('border-box');
-
-    scrollTop = 0;
-    expect(layout.runFrames(20)).toBe(true);
-    expect(block.hasAttribute('data-block-skeleton')).toBe(false);
-    expect(block.style.height).toBe('');
+    scrollTo(950);
+    expect(block.hasAttribute('data-block-skeleton')).toBe(true);
   } finally {
     layout.restore();
-  }
-});
-
-test('reserves no height for a block hidden with display: none', () => {
-  const originalIntersectionObserver = globalThis.IntersectionObserver;
-  let observerCallback: IntersectionObserverCallback | undefined;
-
-  class MockIntersectionObserver implements IntersectionObserver {
-    readonly root = container;
-    readonly rootMargin = '500px 0px';
-    readonly thresholds = [0];
-
-    constructor(callback: IntersectionObserverCallback) {
-      observerCallback = callback;
-    }
-
-    disconnect(): void {}
-    observe(): void {}
-    takeRecords(): IntersectionObserverEntry[] {
-      return [];
-    }
-    unobserve(): void {}
-  }
-
-  globalThis.IntersectionObserver = MockIntersectionObserver;
-  try {
-    editorState = createWithContent(createFromText('zero\none'));
-    flushSync(() => {
-      root.render(
-        <DraftEditor
-          editorState={editorState}
-          onChange={() => {}}
-          blockSkeleton={{
-            enabled: true,
-            scrollContainerRef: {current: container},
-          }}
-        />,
-      );
-    });
-    const block = container.querySelectorAll<HTMLElement>(
-      '[data-block-key]',
-    )[1]!;
-    const deliver = (isIntersecting: boolean, height: number) =>
-      flushSync(() => {
-        observerCallback?.(
-          [
-            ({
-              boundingClientRect: {top: 0, bottom: height, height},
-              isIntersecting,
-              target: block,
-            } as unknown) as IntersectionObserverEntry,
-          ],
-          {} as IntersectionObserver,
-        );
-      });
-
-    deliver(true, 224);
-    expect(block.hasAttribute('data-block-skeleton')).toBe(false);
-
-    // Chrome reports a zero rect for a target under `display: none`.
-    deliver(false, 0);
-    expect(block.hasAttribute('data-block-skeleton')).toBe(true);
-    expect(block.style.height).toBe('');
-  } finally {
-    globalThis.IntersectionObserver = originalIntersectionObserver;
   }
 });
 

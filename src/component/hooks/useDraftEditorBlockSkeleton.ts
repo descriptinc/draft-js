@@ -4,7 +4,6 @@ import {EditorState} from '../../model/immutable/EditorState';
 
 export type DraftEditorBlockSkeletonState = Readonly<{
   fullBlockKeys: ReadonlySet<string>;
-  fullBlockHeights: ReadonlyMap<string, number>;
 }>;
 
 type Options = Readonly<{
@@ -15,7 +14,13 @@ type Options = Readonly<{
   scrollContainerRef?: RefObject<HTMLElement | null>;
 }>;
 
-const OBSERVER_MARGIN = '500px 0px';
+// Blocks promote within the smaller margin and demote only past the larger
+// one. A skeleton can be taller than its full render, and Chrome's scroll
+// anchoring may not absorb the swap while the editor is unfocused, so equal
+// margins let a block at the edge flip every frame. The gap tolerates a
+// skeleton up to 500px taller.
+const PROMOTE_MARGIN = '500px 0px';
+const DEMOTE_MARGIN = '1000px 0px';
 
 export function supportsBlockSkeletonRendering(): boolean {
   return (
@@ -87,9 +92,6 @@ export function useDraftEditorBlockSkeleton({
   const [visibleBlockKeys, setVisibleBlockKeys] = useState<ReadonlySet<string>>(
     new Set(),
   );
-  const [fullBlockHeights, setFullBlockHeights] = useState<
-    ReadonlyMap<string, number>
-  >(new Map());
   const canObserve = supportsBlockSkeletonRendering();
 
   useLayoutEffect(() => {
@@ -100,36 +102,8 @@ export function useDraftEditorBlockSkeleton({
       return;
     }
 
-    const observerOptions = {
-      root: scrollContainerRef?.current ?? contentsElement,
-      rootMargin: OBSERVER_MARGIN,
-    };
-    const handleEntries: IntersectionObserverCallback = entries => {
-      // A block whose skeleton is taller than its full render can flip between
-      // the two every frame at the margin edge unless scroll anchoring absorbs
-      // the swap, which Chrome may skip while the editor is unfocused. Giving
-      // the skeleton the floored full height keeps it from being the taller.
-      const measuredHeights = new Map<string, number>();
-      for (const entry of entries) {
-        const target = entry.target as HTMLElement;
-        const blockKey = target.dataset.blockKey;
-        if (
-          blockKey &&
-          !entry.isIntersecting &&
-          entry.boundingClientRect.height > 0 &&
-          !target.hasAttribute('data-block-skeleton')
-        ) {
-          measuredHeights.set(
-            blockKey,
-            Math.floor(entry.boundingClientRect.height),
-          );
-        }
-      }
-      if (measuredHeights.size > 0) {
-        setFullBlockHeights(
-          previousHeights => new Map([...previousHeights, ...measuredHeights]),
-        );
-      }
+    const scrollContainer = scrollContainerRef?.current ?? contentsElement;
+    const handleEntries = (entries: readonly IntersectionObserverEntry[]) => {
       setVisibleBlockKeys(previousKeys => {
         const nextKeys = new Set(previousKeys);
         let changed = false;
@@ -150,14 +124,25 @@ export function useDraftEditorBlockSkeleton({
         return changed ? nextKeys : previousKeys;
       });
     };
-    const observer = new IntersectionObserver(handleEntries, observerOptions);
+    const observers = [
+      new IntersectionObserver(
+        entries => handleEntries(entries.filter(entry => entry.isIntersecting)),
+        {root: scrollContainer, rootMargin: PROMOTE_MARGIN},
+      ),
+      new IntersectionObserver(
+        entries =>
+          handleEntries(entries.filter(entry => !entry.isIntersecting)),
+        {root: scrollContainer, rootMargin: DEMOTE_MARGIN},
+      ),
+    ];
 
     let blockElements = getBlockElements(contentsElement);
     for (const blockElement of blockElements) {
-      observer.observe(blockElement);
+      for (const observer of observers) {
+        observer.observe(blockElement);
+      }
     }
 
-    const scrollContainer = scrollContainerRef?.current ?? contentsElement;
     const handleScroll = () => {
       const blockKeys = getViewportSkeletonBlockKeys(
         blockElements,
@@ -190,7 +175,9 @@ export function useDraftEditorBlockSkeleton({
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
           for (const blockElement of getBlockElements(node)) {
-            observer.observe(blockElement);
+            for (const observer of observers) {
+              observer.observe(blockElement);
+            }
             const blockKey = blockElement.dataset.blockKey;
             if (blockKey) {
               addedKeys.add(blockKey);
@@ -199,7 +186,9 @@ export function useDraftEditorBlockSkeleton({
         }
         for (const node of mutation.removedNodes) {
           for (const blockElement of getBlockElements(node)) {
-            observer.unobserve(blockElement);
+            for (const observer of observers) {
+              observer.unobserve(blockElement);
+            }
             const blockKey = (blockElement as HTMLElement).dataset.blockKey;
             if (blockKey) {
               removedKeys.add(blockKey);
@@ -224,7 +213,9 @@ export function useDraftEditorBlockSkeleton({
 
     return () => {
       scrollContainer.removeEventListener('scroll', handleScroll);
-      observer.disconnect();
+      for (const observer of observers) {
+        observer.disconnect();
+      }
       mutationObserver.disconnect();
     };
   }, [canObserve, contentsElement, enabled, scrollContainerRef]);
@@ -237,13 +228,12 @@ export function useDraftEditorBlockSkeleton({
     const fullBlockKeys = new Set(visibleBlockKeys);
     fullBlockKeys.add(editorState.selection.anchorKey);
     fullBlockKeys.add(editorState.selection.focusKey);
-    return {fullBlockKeys, fullBlockHeights};
+    return {fullBlockKeys};
   }, [
     canObserve,
     editorState.selection.anchorKey,
     editorState.selection.focusKey,
     enabled,
-    fullBlockHeights,
     visibleBlockKeys,
   ]);
 
