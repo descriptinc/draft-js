@@ -435,6 +435,163 @@ test('renders full blocks when native scroll anchoring is unsupported', () => {
   }
 });
 
+type MockBlockHeights = Readonly<{full: number; skeleton: number}>;
+
+/**
+ * Replaces `IntersectionObserver` with one that stacks blocks top to bottom and
+ * intersects them with a fixed viewport, like a browser without scroll
+ * anchoring. A block is as tall as its inline `height`, else its full or
+ * skeleton height. `runFrames` delivers changed entries once per frame and
+ * returns whether the observers went quiet.
+ */
+function installLayoutIntersectionObserver({
+  heights,
+  viewportHeight,
+  getScrollTop,
+}: {
+  heights: readonly MockBlockHeights[];
+  viewportHeight: number;
+  getScrollTop: () => number;
+}) {
+  type Rect = Readonly<{top: number; bottom: number; height: number}>;
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
+  const observers: LayoutIntersectionObserver[] = [];
+
+  const layOutBlocks = (): Map<Element, Rect> => {
+    const rects = new Map<Element, Rect>();
+    let top = -getScrollTop();
+    container
+      .querySelectorAll<HTMLElement>('[data-block-key]')
+      .forEach((block, index) => {
+        const blockHeights = heights[index]!;
+        const height = block.style.height
+          ? parseFloat(block.style.height)
+          : block.hasAttribute('data-block-skeleton')
+          ? blockHeights.skeleton
+          : blockHeights.full;
+        rects.set(block, {top, bottom: top + height, height});
+        top += height;
+      });
+    return rects;
+  };
+
+  class LayoutIntersectionObserver implements IntersectionObserver {
+    readonly root = container;
+    readonly rootMargin: string;
+    readonly thresholds = [0];
+    private readonly wasIntersecting = new Map<Element, boolean | undefined>();
+
+    constructor(
+      private readonly callback: IntersectionObserverCallback,
+      options?: IntersectionObserverInit,
+    ) {
+      this.rootMargin = options?.rootMargin ?? '0px';
+      observers.push(this);
+    }
+
+    disconnect(): void {
+      this.wasIntersecting.clear();
+    }
+    observe(target: Element): void {
+      this.wasIntersecting.set(target, undefined);
+    }
+    takeRecords(): IntersectionObserverEntry[] {
+      return [];
+    }
+    unobserve(target: Element): void {
+      this.wasIntersecting.delete(target);
+    }
+
+    deliver(rects: ReadonlyMap<Element, Rect>): boolean {
+      const margin = parseFloat(this.rootMargin);
+      const entries: IntersectionObserverEntry[] = [];
+      for (const [target, wasIntersecting] of this.wasIntersecting) {
+        const rect = rects.get(target);
+        if (!rect) {
+          continue;
+        }
+        const isIntersecting =
+          rect.bottom >= -margin && rect.top <= viewportHeight + margin;
+        if (isIntersecting !== wasIntersecting) {
+          this.wasIntersecting.set(target, isIntersecting);
+          entries.push(({
+            boundingClientRect: rect,
+            isIntersecting,
+            target,
+          } as unknown) as IntersectionObserverEntry);
+        }
+      }
+      if (entries.length > 0) {
+        flushSync(() => this.callback(entries, this));
+      }
+      return entries.length > 0;
+    }
+  }
+
+  globalThis.IntersectionObserver = LayoutIntersectionObserver;
+  return {
+    runFrames(maxFrames: number): boolean {
+      for (let frame = 0; frame < maxFrames; frame += 1) {
+        const rects = layOutBlocks();
+        let delivered = false;
+        for (const observer of observers) {
+          delivered = observer.deliver(rects) || delivered;
+        }
+        if (!delivered) {
+          return true;
+        }
+      }
+      return false;
+    },
+    restore() {
+      globalThis.IntersectionObserver = originalIntersectionObserver;
+    },
+  };
+}
+
+test.failing(
+  'settles a block above the viewport whose skeleton is taller than its full render',
+  () => {
+    // The selection pins block 0, so block 1 is the one under test.
+    const blockTexts = Array.from({length: 12}, (_, index) => `block ${index}`);
+    const heights = blockTexts.map((_, index) =>
+      index === 1 ? {full: 224, skeleton: 256} : {full: 100, skeleton: 100},
+    );
+    // Block 1 starts at 100. With a 500px margin, a scrollTop in
+    // (100 + 224 + 500, 100 + 256 + 500) demotes it when full and promotes it
+    // when a skeleton.
+    const layout = installLayoutIntersectionObserver({
+      heights,
+      viewportHeight: 400,
+      getScrollTop: () => 840,
+    });
+    try {
+      editorState = createWithContent(createFromText(blockTexts.join('\n')));
+      flushSync(() => {
+        root.render(
+          <DraftEditor
+            editorState={editorState}
+            onChange={() => {}}
+            blockSkeleton={{
+              enabled: true,
+              scrollContainerRef: {current: container},
+            }}
+          />,
+        );
+      });
+
+      expect(layout.runFrames(20)).toBe(true);
+      expect(
+        container
+          .querySelectorAll('[data-block-key]')[1]!
+          .hasAttribute('data-block-skeleton'),
+      ).toBe(true);
+    } finally {
+      layout.restore();
+    }
+  },
+);
+
 describe('ariaDescribedBy', () => {
   function getProps(elem: React.ReactElement): Element {
     flushSync(() => {
