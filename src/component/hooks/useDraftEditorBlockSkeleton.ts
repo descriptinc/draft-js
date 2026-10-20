@@ -14,7 +14,11 @@ type Options = Readonly<{
   scrollContainerRef?: RefObject<HTMLElement | null>;
 }>;
 
-const OBSERVER_MARGIN = '500px 0px';
+// A skeleton can be taller than its full render, and Chrome's scroll anchoring
+// may not absorb the swap while the editor is unfocused, so a block at a single
+// margin's edge would flip every frame.
+const PROMOTE_MARGIN = '500px 0px';
+const DEMOTE_MARGIN = '1000px 0px';
 
 export function supportsBlockSkeletonRendering(): boolean {
   return (
@@ -96,39 +100,49 @@ export function useDraftEditorBlockSkeleton({
       return;
     }
 
-    const observerOptions = {
-      root: scrollContainerRef?.current ?? contentsElement,
-      rootMargin: OBSERVER_MARGIN,
-    };
-    const handleEntries: IntersectionObserverCallback = entries => {
+    const scrollContainer = scrollContainerRef?.current ?? contentsElement;
+    const createObserverCallback = (
+      direction: 'promote' | 'demote',
+    ): IntersectionObserverCallback => entries => {
+      // One delivery can carry several entries per block; only the last is
+      // current.
+      const latestEntries = new Map(
+        entries.map(entry => [entry.target, entry]),
+      );
       setVisibleBlockKeys(previousKeys => {
         const nextKeys = new Set(previousKeys);
-        let changed = false;
-        for (const entry of entries) {
+        for (const entry of latestEntries.values()) {
           const blockKey = (entry.target as HTMLElement).dataset.blockKey;
           if (!blockKey) {
             continue;
           }
-          if (entry.isIntersecting) {
-            if (!nextKeys.has(blockKey)) {
-              nextKeys.add(blockKey);
-              changed = true;
-            }
-          } else if (nextKeys.delete(blockKey)) {
-            changed = true;
+          if (direction === 'promote' && entry.isIntersecting) {
+            nextKeys.add(blockKey);
+          } else if (direction === 'demote' && !entry.isIntersecting) {
+            nextKeys.delete(blockKey);
           }
         }
-        return changed ? nextKeys : previousKeys;
+        return nextKeys.size === previousKeys.size ? previousKeys : nextKeys;
       });
     };
-    const observer = new IntersectionObserver(handleEntries, observerOptions);
+    const observers = [
+      new IntersectionObserver(createObserverCallback('promote'), {
+        root: scrollContainer,
+        rootMargin: PROMOTE_MARGIN,
+      }),
+      new IntersectionObserver(createObserverCallback('demote'), {
+        root: scrollContainer,
+        rootMargin: DEMOTE_MARGIN,
+      }),
+    ];
 
     let blockElements = getBlockElements(contentsElement);
     for (const blockElement of blockElements) {
-      observer.observe(blockElement);
+      for (const observer of observers) {
+        observer.observe(blockElement);
+      }
     }
 
-    const scrollContainer = scrollContainerRef?.current ?? contentsElement;
     const handleScroll = () => {
       const blockKeys = getViewportSkeletonBlockKeys(
         blockElements,
@@ -161,7 +175,9 @@ export function useDraftEditorBlockSkeleton({
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
           for (const blockElement of getBlockElements(node)) {
-            observer.observe(blockElement);
+            for (const observer of observers) {
+              observer.observe(blockElement);
+            }
             const blockKey = blockElement.dataset.blockKey;
             if (blockKey) {
               addedKeys.add(blockKey);
@@ -170,7 +186,9 @@ export function useDraftEditorBlockSkeleton({
         }
         for (const node of mutation.removedNodes) {
           for (const blockElement of getBlockElements(node)) {
-            observer.unobserve(blockElement);
+            for (const observer of observers) {
+              observer.unobserve(blockElement);
+            }
             const blockKey = (blockElement as HTMLElement).dataset.blockKey;
             if (blockKey) {
               removedKeys.add(blockKey);
@@ -195,7 +213,9 @@ export function useDraftEditorBlockSkeleton({
 
     return () => {
       scrollContainer.removeEventListener('scroll', handleScroll);
-      observer.disconnect();
+      for (const observer of observers) {
+        observer.disconnect();
+      }
       mutationObserver.disconnect();
     };
   }, [canObserve, contentsElement, enabled, scrollContainerRef]);
