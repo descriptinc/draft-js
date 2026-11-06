@@ -13,6 +13,7 @@ import {DraftBlockRenderMap} from '../../model/immutable/DraftBlockRenderMap';
 import {DraftInlineStyle} from '../../model/immutable/DraftInlineStyle';
 import {EditorState, getBlockTree} from '../../model/immutable/EditorState';
 import React, {CSSProperties, ReactNode} from 'react';
+import equal from 'fast-deep-equal';
 import cx from 'fbjs/lib/cx';
 import joinClasses from 'fbjs/lib/joinClasses';
 import {nullthrows} from '../../fbjs/nullthrows';
@@ -82,7 +83,9 @@ const getListItemClasses = (
   });
 };
 
-function renderSkeletonChildren({
+type SkeletonAnchor = {start: number; end: number; ids: readonly string[]};
+
+function getSkeletonAnchors({
   block,
   contentState,
   decorator,
@@ -92,18 +95,16 @@ function renderSkeletonChildren({
   contentState: EditorState['currentContent'];
   decorator: EditorState['decorator'];
   tree: ReturnType<typeof getBlockTree>;
-}): ReactNode {
+}): SkeletonAnchor[] {
+  const anchors: SkeletonAnchor[] = [];
   if (!decorator?.getDOMAnchorIdsForRange) {
-    return block.text || <br data-text={true} />;
+    return anchors;
   }
-
-  const children: ReactNode[] = [];
-  let plainTextStart = 0;
   for (const range of tree) {
     if (range.decoratorKey === null) {
       continue;
     }
-    const anchorIds = decorator.getDOMAnchorIdsForRange({
+    const ids = decorator.getDOMAnchorIdsForRange({
       block,
       contentState,
       decoratorKey: range.decoratorKey,
@@ -111,24 +112,52 @@ function renderSkeletonChildren({
       end: range.end,
       entityKey: getEntityAt(block, range.start),
     });
-    if (!anchorIds?.length) {
-      continue;
+    if (ids?.length) {
+      anchors.push({start: range.start, end: range.end, ids});
     }
-
-    if (plainTextStart < range.start) {
-      children.push(block.text.slice(plainTextStart, range.start));
-    }
-    children.push(
-      wrapInDOMAnchors(block.text.slice(range.start, range.end), anchorIds),
-    );
-    plainTextStart = range.end;
   }
-
-  if (plainTextStart < block.text.length) {
-    children.push(block.text.slice(plainTextStart));
-  }
-  return children.length ? children : block.text || <br data-text={true} />;
+  return anchors;
 }
+
+function renderSkeletonChildren(text: string, anchors: readonly SkeletonAnchor[]): ReactNode {
+  const children: ReactNode[] = [];
+  let plainTextStart = 0;
+  for (const {start, end, ids} of anchors) {
+    if (plainTextStart < start) {
+      children.push(text.slice(plainTextStart, start));
+    }
+    children.push(wrapInDOMAnchors(text.slice(start, end), ids));
+    plainTextStart = end;
+  }
+  if (plainTextStart < text.length) {
+    children.push(text.slice(plainTextStart));
+  }
+  return children.length ? children : text || <br data-text={true} />;
+}
+
+type BlockContainerProps = {
+  element: string;
+  elementProps: Record<string, unknown>;
+} & (
+  | {skeleton: {text: string; anchors: readonly SkeletonAnchor[]}; children?: never}
+  | {skeleton?: undefined; children: ReactNode}
+);
+
+const DraftBlockContainer = React.memo(
+  function DraftBlockContainer({
+    element,
+    elementProps,
+    skeleton,
+    children,
+  }: BlockContainerProps) {
+    return React.createElement(
+      element,
+      elementProps,
+      skeleton ? renderSkeletonChildren(skeleton.text, skeleton.anchors) : children,
+    );
+  },
+  (previous, next) => Boolean(previous.skeleton && next.skeleton) && equal(previous, next),
+);
 
 /**
  * `DraftEditorContents` is the container component for all block components
@@ -358,15 +387,16 @@ export default class DraftEditorContents extends React.Component<Props> {
         const tree = decorator?.getDOMAnchorIdsForRange
           ? getBlockTree(editorState, key)
           : [];
-        child = React.createElement(
-          Element,
-          childProps,
-          renderSkeletonChildren({
-            block,
-            contentState: content,
-            decorator,
-            tree,
-          }),
+        child = (
+          <DraftBlockContainer
+            key={key}
+            element={Element}
+            elementProps={childProps}
+            skeleton={{
+              text: block.text,
+              anchors: getSkeletonAnchors({block, contentState: content, decorator, tree}),
+            }}
+          />
         );
       } else {
         const customRenderer = blockRendererFn(block);
@@ -406,13 +436,10 @@ export default class DraftEditorContents extends React.Component<Props> {
             suppressContentEditableWarning: true,
           };
         }
-        child = React.createElement(
-          Element,
-          childProps,
-          /* $FlowFixMe(>=0.112.0 site=www,mobile) This comment suppresses an
-           * error found when Flow v0.112 was deployed. To see the error delete
-           * this comment and run Flow. */
-          <Component {...componentProps} key={key} />,
+        child = (
+          <DraftBlockContainer key={key} element={Element} elementProps={childProps}>
+            <Component {...componentProps} key={key} />
+          </DraftBlockContainer>
         );
       }
 

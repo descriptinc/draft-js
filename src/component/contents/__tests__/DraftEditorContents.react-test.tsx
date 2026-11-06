@@ -178,3 +178,129 @@ test('renders offscreen blocks as text skeletons with persistent DOM anchors', (
     expect(skeleton?.style.whiteSpace).toBe('pre-wrap');
   }
 });
+
+test('refreshes skeleton anchors when another block changes their document context', () => {
+  const decorator: DraftDecoratorType = {
+    getDecorations: block => block.text.split('').map(() => 'linked'),
+    getComponentForKey: () => ({children}) => <strong>{children}</strong>,
+    getPropsForKey: () => null,
+    getDOMAnchorIdsForRange: ({block, contentState}) => [
+      `${contentState.blockMap.values().next().value?.text}-${block.key}`,
+    ],
+  };
+  const content = createFromText('before\nunchanged');
+  const blocks = Array.from(content.blockMap.values());
+  const target = blocks[1]!;
+  const render = (
+    currentContent: typeof content,
+    fullBlockKeys = new Set<string>(),
+  ) => {
+    flushSync(() => {
+      root.render(
+        <DraftEditorContents
+          editorState={createWithContent(currentContent, decorator)}
+          blockRenderMap={DefaultDraftBlockRenderMap}
+          blockRendererFn={() => null}
+          blockSkeleton={{fullBlockKeys}}
+        />,
+      );
+    });
+  };
+  render(content);
+  const host = container.querySelector(`[data-block-key="${target.key}"]`);
+  expect(
+    container.querySelector(`[id="before-${target.key}"]`)?.textContent,
+  ).toBe('unchanged');
+
+  const blockMap = new Map(content.blockMap);
+  blockMap.set(blocks[0]!.key, {...blocks[0]!, text: 'after!'});
+  const changedContent = {...content, blockMap};
+  render(changedContent);
+  expect(container.querySelector(`[id="before-${target.key}"]`)).toBeNull();
+  expect(
+    container.querySelector(`[id="after!-${target.key}"]`)?.textContent,
+  ).toBe('unchanged');
+
+  render(changedContent, new Set([target.key]));
+  expect(container.querySelector(`[data-block-key="${target.key}"]`)).toBe(host);
+  expect(
+    container
+      .querySelector(`[data-block-key="${target.key}"]`)
+      ?.hasAttribute('data-block-skeleton'),
+  ).toBe(false);
+  render(changedContent);
+  expect(container.querySelector(`[data-block-key="${target.key}"]`)).toBe(host);
+  expect(
+    container.querySelector(`[id="after!-${target.key}"]`)?.textContent,
+  ).toBe('unchanged');
+});
+
+test('updates skeleton text, styles, direction and element type', () => {
+  const content = createFromText('before');
+  const block = Array.from(content.blockMap.values())[0]!;
+  const render = ({text, marginBottom, direction, element}: {
+    text: string;
+    marginBottom: string;
+    direction: 'LTR' | 'RTL';
+    element: string;
+  }) => {
+    const blockMap = new Map([[block.key, {...block, text}]]);
+    flushSync(() => {
+      root.render(
+        <DraftEditorContents
+          editorState={createWithContent({...content, blockMap})}
+          blockRenderMap={{...DefaultDraftBlockRenderMap, unstyled: {element}}}
+          blockRendererFn={() => null}
+          blockStyleFn={() => ({marginBottom})}
+          textDirectionality={direction}
+          blockSkeleton={{fullBlockKeys: new Set()}}
+        />,
+      );
+    });
+  };
+  render({text: 'before', marginBottom: '16px', direction: 'LTR', element: 'div'});
+  render({text: 'after', marginBottom: '32px', direction: 'RTL', element: 'p'});
+  const skeleton = container.querySelector<HTMLElement>(
+    '[data-block-skeleton]',
+  );
+  expect(skeleton?.tagName).toBe('P');
+  expect(skeleton?.textContent).toBe('after');
+  expect(skeleton?.style.marginBottom).toBe('32px');
+  expect(skeleton?.style.direction).toBe('rtl');
+  render({text: '', marginBottom: '0px', direction: 'LTR', element: 'div'});
+  expect(container.querySelector('[data-block-skeleton] br')).not.toBeNull();
+});
+
+test('reuses unchanged skeleton output while updating full blocks and mode transitions', () => {
+  const content = createFromText('unchanged');
+  const block = Array.from(content.blockMap.values())[0]!;
+  const createElement = jest.spyOn(React, 'createElement');
+  const render = (full: boolean) => {
+    flushSync(() => {
+      root.render(
+        <DraftEditorContents
+          editorState={createWithContent(content)}
+          blockRenderMap={{...DefaultDraftBlockRenderMap, unstyled: {element: 'article'}}}
+          blockRendererFn={() => null}
+          blockSkeleton={{fullBlockKeys: new Set(full ? [block.key] : [])}}
+        />,
+      );
+    });
+  };
+  const hostRenders = () => createElement.mock.calls.filter(([type]) => type === 'article').length;
+  try {
+    render(false);
+    expect(hostRenders()).toBe(1);
+    render(false);
+    expect(hostRenders()).toBe(1);
+    render(true);
+    expect(hostRenders()).toBe(2);
+    render(true);
+    expect(hostRenders()).toBe(3);
+    render(false);
+    expect(hostRenders()).toBe(4);
+    expect(container.textContent).toBe('unchanged');
+  } finally {
+    createElement.mockRestore();
+  }
+});
