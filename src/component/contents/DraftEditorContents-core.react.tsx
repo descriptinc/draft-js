@@ -135,6 +135,30 @@ function renderSkeletonChildren(text: string, anchors: readonly SkeletonAnchor[]
   return children.length ? children : text || <br data-text={true} />;
 }
 
+type BlockContainerProps = {
+  element: string;
+  elementProps: Record<string, unknown>;
+} & (
+  | {skeleton: {text: string; anchors: readonly SkeletonAnchor[]}; children?: never}
+  | {skeleton?: undefined; children: ReactNode}
+);
+
+const DraftBlockContainer = React.memo(
+  function DraftBlockContainer({
+    element,
+    elementProps,
+    skeleton,
+    children,
+  }: BlockContainerProps) {
+    return React.createElement(
+      element,
+      elementProps,
+      skeleton ? renderSkeletonChildren(skeleton.text, skeleton.anchors) : children,
+    );
+  },
+  (previous, next) => Boolean(previous.skeleton && next.skeleton) && equal(previous, next),
+);
+
 /**
  * `DraftEditorContents` is the container component for all block components
  * rendered for a `DraftEditor`. It is optimized to aggressively avoid
@@ -150,15 +174,6 @@ export default class DraftEditorContents extends React.Component<Props> {
     focus?: DOMLocation;
   } = {anchor: undefined, focus: undefined};
   private contentsElement: HTMLDivElement | null = null;
-  private skeletonBlocks = new Map<string, {
-    inputs: {
-      element: string;
-      props: Record<string, unknown>;
-      text: string;
-      anchors: SkeletonAnchor[];
-    };
-    child: ReactNode;
-  }>();
 
   shouldComponentUpdate(nextProps: Props): boolean {
     const prevEditorState = this.props.editorState;
@@ -301,9 +316,6 @@ export default class DraftEditorContents extends React.Component<Props> {
       | ReactNode
       | undefined = undefined;
 
-    const previousSkeletonBlocks = this.skeletonBlocks;
-    this.skeletonBlocks = new Map();
-
     for (const block of content.blockMap.values()) {
       const key = block.key;
       const blockType = block.type;
@@ -375,21 +387,17 @@ export default class DraftEditorContents extends React.Component<Props> {
         const tree = decorator?.getDOMAnchorIdsForRange
           ? getBlockTree(editorState, key)
           : [];
-        const inputs = {
-          element: Element,
-          props: childProps,
-          text: block.text,
-          anchors: getSkeletonAnchors({block, contentState: content, decorator, tree}),
-        };
-        const previous = previousSkeletonBlocks.get(key);
-        child = previous && equal(previous.inputs, inputs)
-          ? previous.child
-          : React.createElement(
-              Element,
-              childProps,
-              renderSkeletonChildren(inputs.text, inputs.anchors),
-            );
-        this.skeletonBlocks.set(key, {inputs, child});
+        child = (
+          <DraftBlockContainer
+            key={key}
+            element={Element}
+            elementProps={childProps}
+            skeleton={{
+              text: block.text,
+              anchors: getSkeletonAnchors({block, contentState: content, decorator, tree}),
+            }}
+          />
+        );
       } else {
         const customRenderer = blockRendererFn(block);
         let CustomComponent, customProps, customEditable;
@@ -428,13 +436,10 @@ export default class DraftEditorContents extends React.Component<Props> {
             suppressContentEditableWarning: true,
           };
         }
-        child = React.createElement(
-          Element,
-          childProps,
-          /* $FlowFixMe(>=0.112.0 site=www,mobile) This comment suppresses an
-           * error found when Flow v0.112 was deployed. To see the error delete
-           * this comment and run Flow. */
-          <Component {...componentProps} key={key} />,
+        child = (
+          <DraftBlockContainer key={key} element={Element} elementProps={childProps}>
+            <Component {...componentProps} key={key} />
+          </DraftBlockContainer>
         );
       }
 

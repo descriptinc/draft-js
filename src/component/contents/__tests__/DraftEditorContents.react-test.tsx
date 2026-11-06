@@ -207,6 +207,7 @@ test('refreshes skeleton anchors when another block changes their document conte
     });
   };
   render(content);
+  const host = container.querySelector(`[data-block-key="${target.key}"]`);
   expect(
     container.querySelector(`[id="before-${target.key}"]`)?.textContent,
   ).toBe('unchanged');
@@ -221,12 +222,14 @@ test('refreshes skeleton anchors when another block changes their document conte
   ).toBe('unchanged');
 
   render(changedContent, new Set([target.key]));
+  expect(container.querySelector(`[data-block-key="${target.key}"]`)).toBe(host);
   expect(
     container
       .querySelector(`[data-block-key="${target.key}"]`)
       ?.hasAttribute('data-block-skeleton'),
   ).toBe(false);
   render(changedContent);
+  expect(container.querySelector(`[data-block-key="${target.key}"]`)).toBe(host);
   expect(
     container.querySelector(`[id="after!-${target.key}"]`)?.textContent,
   ).toBe('unchanged');
@@ -266,4 +269,38 @@ test('updates skeleton text, styles, direction and element type', () => {
   expect(skeleton?.style.direction).toBe('rtl');
   render({text: '', marginBottom: '0px', direction: 'LTR', element: 'div'});
   expect(container.querySelector('[data-block-skeleton] br')).not.toBeNull();
+});
+
+test('reuses unchanged skeleton output while updating full blocks and mode transitions', () => {
+  const content = createFromText('unchanged');
+  const block = Array.from(content.blockMap.values())[0]!;
+  const createElement = jest.spyOn(React, 'createElement');
+  const render = (full: boolean) => {
+    flushSync(() => {
+      root.render(
+        <DraftEditorContents
+          editorState={createWithContent(content)}
+          blockRenderMap={{...DefaultDraftBlockRenderMap, unstyled: {element: 'article'}}}
+          blockRendererFn={() => null}
+          blockSkeleton={{fullBlockKeys: new Set(full ? [block.key] : [])}}
+        />,
+      );
+    });
+  };
+  const hostRenders = () => createElement.mock.calls.filter(([type]) => type === 'article').length;
+  try {
+    render(false);
+    expect(hostRenders()).toBe(1);
+    render(false);
+    expect(hostRenders()).toBe(1);
+    render(true);
+    expect(hostRenders()).toBe(2);
+    render(true);
+    expect(hostRenders()).toBe(3);
+    render(false);
+    expect(hostRenders()).toBe(4);
+    expect(container.textContent).toBe('unchanged');
+  } finally {
+    createElement.mockRestore();
+  }
 });
