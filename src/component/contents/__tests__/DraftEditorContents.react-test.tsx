@@ -178,3 +178,92 @@ test('renders offscreen blocks as text skeletons with persistent DOM anchors', (
     expect(skeleton?.style.whiteSpace).toBe('pre-wrap');
   }
 });
+
+test('refreshes skeleton anchors when another block changes their document context', () => {
+  const decorator: DraftDecoratorType = {
+    getDecorations: block => block.text.split('').map(() => 'linked'),
+    getComponentForKey: () => ({children}) => <strong>{children}</strong>,
+    getPropsForKey: () => null,
+    getDOMAnchorIdsForRange: ({block, contentState}) => [
+      `${contentState.blockMap.values().next().value?.text}-${block.key}`,
+    ],
+  };
+  const content = createFromText('before\nunchanged');
+  const blocks = Array.from(content.blockMap.values());
+  const target = blocks[1]!;
+  const render = (
+    currentContent: typeof content,
+    fullBlockKeys = new Set<string>(),
+  ) => {
+    flushSync(() => {
+      root.render(
+        <DraftEditorContents
+          editorState={createWithContent(currentContent, decorator)}
+          blockRenderMap={DefaultDraftBlockRenderMap}
+          blockRendererFn={() => null}
+          blockSkeleton={{fullBlockKeys}}
+        />,
+      );
+    });
+  };
+  render(content);
+  expect(
+    container.querySelector(`[id="before-${target.key}"]`)?.textContent,
+  ).toBe('unchanged');
+
+  const blockMap = new Map(content.blockMap);
+  blockMap.set(blocks[0]!.key, {...blocks[0]!, text: 'after!'});
+  const changedContent = {...content, blockMap};
+  render(changedContent);
+  expect(container.querySelector(`[id="before-${target.key}"]`)).toBeNull();
+  expect(
+    container.querySelector(`[id="after!-${target.key}"]`)?.textContent,
+  ).toBe('unchanged');
+
+  render(changedContent, new Set([target.key]));
+  expect(
+    container
+      .querySelector(`[data-block-key="${target.key}"]`)
+      ?.hasAttribute('data-block-skeleton'),
+  ).toBe(false);
+  render(changedContent);
+  expect(
+    container.querySelector(`[id="after!-${target.key}"]`)?.textContent,
+  ).toBe('unchanged');
+});
+
+test('updates skeleton text, styles, direction and element type', () => {
+  const content = createFromText('before');
+  const block = Array.from(content.blockMap.values())[0]!;
+  const render = ({text, marginBottom, direction, element}: {
+    text: string;
+    marginBottom: string;
+    direction: 'LTR' | 'RTL';
+    element: string;
+  }) => {
+    const blockMap = new Map([[block.key, {...block, text}]]);
+    flushSync(() => {
+      root.render(
+        <DraftEditorContents
+          editorState={createWithContent({...content, blockMap})}
+          blockRenderMap={{...DefaultDraftBlockRenderMap, unstyled: {element}}}
+          blockRendererFn={() => null}
+          blockStyleFn={() => ({marginBottom})}
+          textDirectionality={direction}
+          blockSkeleton={{fullBlockKeys: new Set()}}
+        />,
+      );
+    });
+  };
+  render({text: 'before', marginBottom: '16px', direction: 'LTR', element: 'div'});
+  render({text: 'after', marginBottom: '32px', direction: 'RTL', element: 'p'});
+  const skeleton = container.querySelector<HTMLElement>(
+    '[data-block-skeleton]',
+  );
+  expect(skeleton?.tagName).toBe('P');
+  expect(skeleton?.textContent).toBe('after');
+  expect(skeleton?.style.marginBottom).toBe('32px');
+  expect(skeleton?.style.direction).toBe('rtl');
+  render({text: '', marginBottom: '0px', direction: 'LTR', element: 'div'});
+  expect(container.querySelector('[data-block-skeleton] br')).not.toBeNull();
+});
